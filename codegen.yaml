@@ -1,0 +1,16 @@
+schema: './src/graphql/schemas/hasura.json'
+documents: './src/**/*.gql'
+overwrite: true
+generates:
+  ./src/graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+      - named-operations-object
+    config:
+      fetcher: fetch
+      skipTypename: false
+      withHooks: true
+      withHOC: false
+      withComponent: false

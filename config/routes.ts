@@ -11,12 +11,8 @@ export default [
             component: "./layouts/BasicLayout",
             routes: [
               {
-                path: "/",
-                component: "./pages/Welcome",
-              },
-              {
-                path: "/chats/:id",
-                component: "./pages/ChatDialog",
+                path: "/signup",
+                component: "./pages/SignUp",
               },
               {
                 component: "./pages/404",

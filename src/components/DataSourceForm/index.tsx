@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Typography } from "antd";
 
 import FormTile from "../FormTile";
@@ -12,18 +13,20 @@ import type { FC } from "react";
 const { Title, Text } = Typography;
 
 const DataSourceForm: FC = () => {
+  const { t } = useTranslation(["dataSourceForm"]);
+
   const [activeTile, setActiveTile] = useState<string>();
   const [keyword, setKeyword] = useState<string>("");
 
   return (
     <div className={styles.wrapper}>
-      <Title level={3}>New Data Source</Title>
-      <Text>Spin up your deployment to start configuring your</Text>
-      <Title level={5}>Select Data Source</Title>
+      <Title level={3}>{t("title")}</Title>
+      <Text>{t("text")}</Text>
+      <Title level={5}>{t("subtitle")}</Title>
       <SearchInput
         value={keyword}
         onChange={setKeyword}
-        placeholder="Placeholder"
+        placeholder={t("search_placeholder")}
       />
       <div className={styles.tiles}>
         {dbTiles

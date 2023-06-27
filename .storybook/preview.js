@@ -1,3 +1,5 @@
+import "../i18next.config";
+
 import "../src/global.less";
 
 export const parameters = {

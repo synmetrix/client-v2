@@ -86,7 +86,7 @@ export const defaultForm: DataSoureSetupField[] = [
       required: false,
     },
     placeholder: "db_password",
-    type: "text",
+    type: "password",
   },
   {
     name: "db_params.ssl",
@@ -157,7 +157,7 @@ export const dataSourceForms = {
     {
       name: "db_params.password",
       label: "Password",
-      type: "text",
+      type: "password",
     },
     {
       name: "db_params.apiId",
@@ -212,7 +212,7 @@ export const dataSourceForms = {
         required: false,
       },
       placeholder: "password",
-      type: "text",
+      type: "password",
     },
   ],
   prestodb: [
@@ -267,7 +267,7 @@ export const dataSourceForms = {
         required: false,
       },
       placeholder: "db_password",
-      type: "text",
+      type: "password",
     },
     {
       name: "db_params.ssl",
@@ -328,7 +328,7 @@ export const dataSourceForms = {
         required: false,
       },
       placeholder: "db_password",
-      type: "text",
+      type: "password",
     },
     {
       name: "db_params.ssl",
@@ -388,7 +388,7 @@ export const dataSourceForms = {
       label: "Password",
       required: true,
       placeholder: "pass",
-      type: "text",
+      type: "password",
     },
     {
       name: "db_params.role",
@@ -444,7 +444,7 @@ export const dataSourceForms = {
         required: false,
       },
       placeholder: "db_password",
-      type: "text",
+      type: "password",
     },
     {
       name: "db_params.ssl",
@@ -480,7 +480,7 @@ export const dataSourceForms = {
         required: false,
       },
       placeholder: "pass",
-      type: "text",
+      type: "password",
     },
     {
       name: "db_params.engineName",
@@ -559,6 +559,7 @@ export const dataSourceForms = {
         required: false,
       },
       placeholder: "pass",
+      type: "password",
     },
   ],
 };

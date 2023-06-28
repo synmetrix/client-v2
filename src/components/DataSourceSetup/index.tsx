@@ -9,7 +9,7 @@ const { Title, Text } = Typography;
 export interface DataSoureSetupField {
   name: string;
   label: string;
-  type: "text" | "checkbox";
+  type: "text" | "checkbox" | "password";
   rules?: object;
   value?: string;
   placeholder?: string;
@@ -38,6 +38,21 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
             <Checkbox checked={field.value === "yes"}>
               <span className={styles.checkbox}>{field.placeholder}</span>
             </Checkbox>
+          </Form.Item>
+        );
+      case "password":
+        return (
+          <Form.Item
+            className={styles.label}
+            key={field.name}
+            name={field.name}
+            label={field.label}
+          >
+            <Input.Password
+              placeholder={field.placeholder}
+              type={field.type}
+              defaultValue={field.value}
+            />
           </Form.Item>
         );
       default:

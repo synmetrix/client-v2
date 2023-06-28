@@ -1,3 +1,5 @@
+import type { DataSoureSetupField } from "@/components/DataSourceSetup";
+
 import Postgres from "@/assets/databases/postgre.svg";
 import Mysql from "@/assets/databases/my-sql.svg";
 import Mongo from "@/assets/databases/mongo.svg";
@@ -40,7 +42,7 @@ export const dbTiles = [
   { title: "Materialize", value: "default", icon: <Materialize /> },
 ];
 
-const defaultForm = [
+export const defaultForm: DataSoureSetupField[] = [
   {
     name: "db_params.database",
     label: "Database Name",
@@ -88,10 +90,10 @@ const defaultForm = [
   },
   {
     name: "db_params.ssl",
-    display: "checkbox",
     label: "Use SSL",
     value: "yes",
-    type: "text",
+    placeholder: "I want use SSL",
+    type: "checkbox",
   },
 ];
 export const dataSourceForms = {
@@ -171,6 +173,7 @@ export const dataSourceForms = {
       name: "db_params.ssl",
       label: "Use SSL",
       value: "yes",
+      placeholder: "I want use SSL",
       type: "checkbox",
     },
   ],

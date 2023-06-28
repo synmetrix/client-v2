@@ -8,10 +8,10 @@ import ClickHouse from "@/assets/databases/click-house.svg";
 import DataSourceSelection from ".";
 
 const data = [
-  { title: "Postgres", icon: <Postgres /> },
-  { title: "MySQL", icon: <Mysql /> },
-  { title: "Mongo DB", icon: <Mongo /> },
-  { title: "ClickHouse", icon: <ClickHouse /> },
+  { title: "Postgres", value: "postgres", icon: <Postgres /> },
+  { title: "MySQL", value: "mysql", icon: <Mysql /> },
+  { title: "Mongo DB", value: "mongobi", icon: <Mongo /> },
+  { title: "ClickHouse", value: "clickhouse", icon: <ClickHouse /> },
 ];
 
 import type { StoryFn, Meta } from "@storybook/react";

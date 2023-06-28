@@ -12,6 +12,7 @@ const { Title, Text } = Typography;
 
 export interface DataSourceOption {
   title: string;
+  value: string;
   icon: ReactNode;
 }
 
@@ -52,7 +53,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
               key={tile.title}
               title={tile.title}
               icon={tile.icon}
-              active={value?.title === tile.title}
+              active={value?.value === tile.value}
               onClick={() => onChange(tile)}
             />
           ))}

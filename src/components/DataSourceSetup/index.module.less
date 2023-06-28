@@ -51,6 +51,17 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.actions {
+  @media (max-width: 576px) {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .back {
@@ -65,6 +76,12 @@
   width: 141px;
 
   margin-right: 8px;
+
+  @media (max-width: 576px) {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
 }
 
 .link {

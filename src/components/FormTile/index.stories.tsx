@@ -1,6 +1,6 @@
 import RootLayout from "@/layouts/RootLayout";
 
-import Postgres from "../../assets/databases/postgre.svg";
+import Postgres from "@/assets/databases/postgre.svg";
 
 import FormTile from ".";
 

@@ -1,8 +1,8 @@
 import { Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
-import SearchInput from "../SearchInput";
-import FormTile from "../FormTile";
+import SearchInput from "@/components/SearchInput";
+import FormTile from "@/components/FormTile";
 
 import styles from "./index.module.less";
 

@@ -1,6 +1,6 @@
 import { Input } from "antd";
 
-import SearchIcon from "../../assets/search.svg";
+import SearchIcon from "@/assets/search.svg";
 
 import styles from "./index.module.less";
 

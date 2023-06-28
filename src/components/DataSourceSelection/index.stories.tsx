@@ -1,9 +1,9 @@
 import RootLayout from "@/layouts/RootLayout";
 
-import Postgres from "../../assets/databases/postgre.svg";
-import Mysql from "../../assets/databases/my-sql.svg";
-import Mongo from "../../assets/databases/mongo.svg";
-import ClickHouse from "../../assets/databases/click-house.svg";
+import Postgres from "@/assets/databases/postgre.svg";
+import Mysql from "@/assets/databases/my-sql.svg";
+import Mongo from "@/assets/databases/mongo.svg";
+import ClickHouse from "@/assets/databases/click-house.svg";
 
 import DataSourceSelection from ".";
 

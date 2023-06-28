@@ -1,8 +1,8 @@
-import DataSourceSelection from "../DataSourceSelection";
+import DataSourceSelection from "@/components/DataSourceSelection";
+import type { DataSourceOption } from "@/components/DataSourceSelection";
 
 import { dbTiles } from "./data";
 
-import type { DataSourceOption } from "../DataSourceSelection";
 import type { FC } from "react";
 
 const DataSourceForm: FC = () => {

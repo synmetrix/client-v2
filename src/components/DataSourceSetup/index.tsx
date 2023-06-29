@@ -1,4 +1,13 @@
-import { Button, Checkbox, Col, Form, Input, Row, Typography } from "antd";
+import {
+  Alert,
+  Button,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  Row,
+  Typography,
+} from "antd";
 import { useTranslation } from "react-i18next";
 
 import styles from "./index.module.less";
@@ -27,6 +36,8 @@ interface DataSourceSetupProps {
 
 const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
   const { t } = useTranslation(["dataSetupForm"]);
+
+  const [error, setError] = useState<boolean>(false);
 
   const renderField = (field: DataSoureSetupField) => {
     switch (field.type) {
@@ -86,7 +97,12 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
 
         <Text className={styles.text}>{t("text")}</Text>
       </div>
-      <Form layout="vertical" id="setup-form" onFinish={console.log}>
+      <Form
+        className={styles.form}
+        layout="vertical"
+        id="setup-form"
+        onFinish={console.log}
+      >
         <Form.Item className={styles.label} label="Name*" name="name">
           <Input placeholder="gh-api.clickhouse.tech (Yandex Demo)" />
         </Form.Item>
@@ -113,11 +129,16 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
             Apply
           </Button>
 
-          <Button className={styles.link} type="link">
+          <Button
+            className={styles.link}
+            type="link"
+            onClick={() => setError(true)}
+          >
             Test Connection
           </Button>
         </div>
       </Form>
+      {error && <Alert message="Error" type="error" />}
     </div>
   );
 };

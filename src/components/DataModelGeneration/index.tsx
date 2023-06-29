@@ -82,11 +82,18 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({ dataSource }) => {
         />
         <Form>
           <Collapse
+            style={{ color: "red" }}
             className={styles.collapse}
             expandIcon={() => <TableIcon />}
           >
             {items.map((i) => (
-              <Panel header={i.label} key={i.key}>
+              <Panel
+                className={styles.collapse}
+                header={
+                  <span className={styles.collapseHeader}>{i.label}</span>
+                }
+                key={i.key}
+              >
                 {i.children}
               </Panel>
             ))}

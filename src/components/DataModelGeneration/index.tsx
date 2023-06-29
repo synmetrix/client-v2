@@ -1,4 +1,5 @@
 import { Checkbox, Col, Collapse, Form, Radio, Row, Typography } from "antd";
+import { useTranslation } from "react-i18next";
 
 import TableIcon from "@/assets/table.svg";
 
@@ -58,11 +59,13 @@ const items = [
 ];
 
 const options = [
-  { label: "JS", value: "js" },
-  { label: "YML", value: "yml", disabled: true },
+  { label: "JS", value: "js", disabled: false },
+  { label: "YML", value: "yml", disabled: false },
 ];
 
 const DataModelGeneration: FC<DataModelGenerationProps> = ({ dataSource }) => {
+  const { t } = useTranslation(["dataModelGeneration"]);
+
   const [searchValue, setSearchValue] = useState<string>("");
   return (
     <div className={styles.wrapper}>
@@ -73,8 +76,8 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({ dataSource }) => {
             {dataSource.name}
           </Title>
         </div>
-        <Text>Simple generate new Data Model Files for your tables</Text>
-        <Title level={5}>Select Table</Title>
+        <Text>{t("text")}</Text>
+        <Title level={5}>{t("title")}</Title>
         <SearchInput
           placeholder="Placeholder"
           value={searchValue}
@@ -99,7 +102,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({ dataSource }) => {
             ))}
           </Collapse>
 
-          <Title level={5}>Select choose markup</Title>
+          <Title level={5}>{t("choose_markup")}</Title>
 
           <Radio.Group size="large" optionType="button">
             {options.map((o) => (

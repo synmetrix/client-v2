@@ -2,6 +2,13 @@
   margin-bottom: 20px;
 }
 
+.dataSource {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: var(--gap-base);
+}
+
 .iconWrapper {
   display: flex;
   align-items: center;
@@ -38,16 +45,6 @@
 
 .checkbox {
   font-weight: 400;
-}
-
-.setupForm {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--gap-base);
-
-  @media (max-width: 576px) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .actions {

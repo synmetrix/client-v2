@@ -1,4 +1,5 @@
 import { Button, Checkbox, Col, Form, Input, Row, Typography } from "antd";
+import { useTranslation } from "react-i18next";
 
 import styles from "./index.module.less";
 
@@ -25,6 +26,8 @@ interface DataSourceSetupProps {
 }
 
 const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
+  const { t } = useTranslation(["dataSetupForm"]);
+
   const renderField = (field: DataSoureSetupField) => {
     switch (field.type) {
       case "checkbox":
@@ -81,13 +84,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
           </Title>
         </div>
 
-        <Text className={styles.text}>
-          Please enter the credentials for the data source to establish a
-          connection. <br />
-          To obtain further information about this configuration and
-          Cube&lsquo;s features that are specific to Postgres, please refer to
-          our documentation.
-        </Text>
+        <Text className={styles.text}>{t("text")}</Text>
       </div>
       <Form layout="vertical" id="setup-form" onFinish={console.log}>
         <Form.Item className={styles.label} label="Name*" name="name">

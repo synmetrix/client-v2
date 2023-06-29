@@ -27,7 +27,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
   onChange,
   value,
 }) => {
-  const { t } = useTranslation(["dataSourceForm"]);
+  const { t } = useTranslation(["dataSourceSelecton"]);
 
   const [keyword, setKeyword] = useState<string>("");
 

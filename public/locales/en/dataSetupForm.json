@@ -1,3 +1,6 @@
 {
-  "text": "Please enter the credentials for the data source to establish a connection. To obtain further information about this configuration and Cube's features that are specific to Postgres, please refer to our documentation."
+  "text": {
+    "line1": "Please enter the credentials for the data source to establish a connection.",
+    "line2": "To obtain further information about this configuration and Cube's features that are specific to Postgres, please refer to our documentation."
+  }
 }

@@ -95,7 +95,9 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
           </Title>
         </div>
 
-        <Text className={styles.text}>{t("text")}</Text>
+        <Text className={styles.text}>
+          {t("text.line1")} <br /> {t("text.line2")}
+        </Text>
       </div>
       <Form
         className={styles.form}

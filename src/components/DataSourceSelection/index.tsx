@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { Col, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import SearchInput from "@/components/SearchInput";
@@ -31,8 +31,6 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
 
   const [keyword, setKeyword] = useState<string>("");
 
-  console.log(options[0].icon);
-
   return (
     <div className={styles.wrapper}>
       <Title level={3}>{t("title")}</Title>
@@ -43,21 +41,22 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
         onChange={setKeyword}
         placeholder={t("search_placeholder")}
       />
-      <div className={styles.tiles}>
+      <Row gutter={[16, 16]}>
         {options
           .filter((db) =>
             db.title.toLowerCase().includes(keyword.toLowerCase())
           )
           .map((tile) => (
-            <FormTile
-              key={tile.title}
-              title={tile.title}
-              icon={tile.icon}
-              active={value?.value === tile.value}
-              onClick={() => onChange(tile)}
-            />
+            <Col key={tile.title} span={4}>
+              <FormTile
+                title={tile.title}
+                icon={tile.icon}
+                active={value?.value === tile.value}
+                onClick={() => onChange(tile)}
+              />
+            </Col>
           ))}
-      </div>
+      </Row>
     </div>
   );
 };

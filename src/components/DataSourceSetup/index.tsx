@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Typography } from "antd";
+import { Button, Checkbox, Col, Form, Input, Row, Typography } from "antd";
 
 import styles from "./index.module.less";
 
@@ -31,7 +31,6 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
         return (
           <Form.Item
             className={styles.label}
-            key={field.name}
             name={field.name}
             label={field.label}
           >
@@ -44,7 +43,6 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
         return (
           <Form.Item
             className={styles.label}
-            key={field.name}
             name={field.name}
             label={field.label}
           >
@@ -96,7 +94,13 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
           <Input placeholder="gh-api.clickhouse.tech (Yandex Demo)" />
         </Form.Item>
 
-        <div className={styles.setupForm}>{fields.map(renderField)}</div>
+        <Row gutter={[16, 16]}>
+          {fields.map((f) => (
+            <Col key={f.name} xs={24} sm={12}>
+              {renderField(f)}
+            </Col>
+          ))}
+        </Row>
 
         <div className={styles.actions}>
           <Button className={styles.back} size="large" color="primary">

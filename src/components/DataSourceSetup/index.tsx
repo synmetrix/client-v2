@@ -32,9 +32,14 @@ interface DataSourceSetupProps {
     icon: ReactNode;
   };
   fields: DataSoureSetupField[];
+  name: string;
 }
 
-const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
+const DataSourceSetup: FC<DataSourceSetupProps> = ({
+  dataSource,
+  fields,
+  name,
+}) => {
   const { t } = useTranslation(["dataSetupForm"]);
 
   const [error, setError] = useState<boolean>(false);
@@ -106,7 +111,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({ dataSource, fields }) => {
         onFinish={console.log}
       >
         <Form.Item className={styles.label} label="Name*" name="name">
-          <Input placeholder="gh-api.clickhouse.tech (Yandex Demo)" />
+          <Input value={name} disabled />
         </Form.Item>
 
         <Row gutter={[16, 16]}>

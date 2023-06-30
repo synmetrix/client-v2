@@ -10,18 +10,6 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-const options = [
-  { value: "mysql", label: "MySQL", disabled: false },
-  { value: "psql", label: "PSQL", disabled: false },
-];
-
-const fields = [
-  { label: "Host/URL", value: "username" },
-  { label: "Database", value: "db" },
-  { label: "Login (auto-generated)", value: "db_username" },
-  { label: "Password (auto-generated)", value: "dasdasd", type: "password" },
-];
-
 const Password: FC<{ value: string }> = ({ value }) => {
   const [type, setType] = useState<"text" | "password">("password");
 
@@ -42,12 +30,24 @@ const Password: FC<{ value: string }> = ({ value }) => {
   );
 };
 
-const textareaValue = `MYSQL  --host=gh-api.clickhouse.tech
-    - -user=user@api.clickhouse.tech
-    - -port=5121
-    - -password=**********`;
+interface Field {
+  label: string;
+  value: string;
+  type?: string;
+  disabled?: boolean;
+}
 
-const ApiSetup: FC = () => {
+interface ApiSetupProps {
+  connectionData: Field[];
+  connectionOptions: Field[];
+  connectionString: string;
+}
+
+const ApiSetup: FC<ApiSetupProps> = ({
+  connectionData,
+  connectionOptions,
+  connectionString,
+}) => {
   return (
     <div>
       <Title level={3}>Setup SQL API</Title>
@@ -64,7 +64,7 @@ const ApiSetup: FC = () => {
 
         <Form.Item label="Connect via" className={styles.label}>
           <Radio.Group size="large" optionType="button">
-            {options.map((o) => (
+            {connectionOptions.map((o) => (
               <Radio
                 className={styles.radio}
                 key={o.value}
@@ -78,7 +78,7 @@ const ApiSetup: FC = () => {
         </Form.Item>
 
         <Row gutter={[16, 16]}>
-          {fields.map((f) => (
+          {connectionData.map((f) => (
             <Col key={f.label} xs={24} sm={12}>
               <Form.Item label={f.label} className={styles.label}>
                 {f.type === "password" ? (
@@ -101,19 +101,22 @@ const ApiSetup: FC = () => {
           ))}
         </Row>
 
-        <div className={styles.textareaWrapper}>
+        <Form.Item
+          className={cn(styles.textareaWrapper, styles.label)}
+          label="Connect using mysql-client"
+        >
           <Input.TextArea
             style={{ resize: "none", height: 104 }}
             className={styles.textarea}
-            value={textareaValue}
+            value={connectionString}
             disabled
           />
 
           <CopyIcon
             className={cn(styles.icon, styles.textareaCopy)}
-            onClick={() => navigator.clipboard.writeText(textareaValue)}
+            onClick={() => navigator.clipboard.writeText(connectionString)}
           />
-        </div>
+        </Form.Item>
       </Form>
     </div>
   );

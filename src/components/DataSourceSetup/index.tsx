@@ -9,6 +9,8 @@ import {
   Typography,
 } from "antd";
 import { useTranslation } from "react-i18next";
+import { useResponsive } from "ahooks";
+import cn from "classnames";
 
 import styles from "./index.module.less";
 
@@ -43,6 +45,8 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
   const { t } = useTranslation(["dataSetupForm"]);
 
   const [error, setError] = useState<boolean>(false);
+  const windowSize = useResponsive();
+  console.log(name);
 
   const renderField = (field: DataSoureSetupField) => {
     switch (field.type) {
@@ -111,7 +115,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
         onFinish={console.log}
       >
         <Form.Item className={styles.label} label="Name*" name="name">
-          <Input value={name} disabled />
+          <Input placeholder={name} value={name} disabled />
         </Form.Item>
 
         <Row gutter={[16, 16]}>
@@ -123,11 +127,15 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
         </Row>
 
         <div className={styles.actions}>
-          <Button className={styles.back} size="large" color="primary">
+          <Button
+            className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
+            size="large"
+            color="primary"
+          >
             Back
           </Button>
           <Button
-            className={styles.submit}
+            className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
             form="setup-form"
             type="primary"
             size="large"

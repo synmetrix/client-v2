@@ -1,5 +1,7 @@
-import { Checkbox, Col, Collapse, Form, Radio, Row, Typography } from "antd";
+import { Checkbox, Collapse, Form, Radio, Typography } from "antd";
 import { useTranslation } from "react-i18next";
+import cn from "classnames";
+import { useResponsive } from "ahooks";
 
 import TableIcon from "@/assets/table.svg";
 
@@ -17,54 +19,31 @@ interface DataModelGenerationProps {
     icon: ReactNode;
     name: string;
   };
+  schema: Schema;
 }
 
-const items = [
-  {
-    key: "1",
-    label: "default",
-    children: (
-      <Row gutter={[8, 8]}>
-        <Col span={24}>
-          <div className={styles.field}>
-            <Checkbox>trips {"→"} Trips.js</Checkbox>
-          </div>
-        </Col>
-        <Col span={24}>
-          <div className={styles.field}>
-            <Checkbox>trips {"→"} Trips.js</Checkbox>
-          </div>
-        </Col>
-      </Row>
-    ),
-  },
-  {
-    key: "2",
-    label: "default",
-    children: (
-      <Row>
-        <Col span={24}>
-          <Form.Item className={styles.field}>
-            <Checkbox>trips {"→"} Trips.js</Checkbox>
-          </Form.Item>
-        </Col>
-        <Col span={24}>
-          <Form.Item className={styles.field}>
-            <Checkbox>trips {"→"} Trips.js</Checkbox>
-          </Form.Item>
-        </Col>
-      </Row>
-    ),
-  },
-];
+interface Column {
+  attributes: [];
+  name: string;
+  type: string;
+}
+
+type Table = Record<string, Column[]>;
+
+type Schema = Record<string, Table>;
 
 const options = [
   { label: "JS", value: "js", disabled: false },
   { label: "YML", value: "yml", disabled: false },
 ];
 
-const DataModelGeneration: FC<DataModelGenerationProps> = ({ dataSource }) => {
+const DataModelGeneration: FC<DataModelGenerationProps> = ({
+  dataSource,
+  schema,
+}) => {
   const { t } = useTranslation(["dataModelGeneration"]);
+
+  const windowSize = useResponsive();
 
   const [searchValue, setSearchValue] = useState<string>("");
   return (
@@ -89,15 +68,38 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({ dataSource }) => {
             className={styles.collapse}
             expandIcon={() => <TableIcon />}
           >
-            {items.map((i) => (
+            {Object.keys(schema).map((s) => (
               <Panel
                 className={styles.collapse}
-                header={
-                  <span className={styles.collapseHeader}>{i.label}</span>
-                }
-                key={i.key}
+                header={<span className={styles.collapseHeader}>{s}</span>}
+                key={s}
               >
-                {i.children}
+                {Object.keys(schema[s]).map((tb) => (
+                  <div key={tb}>
+                    <Form.Item className={cn(styles.field)}>
+                      <div>
+                        <Checkbox>
+                          <span
+                            className={cn(styles.table, {
+                              [styles.column]: !windowSize.md,
+                            })}
+                          >
+                            <span>{tb}</span>
+                            <span className={styles.separator}>→</span>
+                            <span>{tb}.js</span>
+                          </span>
+                        </Checkbox>
+                        <span
+                          className={cn(styles.columns, {
+                            [styles.block]: !windowSize.md,
+                          })}
+                        >
+                          ({schema[s][tb].length}) columns
+                        </span>
+                      </div>
+                    </Form.Item>
+                  </div>
+                ))}
               </Panel>
             ))}
           </Collapse>

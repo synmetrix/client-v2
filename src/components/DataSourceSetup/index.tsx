@@ -46,7 +46,6 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 
   const [error, setError] = useState<boolean>(false);
   const windowSize = useResponsive();
-  console.log(name);
 
   const renderField = (field: DataSoureSetupField) => {
     switch (field.type) {

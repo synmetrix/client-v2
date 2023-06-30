@@ -24,4 +24,16 @@ Default.args = {
     icon: <Postgres />,
     name: "gh-api.clickhouse.tech (Yandex Demo)",
   },
+  schema: {
+    dev_pre_aggregations: {
+      orders_orders_rollup_0bohozfp_hle2okkq_1i85rfl: [
+        { attributes: [], name: "users__last_name", type: "character varying" },
+      ],
+    },
+    dev_prod_preaggregations: {
+      orders_orders_rollup_0bohozfp_hle2okkq_1i85rfl: [
+        { attributes: [], name: "users__last_name", type: "character varying" },
+      ],
+    },
+  },
 };

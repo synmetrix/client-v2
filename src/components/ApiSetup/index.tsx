@@ -1,5 +1,6 @@
 import { Col, Form, Input, Radio, Row, Typography } from "antd";
 import cn from "classnames";
+import { useTranslation } from "react-i18next";
 
 import CopyIcon from "@/assets/copy.svg";
 import EyeIcon from "@/assets/eye.svg";
@@ -48,14 +49,12 @@ const ApiSetup: FC<ApiSetupProps> = ({
   connectionOptions,
   connectionString,
 }) => {
+  const { t } = useTranslation(["apiSetup"]);
   return (
     <div>
-      <Title level={3}>Setup SQL API</Title>
+      <Title level={3}>{t("title")}</Title>
 
-      <Text>
-        You can connect any BI tool or other SQL compatible software using the
-        details specified below
-      </Text>
+      <Text>{t("text")}</Text>
 
       <Form layout="vertical">
         <Form.Item label="Data source" className={styles.label}>

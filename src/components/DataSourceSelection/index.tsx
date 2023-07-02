@@ -29,7 +29,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
   onChange,
   value,
 }) => {
-  const { t } = useTranslation(["dataSourceSelecton"]);
+  const { t } = useTranslation(["dataSourceSelecton", "common"]);
   const windowSize = useResponsive();
 
   const [keyword, setKeyword] = useState<string>("");
@@ -69,11 +69,11 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
           size="large"
           htmlType="submit"
         >
-          Apply
+          {t("common:words.next")}
         </Button>
 
         <Button className={cn(styles.link, styles.skip)} type="link">
-          Skip
+          {t("common:words.skip")}
         </Button>
       </Row>
     </div>

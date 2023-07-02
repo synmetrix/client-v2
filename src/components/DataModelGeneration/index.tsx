@@ -41,7 +41,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   dataSource,
   schema,
 }) => {
-  const { t } = useTranslation(["dataModelGeneration"]);
+  const { t } = useTranslation(["dataModelGeneration", "common"]);
 
   const windowSize = useResponsive();
 
@@ -94,7 +94,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                             [styles.block]: !windowSize.md,
                           })}
                         >
-                          ({schema[s][tb].length}) columns
+                          ({schema[s][tb].length}) {t("common:words.columns")}
                         </span>
                       </div>
                     </Form.Item>
@@ -129,7 +129,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
               size="large"
               color="primary"
             >
-              Back
+              {t("common:words.back")}
             </Button>
             <Button
               className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
@@ -138,11 +138,11 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
               size="large"
               htmlType="submit"
             >
-              Generate
+              {t("common:words.generate")}
             </Button>
 
             <Button className={cn(styles.link, styles.skip)} type="link">
-              Skip
+              {t("common:words.skip")}
             </Button>
           </Row>
         </Form>

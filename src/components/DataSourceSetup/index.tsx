@@ -42,7 +42,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
   fields,
   name,
 }) => {
-  const { t } = useTranslation(["dataSetupForm"]);
+  const { t } = useTranslation(["dataSetupForm", "common"]);
 
   const [error, setError] = useState<boolean>(false);
   const windowSize = useResponsive();
@@ -131,7 +131,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             size="large"
             color="primary"
           >
-            Back
+            {t("common:words.back")}
           </Button>
           <Button
             className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
@@ -140,7 +140,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             size="large"
             htmlType="submit"
           >
-            Apply
+            {t("common:words.apply")}
           </Button>
 
           <Button
@@ -148,11 +148,11 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             type="link"
             onClick={() => setError(true)}
           >
-            Test Connection
+            {t("common:words.test_connection")}
           </Button>
 
           <Button className={cn(styles.link, styles.skip)} type="link">
-            Skip
+            {t("common:words.skip")}
           </Button>
         </Row>
       </Form>

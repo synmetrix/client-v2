@@ -50,7 +50,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
   connectionOptions,
   connectionString,
 }) => {
-  const { t } = useTranslation(["apiSetup"]);
+  const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
   return (
     <div>
@@ -125,7 +125,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
             size="large"
             color="primary"
           >
-            Back
+            {t("common:words.back")}
           </Button>
           <Button
             className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
@@ -134,15 +134,15 @@ const ApiSetup: FC<ApiSetupProps> = ({
             size="large"
             htmlType="submit"
           >
-            Finish
+            {t("common:words.finish")}
           </Button>
 
           <Button className={styles.link} type="link">
-            Download Credentials
+            {t("common:words.download_credentials")}
           </Button>
 
           <Button className={cn(styles.link, styles.skip)} type="link">
-            Skip
+            {t("common:words.skip")}
           </Button>
         </Row>
       </Form>

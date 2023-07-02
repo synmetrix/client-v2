@@ -1,0 +1,13 @@
+{
+  "words": {
+    "apply": "Apply",
+    "generate": "Generate",
+    "test_connection": "Test connection",
+    "skip": "Skip",
+    "back": "Back",
+    "finish": "Finish",
+    "download_credentials": "Download Credentials",
+    "next": "Next",
+    "columns": "columns"
+  }
+}

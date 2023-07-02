@@ -125,7 +125,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           ))}
         </Row>
 
-        <div className={styles.actions}>
+        <Row>
           <Button
             className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
             size="large"
@@ -150,7 +150,11 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           >
             Test Connection
           </Button>
-        </div>
+
+          <Button className={cn(styles.link, styles.skip)} type="link">
+            Skip
+          </Button>
+        </Row>
       </Form>
       {error && <Alert message="Error" type="error" />}
     </div>

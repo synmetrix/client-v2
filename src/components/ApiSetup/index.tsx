@@ -1,6 +1,7 @@
-import { Col, Form, Input, Radio, Row, Typography } from "antd";
+import { Button, Col, Form, Input, Radio, Row, Typography } from "antd";
 import cn from "classnames";
 import { useTranslation } from "react-i18next";
+import { useResponsive } from "ahooks";
 
 import CopyIcon from "@/assets/copy.svg";
 import EyeIcon from "@/assets/eye.svg";
@@ -50,6 +51,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
   connectionString,
 }) => {
   const { t } = useTranslation(["apiSetup"]);
+  const windowSize = useResponsive();
   return (
     <div>
       <Title level={3}>{t("title")}</Title>
@@ -116,6 +118,33 @@ const ApiSetup: FC<ApiSetupProps> = ({
             onClick={() => navigator.clipboard.writeText(connectionString)}
           />
         </Form.Item>
+
+        <Row>
+          <Button
+            className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
+            size="large"
+            color="primary"
+          >
+            Back
+          </Button>
+          <Button
+            className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
+            form="setup-form"
+            type="primary"
+            size="large"
+            htmlType="submit"
+          >
+            Finish
+          </Button>
+
+          <Button className={styles.link} type="link">
+            Download Credentials
+          </Button>
+
+          <Button className={cn(styles.link, styles.skip)} type="link">
+            Skip
+          </Button>
+        </Row>
       </Form>
     </div>
   );

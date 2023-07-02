@@ -1,5 +1,7 @@
-import { Col, Row, Typography } from "antd";
+import { Button, Col, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
+import cn from "classnames";
+import { useResponsive } from "ahooks";
 
 import SearchInput from "@/components/SearchInput";
 import FormTile from "@/components/FormTile";
@@ -28,6 +30,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
   value,
 }) => {
   const { t } = useTranslation(["dataSourceSelecton"]);
+  const windowSize = useResponsive();
 
   const [keyword, setKeyword] = useState<string>("");
 
@@ -56,6 +59,22 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
               />
             </Col>
           ))}
+      </Row>
+
+      <Row>
+        <Button
+          className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
+          form="setup-form"
+          type="primary"
+          size="large"
+          htmlType="submit"
+        >
+          Apply
+        </Button>
+
+        <Button className={cn(styles.link, styles.skip)} type="link">
+          Skip
+        </Button>
       </Row>
     </div>
   );

@@ -1,4 +1,4 @@
-import { Checkbox, Collapse, Form, Radio, Typography } from "antd";
+import { Button, Checkbox, Collapse, Form, Radio, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
@@ -106,7 +106,11 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
 
           <Title level={5}>{t("choose_markup")}</Title>
 
-          <Radio.Group size="large" optionType="button">
+          <Radio.Group
+            className={styles.formatSelection}
+            size="large"
+            optionType="button"
+          >
             {options.map((o) => (
               <Radio
                 className={styles.radio}
@@ -118,6 +122,29 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
               </Radio>
             ))}
           </Radio.Group>
+
+          <Row>
+            <Button
+              className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
+              size="large"
+              color="primary"
+            >
+              Back
+            </Button>
+            <Button
+              className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
+              form="setup-form"
+              type="primary"
+              size="large"
+              htmlType="submit"
+            >
+              Generate
+            </Button>
+
+            <Button className={cn(styles.link, styles.skip)} type="link">
+              Skip
+            </Button>
+          </Row>
         </Form>
       </div>
     </div>

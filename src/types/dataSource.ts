@@ -31,3 +31,5 @@ export interface Column {
 export type Table = Record<string, Column[]>;
 
 export type Schema = Record<string, Table>;
+
+export type DataSourceSetupForm = Record<string, string>;

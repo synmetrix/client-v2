@@ -122,7 +122,6 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
             </Button>
             <Button
               className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
-              form="setup-form"
               type="primary"
               size="large"
               htmlType="submit"

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import DataSourceSelection from "@/components/DataSourceSelection";
-import type { DataSource } from "@/types/dataSource";
+import type { DataSource, DataSourceSetupForm } from "@/types/dataSource";
 
 import DataSourceSetup from "../DataSourceSetup";
 import DataModelGeneration from "../DataModelGeneration";
@@ -20,6 +20,10 @@ const DataSourceForm: FC = () => {
   const onDataSourceSelect = (value: DataSource) => {
     setSelectedDataSource(value);
     setStep(1);
+  };
+
+  const onDataSourceSetupSubmit = (data: DataSourceSetupForm) => {
+    console.log(data);
   };
 
   const renderStep = (currentStep: number) => {
@@ -46,6 +50,7 @@ const DataSourceForm: FC = () => {
               ]
             }
             name="gh-api.clickhouse.tech (Yandex Demo)"
+            onSubmit={onDataSourceSetupSubmit}
           />
         );
       case 2:

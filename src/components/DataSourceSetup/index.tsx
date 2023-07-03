@@ -11,8 +11,13 @@ import {
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import cn from "classnames";
+import { Controller, useForm } from "react-hook-form";
 
-import type { DataSource, DataSoureSetupField } from "@/types/dataSource";
+import type {
+  DataSource,
+  DataSourceSetupForm,
+  DataSoureSetupField,
+} from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
@@ -24,60 +29,90 @@ interface DataSourceSetupProps {
   dataSource: DataSource;
   fields: DataSoureSetupField[];
   name: string;
+  onSubmit: (values: DataSourceSetupForm) => void;
 }
 
 const DataSourceSetup: FC<DataSourceSetupProps> = ({
   dataSource,
   fields,
   name,
+  onSubmit,
 }) => {
   const { t } = useTranslation(["dataSetupForm", "common"]);
 
   const [error, setError] = useState<boolean>(false);
   const windowSize = useResponsive();
 
+  const { control, handleSubmit } = useForm<DataSourceSetupForm>();
+
   const renderField = (field: DataSoureSetupField) => {
     switch (field.type) {
       case "checkbox":
         return (
-          <Form.Item
-            className={styles.label}
+          <Controller
+            control={control}
             name={field.name}
-            label={field.label}
-          >
-            <Checkbox checked={field.value === "yes"}>
-              <span className={styles.checkbox}>{field.placeholder}</span>
-            </Checkbox>
-          </Form.Item>
+            defaultValue={field.value}
+            render={({ field: { onChange, value } }) => (
+              <Form.Item
+                className={styles.label}
+                name={field.name}
+                label={field.label}
+              >
+                <Checkbox
+                  checked={value === "yes"}
+                  onChange={() => onChange(value === "yes" ? "no" : "yes")}
+                >
+                  <span className={styles.checkbox}>{field.placeholder}</span>
+                </Checkbox>
+              </Form.Item>
+            )}
+          />
         );
       case "password":
         return (
-          <Form.Item
-            className={styles.label}
+          <Controller
+            control={control}
             name={field.name}
-            label={field.label}
-          >
-            <Input.Password
-              placeholder={field.placeholder}
-              type={field.type}
-              defaultValue={field.value}
-            />
-          </Form.Item>
+            defaultValue={field.value}
+            render={({ field: { value, onChange } }) => (
+              <Form.Item
+                className={styles.label}
+                name={field.name}
+                label={field.label}
+              >
+                <Input.Password
+                  placeholder={field.placeholder}
+                  type={field.type}
+                  defaultValue={field.value}
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                />
+              </Form.Item>
+            )}
+          />
         );
       default:
         return (
-          <Form.Item
-            className={styles.label}
-            key={field.name}
+          <Controller
+            control={control}
             name={field.name}
-            label={field.label}
-          >
-            <Input
-              placeholder={field.placeholder}
-              type={field.type}
-              defaultValue={field.value}
-            />
-          </Form.Item>
+            render={({ field: { value, onChange } }) => (
+              <Form.Item
+                className={styles.label}
+                key={field.name}
+                name={field.name}
+                label={field.label}
+              >
+                <Input
+                  placeholder={field.placeholder}
+                  type={field.type}
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                />
+              </Form.Item>
+            )}
+          />
         );
     }
   };
@@ -96,15 +131,22 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           {t("text.line1")} <br /> {t("text.line2")}
         </Text>
       </div>
-      <Form
-        className={styles.form}
-        layout="vertical"
-        id="setup-form"
-        onFinish={console.log}
-      >
-        <Form.Item className={styles.label} label="Name*" name="name">
-          <Input placeholder={name} value={name} disabled />
-        </Form.Item>
+      <Form className={styles.form} id="setup-form" layout="vertical">
+        <Controller
+          control={control}
+          name="name"
+          defaultValue={name}
+          render={({ field: { value, onChange } }) => (
+            <Form.Item className={styles.label} label="Name*" name="name">
+              <Input
+                placeholder={name}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                disabled
+              />
+            </Form.Item>
+          )}
+        />
 
         <Row gutter={[16, 16]}>
           {fields.map((f) => (
@@ -128,6 +170,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             type="primary"
             size="large"
             htmlType="submit"
+            onClick={handleSubmit(onSubmit)}
           >
             {t("common:words.apply")}
           </Button>

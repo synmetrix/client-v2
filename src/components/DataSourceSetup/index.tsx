@@ -12,27 +12,16 @@ import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import cn from "classnames";
 
+import type { DataSource, DataSoureSetupField } from "@/types/dataSource";
+
 import styles from "./index.module.less";
 
-import type { FC, ReactNode } from "react";
+import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-export interface DataSoureSetupField {
-  name: string;
-  label: string;
-  type: "text" | "checkbox" | "password";
-  rules?: object;
-  value?: string;
-  placeholder?: string;
-}
-
 interface DataSourceSetupProps {
-  dataSource: {
-    title: string;
-    value: string;
-    icon: ReactNode;
-  };
+  dataSource: DataSource;
   fields: DataSoureSetupField[];
   name: string;
 }
@@ -99,7 +88,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
         <div className={styles.dataSource}>
           <div className={styles.iconWrapper}>{dataSource.icon}</div>
           <Title className={styles.title} level={3}>
-            {dataSource.title}
+            {dataSource.name}
           </Title>
         </div>
 

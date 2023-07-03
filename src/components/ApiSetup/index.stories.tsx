@@ -32,4 +32,5 @@ Default.args = {
     { value: "mysql", label: "MySQL", disabled: false },
     { value: "psql", label: "PSQL", disabled: false },
   ],
+  name: "gh-api.clickhouse.tech (Yandex Demo)",
 };

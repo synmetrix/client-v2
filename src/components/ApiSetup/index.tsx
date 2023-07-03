@@ -3,6 +3,8 @@ import cn from "classnames";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 
+import type { ApiSetupField } from "@/types/dataSource";
+
 import CopyIcon from "@/assets/copy.svg";
 import EyeIcon from "@/assets/eye.svg";
 
@@ -32,23 +34,18 @@ const Password: FC<{ value: string }> = ({ value }) => {
   );
 };
 
-interface Field {
-  label: string;
-  value: string;
-  type?: string;
-  disabled?: boolean;
-}
-
 interface ApiSetupProps {
-  connectionData: Field[];
-  connectionOptions: Field[];
+  connectionData: ApiSetupField[];
+  connectionOptions: ApiSetupField[];
   connectionString: string;
+  name: string;
 }
 
 const ApiSetup: FC<ApiSetupProps> = ({
   connectionData,
   connectionOptions,
   connectionString,
+  name,
 }) => {
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
@@ -60,7 +57,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
       <Form layout="vertical">
         <Form.Item label="Data source" className={styles.label}>
-          <Input value={"gh-api.clickhouse.tech (Yandex Demo)"} disabled />
+          <Input value={name} disabled />
         </Form.Item>
 
         <Form.Item label="Connect via" className={styles.label}>

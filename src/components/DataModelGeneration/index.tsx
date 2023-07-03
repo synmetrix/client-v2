@@ -3,34 +3,23 @@ import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
 
+import type { DataSource, Schema } from "@/types/dataSource";
+
 import TableIcon from "@/assets/table.svg";
 
 import SearchInput from "../SearchInput";
 
 import styles from "./index.module.less";
 
-import type { FC, ReactNode } from "react";
+import type { FC } from "react";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
 interface DataModelGenerationProps {
-  dataSource: {
-    icon: ReactNode;
-    name: string;
-  };
+  dataSource: DataSource;
   schema: Schema;
 }
-
-interface Column {
-  attributes: [];
-  name: string;
-  type: string;
-}
-
-type Table = Record<string, Column[]>;
-
-type Schema = Record<string, Table>;
 
 const options = [
   { label: "JS", value: "js", disabled: false },

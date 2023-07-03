@@ -5,33 +5,31 @@ import { useResponsive } from "ahooks";
 
 import SearchInput from "@/components/SearchInput";
 import FormTile from "@/components/FormTile";
+import type { DataSource } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
-import type { FC, ReactNode } from "react";
+import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-export interface DataSourceOption {
-  title: string;
-  value: string;
-  icon: ReactNode;
-}
-
 interface DataSourceSelectionProps {
-  options: DataSourceOption[];
-  value?: DataSourceOption;
-  onChange: (option: DataSourceOption) => void;
+  options: DataSource[];
+  initialValue?: DataSource;
+  onSubmit: (option: DataSource) => void;
 }
 
 const DataSourceSelection: FC<DataSourceSelectionProps> = ({
   options,
-  onChange,
-  value,
+  onSubmit,
+  initialValue,
 }) => {
   const { t } = useTranslation(["dataSourceSelecton", "common"]);
   const windowSize = useResponsive();
 
+  const [activeTile, setActiveTile] = useState<DataSource | undefined>(
+    initialValue
+  );
   const [keyword, setKeyword] = useState<string>("");
 
   return (
@@ -44,18 +42,16 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
         onChange={setKeyword}
         placeholder={t("search_placeholder")}
       />
-      <Row gutter={[16, 16]}>
+      <Row className={styles.tiles} gutter={[16, 16]}>
         {options
-          .filter((db) =>
-            db.title.toLowerCase().includes(keyword.toLowerCase())
-          )
+          .filter((db) => db.name.toLowerCase().includes(keyword.toLowerCase()))
           .map((tile) => (
-            <Col key={tile.title} span={4}>
+            <Col key={tile.name} span={4}>
               <FormTile
-                title={tile.title}
+                title={tile.name}
                 icon={tile.icon}
-                active={value?.value === tile.value}
-                onClick={() => onChange(tile)}
+                active={activeTile?.value === tile.value}
+                onClick={() => setActiveTile(tile)}
               />
             </Col>
           ))}
@@ -68,6 +64,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
           type="primary"
           size="large"
           htmlType="submit"
+          onClick={() => activeTile && onSubmit(activeTile)}
         >
           {t("common:words.next")}
         </Button>

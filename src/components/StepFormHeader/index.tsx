@@ -1,4 +1,5 @@
 import cn from "classnames";
+import { Fragment } from "react";
 
 import styles from "./index.module.less";
 
@@ -22,7 +23,7 @@ const StepFormHeader: FC<StepFormHeaderProps> = ({
       </div>
       <div className={styles.steps}>
         {steps.map((s, i) => (
-          <>
+          <Fragment key={s}>
             {i > 0 && <span className={styles.separator} />}
             <div
               className={cn(styles.step, { [styles.active]: currentStep >= i })}
@@ -30,7 +31,7 @@ const StepFormHeader: FC<StepFormHeaderProps> = ({
             >
               {i + 1}. {s}
             </div>
-          </>
+          </Fragment>
         ))}
       </div>
     </div>

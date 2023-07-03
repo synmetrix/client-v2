@@ -1,4 +1,4 @@
-import type { DataSoureSetupField } from "@/components/DataSourceSetup";
+import type { DataSoureSetupField } from "@/types/dataSource";
 
 import Postgres from "@/assets/databases/postgre.svg";
 import Mysql from "@/assets/databases/my-sql.svg";
@@ -21,25 +21,25 @@ import Snowflake from "@/assets/databases/snowflake.svg";
 import Materialize from "@/assets/databases/materialize.svg";
 
 export const dbTiles = [
-  { title: "Postgres", value: "postgres", icon: <Postgres /> },
-  { title: "MySQL", value: "mysql", icon: <Mysql /> },
-  { title: "Mongo DB", value: "mongobi", icon: <Mongo /> },
-  { title: "ClickHouse", value: "click-house", icon: <ClickHouse /> },
-  { title: "Redshift", value: "reshift", icon: <Redshift /> },
-  { title: "BigQuery", value: "bigquery", icon: <Bigquery /> },
-  { title: "Trino", value: "trino", icon: <Trino /> },
-  { title: "MSSQL", value: "mssql", icon: <Mssql /> },
-  { title: "DRUID", value: "druid", icon: <Druid /> },
-  { title: "ElasticSearch", value: "elasticsearch", icon: <Elasticsearch /> },
-  { title: "PrestoDB", value: "prestodb", icon: <Presto /> },
-  { title: "Databricks", value: "databricks-jdbc", icon: <Databricks /> },
-  { title: "Firebolt", value: "firebolt", icon: <Firebolt /> },
-  { title: "KSQL", value: "ksql", icon: <Ksql /> },
-  { title: "Dremio", value: "default", icon: <Dremio /> },
-  { title: "Crate", value: "default", icon: <Crate /> },
-  { title: "QuestDB", value: "questdb", icon: <Quest /> },
-  { title: "Snowflake", value: "snowflake", icon: <Snowflake /> },
-  { title: "Materialize", value: "default", icon: <Materialize /> },
+  { name: "Postgres", value: "postgres", icon: <Postgres /> },
+  { name: "MySQL", value: "mysql", icon: <Mysql /> },
+  { name: "Mongo DB", value: "mongobi", icon: <Mongo /> },
+  { name: "ClickHouse", value: "click-house", icon: <ClickHouse /> },
+  { name: "Redshift", value: "reshift", icon: <Redshift /> },
+  { name: "BigQuery", value: "bigquery", icon: <Bigquery /> },
+  { name: "Trino", value: "trino", icon: <Trino /> },
+  { name: "MSSQL", value: "mssql", icon: <Mssql /> },
+  { name: "DRUID", value: "druid", icon: <Druid /> },
+  { name: "ElasticSearch", value: "elasticsearch", icon: <Elasticsearch /> },
+  { name: "PrestoDB", value: "prestodb", icon: <Presto /> },
+  { name: "Databricks", value: "databricks-jdbc", icon: <Databricks /> },
+  { name: "Firebolt", value: "firebolt", icon: <Firebolt /> },
+  { name: "KSQL", value: "ksql", icon: <Ksql /> },
+  { name: "Dremio", value: "default", icon: <Dremio /> },
+  { name: "Crate", value: "default", icon: <Crate /> },
+  { name: "QuestDB", value: "questdb", icon: <Quest /> },
+  { name: "Snowflake", value: "snowflake", icon: <Snowflake /> },
+  { name: "Materialize", value: "default", icon: <Materialize /> },
 ];
 
 export const defaultForm: DataSoureSetupField[] = [
@@ -96,7 +96,10 @@ export const defaultForm: DataSoureSetupField[] = [
     type: "checkbox",
   },
 ];
-export const dataSourceForms = {
+
+type Form = Record<string, DataSoureSetupField[]>;
+
+export const dataSourceForms: Form = {
   default: defaultForm,
   bigquery: [
     {
@@ -386,7 +389,9 @@ export const dataSourceForms = {
     {
       name: "db_params.password",
       label: "Password",
-      required: true,
+      rules: {
+        required: true,
+      },
       placeholder: "pass",
       type: "password",
     },
@@ -448,10 +453,9 @@ export const dataSourceForms = {
     },
     {
       name: "db_params.ssl",
-      display: "checkbox",
       label: "Use SSL",
       value: "yes",
-      type: "text",
+      type: "checkbox",
     },
   ],
   firebolt: [
@@ -499,7 +503,6 @@ export const dataSourceForms = {
       placeholder: "api.dev.firebolt.io, api.app.firebolt.io",
       type: "text",
     },
-    ,
   ],
   "databricks-jdbc": [
     {

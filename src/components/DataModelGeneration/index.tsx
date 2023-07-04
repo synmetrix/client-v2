@@ -2,8 +2,9 @@ import { Button, Checkbox, Collapse, Form, Radio, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
+import { Controller, useForm } from "react-hook-form";
 
-import type { DataSource, Schema } from "@/types/dataSource";
+import type { DataSource, DynamicForm, Schema } from "@/types/dataSource";
 
 import TableIcon from "@/assets/table.svg";
 
@@ -19,6 +20,8 @@ const { Panel } = Collapse;
 interface DataModelGenerationProps {
   dataSource: DataSource;
   schema: Schema;
+  onSubmit: (data: DynamicForm) => void;
+  initialValue?: DynamicForm;
 }
 
 const options = [
@@ -29,8 +32,16 @@ const options = [
 const DataModelGeneration: FC<DataModelGenerationProps> = ({
   dataSource,
   schema,
+  onSubmit,
+  initialValue = {
+    type: "js",
+  },
 }) => {
   const { t } = useTranslation(["dataModelGeneration", "common"]);
+
+  const { control, handleSubmit, watch } = useForm<DynamicForm>({
+    defaultValues: initialValue,
+  });
 
   const windowSize = useResponsive();
 
@@ -51,9 +62,8 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
           value={searchValue}
           onChange={setSearchValue}
         />
-        <Form>
+        <Form id="data-model-generation">
           <Collapse
-            style={{ color: "red" }}
             className={styles.collapse}
             expandIcon={() => <TableIcon />}
           >
@@ -65,28 +75,46 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
               >
                 {Object.keys(schema[s]).map((tb) => (
                   <div key={tb}>
-                    <Form.Item className={cn(styles.field)}>
-                      <div>
-                        <Checkbox>
-                          <span
-                            className={cn(styles.table, {
-                              [styles.column]: !windowSize.md,
-                            })}
-                          >
-                            <span>{tb}</span>
-                            <span className={styles.separator}>→</span>
-                            <span>{tb}.js</span>
-                          </span>
-                        </Checkbox>
-                        <span
-                          className={cn(styles.columns, {
-                            [styles.block]: !windowSize.md,
-                          })}
+                    <Controller
+                      name={`${s}->${tb}`}
+                      control={control}
+                      defaultValue={initialValue[`${s}->${tb}`] ?? "off"}
+                      render={({ field: { onChange, value } }) => (
+                        <Form.Item
+                          className={cn(styles.field)}
+                          name={`${s}->${tb}`}
                         >
-                          ({schema[s][tb].length}) {t("common:words.columns")}
-                        </span>
-                      </div>
-                    </Form.Item>
+                          <div>
+                            <Checkbox
+                              checked={value === "on"}
+                              onChange={() =>
+                                onChange(value === "on" ? "off" : "on")
+                              }
+                            >
+                              <span
+                                className={cn(styles.table, {
+                                  [styles.column]: !windowSize.md,
+                                })}
+                              >
+                                <span>{tb}</span>
+                                <span className={styles.separator}>→</span>
+                                <span>
+                                  {tb}.{watch("type")}
+                                </span>
+                              </span>
+                            </Checkbox>
+                            <span
+                              className={cn(styles.columns, {
+                                [styles.block]: !windowSize.md,
+                              })}
+                            >
+                              ({schema[s][tb].length}){" "}
+                              {t("common:words.columns")}
+                            </span>
+                          </div>
+                        </Form.Item>
+                      )}
+                    />
                   </div>
                 ))}
               </Panel>
@@ -95,22 +123,33 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
 
           <Title level={5}>{t("choose_markup")}</Title>
 
-          <Radio.Group
-            className={styles.formatSelection}
-            size="large"
-            optionType="button"
-          >
-            {options.map((o) => (
-              <Radio
-                className={styles.radio}
-                key={o.value}
-                value={o.value}
-                disabled={o.disabled}
-              >
-                {o.label}
-              </Radio>
-            ))}
-          </Radio.Group>
+          <Controller
+            control={control}
+            name={"type"}
+            defaultValue={initialValue.type}
+            render={({ field: { onChange, value } }) => (
+              <Form.Item>
+                <Radio.Group
+                  className={styles.formatSelection}
+                  size="large"
+                  optionType="button"
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                >
+                  {options.map((o) => (
+                    <Radio
+                      className={styles.radio}
+                      key={o.value}
+                      value={o.value}
+                      disabled={o.disabled}
+                    >
+                      {o.label}
+                    </Radio>
+                  ))}
+                </Radio.Group>
+              </Form.Item>
+            )}
+          />
 
           <Row>
             <Button
@@ -125,6 +164,8 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
               type="primary"
               size="large"
               htmlType="submit"
+              form="data-model-generation"
+              onClick={handleSubmit(onSubmit)}
             >
               {t("common:words.generate")}
             </Button>

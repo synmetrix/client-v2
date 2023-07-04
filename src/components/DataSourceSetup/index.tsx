@@ -15,7 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import type {
   DataSource,
-  DataSourceSetupForm,
+  DynamicForm,
   DataSoureSetupField,
 } from "@/types/dataSource";
 
@@ -29,7 +29,8 @@ interface DataSourceSetupProps {
   dataSource: DataSource;
   fields: DataSoureSetupField[];
   name: string;
-  onSubmit: (values: DataSourceSetupForm) => void;
+  onSubmit: (values: DynamicForm) => void;
+  initialValue?: DynamicForm;
 }
 
 const DataSourceSetup: FC<DataSourceSetupProps> = ({
@@ -37,13 +38,16 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
   fields,
   name,
   onSubmit,
+  initialValue,
 }) => {
   const { t } = useTranslation(["dataSetupForm", "common"]);
 
   const [error, setError] = useState<boolean>(false);
   const windowSize = useResponsive();
 
-  const { control, handleSubmit } = useForm<DataSourceSetupForm>();
+  const { control, handleSubmit } = useForm<DynamicForm>({
+    defaultValues: initialValue,
+  });
 
   const renderField = (field: DataSoureSetupField) => {
     switch (field.type) {

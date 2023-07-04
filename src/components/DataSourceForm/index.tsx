@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import DataSourceSelection from "@/components/DataSourceSelection";
-import type { DataSource, DataSourceSetupForm } from "@/types/dataSource";
+import type { DataSource, DynamicForm } from "@/types/dataSource";
 
 import DataSourceSetup from "../DataSourceSetup";
 import DataModelGeneration from "../DataModelGeneration";
@@ -22,7 +22,11 @@ const DataSourceForm: FC = () => {
     setStep(1);
   };
 
-  const onDataSourceSetupSubmit = (data: DataSourceSetupForm) => {
+  const onDataSourceSetupSubmit = (data: DynamicForm) => {
+    console.log(data);
+  };
+
+  const onDataModelGenerationSubmit = (data: DynamicForm) => {
     console.log(data);
   };
 
@@ -81,6 +85,7 @@ const DataSourceForm: FC = () => {
                 ],
               },
             }}
+            onSubmit={onDataModelGenerationSubmit}
           />
         );
       case 3:

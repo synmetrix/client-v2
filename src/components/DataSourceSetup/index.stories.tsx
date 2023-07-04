@@ -22,4 +22,5 @@ Default.args = {
   dataSource: dbTiles[0],
   fields: defaultForm,
   name: "gh-api.clickhouse.tech (Yandex Demo)",
+  onSubmit: console.log,
 };

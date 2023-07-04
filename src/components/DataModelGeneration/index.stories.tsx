@@ -36,4 +36,5 @@ Default.args = {
       ],
     },
   },
+  onSubmit: console.log,
 };

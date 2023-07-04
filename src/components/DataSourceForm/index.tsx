@@ -1,13 +1,12 @@
 import { Suspense } from "react";
 
 import DataSourceSelection from "@/components/DataSourceSelection";
+import DataSourceSetup from "@/components/DataSourceSetup";
+import DataModelGeneration from "@/components/DataModelGeneration";
+import ApiSetup from "@/components/ApiSetup";
+import StepFormHeader from "@/components/StepFormHeader";
+import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import type { DataSource, DynamicForm } from "@/types/dataSource";
-
-import DataSourceSetup from "../DataSourceSetup";
-import DataModelGeneration from "../DataModelGeneration";
-import ApiSetup from "../ApiSetup";
-import StepFormHeader from "../StepFormHeader";
-import BouncingDotsLoader from "../BouncingDotsLoader";
 
 import { dataSourceForms, dbTiles } from "./data";
 

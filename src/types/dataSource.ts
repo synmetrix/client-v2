@@ -34,3 +34,8 @@ export type Table = Record<string, Column[]>;
 export type Schema = Record<string, Table>;
 
 export type DynamicForm = Record<string, string>;
+
+export interface DataSourceSetupForm {
+  name: string;
+  db_params?: DynamicForm;
+}

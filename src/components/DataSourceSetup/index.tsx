@@ -17,6 +17,7 @@ import type {
   DataSource,
   DynamicForm,
   DataSoureSetupField,
+  DataSourceSetupForm,
 } from "@/types/dataSource";
 
 import styles from "./index.module.less";
@@ -28,16 +29,20 @@ const { Title, Text } = Typography;
 interface DataSourceSetupProps {
   dataSource: DataSource;
   fields: DataSoureSetupField[];
-  name: string;
-  onSubmit: (values: DynamicForm) => void;
-  initialValue?: DynamicForm;
+  onSubmit: (values: DataSourceSetupForm) => void;
+  onGoBack: () => void;
+  onSkip: () => void;
+  onTestConnection: () => void;
+  initialValue?: DataSourceSetupForm;
 }
 
 const DataSourceSetup: FC<DataSourceSetupProps> = ({
   dataSource,
   fields,
-  name,
   onSubmit,
+  onGoBack,
+  onSkip,
+  onTestConnection,
   initialValue,
 }) => {
   const { t } = useTranslation(["dataSetupForm", "common"]);
@@ -45,18 +50,18 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
   const [error, setError] = useState<boolean>(false);
   const windowSize = useResponsive();
 
-  const { control, handleSubmit } = useForm<DynamicForm>({
-    defaultValues: initialValue,
-  });
+  const { control, handleSubmit } = useForm<DataSourceSetupForm>();
 
   const renderField = (field: DataSoureSetupField) => {
+    const name = field.name.split(".")[1];
+    const defaultValue = initialValue?.db_params?.[name];
     switch (field.type) {
       case "checkbox":
         return (
           <Controller
             control={control}
-            name={field.name}
-            defaultValue={field.value}
+            name={`db_params.${name}`}
+            defaultValue={defaultValue}
             render={({ field: { onChange, value } }) => (
               <Form.Item
                 className={styles.label}
@@ -77,8 +82,8 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
         return (
           <Controller
             control={control}
-            name={field.name}
-            defaultValue={field.value}
+            name={`db_params.${name}`}
+            defaultValue={defaultValue}
             render={({ field: { value, onChange } }) => (
               <Form.Item
                 className={styles.label}
@@ -88,8 +93,8 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
                 <Input.Password
                   placeholder={field.placeholder}
                   type={field.type}
-                  defaultValue={field.value}
                   value={value}
+                  defaultValue={defaultValue}
                   onChange={(e) => onChange(e.target.value)}
                 />
               </Form.Item>
@@ -100,7 +105,8 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
         return (
           <Controller
             control={control}
-            name={field.name}
+            name={`db_params.${name}`}
+            defaultValue={defaultValue}
             render={({ field: { value, onChange } }) => (
               <Form.Item
                 className={styles.label}
@@ -111,6 +117,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
                 <Input
                   placeholder={field.placeholder}
                   type={field.type}
+                  defaultValue={defaultValue}
                   value={value}
                   onChange={(e) => onChange(e.target.value)}
                 />
@@ -137,21 +144,15 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
       </div>
       <Form className={styles.form} id="setup-form" layout="vertical">
         <Controller
-          control={control}
           name="name"
-          defaultValue={name}
-          render={({ field: { value, onChange } }) => (
-            <Form.Item className={styles.label} label="Name*" name="name">
-              <Input
-                placeholder={name}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                disabled
-              />
+          control={control}
+          defaultValue={initialValue?.name}
+          render={({ field: { onChange, value } }) => (
+            <Form.Item label="Name*" className={styles.label}>
+              <Input value={value} onChange={(e) => onChange(e.target.value)} />
             </Form.Item>
           )}
         />
-
         <Row gutter={[16, 16]}>
           {fields.map((f) => (
             <Col key={f.name} xs={24} sm={12}>
@@ -165,6 +166,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
             size="large"
             color="primary"
+            onClick={onGoBack}
           >
             {t("common:words.back")}
           </Button>
@@ -182,12 +184,16 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           <Button
             className={styles.link}
             type="link"
-            onClick={() => setError(true)}
+            onClick={onTestConnection}
           >
             {t("common:words.test_connection")}
           </Button>
 
-          <Button className={cn(styles.link, styles.skip)} type="link">
+          <Button
+            className={cn(styles.link, styles.skip)}
+            type="link"
+            onClick={onSkip}
+          >
             {t("common:words.skip")}
           </Button>
         </Row>

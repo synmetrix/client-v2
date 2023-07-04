@@ -21,6 +21,8 @@ interface DataModelGenerationProps {
   dataSource: DataSource;
   schema: Schema;
   onSubmit: (data: DynamicForm) => void;
+  onGoBack: () => void;
+  onSkip: () => void;
   initialValue?: DynamicForm;
 }
 
@@ -33,6 +35,8 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   dataSource,
   schema,
   onSubmit,
+  onGoBack,
+  onSkip,
   initialValue = {
     type: "js",
   },
@@ -156,6 +160,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
               className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
               size="large"
               color="primary"
+              onClick={onGoBack}
             >
               {t("common:words.back")}
             </Button>
@@ -170,7 +175,11 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
               {t("common:words.generate")}
             </Button>
 
-            <Button className={cn(styles.link, styles.skip)} type="link">
+            <Button
+              className={cn(styles.link, styles.skip)}
+              type="link"
+              onClick={onSkip}
+            >
               {t("common:words.skip")}
             </Button>
           </Row>

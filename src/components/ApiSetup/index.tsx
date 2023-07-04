@@ -43,6 +43,9 @@ interface ApiSetupProps {
   connectionOptions: ApiSetupField[];
   connectionString: string;
   onSubmit: (data: DynamicForm) => void;
+  onGoBack: () => void;
+  onSkip: () => void;
+  onDownload: () => void;
   initialValue?: DynamicForm;
 }
 
@@ -50,12 +53,13 @@ const ApiSetup: FC<ApiSetupProps> = ({
   connectionData,
   connectionOptions,
   connectionString,
-  initialValue,
   onSubmit,
+  onSkip,
+  onGoBack,
+  onDownload,
+  initialValue,
 }) => {
-  const { control, handleSubmit } = useForm<DynamicForm>({
-    defaultValues: initialValue,
-  });
+  const { control, handleSubmit } = useForm<DynamicForm>();
 
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
@@ -110,7 +114,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
               <Controller
                 control={control}
                 name={f.name}
-                defaultValue={f.value}
+                defaultValue={initialValue?.[f.name]}
                 render={({ field: { value, onChange } }) => (
                   <Form.Item label={f.label} className={styles.label}>
                     {f.type === "password" ? (
@@ -119,6 +123,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                       <Input
                         type={f.type}
                         value={value}
+                        onChange={(e) => onChange(e.target.value)}
                         suffix={
                           <CopyIcon
                             className={styles.icon}
@@ -158,6 +163,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
             className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
             size="large"
             color="primary"
+            onClick={onGoBack}
           >
             {t("common:words.back")}
           </Button>
@@ -172,11 +178,15 @@ const ApiSetup: FC<ApiSetupProps> = ({
             {t("common:words.finish")}
           </Button>
 
-          <Button className={styles.link} type="link">
+          <Button className={styles.link} type="link" onClick={onDownload}>
             {t("common:words.download_credentials")}
           </Button>
 
-          <Button className={cn(styles.link, styles.skip)} type="link">
+          <Button
+            className={cn(styles.link, styles.skip)}
+            type="link"
+            onClick={onSkip}
+          >
             {t("common:words.skip")}
           </Button>
         </Row>

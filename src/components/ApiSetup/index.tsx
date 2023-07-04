@@ -2,8 +2,9 @@ import { Button, Col, Form, Input, Radio, Row, Typography } from "antd";
 import cn from "classnames";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
+import { Controller, useForm } from "react-hook-form";
 
-import type { ApiSetupField } from "@/types/dataSource";
+import type { ApiSetupField, DynamicForm } from "@/types/dataSource";
 
 import CopyIcon from "@/assets/copy.svg";
 import EyeIcon from "@/assets/eye.svg";
@@ -14,14 +15,17 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-const Password: FC<{ value: string }> = ({ value }) => {
+const Password: FC<{ value: string; onChange: (v: string) => void }> = ({
+  value,
+  onChange,
+}) => {
   const [type, setType] = useState<"text" | "password">("password");
 
   return (
     <Input
       type={type}
       value={value}
-      disabled
+      onChange={(e) => onChange(e.target.value)}
       suffix={
         <EyeIcon
           className={styles.icon}
@@ -38,15 +42,21 @@ interface ApiSetupProps {
   connectionData: ApiSetupField[];
   connectionOptions: ApiSetupField[];
   connectionString: string;
-  name: string;
+  onSubmit: (data: DynamicForm) => void;
+  initialValue?: DynamicForm;
 }
 
 const ApiSetup: FC<ApiSetupProps> = ({
   connectionData,
   connectionOptions,
   connectionString,
-  name,
+  initialValue,
+  onSubmit,
 }) => {
+  const { control, handleSubmit } = useForm<DynamicForm>({
+    defaultValues: initialValue,
+  });
+
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
   return (
@@ -55,46 +65,73 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
       <Text>{t("text")}</Text>
 
-      <Form layout="vertical">
-        <Form.Item label="Data source" className={styles.label}>
-          <Input value={name} disabled />
-        </Form.Item>
+      <Form layout="vertical" id="api-setup">
+        <Controller
+          name="name"
+          control={control}
+          defaultValue={initialValue?.name}
+          render={({ field: { onChange, value } }) => (
+            <Form.Item label="Data source" className={styles.label}>
+              <Input value={value} onChange={(e) => onChange(e.target.value)} />
+            </Form.Item>
+          )}
+        />
 
-        <Form.Item label="Connect via" className={styles.label}>
-          <Radio.Group size="large" optionType="button">
-            {connectionOptions.map((o) => (
-              <Radio
-                className={styles.radio}
-                key={o.value}
-                value={o.value}
-                disabled={o.disabled}
+        <Controller
+          control={control}
+          name="connection"
+          defaultValue={initialValue?.connection}
+          render={({ field: { value, onChange } }) => (
+            <Form.Item label="Connect via" className={styles.label}>
+              <Radio.Group
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                size="large"
+                optionType="button"
               >
-                {o.label}
-              </Radio>
-            ))}
-          </Radio.Group>
-        </Form.Item>
+                {connectionOptions.map((o) => (
+                  <Radio
+                    className={styles.radio}
+                    key={o.value}
+                    value={o.value}
+                    disabled={o.disabled}
+                  >
+                    {o.label}
+                  </Radio>
+                ))}
+              </Radio.Group>
+            </Form.Item>
+          )}
+        />
 
         <Row gutter={[16, 16]}>
           {connectionData.map((f) => (
             <Col key={f.label} xs={24} sm={12}>
-              <Form.Item label={f.label} className={styles.label}>
-                {f.type === "password" ? (
-                  <Password value={f.value} />
-                ) : (
-                  <Input
-                    type={f.value}
-                    value={f.value}
-                    disabled
-                    suffix={
-                      <CopyIcon
-                        className={styles.icon}
-                        onClick={() => navigator.clipboard.writeText(f.value)}
+              <Controller
+                control={control}
+                name={f.name}
+                defaultValue={f.value}
+                render={({ field: { value, onChange } }) => (
+                  <Form.Item label={f.label} className={styles.label}>
+                    {f.type === "password" ? (
+                      <Password value={value} onChange={onChange} />
+                    ) : (
+                      <Input
+                        type={f.type}
+                        value={value}
+                        suffix={
+                          <CopyIcon
+                            className={styles.icon}
+                            onClick={() =>
+                              navigator.clipboard.writeText(f.value)
+                            }
+                          />
+                        }
                       />
-                    }
-                  />
+                    )}
+                  </Form.Item>
                 )}
-              </Form.Item>
+              />
             </Col>
           ))}
         </Row>
@@ -129,6 +166,8 @@ const ApiSetup: FC<ApiSetupProps> = ({
             type="primary"
             size="large"
             htmlType="submit"
+            form="api-setup"
+            onClick={handleSubmit(onSubmit)}
           >
             {t("common:words.finish")}
           </Button>

@@ -30,6 +30,10 @@ const DataSourceForm: FC = () => {
     console.log(data);
   };
 
+  const onApiSetupSubmit = (data: DynamicForm) => {
+    console.log(data);
+  };
+
   const renderStep = (currentStep: number) => {
     if (!selectedDataSource && step !== 0) setStep(0);
 
@@ -92,25 +96,44 @@ const DataSourceForm: FC = () => {
         return (
           <ApiSetup
             key={3}
+            onSubmit={onApiSetupSubmit}
             connectionData={[
-              { label: "Host/URL", value: "username" },
-              { label: "Database", value: "db" },
-              { label: "Login (auto-generated)", value: "db_username" },
+              { label: "Host/URL", value: "username", name: "username" },
+              { label: "Database", value: "db", name: "db" },
+              {
+                label: "Login (auto-generated)",
+                value: "db_username",
+                name: "db_username",
+              },
               {
                 label: "Password (auto-generated)",
                 value: "dasdasd",
                 type: "password",
+                name: "password",
               },
             ]}
             connectionOptions={[
-              { value: "mysql", label: "MySQL", disabled: false },
-              { value: "psql", label: "PSQL", disabled: false },
+              {
+                value: "mysql",
+                label: "MySQL",
+                disabled: false,
+                name: "connection",
+              },
+              {
+                value: "psql",
+                label: "PSQL",
+                disabled: false,
+                name: "connection",
+              },
             ]}
             connectionString={`MYSQL  --host=gh-api.clickhouse.tech
       - -user=user@api.clickhouse.tech
       - -port=5121
       - -password=**********`}
-            name="gh-api.clickhouse.tech (Yandex Demo)"
+            initialValue={{
+              name: "gh-api.clickhouse.tech (Yandex Demo)",
+              connection: "mysql",
+            }}
           />
         );
     }

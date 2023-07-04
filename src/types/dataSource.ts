@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 export interface ApiSetupField {
   label: string;
+  name: string;
   value: string;
   type?: string;
   disabled?: boolean;

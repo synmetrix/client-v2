@@ -71,58 +71,60 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
             className={styles.collapse}
             expandIcon={() => <TableIcon />}
           >
-            {Object.keys(schema).map((s) => (
-              <Panel
-                className={styles.collapse}
-                header={<span className={styles.collapseHeader}>{s}</span>}
-                key={s}
-              >
-                {Object.keys(schema[s]).map((tb) => (
-                  <div key={tb}>
-                    <Controller
-                      name={`${s}->${tb}`}
-                      control={control}
-                      defaultValue={initialValue[`${s}->${tb}`] ?? "off"}
-                      render={({ field: { onChange, value } }) => (
-                        <Form.Item
-                          className={cn(styles.field)}
-                          name={`${s}->${tb}`}
-                        >
-                          <div>
-                            <Checkbox
-                              checked={value === "on"}
-                              onChange={() =>
-                                onChange(value === "on" ? "off" : "on")
-                              }
-                            >
+            {Object.keys(schema)
+              .filter((s) => s.includes(searchValue))
+              .map((s) => (
+                <Panel
+                  className={styles.collapse}
+                  header={<span className={styles.collapseHeader}>{s}</span>}
+                  key={s}
+                >
+                  {Object.keys(schema[s]).map((tb) => (
+                    <div key={tb}>
+                      <Controller
+                        name={`${s}->${tb}`}
+                        control={control}
+                        defaultValue={initialValue[`${s}->${tb}`] ?? "off"}
+                        render={({ field: { onChange, value } }) => (
+                          <Form.Item
+                            className={cn(styles.field)}
+                            name={`${s}->${tb}`}
+                          >
+                            <div>
+                              <Checkbox
+                                checked={value === "on"}
+                                onChange={() =>
+                                  onChange(value === "on" ? "off" : "on")
+                                }
+                              >
+                                <span
+                                  className={cn(styles.table, {
+                                    [styles.column]: !windowSize.md,
+                                  })}
+                                >
+                                  <span>{tb}</span>
+                                  <span className={styles.separator}>→</span>
+                                  <span>
+                                    {tb}.{watch("type")}
+                                  </span>
+                                </span>
+                              </Checkbox>
                               <span
-                                className={cn(styles.table, {
-                                  [styles.column]: !windowSize.md,
+                                className={cn(styles.columns, {
+                                  [styles.block]: !windowSize.md,
                                 })}
                               >
-                                <span>{tb}</span>
-                                <span className={styles.separator}>→</span>
-                                <span>
-                                  {tb}.{watch("type")}
-                                </span>
+                                ({schema[s][tb].length}){" "}
+                                {t("common:words.columns")}
                               </span>
-                            </Checkbox>
-                            <span
-                              className={cn(styles.columns, {
-                                [styles.block]: !windowSize.md,
-                              })}
-                            >
-                              ({schema[s][tb].length}){" "}
-                              {t("common:words.columns")}
-                            </span>
-                          </div>
-                        </Form.Item>
-                      )}
-                    />
-                  </div>
-                ))}
-              </Panel>
-            ))}
+                            </div>
+                          </Form.Item>
+                        )}
+                      />
+                    </div>
+                  ))}
+                </Panel>
+              ))}
           </Collapse>
 
           <Title level={5}>{t("choose_markup")}</Title>

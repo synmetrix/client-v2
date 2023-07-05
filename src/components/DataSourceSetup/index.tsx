@@ -1,13 +1,4 @@
-import {
-  Alert,
-  Button,
-  Checkbox,
-  Col,
-  Form,
-  Input,
-  Row,
-  Typography,
-} from "antd";
+import { Alert, Button, Col, Form, Input, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import cn from "classnames";

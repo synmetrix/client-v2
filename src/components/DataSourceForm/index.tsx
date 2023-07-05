@@ -1,3 +1,4 @@
+import { Card } from "antd";
 import { Suspense } from "react";
 
 import DataSourceSelection from "@/components/DataSourceSelection";
@@ -13,6 +14,8 @@ import type {
 } from "@/types/dataSource";
 
 import { dataSourceForms, dbTiles } from "./data";
+
+import styles from "./index.module.less";
 
 import type { FC } from "react";
 
@@ -161,19 +164,21 @@ const DataSourceForm: FC = () => {
   };
 
   return (
-    <>
-      <StepFormHeader
-        currentStep={step}
-        steps={[
-          "Connect Data Source",
-          "Data Source Setup",
-          "Generate Data Model Files",
-          "SQL API",
-        ]}
-        onChange={setStep}
-      />
+    <Card>
+      <div className={styles.header}>
+        <StepFormHeader
+          currentStep={step}
+          steps={[
+            "Connect Data Source",
+            "Data Source Setup",
+            "Generate Data Model Files",
+            "SQL API",
+          ]}
+          onChange={setStep}
+        />
+      </div>
       <Suspense fallback={<BouncingDotsLoader />}>{renderStep(step)}</Suspense>
-    </>
+    </Card>
   );
 };
 

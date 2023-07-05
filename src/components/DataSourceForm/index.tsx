@@ -52,18 +52,16 @@ const DataSourceForm: FC = () => {
   };
 
   const renderStep = (currentStep: number) => {
-    if (!formData?.dataSourceSetup) {
-      if (currentStep > 0) setStep(0);
-      return (
-        <DataSourceSelection
-          onSubmit={onDataSourceSelect}
-          initialValue={formData?.dataSource}
-          options={dbTiles}
-        />
-      );
-    }
-
+    if (!formData?.dataSource && currentStep > 0) setStep(0);
     switch (currentStep) {
+      case 0:
+        return (
+          <DataSourceSelection
+            onSubmit={onDataSourceSelect}
+            initialValue={formData?.dataSource}
+            options={dbTiles}
+          />
+        );
       case 1:
         if (formData?.dataSource)
           return (

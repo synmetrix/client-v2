@@ -19,6 +19,8 @@ import type {
   DataSourceSetupForm,
 } from "@/types/dataSource";
 
+import DataSourceSetupField from "../DataSourceSetupField";
+
 import styles from "./index.module.less";
 
 import type { FC } from "react";
@@ -46,86 +48,9 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 }) => {
   const { t } = useTranslation(["dataSetupForm", "common"]);
 
-  const [error, setError] = useState<boolean>(false);
   const windowSize = useResponsive();
 
   const { control, handleSubmit } = useForm<DataSourceSetupForm>();
-
-  const renderField = (field: DataSoureSetupField) => {
-    const name = field.name.split(".")[1];
-    const defaultValue = initialValue?.db_params?.[name];
-    switch (field.type) {
-      case "checkbox":
-        return (
-          <Controller
-            control={control}
-            name={`db_params.${name}`}
-            defaultValue={defaultValue}
-            render={({ field: { onChange, value } }) => (
-              <Form.Item
-                className={styles.label}
-                name={field.name}
-                label={field.label}
-              >
-                <Checkbox
-                  checked={value === "yes"}
-                  onChange={() => onChange(value === "yes" ? "no" : "yes")}
-                >
-                  <span className={styles.checkbox}>{field.placeholder}</span>
-                </Checkbox>
-              </Form.Item>
-            )}
-          />
-        );
-      case "password":
-        return (
-          <Controller
-            control={control}
-            name={`db_params.${name}`}
-            defaultValue={defaultValue}
-            render={({ field: { value, onChange } }) => (
-              <Form.Item
-                className={styles.label}
-                name={field.name}
-                label={field.label}
-              >
-                <Input.Password
-                  placeholder={field.placeholder}
-                  type={field.type}
-                  value={value}
-                  defaultValue={defaultValue}
-                  onChange={(e) => onChange(e.target.value)}
-                />
-              </Form.Item>
-            )}
-          />
-        );
-      default:
-        return (
-          <Controller
-            control={control}
-            name={`db_params.${name}`}
-            defaultValue={defaultValue}
-            render={({ field: { value, onChange } }) => (
-              <Form.Item
-                className={styles.label}
-                key={field.name}
-                name={field.name}
-                label={field.label}
-              >
-                <Input
-                  placeholder={field.placeholder}
-                  type={field.type}
-                  defaultValue={defaultValue}
-                  value={value}
-                  onChange={(e) => onChange(e.target.value)}
-                />
-              </Form.Item>
-            )}
-          />
-        );
-    }
-  };
 
   return (
     <div className={styles.wrapper}>
@@ -148,16 +73,31 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           defaultValue={initialValue?.name}
           render={({ field: { onChange, value } }) => (
             <Form.Item label="Name*" className={styles.label}>
-              <Input value={value} onChange={(e) => onChange(e.target.value)} />
+              <Input
+                value={value}
+                placeholder="Name"
+                onChange={(e) => onChange(e.target.value)}
+              />
             </Form.Item>
           )}
         />
         <Row gutter={[16, 16]}>
-          {fields.map((f) => (
-            <Col key={f.name} xs={24} sm={12}>
-              {renderField(f)}
-            </Col>
-          ))}
+          {fields.map((f) => {
+            const name = f.name.split(".")[1];
+            const defaultValue = initialValue?.db_params?.[name];
+            return (
+              <Col key={f.name} xs={24} sm={12}>
+                <DataSourceSetupField
+                  control={control}
+                  type={f.type}
+                  name={name}
+                  placeholder={f.placeholder}
+                  label={f.label}
+                  defaultValue={defaultValue}
+                />
+              </Col>
+            );
+          })}
         </Row>
 
         <Row>
@@ -197,7 +137,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           </Button>
         </Row>
       </Form>
-      {error && <Alert message="Error" type="error" />}
+      <Alert message="Error" type="error" />
     </div>
   );
 };

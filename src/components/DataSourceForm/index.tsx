@@ -52,6 +52,17 @@ const DataSourceForm: FC = () => {
   };
 
   const renderStep = (currentStep: number) => {
+    if (!formData?.dataSourceSetup) {
+      if (currentStep > 0) setStep(0);
+      return (
+        <DataSourceSelection
+          onSubmit={onDataSourceSelect}
+          initialValue={formData?.dataSource}
+          options={dbTiles}
+        />
+      );
+    }
+
     switch (currentStep) {
       case 1:
         if (formData?.dataSource)
@@ -75,7 +86,6 @@ const DataSourceForm: FC = () => {
       case 2:
         return (
           <DataModelGeneration
-            key={2}
             dataSource={{
               icon: formData?.dataSource?.icon,
               name: "gh-api.clickhouse.tech (Yandex Demo)",
@@ -109,7 +119,6 @@ const DataSourceForm: FC = () => {
       case 3:
         return (
           <ApiSetup
-            key={3}
             connectionData={[
               { label: "Host/URL", value: "username", name: "username" },
               { label: "Database", value: "db", name: "db" },
@@ -148,15 +157,6 @@ const DataSourceForm: FC = () => {
             onGoBack={onGoBack}
             onSkip={onSkip}
             onDownload={onDownload}
-          />
-        );
-
-      default:
-        return (
-          <DataSourceSelection
-            onSubmit={onDataSourceSelect}
-            initialValue={formData?.dataSource}
-            options={dbTiles}
           />
         );
     }

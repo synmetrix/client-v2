@@ -38,7 +38,6 @@ const DataSourceForm: FC = () => {
   };
 
   const onDataSourceSetupSubmit = (data: DataSourceSetupForm) => {
-    console.log(data);
     setFormData((prevState) => ({ ...prevState, dataSourceSetup: data }));
     setStep(2);
   };
@@ -104,6 +103,7 @@ const DataSourceForm: FC = () => {
             onSubmit={onDataModelGenerationSubmit}
             onGoBack={onGoBack}
             onSkip={onSkip}
+            initialValue={formData?.dataModel}
           />
         );
       case 3:

@@ -7,36 +7,12 @@ import { Controller, useForm } from "react-hook-form";
 import type { ApiSetupField, DynamicForm } from "@/types/dataSource";
 
 import CopyIcon from "@/assets/copy.svg";
-import EyeIcon from "@/assets/eye.svg";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
 const { Title, Text } = Typography;
-
-const Password: FC<{ value: string; onChange: (v: string) => void }> = ({
-  value,
-  onChange,
-}) => {
-  const [type, setType] = useState<"text" | "password">("password");
-
-  return (
-    <Input
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      suffix={
-        <EyeIcon
-          className={styles.icon}
-          onClick={() =>
-            setType((prevState) => (prevState === "text" ? "password" : "text"))
-          }
-        />
-      }
-    />
-  );
-};
 
 interface ApiSetupProps {
   connectionData: ApiSetupField[];
@@ -118,7 +94,11 @@ const ApiSetup: FC<ApiSetupProps> = ({
                 render={({ field: { value, onChange } }) => (
                   <Form.Item label={f.label} className={styles.label}>
                     {f.type === "password" ? (
-                      <Password value={value} onChange={onChange} />
+                      <Input.Password
+                        type={f.type}
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                      />
                     ) : (
                       <Input
                         type={f.type}

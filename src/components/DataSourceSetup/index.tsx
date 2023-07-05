@@ -15,7 +15,6 @@ import { Controller, useForm } from "react-hook-form";
 
 import type {
   DataSource,
-  DynamicForm,
   DataSoureSetupField,
   DataSourceSetupForm,
 } from "@/types/dataSource";

@@ -62,24 +62,14 @@ const ApiSetup: FC<ApiSetupProps> = ({
           name="connection"
           defaultValue={initialValue?.connection}
           render={({ field: { value, onChange } }) => (
-            <Form.Item label="Connect via" className={styles.label}>
+            <Form.Item label="Connect via">
               <Radio.Group
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 size="large"
                 optionType="button"
-              >
-                {connectionOptions.map((o) => (
-                  <Radio
-                    className={styles.radio}
-                    key={o.value}
-                    value={o.value}
-                    disabled={o.disabled}
-                  >
-                    {o.label}
-                  </Radio>
-                ))}
-              </Radio.Group>
+                options={connectionOptions}
+              />
             </Form.Item>
           )}
         />

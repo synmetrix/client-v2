@@ -140,19 +140,9 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                   size="large"
                   optionType="button"
                   value={value}
+                  options={options}
                   onChange={(e) => onChange(e.target.value)}
-                >
-                  {options.map((o) => (
-                    <Radio
-                      className={styles.radio}
-                      key={o.value}
-                      value={o.value}
-                      disabled={o.disabled}
-                    >
-                      {o.label}
-                    </Radio>
-                  ))}
-                </Radio.Group>
+                />
               </Form.Item>
             )}
           />

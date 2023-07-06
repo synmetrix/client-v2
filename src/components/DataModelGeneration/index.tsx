@@ -1,14 +1,14 @@
-import { Button, Checkbox, Collapse, Form, Radio, Row, Typography } from "antd";
+import { Button, Collapse, Form, Radio, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
 import { Controller, useForm } from "react-hook-form";
 
 import type { DataSource, DynamicForm, Schema } from "@/types/dataSource";
+import SearchInput from "@/components/SearchInput";
+import TableSelection from "@/components/TableSelection";
 
 import TableIcon from "@/assets/table.svg";
-
-import SearchInput from "../SearchInput";
 
 import styles from "./index.module.less";
 
@@ -79,50 +79,13 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                   header={<span className={styles.collapseHeader}>{s}</span>}
                   key={s}
                 >
-                  {Object.keys(schema[s]).map((tb) => (
-                    <div key={tb}>
-                      <Controller
-                        name={`${s}->${tb}`}
-                        control={control}
-                        defaultValue={initialValue[`${s}->${tb}`] ?? "off"}
-                        render={({ field: { onChange, value } }) => (
-                          <Form.Item
-                            className={cn(styles.field)}
-                            name={`${s}->${tb}`}
-                          >
-                            <div>
-                              <Checkbox
-                                checked={value === "on"}
-                                onChange={() =>
-                                  onChange(value === "on" ? "off" : "on")
-                                }
-                              >
-                                <span
-                                  className={cn(styles.table, {
-                                    [styles.column]: !windowSize.md,
-                                  })}
-                                >
-                                  <span>{tb}</span>
-                                  <span className={styles.separator}>→</span>
-                                  <span>
-                                    {tb}.{watch("type")}
-                                  </span>
-                                </span>
-                              </Checkbox>
-                              <span
-                                className={cn(styles.columns, {
-                                  [styles.block]: !windowSize.md,
-                                })}
-                              >
-                                ({schema[s][tb].length}){" "}
-                                {t("common:words.columns")}
-                              </span>
-                            </div>
-                          </Form.Item>
-                        )}
-                      />
-                    </div>
-                  ))}
+                  <TableSelection
+                    control={control}
+                    type={watch("type")}
+                    schema={schema}
+                    path={s}
+                    initialValue={initialValue}
+                  />
                 </Panel>
               ))}
           </Collapse>

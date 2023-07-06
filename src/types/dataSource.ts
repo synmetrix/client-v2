@@ -39,3 +39,10 @@ export interface DataSourceSetupForm {
   name: string;
   db_params?: DynamicForm;
 }
+
+export interface DataSourceForm {
+  dataSource?: DataSource;
+  dataSourceSetup?: DataSourceSetupForm;
+  dataModel?: DynamicForm;
+  apiSetup?: DynamicForm;
+}

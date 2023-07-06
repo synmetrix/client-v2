@@ -1,5 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
-import { dbTiles, defaultForm } from "@/components/DataSourceForm/data";
+import { dbTiles, defaultForm } from "@/components/DataSourceFormBody/data";
 
 import DataSourceSetup from ".";
 

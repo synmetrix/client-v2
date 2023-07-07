@@ -33,7 +33,7 @@ export type Table = Record<string, Column[]>;
 
 export type Schema = Record<string, Table>;
 
-export type DynamicForm = Record<string, string>;
+export type DynamicForm = Record<string, any>;
 
 export interface DataSourceSetupForm {
   name: string;

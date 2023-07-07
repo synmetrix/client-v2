@@ -1,5 +1,6 @@
 import { Controller } from "react-hook-form";
-import { Input as AntInput, Checkbox, Form, Radio } from "antd";
+import { Input as AntInput, Button, Checkbox, Form, Radio, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
 import styles from "./index.module.less";
 
@@ -8,13 +9,17 @@ import type {
   InputProps as AntInputProps,
   CheckboxProps as AntCheckboxProps,
   RadioGroupProps,
+  UploadProps,
 } from "antd";
 import type { Control, Path, PathValue, FieldValues } from "react-hook-form";
+import type { PasswordProps } from "antd/es/input/Password";
 
 type ParentProps = AntCheckboxProps &
   AntInputProps &
   TextAreaProps &
-  RadioGroupProps;
+  RadioGroupProps &
+  UploadProps &
+  PasswordProps;
 
 interface InputProps<T extends FieldValues> extends ParentProps {
   control: Control<T>;
@@ -22,7 +27,7 @@ interface InputProps<T extends FieldValues> extends ParentProps {
   defaultValue?: PathValue<T, Path<T>>;
   label?: string;
   placeholder?: string;
-  type?: string;
+  fieldType?: string;
 }
 
 const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
@@ -31,10 +36,29 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   defaultValue,
   label,
   placeholder,
-  type,
+  fieldType,
   ...props
 }) => {
-  switch (type) {
+  switch (fieldType) {
+    case "file":
+      return (
+        <Controller
+          control={control}
+          name={name}
+          defaultValue={defaultValue}
+          render={({ field: { value, onChange } }) => (
+            <Form.Item label={label}>
+              <Upload
+                {...props}
+                fileList={value}
+                onChange={(e) => onChange(e.fileList as any)}
+              >
+                <Button icon={<UploadOutlined />}>{placeholder}</Button>
+              </Upload>
+            </Form.Item>
+          )}
+        />
+      );
     case "radio":
       return (
         <Controller
@@ -42,7 +66,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           name={name}
           defaultValue={defaultValue}
           render={({ field: { value, onChange } }) => (
-            <Form.Item label="Connect via">
+            <Form.Item label={label}>
               <Radio.Group
                 {...props}
                 value={value}

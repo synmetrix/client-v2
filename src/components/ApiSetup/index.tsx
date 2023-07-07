@@ -61,7 +61,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
           size="large"
           optionType="button"
           options={connectionOptions}
-          type="radio"
+          fieldType="radio"
         />
 
         <Row gutter={[16, 16]}>
@@ -71,7 +71,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                 control={control}
                 name={f.name}
                 defaultValue={initialValue?.[f.name] || f.value}
-                type={f.type}
+                fieldType={f.type}
                 suffix={
                   <CopyIcon
                     className={styles.icon}
@@ -93,7 +93,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
             control={control}
             defaultValue={connectionString}
             name="connection-string"
-            type="textarea"
+            fieldType="textarea"
           />
 
           <CopyIcon

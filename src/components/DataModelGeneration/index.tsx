@@ -97,7 +97,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
             control={control}
             name="type"
             defaultValue={initialValue.type}
-            type="radio"
+            fieldType="radio"
             optionType="button"
             options={options}
           />

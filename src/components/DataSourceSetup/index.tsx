@@ -73,7 +73,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
               <Col key={f.name} xs={24} sm={12}>
                 <Input
                   control={control}
-                  type={f.type}
+                  fieldType={f.type}
                   name={`db_params.${name}`}
                   placeholder={f.placeholder}
                   label={f.label}

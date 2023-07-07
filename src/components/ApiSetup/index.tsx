@@ -1,10 +1,11 @@
-import { Button, Col, Form, Input, Radio, Row, Typography } from "antd";
+import { Button, Col, Form, Row, Typography } from "antd";
 import cn from "classnames";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import type { ApiSetupField, DynamicForm } from "@/types/dataSource";
+import Input from "@/components/Input";
 
 import CopyIcon from "@/assets/copy.svg";
 
@@ -35,7 +36,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
   onDownload,
   initialValue,
 }) => {
-  const { control, handleSubmit } = useForm<DynamicForm>();
+  const { control, handleSubmit, getValues } = useForm<DynamicForm>();
 
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
@@ -46,66 +47,39 @@ const ApiSetup: FC<ApiSetupProps> = ({
       <Text>{t("text")}</Text>
 
       <Form layout="vertical" id="api-setup">
-        <Controller
-          name="name"
+        <Input
           control={control}
+          name="name"
           defaultValue={initialValue?.name}
-          render={({ field: { onChange, value } }) => (
-            <Form.Item label="Data source" className={styles.label}>
-              <Input value={value} onChange={(e) => onChange(e.target.value)} />
-            </Form.Item>
-          )}
+          label="Data source"
         />
 
-        <Controller
+        <Input
           control={control}
           name="connection"
-          defaultValue={initialValue?.connection}
-          render={({ field: { value, onChange } }) => (
-            <Form.Item label="Connect via">
-              <Radio.Group
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                size="large"
-                optionType="button"
-                options={connectionOptions}
-              />
-            </Form.Item>
-          )}
+          label="Connect via"
+          size="large"
+          optionType="button"
+          options={connectionOptions}
+          type="radio"
         />
 
         <Row gutter={[16, 16]}>
           {connectionData.map((f) => (
             <Col key={f.label} xs={24} sm={12}>
-              <Controller
+              <Input
                 control={control}
                 name={f.name}
-                defaultValue={initialValue?.[f.name]}
-                render={({ field: { value, onChange } }) => (
-                  <Form.Item label={f.label} className={styles.label}>
-                    {f.type === "password" ? (
-                      <Input.Password
-                        type={f.type}
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                      />
-                    ) : (
-                      <Input
-                        type={f.type}
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                        suffix={
-                          <CopyIcon
-                            className={styles.icon}
-                            onClick={() =>
-                              navigator.clipboard.writeText(f.value)
-                            }
-                          />
-                        }
-                      />
-                    )}
-                  </Form.Item>
-                )}
+                defaultValue={initialValue?.[f.name] || f.value}
+                type={f.type}
+                suffix={
+                  <CopyIcon
+                    className={styles.icon}
+                    onClick={() =>
+                      navigator.clipboard.writeText(getValues(f.name))
+                    }
+                  />
+                }
               />
             </Col>
           ))}
@@ -115,16 +89,18 @@ const ApiSetup: FC<ApiSetupProps> = ({
           className={cn(styles.textareaWrapper, styles.label)}
           label="Connect using mysql-client"
         >
-          <Input.TextArea
-            style={{ resize: "none", height: 104 }}
-            className={styles.textarea}
-            value={connectionString}
-            disabled
+          <Input
+            control={control}
+            defaultValue={connectionString}
+            name="connection-string"
+            type="textarea"
           />
 
           <CopyIcon
             className={cn(styles.icon, styles.textareaCopy)}
-            onClick={() => navigator.clipboard.writeText(connectionString)}
+            onClick={() =>
+              navigator.clipboard.writeText(getValues("connection-string"))
+            }
           />
         </Form.Item>
 

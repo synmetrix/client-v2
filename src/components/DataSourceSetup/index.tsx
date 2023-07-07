@@ -1,16 +1,15 @@
-import { Alert, Button, Col, Form, Input, Row, Typography } from "antd";
+import { Alert, Button, Col, Form, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import cn from "classnames";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import type {
   DataSource,
   DataSoureSetupField,
   DataSourceSetupForm,
 } from "@/types/dataSource";
-
-import DataSourceSetupField from "../DataSourceSetupField";
+import Input from "@/components/Input";
 
 import styles from "./index.module.less";
 
@@ -58,30 +57,24 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
         </Text>
       </div>
       <Form className={styles.form} id="setup-form" layout="vertical">
-        <Controller
-          name="name"
+        <Input
           control={control}
+          name="name"
+          label="Name*"
+          placeholder="Name"
           defaultValue={initialValue?.name}
-          render={({ field: { onChange, value } }) => (
-            <Form.Item label="Name*" className={styles.label}>
-              <Input
-                value={value}
-                placeholder="Name"
-                onChange={(e) => onChange(e.target.value)}
-              />
-            </Form.Item>
-          )}
         />
+
         <Row gutter={[16, 16]}>
           {fields.map((f) => {
             const name = f.name.split(".")[1];
             const defaultValue = initialValue?.db_params?.[name];
             return (
               <Col key={f.name} xs={24} sm={12}>
-                <DataSourceSetupField
+                <Input
                   control={control}
                   type={f.type}
-                  name={name}
+                  name={`db_params.${name}`}
                   placeholder={f.placeholder}
                   label={f.label}
                   defaultValue={defaultValue}

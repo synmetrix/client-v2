@@ -1,10 +1,6 @@
 import { Card } from "antd";
 import { Suspense } from "react";
 
-import DataSourceSelection from "@/components/DataSourceSelection";
-import DataSourceSetup from "@/components/DataSourceSetup";
-import DataModelGeneration from "@/components/DataModelGeneration";
-import ApiSetup from "@/components/ApiSetup";
 import StepFormHeader from "@/components/StepFormHeader";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import DataSourceFormBody from "@/components/DataSourceFormBody";

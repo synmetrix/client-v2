@@ -1,9 +1,10 @@
-import { Button, Collapse, Form, Radio, Row, Typography } from "antd";
+import { Button, Collapse, Form, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
+import Input from "@/components/Input";
 import type { DataSource, DynamicForm, Schema } from "@/types/dataSource";
 import SearchInput from "@/components/SearchInput";
 import TableSelection from "@/components/TableSelection";
@@ -92,22 +93,13 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
 
           <Title level={5}>{t("choose_markup")}</Title>
 
-          <Controller
+          <Input
             control={control}
-            name={"type"}
+            name="type"
             defaultValue={initialValue.type}
-            render={({ field: { onChange, value } }) => (
-              <Form.Item>
-                <Radio.Group
-                  className={styles.formatSelection}
-                  size="large"
-                  optionType="button"
-                  value={value}
-                  options={options}
-                  onChange={(e) => onChange(e.target.value)}
-                />
-              </Form.Item>
-            )}
+            type="radio"
+            optionType="button"
+            options={options}
           />
 
           <Row>

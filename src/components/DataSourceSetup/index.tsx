@@ -58,6 +58,9 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
       </div>
       <Form className={styles.form} id="setup-form" layout="vertical">
         <Input
+          rules={{
+            required: true,
+          }}
           control={control}
           name="name"
           label="Name*"
@@ -72,6 +75,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             return (
               <Col key={f.name} xs={24} sm={12}>
                 <Input
+                  rules={f.rules}
                   control={control}
                   fieldType={f.type}
                   name={`db_params.${name}`}

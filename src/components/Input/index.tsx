@@ -28,6 +28,7 @@ interface InputProps<T extends FieldValues> extends ParentProps {
   label?: string;
   placeholder?: string;
   fieldType?: string;
+  rules?: object;
 }
 
 const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
@@ -37,12 +38,14 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   label,
   placeholder,
   fieldType,
+  rules,
   ...props
 }) => {
   switch (fieldType) {
     case "file":
       return (
         <Controller
+          rules={rules}
           control={control}
           name={name}
           defaultValue={defaultValue}
@@ -62,6 +65,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
     case "radio":
       return (
         <Controller
+          rules={rules}
           control={control}
           name={name}
           defaultValue={defaultValue}
@@ -79,6 +83,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
     case "checkbox":
       return (
         <Controller
+          rules={rules}
           control={control}
           name={name}
           defaultValue={defaultValue}
@@ -100,6 +105,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
     case "password":
       return (
         <Controller
+          rules={rules}
           control={control}
           name={name}
           defaultValue={defaultValue}
@@ -119,6 +125,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
     case "textarea":
       return (
         <Controller
+          rules={rules}
           control={control}
           name={name}
           defaultValue={defaultValue}
@@ -135,6 +142,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
     default:
       return (
         <Controller
+          rules={rules}
           control={control}
           name={name}
           defaultValue={defaultValue}

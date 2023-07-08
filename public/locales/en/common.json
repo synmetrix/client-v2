@@ -8,6 +8,8 @@
     "finish": "Finish",
     "download_credentials": "Download Credentials",
     "next": "Next",
-    "columns": "columns"
+    "columns": "columns",
+    "select_all": "Select all",
+    "clear": "Clear"
   }
 }

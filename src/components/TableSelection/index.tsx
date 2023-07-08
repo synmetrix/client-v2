@@ -1,7 +1,7 @@
 import { useResponsive } from "ahooks";
-import { Controller } from "react-hook-form";
+import { useController } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Checkbox, Form } from "antd";
+import { Button, Checkbox, Form } from "antd";
 import cn from "classnames";
 
 import type { DynamicForm, Schema } from "@/types/dataSource";
@@ -29,47 +29,73 @@ const TableSelection: FC<TableSelectionProps> = ({
   const windowSize = useResponsive();
   const { t } = useTranslation(["common"]);
 
+  const {
+    field: { onChange, value },
+  } = useController({
+    name: path,
+    control,
+    defaultValue: initialValue,
+  });
+
+  const isAllSelected = () =>
+    Object.keys(schema[path]).every((tb) => value[`${path}->${tb}`] === true);
+
+  const onSelectAll = () => {
+    const newVal: DynamicForm = {};
+    Object.keys(schema[path]).forEach(
+      (tb) => (newVal[`${path}->${tb}`] = true)
+    );
+    onChange(newVal);
+  };
+
+  const onClear = () => {
+    const newVal: DynamicForm = {};
+    Object.keys(value).forEach((k) => (newVal[k] = false));
+    onChange(newVal);
+  };
+
   return (
-    <>
+    <div>
+      <div className={styles.header}>
+        <Checkbox checked={isAllSelected()} onChange={onSelectAll}>
+          {t("common:words.select_all")}
+        </Checkbox>
+        <Button className={styles.clear} onClick={onClear} type="link">
+          {t("common:words.clear")}
+        </Button>
+      </div>
       {Object.keys(schema[path]).map((tb) => (
         <div key={tb}>
-          <Controller
-            name={`${path}->${tb}`}
-            control={control}
-            defaultValue={initialValue?.[`${path}->${tb}`] ?? "off"}
-            render={({ field: { onChange, value } }) => (
-              <Form.Item className={cn(styles.field)} name={`${path}->${tb}`}>
-                <div>
-                  <Checkbox
-                    checked={value === "on"}
-                    onChange={() => onChange(value === "on" ? "off" : "on")}
-                  >
-                    <span
-                      className={cn(styles.table, {
-                        [styles.column]: !windowSize.md,
-                      })}
-                    >
-                      <span>{tb}</span>
-                      <span className={styles.separator}>→</span>
-                      <span>
-                        {tb}.{type}
-                      </span>
-                    </span>
-                  </Checkbox>
-                  <span
-                    className={cn(styles.columns, {
-                      [styles.block]: !windowSize.md,
-                    })}
-                  >
-                    ({schema[path][tb].length}) {t("common:words.columns")}
-                  </span>
-                </div>
-              </Form.Item>
-            )}
-          />
+          <Form.Item className={cn(styles.field)} name={`${path}->${tb}`}>
+            <Checkbox
+              checked={value?.[`${path}->${tb}`]}
+              onChange={(e) =>
+                onChange({ ...value, [`${path}->${tb}`]: e.target.checked })
+              }
+            >
+              <span
+                className={cn(styles.table, {
+                  [styles.column]: !windowSize.md,
+                })}
+              >
+                <span>{tb}</span>
+                <span className={styles.separator}>→</span>
+                <span>
+                  {tb}.{type}
+                </span>
+              </span>
+            </Checkbox>
+            <span
+              className={cn(styles.columns, {
+                [styles.block]: !windowSize.md,
+              })}
+            >
+              ({schema[path][tb].length}) {t("common:words.columns")}
+            </span>
+          </Form.Item>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

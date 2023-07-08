@@ -15,20 +15,35 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
+const defaultConnectionOptions = [
+  {
+    value: "mysql",
+    label: "MySQL",
+    disabled: false,
+    name: "connection",
+  },
+  {
+    value: "psql",
+    label: "PSQL",
+    disabled: false,
+    name: "connection",
+  },
+];
+
 interface ApiSetupProps {
   connectionData: ApiSetupField[];
-  connectionOptions: ApiSetupField[];
   connectionString: string;
   onSubmit: (data: DynamicForm) => void;
   onGoBack: () => void;
   onSkip: () => void;
   onDownload: () => void;
+  connectionOptions?: ApiSetupField[];
   initialValue?: DynamicForm;
 }
 
 const ApiSetup: FC<ApiSetupProps> = ({
   connectionData,
-  connectionOptions,
+  connectionOptions = defaultConnectionOptions,
   connectionString,
   onSubmit,
   onSkip,

@@ -33,7 +33,6 @@ const defaultConnectionOptions = [
 ];
 
 interface ApiSetupProps {
-  connectionData: ApiSetupField[];
   onSubmit: (data: ApiSetupForm) => void;
   onGoBack: () => void;
   onSkip: () => void;
@@ -42,8 +41,21 @@ interface ApiSetupProps {
   connectionOptions?: ApiSetupField[];
 }
 
+const connectionData = [
+  { label: "Host/URL", value: "username", name: "username" },
+  { label: "Database", value: "db", name: "db" },
+  {
+    label: "Login (auto-generated)",
+    name: "db_username",
+  },
+  {
+    label: "Password (auto-generated)",
+    type: "password",
+    name: "password",
+  },
+];
+
 const ApiSetup: FC<ApiSetupProps> = ({
-  connectionData,
   connectionOptions = defaultConnectionOptions,
   onSubmit,
   onSkip,
@@ -58,13 +70,18 @@ const ApiSetup: FC<ApiSetupProps> = ({
   const windowSize = useResponsive();
 
   const createConnectionString = useCallback(
-    (
-      connection: string = CONNECTION_DEFAULT
-    ) => `${connection}  --host=gh-api.clickhouse.tech
+    (connection: string = CONNECTION_DEFAULT) => `${connection}  --host=${
+      initialValue.host
+    }
     - -user=${initialValue.user}
     - -port=${initialValue.port}
     - -password=${"*".repeat(initialValue.password?.length)}`,
-    [initialValue.password?.length, initialValue.port, initialValue.user]
+    [
+      initialValue.host,
+      initialValue.password?.length,
+      initialValue.port,
+      initialValue.user,
+    ]
   );
 
   useEffect(() => {

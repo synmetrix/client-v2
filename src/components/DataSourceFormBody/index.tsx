@@ -47,8 +47,11 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
       name: "gh-api.clickhouse.tech (Yandex Demo)",
       host: "gh-api.clickhouse.tech",
       user: "user@api.clickhouse.tech",
+      username: "user@api.clickhouse.tech",
       port: "12346",
       password: "132456456",
+      db_username: "db_username",
+      db: "db",
     };
     setState((prevState) => ({
       ...prevState,
@@ -128,21 +131,6 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
       if (formState?.apiSetup)
         return (
           <ApiSetup
-            connectionData={[
-              { label: "Host/URL", value: "username", name: "username" },
-              { label: "Database", value: "db", name: "db" },
-              {
-                label: "Login (auto-generated)",
-                value: "db_username",
-                name: "db_username",
-              },
-              {
-                label: "Password (auto-generated)",
-                value: "dasdasd",
-                type: "password",
-                name: "password",
-              },
-            ]}
             initialValue={formState?.apiSetup}
             onSubmit={onApiSetupSubmit}
             onGoBack={onGoBack}

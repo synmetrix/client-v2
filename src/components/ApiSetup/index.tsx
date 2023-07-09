@@ -4,11 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import { useForm } from "react-hook-form";
 
-import type {
-  ApiSetupField,
-  ApiSetupForm,
-  DynamicForm,
-} from "@/types/dataSource";
+import type { ApiSetupField, ApiSetupForm } from "@/types/dataSource";
 import Input from "@/components/Input";
 
 import CopyIcon from "@/assets/copy.svg";

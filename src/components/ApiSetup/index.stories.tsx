@@ -18,10 +18,6 @@ const Template: StoryFn<typeof ApiSetup> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  connectionString: `MYSQL  --host=gh-api.clickhouse.tech
-  - -user=user@api.clickhouse.tech
-  - -port=5121
-  - -password=**********`,
   connectionData: [
     { label: "Host/URL", value: "username", name: "username" },
     { label: "Database", value: "db", name: "db" },
@@ -43,6 +39,9 @@ Default.args = {
   ],
   initialValue: {
     name: "gh-api.clickhouse.tech (Yandex Demo)",
-    connection: "mysql",
+    host: "gh-api.clickhouse.tech",
+    user: "user@api.clickhouse.tech",
+    port: "12346",
+    password: "132456456",
   },
 };

@@ -1,6 +1,7 @@
 import { Controller } from "react-hook-form";
 import { Input as AntInput, Button, Checkbox, Form, Radio, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import cn from "classnames";
 
 import styles from "./index.module.less";
 
@@ -49,14 +50,23 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           control={control}
           name={name}
           defaultValue={defaultValue}
-          render={({ field: { value, onChange } }) => (
+          render={({
+            field: { value, onChange },
+            fieldState: { invalid, error },
+          }) => (
             <Form.Item label={label}>
+              <span className={styles.error}>{error?.message}</span>
               <Upload
                 {...props}
                 fileList={value}
                 onChange={(e) => onChange(e.fileList as any)}
               >
-                <Button icon={<UploadOutlined />}>{placeholder}</Button>
+                <Button
+                  className={cn({ [styles.uploadError]: invalid })}
+                  icon={<UploadOutlined />}
+                >
+                  {placeholder}
+                </Button>
               </Upload>
             </Form.Item>
           )}
@@ -69,9 +79,14 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           control={control}
           name={name}
           defaultValue={defaultValue}
-          render={({ field: { value, onChange } }) => (
+          render={({
+            field: { value, onChange },
+            fieldState: { invalid, error },
+          }) => (
             <Form.Item label={label}>
+              <span className={styles.error}>{error?.message}</span>
               <Radio.Group
+                className={cn({ [styles.radioError]: invalid })}
                 {...props}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
@@ -87,16 +102,21 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           control={control}
           name={name}
           defaultValue={defaultValue}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onChange, value }, fieldState: { invalid } }) => (
             <Form.Item label={label} className={styles.label}>
               <Checkbox
+                className={cn({ [styles.error]: invalid })}
                 checked={value}
                 onChange={(e) => {
                   e.target.value = e.target.checked;
                   onChange(e.target.value);
                 }}
               >
-                <span className={styles.checkbox}>{placeholder}</span>
+                <span
+                  className={cn(styles.checkbox, { [styles.error]: invalid })}
+                >
+                  {placeholder}
+                </span>
               </Checkbox>
             </Form.Item>
           )}
@@ -109,13 +129,18 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           control={control}
           name={name}
           defaultValue={defaultValue}
-          render={({ field: { value, onChange } }) => (
+          render={({
+            field: { value, onChange },
+            fieldState: { invalid, error },
+          }) => (
             <Form.Item label={label} className={styles.label}>
+              <span className={styles.error}>{error?.message}</span>
               <AntInput.Password
                 {...props}
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
+                status={invalid ? "error" : undefined}
               />
             </Form.Item>
           )}
@@ -129,13 +154,18 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           control={control}
           name={name}
           defaultValue={defaultValue}
-          render={({ field: { value, onChange } }) => (
+          render={({
+            field: { value, onChange },
+            fieldState: { invalid, error },
+          }) => (
             <Form.Item label={label} className={styles.label}>
+              <span className={styles.error}>{error?.message}</span>
               <AntInput.TextArea
                 {...props}
                 style={{ resize: "none", height: 104 }}
                 value={value}
                 onChange={onChange}
+                status={invalid ? "error" : undefined}
               />
             </Form.Item>
           )}
@@ -148,13 +178,18 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           control={control}
           name={name}
           defaultValue={defaultValue}
-          render={({ field: { value, onChange } }) => (
+          render={({
+            field: { value, onChange },
+            fieldState: { invalid, error },
+          }) => (
             <Form.Item label={label} className={styles.label}>
+              <span className={styles.error}>{error?.message}</span>
               <AntInput
                 {...props}
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
+                status={invalid ? "error" : undefined}
               />
             </Form.Item>
           )}

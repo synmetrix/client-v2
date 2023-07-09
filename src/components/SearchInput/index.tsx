@@ -23,6 +23,7 @@ const SearchInput: FC<SearchInputProps> = ({
       prefix={<SearchIcon className={styles.inputIcon} />}
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value)}
+      bordered={false}
       value={value}
     />
   );

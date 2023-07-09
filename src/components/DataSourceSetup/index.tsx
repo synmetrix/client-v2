@@ -125,7 +125,10 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           </Button>
         </Row>
       </Form>
-      <Alert message="Error" type="error" />
+      <Alert
+        message={<span className={styles.error}>Error</span>}
+        type="error"
+      />
     </div>
   );
 };

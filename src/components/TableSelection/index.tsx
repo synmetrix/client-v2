@@ -1,7 +1,7 @@
 import { useResponsive } from "ahooks";
 import { useController } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Button, Checkbox, Form } from "antd";
+import { Button, Checkbox } from "antd";
 import cn from "classnames";
 
 import type { DynamicForm, Schema } from "@/types/dataSource";
@@ -66,7 +66,7 @@ const TableSelection: FC<TableSelectionProps> = ({
       </div>
       {Object.keys(schema[path]).map((tb) => (
         <div key={tb}>
-          <Form.Item className={cn(styles.field)} name={`${path}->${tb}`}>
+          <div className={cn(styles.field)}>
             <Checkbox
               checked={value?.[`${path}->${tb}`]}
               onChange={(e) =>
@@ -92,7 +92,7 @@ const TableSelection: FC<TableSelectionProps> = ({
             >
               ({schema[path][tb].length}) {t("common:words.columns")}
             </span>
-          </Form.Item>
+          </div>
         </div>
       ))}
     </div>

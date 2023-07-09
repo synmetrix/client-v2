@@ -51,6 +51,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   const windowSize = useResponsive();
 
   const [searchValue, setSearchValue] = useState<string>("");
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.head}>
@@ -73,7 +74,11 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
             expandIcon={() => <TableIcon />}
           >
             {Object.keys(schema)
-              .filter((s) => s.includes(searchValue))
+              .filter(
+                (s) =>
+                  s.includes(searchValue) ||
+                  Object.keys(schema[s]).some((tb) => tb.includes(searchValue))
+              )
               .map((s) => (
                 <Panel
                   className={styles.collapse}

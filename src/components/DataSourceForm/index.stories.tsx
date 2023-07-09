@@ -5,7 +5,7 @@ import DataSourceForm from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/DataSourceForm",
+  title: "Components/Onboarding/DataSourceForm",
   component: DataSourceForm,
 } as Meta<typeof DataSourceForm>;
 

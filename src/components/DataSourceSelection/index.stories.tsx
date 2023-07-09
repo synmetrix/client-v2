@@ -17,7 +17,7 @@ const data = [
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/DataSourceSelection",
+  title: "Components/Onboarding/DataSourceSelection",
   component: DataSourceSelection,
 } as Meta<typeof DataSourceSelection>;
 

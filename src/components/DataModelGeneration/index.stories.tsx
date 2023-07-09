@@ -7,7 +7,7 @@ import DataModelGeneration from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/DataModelGeneration",
+  title: "Components/Onboarding/DataModelGeneration",
   component: DataModelGeneration,
 } as Meta<typeof DataModelGeneration>;
 

@@ -6,7 +6,7 @@ import DataSourceSetup from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/DataSourceSetup",
+  title: "Components/Onboarding/DataSourceSetup",
   component: DataSourceSetup,
 } as Meta<typeof DataSourceSetup>;
 

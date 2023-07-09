@@ -1,4 +1,5 @@
 import type {
+  ApiSetupForm,
   DataSource,
   DataSourceForm,
   DataSourceSetupForm,
@@ -41,11 +42,23 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   };
 
   const onDataModelGenerationSubmit = (data: DynamicForm) => {
-    setState((prevState) => ({ ...prevState, dataModel: data }));
+    // TODO get data from api
+    const apiSetup: ApiSetupForm = {
+      name: "gh-api.clickhouse.tech (Yandex Demo)",
+      host: "gh-api.clickhouse.tech",
+      user: "user@api.clickhouse.tech",
+      port: "12346",
+      password: "132456456",
+    };
+    setState((prevState) => ({
+      ...prevState,
+      dataModel: data,
+      apiSetup,
+    }));
     setStep(3);
   };
 
-  const onApiSetupSubmit = (data: DynamicForm) => {
+  const onApiSetupSubmit = (data: ApiSetupForm) => {
     setState((prevState) => ({ ...prevState, apiSetup: data }));
   };
 
@@ -112,48 +125,31 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
         />
       );
     case 3:
-      return (
-        <ApiSetup
-          connectionData={[
-            { label: "Host/URL", value: "username", name: "username" },
-            { label: "Database", value: "db", name: "db" },
-            {
-              label: "Login (auto-generated)",
-              value: "db_username",
-              name: "db_username",
-            },
-            {
-              label: "Password (auto-generated)",
-              value: "dasdasd",
-              type: "password",
-              name: "password",
-            },
-          ]}
-          connectionOptions={[
-            {
-              value: "mysql",
-              label: "MySQL",
-              disabled: false,
-              name: "connection",
-            },
-            {
-              value: "psql",
-              label: "PSQL",
-              disabled: false,
-              name: "connection",
-            },
-          ]}
-          connectionString={`MYSQL  --host=gh-api.clickhouse.tech
-      - -user=user@api.clickhouse.tech
-      - -port=5121
-      - -password=**********`}
-          initialValue={formState?.apiSetup}
-          onSubmit={onApiSetupSubmit}
-          onGoBack={onGoBack}
-          onSkip={onSkip}
-          onDownload={onDownload}
-        />
-      );
+      if (formState?.apiSetup)
+        return (
+          <ApiSetup
+            connectionData={[
+              { label: "Host/URL", value: "username", name: "username" },
+              { label: "Database", value: "db", name: "db" },
+              {
+                label: "Login (auto-generated)",
+                value: "db_username",
+                name: "db_username",
+              },
+              {
+                label: "Password (auto-generated)",
+                value: "dasdasd",
+                type: "password",
+                name: "password",
+              },
+            ]}
+            initialValue={formState?.apiSetup}
+            onSubmit={onApiSetupSubmit}
+            onGoBack={onGoBack}
+            onSkip={onSkip}
+            onDownload={onDownload}
+          />
+        );
   }
 
   return (

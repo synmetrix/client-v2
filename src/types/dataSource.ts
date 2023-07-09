@@ -35,6 +35,16 @@ export type Schema = Record<string, Table>;
 
 export type DynamicForm = Record<string, any>;
 
+export interface ApiSetupForm {
+  name: string;
+  host: string;
+  user: string;
+  password: string;
+  port: string;
+  connection?: string;
+  connection_string?: string;
+}
+
 export interface DataSourceSetupForm {
   name: string;
   db_params?: DynamicForm;
@@ -44,5 +54,5 @@ export interface DataSourceForm {
   dataSource?: DataSource;
   dataSourceSetup?: DataSourceSetupForm;
   dataModel?: DynamicForm;
-  apiSetup?: DynamicForm;
+  apiSetup?: ApiSetupForm;
 }

@@ -130,12 +130,14 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           name={name}
           defaultValue={defaultValue}
           render={({ field: { value, onChange } }) => (
-            <AntInput.TextArea
-              {...props}
-              style={{ resize: "none", height: 104 }}
-              value={value}
-              onChange={onChange}
-            />
+            <Form.Item label={label} className={styles.label}>
+              <AntInput.TextArea
+                {...props}
+                style={{ resize: "none", height: 104 }}
+                value={value}
+                onChange={onChange}
+              />
+            </Form.Item>
           )}
         />
       );

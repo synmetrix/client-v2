@@ -4,7 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import { useForm } from "react-hook-form";
 
-import type { ApiSetupField, DynamicForm } from "@/types/dataSource";
+import type {
+  ApiSetupField,
+  ApiSetupForm,
+  DynamicForm,
+} from "@/types/dataSource";
 import Input from "@/components/Input";
 
 import CopyIcon from "@/assets/copy.svg";
@@ -14,6 +18,8 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 const { Title, Text } = Typography;
+
+const CONNECTION_DEFAULT = "mysql";
 
 const defaultConnectionOptions = [
   {
@@ -32,29 +38,50 @@ const defaultConnectionOptions = [
 
 interface ApiSetupProps {
   connectionData: ApiSetupField[];
-  connectionString: string;
-  onSubmit: (data: DynamicForm) => void;
+  onSubmit: (data: ApiSetupForm) => void;
   onGoBack: () => void;
   onSkip: () => void;
   onDownload: () => void;
+  initialValue: ApiSetupForm;
   connectionOptions?: ApiSetupField[];
-  initialValue?: DynamicForm;
 }
 
 const ApiSetup: FC<ApiSetupProps> = ({
   connectionData,
   connectionOptions = defaultConnectionOptions,
-  connectionString,
   onSubmit,
   onSkip,
   onGoBack,
   onDownload,
   initialValue,
 }) => {
-  const { control, handleSubmit, getValues } = useForm<DynamicForm>();
+  const { control, handleSubmit, getValues, watch, resetField } =
+    useForm<ApiSetupForm>();
 
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
+
+  const createConnectionString = useCallback(
+    (
+      connection: string = CONNECTION_DEFAULT
+    ) => `${connection}  --host=gh-api.clickhouse.tech
+    - -user=${initialValue.user}
+    - -port=${initialValue.port}
+    - -password=${"*".repeat(initialValue.password?.length)}`,
+    [initialValue.password?.length, initialValue.port, initialValue.user]
+  );
+
+  useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (name === "connection")
+        resetField("connection_string", {
+          defaultValue: createConnectionString(value.connection),
+        });
+    });
+
+    return () => subscription.unsubscribe();
+  }, [createConnectionString, resetField, watch]);
+
   return (
     <div>
       <Title level={3}>{t("title")}</Title>
@@ -65,8 +92,9 @@ const ApiSetup: FC<ApiSetupProps> = ({
         <Input
           control={control}
           name="name"
-          defaultValue={initialValue?.name}
+          defaultValue={initialValue.name}
           label="Data source"
+          disabled
         />
 
         <Input
@@ -76,48 +104,55 @@ const ApiSetup: FC<ApiSetupProps> = ({
           size="large"
           optionType="button"
           options={connectionOptions}
+          defaultValue={CONNECTION_DEFAULT}
           fieldType="radio"
         />
 
         <Row gutter={[16, 16]}>
-          {connectionData.map((f) => (
-            <Col key={f.label} xs={24} sm={12}>
-              <Input
-                control={control}
-                name={f.name}
-                defaultValue={initialValue?.[f.name] || f.value}
-                fieldType={f.type}
-                suffix={
-                  <CopyIcon
-                    className={styles.icon}
-                    onClick={() =>
-                      navigator.clipboard.writeText(getValues(f.name))
-                    }
-                  />
-                }
-              />
-            </Col>
-          ))}
+          {connectionData.map((f) => {
+            const name = f.name as keyof ApiSetupForm;
+            return (
+              <Col key={f.label} xs={24} sm={12}>
+                <Input
+                  control={control}
+                  name={name}
+                  defaultValue={initialValue?.[name]}
+                  fieldType={f.type}
+                  label={f.label}
+                  disabled
+                  suffix={
+                    <CopyIcon
+                      className={styles.icon}
+                      onClick={() =>
+                        navigator.clipboard.writeText(getValues(name) || "")
+                      }
+                    />
+                  }
+                />
+              </Col>
+            );
+          })}
         </Row>
 
-        <Form.Item
-          className={cn(styles.textareaWrapper, styles.label)}
-          label="Connect using mysql-client"
-        >
+        <div className={cn(styles.textareaWrapper, styles.label)}>
           <Input
             control={control}
-            defaultValue={connectionString}
-            name="connection-string"
+            defaultValue={createConnectionString()}
+            name="connection_string"
             fieldType="textarea"
+            label={`Connect using ${watch("connection")}-client`}
+            disabled
           />
 
           <CopyIcon
             className={cn(styles.icon, styles.textareaCopy)}
             onClick={() =>
-              navigator.clipboard.writeText(getValues("connection-string"))
+              navigator.clipboard.writeText(
+                getValues("connection_string") || ""
+              )
             }
           />
-        </Form.Item>
+        </div>
 
         <Row>
           <Button

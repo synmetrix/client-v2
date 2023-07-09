@@ -1,4 +1,4 @@
-import { Button, Col, Form, Row, Typography } from "antd";
+import { Col, Form, Row, Typography } from "antd";
 import cn from "classnames";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 
 import type { ApiSetupField, ApiSetupForm } from "@/types/dataSource";
 import Input from "@/components/Input";
+import Button from "@/components/Button";
 
 import CopyIcon from "@/assets/copy.svg";
 
@@ -153,7 +154,9 @@ const ApiSetup: FC<ApiSetupProps> = ({
             defaultValue={createConnectionString()}
             name="connection_string"
             fieldType="textarea"
-            label={`Connect using ${watch("connection")}-client`}
+            label={`Connect using ${
+              watch("connection") || CONNECTION_DEFAULT
+            }-client`}
             disabled
           />
 

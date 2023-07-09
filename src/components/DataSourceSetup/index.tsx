@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Form, Row, Typography } from "antd";
+import { Alert, Col, Form, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import cn from "classnames";
@@ -10,6 +10,7 @@ import type {
   DataSourceSetupForm,
 } from "@/types/dataSource";
 import Input from "@/components/Input";
+import Button from "@/components/Button";
 
 import styles from "./index.module.less";
 
@@ -68,7 +69,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           defaultValue={initialValue?.name}
         />
 
-        <Row gutter={[16, 16]}>
+        <Row gutter={16}>
           {fields.map((f) => {
             const name = f.name.split(".")[1];
             const defaultValue = initialValue?.db_params?.[name];

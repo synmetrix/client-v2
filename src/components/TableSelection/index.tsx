@@ -1,9 +1,10 @@
 import { useResponsive } from "ahooks";
 import { useController } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Button, Checkbox } from "antd";
+import { Checkbox } from "antd";
 import cn from "classnames";
 
+import Button from "@/components/Button";
 import type { DynamicForm, Schema } from "@/types/dataSource";
 
 import styles from "./index.module.less";
@@ -60,7 +61,7 @@ const TableSelection: FC<TableSelectionProps> = ({
         <Checkbox checked={isAllSelected()} onChange={onSelectAll}>
           {t("common:words.select_all")}
         </Checkbox>
-        <Button className={styles.clear} onClick={onClear} type="link">
+        <Button onClick={onClear} type="link">
           {t("common:words.clear")}
         </Button>
       </div>

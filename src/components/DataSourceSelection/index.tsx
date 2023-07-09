@@ -1,10 +1,11 @@
-import { Button, Col, Row, Typography } from "antd";
+import { Col, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
 
 import SearchInput from "@/components/SearchInput";
 import FormTile from "@/components/FormTile";
+import Button from "@/components/Button";
 import type { DataSource } from "@/types/dataSource";
 
 import styles from "./index.module.less";

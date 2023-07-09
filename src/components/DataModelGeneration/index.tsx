@@ -1,4 +1,4 @@
-import { Button, Collapse, Form, Row, Typography } from "antd";
+import { Collapse, Form, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
@@ -8,6 +8,7 @@ import Input from "@/components/Input";
 import type { DataSource, DynamicForm, Schema } from "@/types/dataSource";
 import SearchInput from "@/components/SearchInput";
 import TableSelection from "@/components/TableSelection";
+import Button from "@/components/Button";
 
 import TableIcon from "@/assets/table.svg";
 

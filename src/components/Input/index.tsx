@@ -62,7 +62,9 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 onChange={(e) => onChange(e.fileList as any)}
               >
                 <Button
-                  className={cn({ [styles.uploadError]: invalid })}
+                  className={cn(styles.input, props.className, {
+                    [styles.uploadError]: invalid,
+                  })}
                   icon={<UploadOutlined />}
                 >
                   {placeholder}
@@ -137,6 +139,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
               <span className={styles.error}>{error?.message}</span>
               <AntInput.Password
                 {...props}
+                className={cn(styles.input, props.className)}
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
@@ -162,6 +165,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
               <span className={styles.error}>{error?.message}</span>
               <AntInput.TextArea
                 {...props}
+                className={cn(styles.input, props.className)}
                 style={{ resize: "none", height: 104 }}
                 value={value}
                 onChange={onChange}
@@ -186,6 +190,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
               <span className={styles.error}>{error?.message}</span>
               <AntInput
                 {...props}
+                className={cn(styles.input, props.className)}
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}

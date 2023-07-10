@@ -1,4 +1,4 @@
-import { Collapse, Form, Row, Typography } from "antd";
+import { Col, Collapse, Form, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
@@ -121,33 +121,33 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
             options={options}
           />
 
-          <Row align="middle">
-            <Button
-              className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
-              size="large"
-              color="primary"
-              onClick={onGoBack}
-            >
-              {t("common:words.back")}
-            </Button>
-            <Button
-              className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
-              type="primary"
-              size="large"
-              htmlType="submit"
-              form="data-model-generation"
-              onClick={handleSubmit(onSubmit)}
-            >
-              {t("common:words.generate")}
-            </Button>
+          <Row align="middle" justify={"space-between"}>
+            <Col xs={24} xl={12}>
+              <Button
+                className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
+                size="large"
+                color="primary"
+                onClick={onGoBack}
+              >
+                {t("common:words.back")}
+              </Button>
+              <Button
+                className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
+                type="primary"
+                size="large"
+                htmlType="submit"
+                form="data-model-generation"
+                onClick={handleSubmit(onSubmit)}
+              >
+                {t("common:words.generate")}
+              </Button>
+            </Col>
 
-            <Button
-              className={cn(styles.link, styles.skip)}
-              type="link"
-              onClick={onSkip}
-            >
-              {t("common:words.skip")}
-            </Button>
+            <Col xs={24} xl={12} className={styles.skip}>
+              <Button className={cn(styles.link)} type="link" onClick={onSkip}>
+                {t("common:words.skip")}
+              </Button>
+            </Col>
           </Row>
         </Form>
       </div>

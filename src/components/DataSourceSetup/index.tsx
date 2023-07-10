@@ -95,41 +95,41 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           })}
         </Row>
 
-        <Row align="middle">
-          <Button
-            className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
-            size="large"
-            color="primary"
-            onClick={onGoBack}
-          >
-            {t("common:words.back")}
-          </Button>
-          <Button
-            className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
-            form="setup-form"
-            type="primary"
-            size="large"
-            htmlType="submit"
-            onClick={handleSubmit(onSubmit)}
-          >
-            {t("common:words.apply")}
-          </Button>
+        <Row align="middle" justify="space-between">
+          <Col xs={24} xl={12}>
+            <Button
+              className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
+              size="large"
+              color="primary"
+              onClick={onGoBack}
+            >
+              {t("common:words.back")}
+            </Button>
+            <Button
+              className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
+              form="setup-form"
+              type="primary"
+              size="large"
+              htmlType="submit"
+              onClick={handleSubmit(onSubmit)}
+            >
+              {t("common:words.apply")}
+            </Button>
 
-          <Button
-            className={styles.link}
-            type="link"
-            onClick={onTestConnection}
-          >
-            {t("common:words.test_connection")}
-          </Button>
+            <Button
+              className={cn(styles.link, { [styles.sm]: !windowSize.sm })}
+              type="link"
+              onClick={onTestConnection}
+            >
+              {t("common:words.test_connection")}
+            </Button>
+          </Col>
 
-          <Button
-            className={cn(styles.link, styles.skip)}
-            type="link"
-            onClick={onSkip}
-          >
-            {t("common:words.skip")}
-          </Button>
+          <Col xs={24} xl={12} className={styles.skip}>
+            <Button className={cn(styles.link)} type="link" onClick={onSkip}>
+              {t("common:words.skip")}
+            </Button>
+          </Col>
         </Row>
       </Form>
       {error && (

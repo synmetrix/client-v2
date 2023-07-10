@@ -58,20 +58,24 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
           ))}
       </Row>
 
-      <Row align="middle">
-        <Button
-          className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
-          type="primary"
-          size="large"
-          htmlType="submit"
-          onClick={() => activeTile && onSubmit(activeTile)}
-        >
-          {t("common:words.next")}
-        </Button>
+      <Row align="middle" justify="space-between">
+        <Col xs={24} xl={12}>
+          <Button
+            className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
+            type="primary"
+            size="large"
+            htmlType="submit"
+            onClick={() => activeTile && onSubmit(activeTile)}
+          >
+            {t("common:words.next")}
+          </Button>
+        </Col>
 
-        <Button className={cn(styles.link, styles.skip)} type="link">
-          {t("common:words.skip")}
-        </Button>
+        <Col xs={24} xl={12} className={styles.skip}>
+          <Button className={cn(styles.link)} type="link">
+            {t("common:words.skip")}
+          </Button>
+        </Col>
       </Row>
     </div>
   );

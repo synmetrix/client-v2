@@ -52,7 +52,7 @@
 
 .back,
 .submit {
-  width: 141px;
+  min-width: 141px;
 
   margin-right: var(--gap-5xs);
 
@@ -66,11 +66,15 @@
 .link {
   color: var(--color-primary);
   font-weight: 600;
+  &.sm {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: var(--gap-5xs);
+  }
 }
 
 .skip {
-  display: block;
-  margin-left: auto;
+  text-align: right;
 }
 
 .error {

@@ -181,37 +181,37 @@ const ApiSetup: FC<ApiSetupProps> = ({
           />
         </div>
 
-        <Row align="middle">
-          <Button
-            className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
-            size="large"
-            color="primary"
-            onClick={onGoBack}
-          >
-            {t("common:words.back")}
-          </Button>
-          <Button
-            className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
-            type="primary"
-            size="large"
-            htmlType="submit"
-            form="api-setup"
-            onClick={handleSubmit(onSubmit)}
-          >
-            {t("common:words.finish")}
-          </Button>
+        <Row align="middle" justify={"space-between"}>
+          <Col xs={24} xl={12}>
+            <Button
+              className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
+              size="large"
+              color="primary"
+              onClick={onGoBack}
+            >
+              {t("common:words.back")}
+            </Button>
+            <Button
+              className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
+              type="primary"
+              size="large"
+              htmlType="submit"
+              form="api-setup"
+              onClick={handleSubmit(onSubmit)}
+            >
+              {t("common:words.finish")}
+            </Button>
 
-          <Button className={styles.link} type="link" onClick={onDownload}>
-            {t("common:words.download_credentials")}
-          </Button>
+            <Button className={styles.link} type="link" onClick={onDownload}>
+              {t("common:words.download_credentials")}
+            </Button>
+          </Col>
 
-          <Button
-            className={cn(styles.link, styles.skip)}
-            type="link"
-            onClick={onSkip}
-          >
-            {t("common:words.skip")}
-          </Button>
+          <Col xs={24} xl={12} className={styles.skip}>
+            <Button className={cn(styles.link)} type="link" onClick={onSkip}>
+              {t("common:words.skip")}
+            </Button>
+          </Col>
         </Row>
       </Form>
     </div>

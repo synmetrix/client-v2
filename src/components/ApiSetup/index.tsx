@@ -172,7 +172,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
           />
         </div>
 
-        <Row>
+        <Row align="middle">
           <Button
             className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
             size="large"

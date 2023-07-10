@@ -42,6 +42,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   rules,
   ...props
 }) => {
+  const getLabel = () => (rules && "required" in rules ? label + "*" : label);
   switch (fieldType) {
     case "file":
       return (
@@ -54,7 +55,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={label}>
+            <Form.Item label={getLabel()}>
               <span className={styles.error}>{error?.message}</span>
               <Upload
                 {...props}
@@ -85,7 +86,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={label}>
+            <Form.Item label={getLabel()}>
               <span className={styles.error}>{error?.message}</span>
               <Radio.Group
                 className={cn({ [styles.radioError]: invalid })}
@@ -105,7 +106,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           name={name}
           defaultValue={defaultValue}
           render={({ field: { onChange, value }, fieldState: { invalid } }) => (
-            <Form.Item label={label} className={styles.label}>
+            <Form.Item label={getLabel()} className={styles.label}>
               <Checkbox
                 className={cn({ [styles.error]: invalid })}
                 checked={value}
@@ -135,7 +136,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={label} className={styles.label}>
+            <Form.Item label={getLabel()} className={styles.label}>
               <span className={styles.error}>{error?.message}</span>
               <AntInput.Password
                 {...props}
@@ -161,7 +162,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={label} className={styles.label}>
+            <Form.Item label={getLabel()} className={styles.label}>
               <span className={styles.error}>{error?.message}</span>
               <AntInput.TextArea
                 {...props}
@@ -190,7 +191,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={label} className={styles.label}>
+            <Form.Item label={getLabel()} className={styles.label}>
               <span className={styles.error}>{error?.message}</span>
               <AntInput
                 {...props}

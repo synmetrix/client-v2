@@ -58,7 +58,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
           ))}
       </Row>
 
-      <Row>
+      <Row align="middle">
         <Button
           className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
           type="primary"

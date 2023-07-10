@@ -68,7 +68,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           }}
           control={control}
           name="name"
-          label={getLabel("name") + "*"}
+          label={getLabel("name")}
           placeholder={getPlaceholder("name")}
           defaultValue={initialValue?.name}
         />
@@ -93,7 +93,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           })}
         </Row>
 
-        <Row>
+        <Row align="middle">
           <Button
             className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
             size="large"

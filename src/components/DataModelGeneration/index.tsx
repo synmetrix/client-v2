@@ -121,7 +121,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
             options={options}
           />
 
-          <Row>
+          <Row align="middle">
             <Button
               className={cn(styles.back, { [styles.sm]: !windowSize.sm })}
               size="large"

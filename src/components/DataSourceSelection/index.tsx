@@ -43,11 +43,11 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
         onChange={setKeyword}
         placeholder={t("search_placeholder")}
       />
-      <Row className={styles.tiles} gutter={[16, 16]}>
+      <Row className={styles.tiles} gutter={[16, 16]} justify={"center"}>
         {options
           .filter((db) => db.name.toLowerCase().includes(keyword.toLowerCase()))
           .map((tile) => (
-            <Col key={tile.name} span={4}>
+            <Col className={styles.tile} key={tile.name} span={4}>
               <FormTile
                 title={tile.name}
                 icon={tile.icon}

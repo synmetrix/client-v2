@@ -39,6 +39,8 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 }) => {
   const { t } = useTranslation(["dataSetupForm", "common"]);
 
+  const [error] = useState<boolean>(false);
+
   const windowSize = useResponsive();
 
   const { control, handleSubmit } = useForm<DataSourceSetupForm>();
@@ -130,10 +132,12 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           </Button>
         </Row>
       </Form>
-      <Alert
-        message={<span className={styles.error}>Error</span>}
-        type="error"
-      />
+      {error && (
+        <Alert
+          message={<span className={styles.error}>Error</span>}
+          type="error"
+        />
+      )}
     </div>
   );
 };

@@ -59,9 +59,11 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
       </Row>
 
       <Row align="middle" justify="space-between">
-        <Col xs={24} xl={12}>
+        <Col xs={24} md={18}>
           <Button
-            className={cn(styles.submit, { [styles.sm]: !windowSize.sm })}
+            className={cn(styles.submit, {
+              [styles.fullwidth]: !windowSize.md,
+            })}
             type="primary"
             size="large"
             htmlType="submit"
@@ -71,8 +73,17 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
           </Button>
         </Col>
 
-        <Col xs={24} xl={12} className={styles.skip}>
-          <Button className={cn(styles.link)} type="link">
+        <Col
+          xs={24}
+          md={6}
+          className={cn(styles.skip, { [styles.center]: !windowSize.md })}
+        >
+          <Button
+            className={cn(styles.link, {
+              [styles.fullwidth]: !windowSize.md,
+            })}
+            type="link"
+          >
             {t("common:words.skip")}
           </Button>
         </Col>

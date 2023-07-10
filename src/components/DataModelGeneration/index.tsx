@@ -53,6 +53,15 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
 
   const [searchValue, setSearchValue] = useState<string>("");
 
+  const getCount = (val: DynamicForm, key: string) => {
+    if (val[key]) {
+      return Object.keys(val[key]).filter((k) => val?.[key]?.[k] === true)
+        .length;
+    } else {
+      return 0;
+    }
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.head}>
@@ -83,7 +92,11 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
               .map((s) => (
                 <Panel
                   className={styles.collapse}
-                  header={<span className={styles.collapseHeader}>{s}</span>}
+                  header={
+                    <span className={styles.collapseHeader}>
+                      {s} ({getCount(watch(), s)})
+                    </span>
+                  }
                   key={s}
                 >
                   <TableSelection

@@ -110,6 +110,13 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
                   type: "character varying",
                 },
               ],
+              orders_orders_rollup_0bohozfp_hle2okkq_1i85rfl222: [
+                {
+                  attributes: [],
+                  name: "users__last_name",
+                  type: "character varying",
+                },
+              ],
             },
             dev_prod_preaggregations: {
               orders_second_rollup_0bohozfp_hle2okkq_1i85rfl: [

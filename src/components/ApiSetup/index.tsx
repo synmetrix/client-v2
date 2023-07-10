@@ -88,7 +88,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
   const onDownload = () => {
     const dataStr =
       "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(getValues()));
+      encodeURIComponent(JSON.stringify(getValues(), null, 2));
     const link = document.createElement("a");
     link.href = dataStr;
     link.download = "credentials.json";

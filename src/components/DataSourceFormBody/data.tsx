@@ -197,7 +197,7 @@ export const dataSourceForms: Form = {
         required: true,
       },
       placeholder: "8082",
-      type: "text",
+      type: "number",
     },
     {
       name: "db_params.user",
@@ -235,7 +235,7 @@ export const dataSourceForms: Form = {
         required: true,
       },
       placeholder: "8080",
-      type: "text",
+      type: "number",
     },
     {
       name: "db_params.catalog",
@@ -296,7 +296,7 @@ export const dataSourceForms: Form = {
         required: true,
       },
       placeholder: "8080",
-      type: "text",
+      type: "number",
     },
     {
       name: "db_params.catalog",
@@ -431,7 +431,7 @@ export const dataSourceForms: Form = {
         required: true,
       },
       placeholder: "5432",
-      type: "text",
+      type: "number",
     },
     {
       name: "db_params.user",
@@ -546,6 +546,7 @@ export const dataSourceForms: Form = {
         required: true,
       },
       placeholder: "8088",
+      type: "number",
     },
     {
       name: "db_params.username",

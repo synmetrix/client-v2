@@ -70,9 +70,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
 
-  const getLabel = (key: string) => t(`common:form.labels.${key}`) || key;
-  const getPlaceholder = (key?: string) =>
-    t(`common:form.placeholders.${key}`) || key;
+  const getLabel = (key: string) => t(`common:form.labels.${key}`, key);
 
   const createConnectionString = useCallback(
     (connection: string = CONNECTION_DEFAULT) => `${connection}  --host=${

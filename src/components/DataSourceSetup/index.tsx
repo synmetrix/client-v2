@@ -43,9 +43,9 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 
   const { control, handleSubmit } = useForm<DataSourceSetupForm>();
 
-  const getLabel = (key: string) => t(`common:form.labels.${key}`) || key;
+  const getLabel = (key: string) => t(`common:form.labels.${key}`, key);
   const getPlaceholder = (key?: string) =>
-    t(`common:form.placeholders.${key}`) || key;
+    key ? t(`common:form.placeholders.${key}`, key) : "";
 
   return (
     <div className={styles.wrapper}>

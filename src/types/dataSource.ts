@@ -17,7 +17,7 @@ export interface DataSource {
 export interface DataSoureSetupField {
   name: string;
   label: string;
-  type?: "text" | "checkbox" | "password" | "file";
+  type?: "text" | "checkbox" | "password" | "file" | "number";
   rules?: object;
   value?: string;
   placeholder?: string;

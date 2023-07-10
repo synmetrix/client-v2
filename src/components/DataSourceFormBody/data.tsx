@@ -68,7 +68,7 @@ export const defaultForm: DataSoureSetupField[] = [
       required: true,
     },
     placeholder: "5432",
-    type: "text",
+    type: "number",
   },
   {
     name: "db_params.user",

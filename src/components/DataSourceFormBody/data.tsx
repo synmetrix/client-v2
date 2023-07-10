@@ -45,7 +45,7 @@ export const dbTiles = [
 export const defaultForm: DataSoureSetupField[] = [
   {
     name: "db_params.database",
-    label: "Database Name",
+    label: "db_name",
     rules: {
       required: true,
     },
@@ -54,7 +54,7 @@ export const defaultForm: DataSoureSetupField[] = [
   },
   {
     name: "db_params.host",
-    label: "Host",
+    label: "host",
     rules: {
       required: true,
     },
@@ -63,7 +63,7 @@ export const defaultForm: DataSoureSetupField[] = [
   },
   {
     name: "db_params.port",
-    label: "Port",
+    label: "port",
     rules: {
       required: true,
     },
@@ -72,7 +72,7 @@ export const defaultForm: DataSoureSetupField[] = [
   },
   {
     name: "db_params.user",
-    label: "User",
+    label: "user",
     rules: {
       required: true,
     },
@@ -81,7 +81,7 @@ export const defaultForm: DataSoureSetupField[] = [
   },
   {
     name: "db_params.password",
-    label: "Password",
+    label: "password",
     rules: {
       required: false,
     },
@@ -90,9 +90,9 @@ export const defaultForm: DataSoureSetupField[] = [
   },
   {
     name: "db_params.ssl",
-    label: "Use SSL",
+    label: "use_ssl",
     value: "yes",
-    placeholder: "I want use SSL",
+    placeholder: "use_ssl",
     type: "checkbox",
   },
 ];
@@ -104,16 +104,16 @@ export const dataSourceForms: Form = {
   bigquery: [
     {
       name: "db_params.keyFile",
-      label: "Keyfile",
+      label: "key_file",
       rules: {
         required: true,
       },
-      placeholder: "Attach the file credentials, please",
+      placeholder: "attach_file_credentials",
       type: "file",
     },
     {
       name: "db_params.projectId",
-      label: "Project Id",
+      label: "project_id",
       rules: {
         required: true,
       },
@@ -124,29 +124,29 @@ export const dataSourceForms: Form = {
     ...defaultForm,
     {
       name: "db_params.ca",
-      label: "SSL CA",
+      label: "ssl_ca",
       type: "text",
     },
     {
       name: "db_params.cert",
-      label: "SSL CERT",
+      label: "ssl_cert",
       type: "text",
     },
     {
       name: "db_params.ciphers",
-      label: "SSL CIPHERS",
+      label: "ssl_ciphers",
       type: "text",
     },
     {
       name: "db_params.passphrase",
-      label: "SSL PASSPHRASE",
+      label: "ssl_passphrase",
       type: "text",
     },
   ],
   elasticsearch: [
     {
       name: "db_params.url",
-      label: "Url",
+      label: "url",
       rules: {
         required: true,
       },
@@ -154,36 +154,36 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.username",
-      label: "User",
+      label: "user",
       type: "text",
     },
     {
       name: "db_params.password",
-      label: "Password",
+      label: "password",
       type: "password",
     },
     {
       name: "db_params.apiId",
-      label: "API ID",
+      label: "api_id",
       type: "text",
     },
     {
       name: "db_params.apiKey",
-      label: "API KEY",
+      label: "api_key",
       type: "text",
     },
     {
       name: "db_params.ssl",
-      label: "Use SSL",
+      label: "use_ssl",
       value: "yes",
-      placeholder: "I want use SSL",
+      placeholder: "use_ssl",
       type: "checkbox",
     },
   ],
   druid: [
     {
       name: "db_params.host",
-      label: "Host",
+      label: "host",
       rules: {
         required: true,
       },
@@ -192,7 +192,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.port",
-      label: "Port",
+      label: "port",
       rules: {
         required: true,
       },
@@ -201,7 +201,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.user",
-      label: "User",
+      label: "user",
       rules: {
         required: false,
       },
@@ -210,7 +210,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.password",
-      label: "Password",
+      label: "password",
       rules: {
         required: false,
       },
@@ -221,7 +221,7 @@ export const dataSourceForms: Form = {
   prestodb: [
     {
       name: "db_params.host",
-      label: "Host",
+      label: "host",
       rules: {
         required: true,
       },
@@ -230,7 +230,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.port",
-      label: "Port",
+      label: "port",
       rules: {
         required: true,
       },
@@ -239,7 +239,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.catalog",
-      label: "Catalog",
+      label: "catalog",
       rules: {
         required: true,
       },
@@ -248,7 +248,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.schema",
-      label: "Schema",
+      label: "schema",
       rules: {
         required: false,
       },
@@ -257,7 +257,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.user",
-      label: "User",
+      label: "user",
       rules: {
         required: false,
       },
@@ -265,7 +265,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.pass",
-      label: "Password",
+      label: "password",
       rules: {
         required: false,
       },
@@ -274,7 +274,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.ssl",
-      label: "Use SSL",
+      label: "use_ssl",
       value: "yes",
       type: "checkbox",
     },
@@ -282,7 +282,7 @@ export const dataSourceForms: Form = {
   trino: [
     {
       name: "db_params.host",
-      label: "Host",
+      label: "host",
       rules: {
         required: true,
       },
@@ -291,7 +291,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.port",
-      label: "Port",
+      label: "port",
       rules: {
         required: true,
       },
@@ -300,7 +300,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.catalog",
-      label: "Catalog",
+      label: "catalog",
       rules: {
         required: true,
       },
@@ -309,7 +309,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.schema",
-      label: "Schema",
+      label: "schema",
       rules: {
         required: false,
       },
@@ -318,7 +318,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.user",
-      label: "User",
+      label: "user",
       rules: {
         required: false,
       },
@@ -326,7 +326,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.pass",
-      label: "Password",
+      label: "password",
       rules: {
         required: false,
       },
@@ -335,7 +335,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.ssl",
-      label: "Use SSL",
+      label: "use_ssl",
       value: "yes",
       type: "checkbox",
     },
@@ -343,7 +343,7 @@ export const dataSourceForms: Form = {
   snowflake: [
     {
       name: "db_params.database",
-      label: "Database Name",
+      label: "db_name",
       rules: {
         required: true,
       },
@@ -352,7 +352,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.warehouse",
-      label: "Warehouse",
+      label: "warehouse",
       rules: {
         required: true,
       },
@@ -361,7 +361,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.orgId",
-      label: "Organization ID",
+      label: "organization_id",
       rules: {
         required: true,
       },
@@ -370,7 +370,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.accountId",
-      label: "Account ID",
+      label: "account_id",
       rules: {
         required: true,
       },
@@ -379,7 +379,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.username",
-      label: "Username",
+      label: "username",
       rules: {
         required: true,
       },
@@ -388,7 +388,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.password",
-      label: "Password",
+      label: "password",
       rules: {
         required: true,
       },
@@ -397,7 +397,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.role",
-      label: "Role",
+      label: "role",
       rules: {
         required: true,
       },
@@ -408,7 +408,7 @@ export const dataSourceForms: Form = {
   questdb: [
     {
       name: "db_params.database",
-      label: "Database Name",
+      label: "db_name",
       rules: {
         required: false,
       },
@@ -417,7 +417,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.host",
-      label: "Host",
+      label: "host",
       rules: {
         required: true,
       },
@@ -426,7 +426,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.port",
-      label: "Port",
+      label: "port",
       rules: {
         required: true,
       },
@@ -435,7 +435,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.user",
-      label: "User",
+      label: "user",
       rules: {
         required: false,
       },
@@ -444,7 +444,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.password",
-      label: "Password",
+      label: "password",
       rules: {
         required: false,
       },
@@ -453,7 +453,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.ssl",
-      label: "Use SSL",
+      label: "use_ssl",
       value: "yes",
       type: "checkbox",
     },
@@ -461,7 +461,7 @@ export const dataSourceForms: Form = {
   firebolt: [
     {
       name: "db_params.database",
-      label: "Database Name",
+      label: "db_name",
       rules: {
         required: true,
       },
@@ -470,7 +470,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.username",
-      label: "Username",
+      label: "username",
       rules: {
         required: false,
       },
@@ -479,7 +479,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.password",
-      label: "Password",
+      label: "password",
       rules: {
         required: false,
       },
@@ -488,7 +488,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.engineName",
-      label: "Engine Name",
+      label: "engine_name",
       rules: {
         required: false,
       },
@@ -496,7 +496,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.apiEndpoint",
-      label: "API Endpoint",
+      label: "api_endpoint",
       rules: {
         required: false,
       },
@@ -507,7 +507,7 @@ export const dataSourceForms: Form = {
   "databricks-jdbc": [
     {
       name: "db_params.token",
-      label: "Access Token",
+      label: "access_token",
       rules: {
         required: true,
       },
@@ -515,7 +515,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.url",
-      label: "Databricks JDBC URL",
+      label: "databricks_jdbc_url",
       rules: {
         required: true,
       },
@@ -533,7 +533,7 @@ export const dataSourceForms: Form = {
   ksql: [
     {
       name: "db_params.host",
-      label: "Host",
+      label: "host",
       rules: {
         required: true,
       },
@@ -541,7 +541,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.port",
-      label: "Port",
+      label: "port",
       rules: {
         required: true,
       },
@@ -549,7 +549,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.username",
-      label: "Username",
+      label: "username",
       rules: {
         required: false,
       },
@@ -557,7 +557,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.password",
-      label: "Password",
+      label: "password",
       rules: {
         required: false,
       },

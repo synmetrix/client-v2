@@ -43,6 +43,10 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 
   const { control, handleSubmit } = useForm<DataSourceSetupForm>();
 
+  const getLabel = (key: string) => t(`common:form.labels.${key}`) || key;
+  const getPlaceholder = (key?: string) =>
+    t(`common:form.placeholders.${key}`) || key;
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.head}>
@@ -64,8 +68,8 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
           }}
           control={control}
           name="name"
-          label="Name*"
-          placeholder="Name"
+          label={getLabel("name") + "*"}
+          placeholder={getPlaceholder("name")}
           defaultValue={initialValue?.name}
         />
 
@@ -80,8 +84,8 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
                   control={control}
                   fieldType={f.type}
                   name={`db_params.${name}`}
-                  placeholder={f.placeholder}
-                  label={f.label}
+                  placeholder={getPlaceholder(f.placeholder)}
+                  label={getLabel(f.label)}
                   defaultValue={defaultValue}
                 />
               </Col>

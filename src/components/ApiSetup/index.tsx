@@ -70,6 +70,10 @@ const ApiSetup: FC<ApiSetupProps> = ({
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
 
+  const getLabel = (key: string) => t(`common:form.labels.${key}`) || key;
+  const getPlaceholder = (key?: string) =>
+    t(`common:form.placeholders.${key}`) || key;
+
   const createConnectionString = useCallback(
     (connection: string = CONNECTION_DEFAULT) => `${connection}  --host=${
       initialValue.host
@@ -107,14 +111,14 @@ const ApiSetup: FC<ApiSetupProps> = ({
           control={control}
           name="name"
           defaultValue={initialValue.name}
-          label="Data source"
+          label={getLabel("data_source")}
           disabled
         />
 
         <Input
           control={control}
           name="connection"
-          label="Connect via"
+          label={getLabel("connect_via")}
           size="large"
           optionType="button"
           options={connectionOptions}
@@ -154,7 +158,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
             defaultValue={createConnectionString()}
             name="connection_string"
             fieldType="textarea"
-            label={`Connect using ${
+            label={`${getLabel("connect_using")} ${
               watch("connection") || CONNECTION_DEFAULT
             }-client`}
             disabled

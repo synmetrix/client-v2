@@ -5,7 +5,7 @@ import ApiSetup from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/ApiSetup",
+  title: "Components/Onboarding/ApiSetup",
   component: ApiSetup,
 } as Meta<typeof ApiSetup>;
 

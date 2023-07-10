@@ -7,7 +7,7 @@ import TableSelection from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/TableSelection",
+  title: "Components/Basic/TableSelection",
   component: TableSelection,
 } as Meta<typeof TableSelection>;
 

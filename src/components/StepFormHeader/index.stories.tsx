@@ -5,7 +5,7 @@ import StepFormHeader from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/StepFormHeader",
+  title: "Components/Basic/StepFormHeader",
   component: StepFormHeader,
 } as Meta<typeof StepFormHeader>;
 

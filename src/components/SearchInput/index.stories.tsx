@@ -5,7 +5,7 @@ import SearchInput from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/SearchInput",
+  title: "Components/Basic/SearchInput",
   component: SearchInput,
 } as Meta<typeof SearchInput>;
 

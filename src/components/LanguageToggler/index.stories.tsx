@@ -5,7 +5,7 @@ import LanguageToggler from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/LanguageToggler",
+  title: "Components/Basic/LanguageToggler",
   component: LanguageToggler,
 } as Meta<typeof LanguageToggler>;
 

@@ -7,7 +7,7 @@ import Input from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Input",
+  title: "Components/Basic/Input",
   component: Input,
 } as Meta<typeof Input>;
 

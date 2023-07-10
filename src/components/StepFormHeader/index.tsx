@@ -1,5 +1,6 @@
 import cn from "classnames";
-import { Fragment } from "react";
+import { Breadcrumb } from "antd";
+import { useResponsive } from "ahooks";
 
 import styles from "./index.module.less";
 
@@ -16,24 +17,29 @@ const StepFormHeader: FC<StepFormHeaderProps> = ({
   currentStep,
   onChange,
 }) => {
+  const windowSize = useResponsive();
   return (
     <div className={styles.wrapper}>
       <div className={styles.currentStep}>
         {currentStep + 1}/{steps.length}
       </div>
-      <div className={styles.steps}>
-        {steps.map((s, i) => (
-          <Fragment key={s}>
-            {i > 0 && <span className={styles.separator} />}
-            <div
+      <Breadcrumb
+        separator={
+          <span
+            className={cn(styles.separator, { [styles.none]: !windowSize.md })}
+          />
+        }
+        items={steps.map((t, i) => ({
+          title: (
+            <span
               className={cn(styles.step, { [styles.active]: currentStep >= i })}
               onClick={() => onChange?.(i)}
             >
-              {i + 1}. {s}
-            </div>
-          </Fragment>
-        ))}
-      </div>
+              {i + 1}. {t}
+            </span>
+          ),
+        }))}
+      />
     </div>
   );
 };

@@ -1,0 +1,55 @@
+{
+  "words": {
+    "apply": "Apply",
+    "generate": "Generate",
+    "test_connection": "Test connection",
+    "skip": "Skip",
+    "back": "Back",
+    "finish": "Finish",
+    "download_credentials": "Download Credentials",
+    "next": "Next",
+    "columns": "columns",
+    "select_all": "Select all",
+    "clear": "Clear"
+  },
+  "form": {
+    "labels": {
+      "data_source": "Data source",
+      "name": "Name",
+      "db_name": "Database Name",
+      "host": "Host",
+      "port": "Port",
+      "user": "User",
+      "password": "Password",
+      "use_ssl": "Use SSL",
+      "key_file": "Keyfile",
+      "project_id": "Project Id",
+      "ssl_ca": "SSL CA",
+      "ssl_cert": "SSL CERT",
+      "ssl_ciphers": "SSL CIPHERS",
+      "ssl_passphrase": "SSL PASSPHRASE",
+      "url": "Url",
+      "api_id": "API ID",
+      "api_key": "API KEY",
+      "catalog": "Catalog",
+      "schema": "Schema",
+      "warehouse": "Warehouse",
+      "organization_id": "Organization ID",
+      "account_id": "Account ID",
+      "username": "Username",
+      "role": "Role",
+      "engine_name": "Engine Name",
+      "api_endpoint": "API Endpoint",
+      "access_token": "Access Token",
+      "databricks_jdbc_url": "Databricks JDBC URL",
+      "connect_via": "Connect via",
+      "connect_using": "Connect using"
+    },
+    "placeholders": {
+      "name": "Name",
+      "use_ssl": "I want use SSL",
+      "attach_file_credentials": "Attach the file credentials, please",
+      "schema": "schema"
+    }
+  }
+}

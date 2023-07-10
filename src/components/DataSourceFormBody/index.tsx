@@ -28,7 +28,6 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
 }) => {
   const onGoBack = () => setStep((prevState) => prevState - 1);
   const onSkip = () => console.log("skip");
-  const onDownload = () => console.log("download");
   const onTestConnection = () => console.log("test connection");
 
   const onDataSourceSelect = (value: DataSource) => {
@@ -142,7 +141,6 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
             onSubmit={onApiSetupSubmit}
             onGoBack={onGoBack}
             onSkip={onSkip}
-            onDownload={onDownload}
           />
         );
   }

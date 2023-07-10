@@ -37,7 +37,6 @@ interface ApiSetupProps {
   onSubmit: (data: ApiSetupForm) => void;
   onGoBack: () => void;
   onSkip: () => void;
-  onDownload: () => void;
   initialValue: ApiSetupForm;
   connectionOptions?: ApiSetupField[];
 }
@@ -61,7 +60,6 @@ const ApiSetup: FC<ApiSetupProps> = ({
   onSubmit,
   onSkip,
   onGoBack,
-  onDownload,
   initialValue,
 }) => {
   const { control, handleSubmit, getValues, watch, resetField } =
@@ -86,6 +84,17 @@ const ApiSetup: FC<ApiSetupProps> = ({
       initialValue.user,
     ]
   );
+
+  const onDownload = () => {
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(getValues()));
+    const link = document.createElement("a");
+    link.href = dataStr;
+    link.download = "credentials.json";
+    link.click();
+    link.remove();
+  };
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {

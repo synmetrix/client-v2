@@ -178,7 +178,11 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
     default:
       return (
         <Controller
-          rules={rules}
+          rules={
+            fieldType === "number"
+              ? { ...rules, validate: (v) => !isNaN(v) }
+              : rules
+          }
           control={control}
           name={name}
           defaultValue={defaultValue}

@@ -1,5 +1,6 @@
 import { Card } from "antd";
 import { Suspense } from "react";
+import { useTranslation } from "react-i18next";
 
 import StepFormHeader from "@/components/StepFormHeader";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
@@ -11,6 +12,7 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 const DataSourceForm: FC = () => {
+  const { t } = useTranslation(["dataSourceStepForm"]);
   const [formData, setFormData] = useState<DataSourceFormType>({});
   const [step, setStep] = useState<number>(0);
 
@@ -19,12 +21,7 @@ const DataSourceForm: FC = () => {
       <div className={styles.header}>
         <StepFormHeader
           currentStep={step}
-          steps={[
-            "Connect Data Source",
-            "Data Source Setup",
-            "Generate Data Model Files",
-            "SQL API",
-          ]}
+          steps={[t("step1"), t("step2"), t("step3"), t("step4")]}
           onChange={setStep}
         />
       </div>

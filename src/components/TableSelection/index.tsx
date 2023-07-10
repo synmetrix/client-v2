@@ -9,6 +9,7 @@ import type { DynamicForm, Schema } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import type { Control } from "react-hook-form";
 import type { FC } from "react";
 
@@ -41,17 +42,18 @@ const TableSelection: FC<TableSelectionProps> = ({
   const isAllSelected = () =>
     Object.keys(schema[path]).every((tb) => value[`${path}->${tb}`] === true);
 
-  const onSelectAll = () => {
+  const onClear = () => {
+    const newVal: DynamicForm = {};
+    Object.keys(value).forEach((k) => (newVal[k] = false));
+    onChange(newVal);
+  };
+
+  const onSelectAll = (e: CheckboxChangeEvent) => {
+    if (!e.target.checked) return onClear();
     const newVal: DynamicForm = {};
     Object.keys(schema[path]).forEach(
       (tb) => (newVal[`${path}->${tb}`] = true)
     );
-    onChange(newVal);
-  };
-
-  const onClear = () => {
-    const newVal: DynamicForm = {};
-    Object.keys(value).forEach((k) => (newVal[k] = false));
     onChange(newVal);
   };
 

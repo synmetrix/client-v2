@@ -9,25 +9,20 @@ import TeamIcon from "@/assets/team.svg";
 
 import styles from "./index.module.less";
 
-import type { MenuProps } from "antd";
 import type { FC } from "react";
 
-const mock: MenuProps["items"] = [
-  {
-    label: "1st menu item",
-    key: "1",
-  },
-  {
-    label: "2nd menu item",
-    key: "2",
-  },
-];
+interface MenuItem {
+  label: string;
+  href: string;
+}
 
 interface NavbarProps {
+  teams: MenuItem[];
+  userMenu: MenuItem[];
   direction?: "horizontal" | "vertical";
 }
 
-const Navbar: FC<NavbarProps> = ({ direction }) => {
+const Navbar: FC<NavbarProps> = ({ direction, teams, userMenu }) => {
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
   const { t } = useTranslation(["common"]);
@@ -38,7 +33,10 @@ const Navbar: FC<NavbarProps> = ({ direction }) => {
         {t("common:words.docs")}
       </Button>
 
-      <Dropdown onOpenChange={setTeamsOpen} menu={{ items: mock }}>
+      <Dropdown
+        onOpenChange={setTeamsOpen}
+        menu={{ items: teams.map((tm, i) => ({ ...tm, key: i })) }}
+      >
         <Button>
           <Space align="start">
             <TeamIcon />
@@ -50,7 +48,10 @@ const Navbar: FC<NavbarProps> = ({ direction }) => {
         </Button>
       </Dropdown>
 
-      <Dropdown onOpenChange={setAccountOpen} menu={{ items: mock }}>
+      <Dropdown
+        onOpenChange={setAccountOpen}
+        menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })) }}
+      >
         <Space className={styles.dropdownHeader} align="center">
           <Avatar username="user name" />
           <span className={cn(styles.icon, { [styles.rotate]: accountOpen })}>

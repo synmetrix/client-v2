@@ -16,3 +16,26 @@ const Template: StoryFn<typeof Navbar> = (args) => (
 );
 
 export const Default = Template.bind({});
+
+Default.args = {
+  userMenu: [
+    {
+      label: "1st menu item",
+      href: "/",
+    },
+    {
+      label: "2nd menu item",
+      href: "/",
+    },
+  ],
+  teams: [
+    {
+      label: "1st team item",
+      href: "/",
+    },
+    {
+      label: "2nd team item",
+      href: "/",
+    },
+  ],
+};

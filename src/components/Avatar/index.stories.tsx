@@ -5,7 +5,7 @@ import Avatar from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Avatar",
+  title: "Components/Basic/Avatar",
   component: Avatar,
 } as Meta<typeof Avatar>;
 

@@ -10,7 +10,9 @@
     "next": "Next",
     "columns": "columns",
     "select_all": "Select all",
-    "clear": "Clear"
+    "clear": "Clear",
+    "docs": "Docs",
+    "team": "Team"
   },
   "form": {
     "labels": {

@@ -5,7 +5,7 @@ import Navbar from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Navbar",
+  title: "Components/Basic/Navbar",
   component: Navbar,
 } as Meta<typeof Navbar>;
 

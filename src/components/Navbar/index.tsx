@@ -28,7 +28,7 @@ const Navbar: FC<NavbarProps> = ({ direction, teams, userMenu }) => {
   const { t } = useTranslation(["common"]);
 
   return (
-    <Space size={20} direction={direction}>
+    <Space size={20} direction={direction} align="center">
       <Button className={styles.docs} href="/">
         {t("common:words.docs")}
       </Button>

@@ -12,7 +12,11 @@
     "select_all": "Select all",
     "clear": "Clear",
     "docs": "Docs",
-    "team": "Team"
+    "team": "Team",
+    "host": "Host",
+    "type": "Type",
+    "updated_at": "Updated At",
+    "created_at": "Created At"
   },
   "form": {
     "labels": {

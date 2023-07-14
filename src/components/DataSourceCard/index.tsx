@@ -1,6 +1,7 @@
 import cn from "classnames";
 import { SettingOutlined } from "@ant-design/icons";
 import { Card } from "antd";
+import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import type { DataSource } from "@/types/dataSource";
@@ -22,6 +23,7 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
   updatedAt,
   createdAt,
 }) => {
+  const { t } = useTranslation(["common"]);
   return (
     <Card
       style={{ width: 260 }}
@@ -40,12 +42,12 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
     >
       <ul className={styles.list}>
         <li className={styles.listItem}>
-          <span className={styles.label}>Host</span>
+          <span className={styles.label}>{t("common:words.host")}</span>
           <span className={styles.value}>{host}</span>
         </li>
 
         <li className={styles.listItem}>
-          <span className={styles.label}>Type</span>
+          <span className={styles.label}>{t("common:words.type")}</span>
           <span className={cn(styles.value, styles.db)}>
             <span className={styles.icon}>{type.icon}</span>
             {type.name}
@@ -53,12 +55,12 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
         </li>
 
         <li className={styles.listItem}>
-          <span className={styles.label}>Updated At</span>
+          <span className={styles.label}>{t("common:words.updated_at")}</span>
           <span className={styles.value}>{updatedAt}</span>
         </li>
 
         <li className={styles.listItem}>
-          <span className={styles.label}>Created At</span>
+          <span className={styles.label}>{t("common:words.created_at")}</span>
           <span className={styles.value}>{createdAt}</span>
         </li>
       </ul>

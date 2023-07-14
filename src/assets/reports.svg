@@ -1,0 +1,10 @@
+<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Iconex">
+<g id="Chart">
+<path id="Subtract" opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M7 1.89453C3.82436 1.89453 1.25 4.46889 1.25 7.64453V17.6445C1.25 20.8202 3.82436 23.3945 7 23.3945H17C20.1756 23.3945 22.75 20.8202 22.75 17.6445V7.64453C22.75 4.46889 20.1756 1.89453 17 1.89453H7Z" fill="white"/>
+<path id="Line" d="M8 17.6445L8 14.6445" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Line_2" d="M12 17.6445L12 7.64453" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Line_3" d="M16 17.6445L16 10.6445" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>

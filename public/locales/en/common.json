@@ -49,13 +49,21 @@
       "access_token": "Access Token",
       "databricks_jdbc_url": "Databricks JDBC URL",
       "connect_via": "Connect via",
-      "connect_using": "Connect using"
+      "connect_using": "Connect using",
+      "full_name": "Full Name",
+      "email": "E-mail",
+      "new_password": "New Password",
+      "old_password": "Old Password"
     },
     "placeholders": {
       "name": "Name",
       "use_ssl": "I want use SSL",
       "attach_file_credentials": "Attach the file credentials, please",
       "schema": "schema"
+    },
+    "errors": {
+      "email": "Enter a valid e-mail",
+      "password": "Minimum 8 characters, at least 1 letter and 1 number"
     }
   }
 }

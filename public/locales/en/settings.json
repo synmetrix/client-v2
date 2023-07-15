@@ -3,5 +3,19 @@
     "title": "You have no Data Sources yet",
     "text": "Click \"Add Data Source\" to add one.",
     "connect_btn": "Connect Data Source"
+  },
+  "personal_info": {
+    "general_info": {
+      "title": "General Information",
+      "update": "Update"
+    },
+    "security": {
+      "title": "Security",
+      "update": "Update Password"
+    },
+    "logout_sessions": {
+      "title": "Active sessions",
+      "logout": "Logout from all sessions"
+    }
   }
 }

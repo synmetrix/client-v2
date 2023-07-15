@@ -5,7 +5,7 @@ import GeneralInfoForm from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/GeneralInfoForm",
+  title: "Components/Settings/PersonalInfo/GeneralInfoForm",
   component: GeneralInfoForm,
 } as Meta<typeof GeneralInfoForm>;
 

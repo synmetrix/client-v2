@@ -8,6 +8,10 @@
     "general_info": {
       "title": "General Information",
       "update": "Update"
+    },
+    "security": {
+      "title": "Security",
+      "update": "Update Password"
     }
   }
 }

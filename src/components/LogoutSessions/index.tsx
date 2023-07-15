@@ -13,7 +13,9 @@ const LogoutSessions: FC = () => {
   const { t } = useTranslation(["settings"]);
   return (
     <div>
-      <Title level={5}>{t("personal_info.logout_sessions.title")}</Title>
+      <Title className={styles.title} level={5}>
+        {t("personal_info.logout_sessions.title")}
+      </Title>
 
       <Button className={styles.btn} type="text" size="large">
         {t("personal_info.logout_sessions.logout")}

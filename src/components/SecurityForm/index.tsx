@@ -5,6 +5,8 @@ import { Col, Form, Row, Typography } from "antd";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 
+import styles from "./index.module.less";
+
 import type { FC } from "react";
 
 const { Title } = Typography;
@@ -28,7 +30,9 @@ const SecurityForm: FC<SecurityFormProps> = ({ initialValue, onSubmit }) => {
 
   return (
     <Form layout="vertical">
-      <Title level={5}>{t("personal_info.security.title")}</Title>
+      <Title className={styles.title} level={5}>
+        {t("personal_info.security.title")}
+      </Title>
 
       <Row gutter={[16, 16]}>
         <Col span={24} md={12}>

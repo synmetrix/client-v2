@@ -60,7 +60,7 @@ const GeneralInfoForm: FC<GeneralInfoFormProps> = ({
         type="primary"
         onClick={handleSubmit(onSubmit)}
       >
-        Update
+        {t("personal_info.general_info.update")}
       </Button>
     </Form>
   );

@@ -6,7 +6,8 @@
   },
   "personal_info": {
     "general_info": {
-      "title": "General Information"
+      "title": "General Information",
+      "update": "Update"
     }
   }
 }

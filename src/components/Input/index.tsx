@@ -56,7 +56,6 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             fieldState: { invalid, error },
           }) => (
             <Form.Item label={getLabel()}>
-              <span className={styles.error}>{error?.message}</span>
               <Upload
                 {...props}
                 fileList={value}
@@ -71,6 +70,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                   {placeholder}
                 </Button>
               </Upload>
+              <span className={styles.error}>{error?.message}</span>
             </Form.Item>
           )}
         />
@@ -87,13 +87,13 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             fieldState: { invalid, error },
           }) => (
             <Form.Item label={getLabel()}>
-              <span className={styles.error}>{error?.message}</span>
               <Radio.Group
                 className={cn({ [styles.radioError]: invalid })}
                 {...props}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
               />
+              <span className={styles.error}>{error?.message}</span>
             </Form.Item>
           )}
         />
@@ -137,7 +137,6 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             fieldState: { invalid, error },
           }) => (
             <Form.Item label={getLabel()} className={styles.label}>
-              <span className={styles.error}>{error?.message}</span>
               <AntInput.Password
                 {...props}
                 className={cn(styles.input, props.className)}
@@ -146,6 +145,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 placeholder={placeholder}
                 status={invalid ? "error" : undefined}
               />
+              <span className={styles.error}>{error?.message}</span>
             </Form.Item>
           )}
         />
@@ -163,7 +163,6 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             fieldState: { invalid, error },
           }) => (
             <Form.Item label={getLabel()} className={styles.label}>
-              <span className={styles.error}>{error?.message}</span>
               <AntInput.TextArea
                 {...props}
                 className={cn(styles.input, props.className)}
@@ -172,6 +171,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 onChange={onChange}
                 status={invalid ? "error" : undefined}
               />
+              <span className={styles.error}>{error?.message}</span>
             </Form.Item>
           )}
         />
@@ -192,7 +192,6 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             fieldState: { invalid, error },
           }) => (
             <Form.Item label={getLabel()} className={styles.label}>
-              <span className={styles.error}>{error?.message}</span>
               <AntInput
                 {...props}
                 className={cn(styles.input, props.className)}
@@ -201,6 +200,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 placeholder={placeholder}
                 status={invalid ? "error" : undefined}
               />
+              <span className={styles.error}>{error?.message}</span>
             </Form.Item>
           )}
         />

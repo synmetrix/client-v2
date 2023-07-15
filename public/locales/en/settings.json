@@ -12,6 +12,10 @@
     "security": {
       "title": "Security",
       "update": "Update Password"
+    },
+    "logout_sessions": {
+      "title": "Active sessions",
+      "logout": "Logout from all sessions"
     }
   }
 }

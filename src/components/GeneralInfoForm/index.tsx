@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import validate from "@/utils/validations";
 
 import type { FC } from "react";
 
@@ -46,7 +47,7 @@ const GeneralInfoForm: FC<GeneralInfoFormProps> = ({
         <Col span={24} md={12}>
           <Input
             control={control}
-            rules={{ required: true }}
+            rules={{ required: true, validate: validate.email }}
             name="email"
             label={t("common:form.labels.email")}
             defaultValue={initialValue?.fullName}

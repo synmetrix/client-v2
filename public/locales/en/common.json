@@ -60,6 +60,10 @@
       "use_ssl": "I want use SSL",
       "attach_file_credentials": "Attach the file credentials, please",
       "schema": "schema"
+    },
+    "errors": {
+      "email": "Enter a valid e-mail",
+      "password": "Minimum 8 characters, at least 1 letter and 1 number"
     }
   }
 }

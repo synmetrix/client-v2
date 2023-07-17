@@ -15,9 +15,16 @@ interface TeamSettingsForm {
   name: string;
 }
 
-const TeamSettings: FC = () => {
+interface TeamSettingsProps {
+  onSubmit: (data: TeamSettingsForm) => void;
+  initialValue?: TeamSettingsForm;
+}
+
+const TeamSettings: FC<TeamSettingsProps> = ({ initialValue, onSubmit }) => {
   const { t } = useTranslation(["settings", "common"]);
-  const { control, handleSubmit } = useForm<TeamSettingsForm>();
+  const { control, handleSubmit } = useForm<TeamSettingsForm>({
+    defaultValues: initialValue,
+  });
 
   return (
     <Form layout="vertical">
@@ -28,13 +35,14 @@ const TeamSettings: FC = () => {
         name="name"
         control={control}
         rules={{ required: true }}
+        defaultValue={initialValue?.name}
       />
 
       <Button
         className={styles.submit}
         size="large"
         type="primary"
-        onClick={handleSubmit(console.log)}
+        onClick={handleSubmit(onSubmit)}
       >
         Save
       </Button>

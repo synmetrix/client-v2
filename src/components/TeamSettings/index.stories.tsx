@@ -16,3 +16,7 @@ const Template: StoryFn<typeof TeamSettings> = (args) => (
 );
 
 export const Default = Template.bind({});
+
+Default.args = {
+  onSubmit: console.log,
+};

@@ -31,6 +31,11 @@
       "invite_team_member": "Invite Team Member",
       "select_role": "Select Role",
       "invite": "Invite"
+    },
+    "not_found": {
+      "title": "You have no members yet",
+      "text": "Please invite members for manage roles.",
+      "invite_btn": "Invite Members"
     }
   }
 }

@@ -15,10 +15,10 @@ const NoDataSource: FC = () => {
   return (
     <div className={styles.wrapper}>
       <img className={styles.img} src={NoDataSourceImg} alt="" />
-      <Title level={4}>{t("data_sources.title")}</Title>
-      <Text className={styles.text}>{t("data_sources.text")}</Text>
+      <Title level={4}>{t("data_sources.not_found.title")}</Title>
+      <Text className={styles.text}>{t("data_sources.not_found.text")}</Text>
       <Button size="large" type="primary">
-        {t("data_sources.connect_btn")}
+        {t("data_sources.not_found.connect_btn")}
       </Button>
     </div>
   );

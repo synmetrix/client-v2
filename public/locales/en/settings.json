@@ -1,8 +1,10 @@
 {
   "data_sources": {
-    "title": "You have no Data Sources yet",
-    "text": "Click \"Add Data Source\" to add one.",
-    "connect_btn": "Connect Data Source"
+    "not_found": {
+      "title": "You have no Data Sources yet",
+      "text": "Click \"Add Data Source\" to add one.",
+      "connect_btn": "Connect Data Source"
+    }
   },
   "personal_info": {
     "general_info": {

@@ -3,17 +3,14 @@ import cn from "classnames";
 
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
+import { Role } from "@/types/team";
+import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 
 import TrashIcon from "@/assets/trash.svg";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
-
-const ROLES = [
-  { label: "Owner", value: "owner" },
-  { label: "role", value: "role" },
-];
 
 interface Member {
   fullName: string;
@@ -75,13 +72,8 @@ const MembersTable: FC<MembersTableProps> = ({
             onChange={(role) => onRoleChange({ ...m, role })}
             bordered={false}
             value={m.role}
-          >
-            {ROLES.map((v) => (
-              <Select.Option key={v.value} className={styles.option}>
-                {v.label}
-              </Select.Option>
-            ))}
-          </Select>
+            options={createRoleOptions(Role)}
+          />
         </span>
       ),
       remove: (

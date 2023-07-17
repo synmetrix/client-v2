@@ -21,11 +21,14 @@
   "members": {
     "team_settings": {
       "title": "Team Settings",
-      "form": {
-        "labels": {
-          "team_name": "Team Name"
-        }
-      }
+      "team_name": "Team Name",
+      "save": "Save"
+    },
+    "members": {
+      "title": "Members",
+      "invite_team_member": "Invite Team Member",
+      "select_role": "Select Role",
+      "invite": "Invite"
     }
   }
 }

@@ -31,7 +31,7 @@ const TeamSettings: FC<TeamSettingsProps> = ({ initialValue, onSubmit }) => {
       <Title level={4}>{t("members.team_settings.title")}</Title>
 
       <Input
-        label={t("members.team_settings.form.labels.team_name")}
+        label={t("members.team_settings.team_name")}
         name="name"
         control={control}
         rules={{ required: true }}
@@ -44,7 +44,7 @@ const TeamSettings: FC<TeamSettingsProps> = ({ initialValue, onSubmit }) => {
         type="primary"
         onClick={handleSubmit(onSubmit)}
       >
-        Save
+        {t("members.team_settings.save")}
       </Button>
     </Form>
   );

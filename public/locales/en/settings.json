@@ -17,5 +17,15 @@
       "title": "Active sessions",
       "logout": "Logout from all sessions"
     }
+  },
+  "members": {
+    "team_settings": {
+      "title": "Team Settings",
+      "form": {
+        "labels": {
+          "team_name": "Team Name"
+        }
+      }
+    }
   }
 }

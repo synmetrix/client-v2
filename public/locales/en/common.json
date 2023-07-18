@@ -16,7 +16,10 @@
     "host": "Host",
     "type": "Type",
     "updated_at": "Updated At",
-    "created_at": "Created At"
+    "created_at": "Created At",
+    "member": "Member",
+    "remove": "Remove",
+    "role": "Role"
   },
   "form": {
     "labels": {

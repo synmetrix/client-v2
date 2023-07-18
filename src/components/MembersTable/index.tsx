@@ -1,5 +1,6 @@
 import { Select, Space, Table } from "antd";
 import cn from "classnames";
+import { useTranslation } from "react-i18next";
 
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
@@ -11,39 +12,13 @@ import TrashIcon from "@/assets/trash.svg";
 import styles from "./index.module.less";
 
 import type { FC } from "react";
+import type { TableProps } from "antd";
 
 interface Member {
   fullName: string;
   email: string;
   role: string;
 }
-
-const columns = [
-  {
-    title: <span className={cn(styles.cell, styles.header)}>Member</span>,
-    dataIndex: "member",
-    key: "member",
-  },
-  {
-    title: <span className={cn(styles.cell, styles.header)}>Email</span>,
-    dataIndex: "email",
-    key: "email",
-  },
-  {
-    title: <span className={cn(styles.cell, styles.header)}>Role</span>,
-    dataIndex: "role",
-    key: "role",
-  },
-  {
-    title: (
-      <div className={cn(styles.cell, styles.header, styles.remove)}>
-        Remove
-      </div>
-    ),
-    dataIndex: "remove",
-    key: "remove",
-  },
-];
 
 interface MembersTableProps {
   members: Member[];
@@ -56,39 +31,85 @@ const MembersTable: FC<MembersTableProps> = ({
   onRoleChange,
   onRemove,
 }) => {
-  const renderMembers = (membersList: Member[]) =>
-    membersList.map((m, i) => ({
-      member: (
-        <Space size={10} className={styles.cell}>
-          <Avatar username={m.fullName} />
-          <span className={styles.memberName}>{m.fullName}</span>
-        </Space>
-      ),
-      email: <span className={styles.cell}>{m.email}</span>,
-      role: (
-        <span className={styles.cell}>
-          <Select
-            className={styles.select}
-            onChange={(role) => onRoleChange({ ...m, role })}
-            bordered={false}
-            value={m.role}
-            options={createRoleOptions(Role)}
-          />
+  const { t } = useTranslation(["settings", "common"]);
+
+  const columns: TableProps<Member>["columns"] = [
+    {
+      title: (
+        <span className={cn(styles.cell, styles.header)}>
+          {t("common:words.member")}
         </span>
       ),
-      remove: (
-        <div className={cn(styles.cell, styles.remove)}>
-          <Button onClick={() => onRemove(m)} type="link">
-            <TrashIcon />
-          </Button>
+      dataIndex: "member",
+      key: "member",
+      render: (_, value) => ({
+        children: (
+          <Space size={10} className={styles.cell}>
+            <Avatar username={value.fullName} />
+            <span className={styles.memberName}>{value.fullName}</span>
+          </Space>
+        ),
+      }),
+    },
+    {
+      title: (
+        <span className={cn(styles.cell, styles.header)}>
+          {" "}
+          {t("common:words.email")}
+        </span>
+      ),
+      dataIndex: "email",
+      key: "email",
+      render: (_, value) => ({
+        children: <span className={styles.cell}>{value.email}</span>,
+      }),
+    },
+    {
+      title: (
+        <span className={cn(styles.cell, styles.header)}>
+          {" "}
+          {t("common:words.role")}
+        </span>
+      ),
+      dataIndex: "role",
+      key: "role",
+      render: (_, value) => ({
+        children: (
+          <span className={styles.cell}>
+            <Select
+              className={styles.select}
+              onChange={(role) => onRoleChange({ ...value, role })}
+              bordered={false}
+              value={value.role}
+              options={createRoleOptions(Role)}
+            />
+          </span>
+        ),
+      }),
+    },
+    {
+      title: (
+        <div className={cn(styles.cell, styles.header, styles.remove)}>
+          {t("common:words.remove")}
         </div>
       ),
-      key: i,
-    }));
-
+      dataIndex: "remove",
+      key: "remove",
+      render: (_, value) => ({
+        children: (
+          <div className={cn(styles.cell, styles.remove)}>
+            <Button onClick={() => onRemove(value)} type="link">
+              <TrashIcon />
+            </Button>
+          </div>
+        ),
+      }),
+    },
+  ];
   return (
     <Table
-      dataSource={renderMembers(members)}
+      dataSource={members}
+      rowKey={(record) => record.fullName + record.email}
       pagination={false}
       columns={columns}
     />

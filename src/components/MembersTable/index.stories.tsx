@@ -12,32 +12,32 @@ export default {
 const data = [
   {
     fullName: "Ivan Fokeev1",
-    email: "mail@synmetrix.com",
+    email: "mail@synmetrix1.com",
     role: "Owner",
   },
   {
     fullName: "Ivan Fokeev2",
-    email: "mail@synmetrix.com",
+    email: "mail@synmetrix2.com",
     role: "Owner",
   },
   {
     fullName: "Ivan Fokeev3",
-    email: "mail@synmetrix.com",
+    email: "mail@synmetrix3.com",
     role: "Owner",
   },
   {
     fullName: "Ivan Fokeev4",
-    email: "mail@synmetrix.com",
+    email: "mail@synmetrix4.com",
     role: "Owner",
   },
   {
     fullName: "Ivan Fokeev5",
-    email: "mail@synmetrix.com",
+    email: "mail@synmetrix5.com",
     role: "Owner",
   },
   {
     fullName: "Ivan Fokeev6",
-    email: "mail@synmetrix.com",
+    email: "mail@synmetrix6.com",
     role: "role",
   },
 ];

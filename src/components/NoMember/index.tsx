@@ -1,7 +1,7 @@
 import { Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
-import NoDataSourceImg from "@/assets/no-db.png";
+import NoMemberImg from "@/assets/no-member.png";
 import Button from "@/components/Button";
 
 import styles from "./index.module.less";
@@ -14,11 +14,11 @@ const NoDataSource: FC = () => {
   const { t } = useTranslation(["settings", "common"]);
   return (
     <div className={styles.wrapper}>
-      <img className={styles.img} src={NoDataSourceImg} alt="" />
-      <Title level={4}>{t("data_sources.not_found.title")}</Title>
-      <Text className={styles.text}>{t("data_sources.not_found.text")}</Text>
+      <img className={styles.img} src={NoMemberImg} alt="" />
+      <Title level={4}>{t("members.not_found.title")}</Title>
+      <Text className={styles.text}>{t("members.not_found.text")}</Text>
       <Button size="large" type="primary">
-        {t("data_sources.not_found.connect_btn")}
+        {t("members.not_found.invite_btn")}
       </Button>
     </div>
   );

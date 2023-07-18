@@ -5,7 +5,7 @@ import NoDataSource from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/NoDataSource",
+  title: "Components/Settings/DataSources/NoDataSource",
   component: NoDataSource,
 } as Meta<typeof NoDataSource>;
 

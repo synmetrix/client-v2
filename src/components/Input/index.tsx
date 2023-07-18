@@ -1,5 +1,13 @@
 import { Controller } from "react-hook-form";
-import { Input as AntInput, Button, Checkbox, Form, Radio, Upload } from "antd";
+import {
+  Input as AntInput,
+  Button,
+  Checkbox,
+  Form,
+  Radio,
+  Select,
+  Upload,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import cn from "classnames";
 
@@ -11,6 +19,7 @@ import type {
   CheckboxProps as AntCheckboxProps,
   RadioGroupProps,
   UploadProps,
+  SelectProps,
 } from "antd";
 import type { Control, Path, PathValue, FieldValues } from "react-hook-form";
 import type { PasswordProps } from "antd/es/input/Password";
@@ -20,7 +29,8 @@ type ParentProps = AntCheckboxProps &
   TextAreaProps &
   RadioGroupProps &
   UploadProps &
-  PasswordProps;
+  PasswordProps &
+  SelectProps;
 
 interface InputProps<T extends FieldValues> extends ParentProps {
   control: Control<T>;
@@ -35,6 +45,7 @@ interface InputProps<T extends FieldValues> extends ParentProps {
 const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   control,
   name,
+  size = "large",
   defaultValue,
   label,
   placeholder,
@@ -66,6 +77,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                     [styles.uploadError]: invalid,
                   })}
                   icon={<UploadOutlined />}
+                  size={size}
                 >
                   {placeholder}
                 </Button>
@@ -90,6 +102,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
               <Radio.Group
                 className={cn({ [styles.radioError]: invalid })}
                 {...props}
+                size={size}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
               />
@@ -139,6 +152,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             <Form.Item label={getLabel()} className={styles.label}>
               <AntInput.Password
                 {...props}
+                size={size}
                 className={cn(styles.input, props.className)}
                 value={value}
                 onChange={onChange}
@@ -165,11 +179,37 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             <Form.Item label={getLabel()} className={styles.label}>
               <AntInput.TextArea
                 {...props}
+                size={size}
                 className={cn(styles.input, props.className)}
                 style={{ resize: "none", height: 108 }}
                 value={value}
                 onChange={onChange}
                 status={invalid ? "error" : undefined}
+              />
+              <span className={styles.error}>{error?.message}</span>
+            </Form.Item>
+          )}
+        />
+      );
+    case "select":
+      return (
+        <Controller
+          rules={rules}
+          control={control}
+          name={name}
+          defaultValue={defaultValue}
+          render={({
+            field: { value, onChange },
+            fieldState: { invalid, error },
+          }) => (
+            <Form.Item label={getLabel()} className={styles.label}>
+              <Select
+                {...props}
+                size={size}
+                className={cn(styles.input, props.className)}
+                value={value}
+                status={invalid ? "error" : undefined}
+                onChange={onChange}
               />
               <span className={styles.error}>{error?.message}</span>
             </Form.Item>
@@ -194,6 +234,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             <Form.Item label={getLabel()} className={styles.label}>
               <AntInput
                 {...props}
+                size={size}
                 className={cn(styles.input, props.className)}
                 value={value}
                 onChange={onChange}

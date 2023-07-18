@@ -15,6 +15,7 @@ import type { FC } from "react";
 import type { TableProps } from "antd";
 
 interface Member {
+  id: string;
   fullName: string;
   email: string;
   role: string;
@@ -109,7 +110,7 @@ const MembersTable: FC<MembersTableProps> = ({
   return (
     <Table
       dataSource={members}
-      rowKey={(record) => record.fullName + record.email}
+      rowKey={(record) => record.id}
       pagination={false}
       columns={columns}
     />

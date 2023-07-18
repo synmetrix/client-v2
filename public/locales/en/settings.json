@@ -17,5 +17,12 @@
       "title": "Active sessions",
       "logout": "Logout from all sessions"
     }
+  },
+  "sql_api": {
+    "not_found": {
+      "title": "You have no SQL API credentials",
+      "text": "Please set up your API credentials.",
+      "attach_btn": "Attach SQL API"
+    }
   }
 }

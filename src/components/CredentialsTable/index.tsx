@@ -1,5 +1,6 @@
 import { Space, Table } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
 import type { DataSource } from "@/types/dataSource";
@@ -28,9 +29,15 @@ interface CredentialsProps {
 }
 
 const Credentials: FC<CredentialsProps> = ({ credentials }) => {
+  const { t } = useTranslation(["settings", "common"]);
+
   const columns: TableProps<DataSourceCrdentials>["columns"] = [
     {
-      title: <span className={cn(styles.headerCeil)}>Team Member</span>,
+      title: (
+        <span className={cn(styles.headerCeil)}>
+          {t("common:words.team_member")}
+        </span>
+      ),
       dataIndex: "member",
       key: "member",
       render: (record) => (
@@ -41,7 +48,12 @@ const Credentials: FC<CredentialsProps> = ({ credentials }) => {
       ),
     },
     {
-      title: <span className={cn(styles.headerCeil)}>Data Source</span>,
+      title: (
+        <span className={cn(styles.headerCeil)}>
+          {" "}
+          {t("common:words.data_source")}
+        </span>
+      ),
       dataIndex: "dataSource",
       key: "dataSource",
       render: (record) => (
@@ -52,14 +64,22 @@ const Credentials: FC<CredentialsProps> = ({ credentials }) => {
       ),
     },
     {
-      title: <span className={cn(styles.headerCeil)}>Login</span>,
+      title: (
+        <span className={cn(styles.headerCeil)}>
+          {" "}
+          {t("common:words.login")}
+        </span>
+      ),
       dataIndex: "login",
       key: "login",
       render: (record) => <span className={styles.ceil}>{record}</span>,
     },
     {
       title: (
-        <span className={cn(styles.headerCeil, styles.date)}>Created At</span>
+        <span className={cn(styles.headerCeil, styles.date)}>
+          {" "}
+          {t("common:words.created_at")}
+        </span>
       ),
       dataIndex: "createdAt",
       key: "createdAt",

@@ -1,9 +1,9 @@
-import cn from "classnames";
 import { SettingOutlined } from "@ant-design/icons";
 import { Card } from "antd";
 import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
+import DataSourceTag from "@/components/DataSourceTag";
 import type { DataSource } from "@/types/dataSource";
 
 import styles from "./index.module.less";
@@ -48,10 +48,7 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
 
         <li className={styles.listItem}>
           <span className={styles.label}>{t("common:words.type")}</span>
-          <span className={cn(styles.value, styles.db)}>
-            <span className={styles.icon}>{type.icon}</span>
-            {type.name}
-          </span>
+          <DataSourceTag dataSource={type} />
         </li>
 
         <li className={styles.listItem}>

@@ -12,6 +12,7 @@ export interface DataSource {
   name: string;
   icon: ReactNode;
   value?: string;
+  url?: string;
 }
 
 export interface DataSoureSetupField {

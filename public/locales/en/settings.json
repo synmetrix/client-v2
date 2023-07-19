@@ -37,5 +37,12 @@
       "text": "Please invite members for manage roles.",
       "invite_btn": "Invite Members"
     }
+  },
+  "sql_api": {
+    "not_found": {
+      "title": "You have no SQL API credentials",
+      "text": "Please set up your API credentials.",
+      "attach_btn": "Attach SQL API"
+    }
   }
 }

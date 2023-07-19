@@ -17,9 +17,13 @@
     "type": "Type",
     "updated_at": "Updated At",
     "created_at": "Created At",
+    "team_member": "Team member",
+    "data_source": "Data source",
+    "login": "Login",
     "member": "Member",
     "remove": "Remove",
-    "role": "Role"
+    "role": "Role",
+    "email": "Email"
   },
   "form": {
     "labels": {

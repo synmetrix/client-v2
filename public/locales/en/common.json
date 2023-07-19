@@ -19,7 +19,8 @@
     "created_at": "Created At",
     "member": "Member",
     "remove": "Remove",
-    "role": "Role"
+    "role": "Role",
+    "email": "Email"
   },
   "form": {
     "labels": {

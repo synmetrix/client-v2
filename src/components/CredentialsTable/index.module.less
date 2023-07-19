@@ -1,0 +1,66 @@
+.table thead th::before {
+  display: none;
+}
+
+.table {
+  table {
+    border-collapse: separate;
+    border-spacing: 0 5px;
+  }
+}
+
+.row td {
+  background: #fcfcfc;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 0;
+  border-left: 0;
+}
+
+.row td:first-child {
+  background: #fcfcfc;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 0;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.row td:last-child {
+  background: #fcfcfc;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 0;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.date {
+  display: block;
+  text-align: right;
+}
+
+.dateCeil {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.dateTime {
+  margin-right: 11px;
+}
+
+.headerCeil {
+  color: #000000;
+  font-weight: 600;
+  font-size: 12px;
+  font-family: var(--font-manrope);
+}
+
+.ceil {
+  color: #808080;
+  font-size: 12px;
+  font-family: var(--font-manrope);
+
+  &.bold {
+    color: #000000;
+    font-weight: 700;
+  }
+}

@@ -68,7 +68,6 @@ const MembersTable: FC<MembersTableProps> = ({
     {
       title: (
         <span className={cn(styles.cell, styles.header)}>
-          {" "}
           {t("common:words.role")}
         </span>
       ),
@@ -109,6 +108,7 @@ const MembersTable: FC<MembersTableProps> = ({
   ];
   return (
     <Table
+      rootClassName={styles.table}
       dataSource={members}
       rowKey={(record) => record.id}
       pagination={false}

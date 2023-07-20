@@ -48,7 +48,9 @@ const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
       dataIndex: "count",
       key: "count",
       render: (value) => (
-        <span className={styles.count}>{value} Data sources</span>
+        <span className={styles.count}>
+          {value} {t("common:words.data_sources")}
+        </span>
       ),
     },
     {

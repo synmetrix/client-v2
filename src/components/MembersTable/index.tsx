@@ -43,11 +43,11 @@ const MembersTable: FC<MembersTableProps> = ({
       ),
       dataIndex: "member",
       key: "member",
-      render: (_, value) => ({
+      render: (_, record) => ({
         children: (
           <Space size={10} className={styles.cell}>
-            <Avatar username={value.fullName} />
-            <span className={styles.memberName}>{value.fullName}</span>
+            <Avatar username={record.fullName} />
+            <span className={styles.memberName}>{record.fullName}</span>
           </Space>
         ),
       }),
@@ -61,8 +61,8 @@ const MembersTable: FC<MembersTableProps> = ({
       ),
       dataIndex: "email",
       key: "email",
-      render: (_, value) => ({
-        children: <span className={styles.cell}>{value.email}</span>,
+      render: (_, record) => ({
+        children: <span className={styles.cell}>{record.email}</span>,
       }),
     },
     {
@@ -73,14 +73,14 @@ const MembersTable: FC<MembersTableProps> = ({
       ),
       dataIndex: "role",
       key: "role",
-      render: (_, value) => ({
+      render: (_, record) => ({
         children: (
           <span className={styles.cell}>
             <Select
               className={styles.select}
-              onChange={(role) => onRoleChange({ ...value, role })}
+              onChange={(role) => onRoleChange({ ...record, role })}
               bordered={false}
-              value={value.role}
+              value={record.role}
               options={createRoleOptions(Role)}
             />
           </span>
@@ -95,10 +95,10 @@ const MembersTable: FC<MembersTableProps> = ({
       ),
       dataIndex: "remove",
       key: "remove",
-      render: (_, value) => ({
+      render: (_, record) => ({
         children: (
           <div className={cn(styles.cell, styles.remove)}>
-            <Button onClick={() => onRemove(value)} type="text">
+            <Button onClick={() => onRemove(record)} type="text">
               <TrashIcon />
             </Button>
           </div>

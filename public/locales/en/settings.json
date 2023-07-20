@@ -44,5 +44,10 @@
       "text": "Please set up your API credentials.",
       "attach_btn": "Attach SQL API"
     }
+  },
+  "roles_and_access": {
+    "access_table": {
+      "count": "Access to data sources"
+    }
   }
 }

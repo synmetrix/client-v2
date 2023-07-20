@@ -98,7 +98,7 @@ const MembersTable: FC<MembersTableProps> = ({
       render: (_, value) => ({
         children: (
           <div className={cn(styles.cell, styles.remove)}>
-            <Button onClick={() => onRemove(value)} type="link">
+            <Button onClick={() => onRemove(value)} type="text">
               <TrashIcon />
             </Button>
           </div>

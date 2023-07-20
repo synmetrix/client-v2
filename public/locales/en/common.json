@@ -23,7 +23,10 @@
     "member": "Member",
     "remove": "Remove",
     "role": "Role",
-    "email": "Email"
+    "email": "Email",
+    "actions": "Actions",
+    "partial_access": "Pratial access",
+    "full_access": "Full access"
   },
   "form": {
     "labels": {

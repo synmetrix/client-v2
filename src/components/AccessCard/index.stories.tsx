@@ -31,6 +31,7 @@ const Template: StoryFn<typeof AccessCard> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
+  id: "1",
   url: "gh-api.clickhouse.tech",
   access: "full",
   dataSource: {
@@ -38,4 +39,5 @@ Default.args = {
     icon: <CickHouseIcon />,
   },
   active: false,
+  onClick: console.log,
 };

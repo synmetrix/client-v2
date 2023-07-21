@@ -3,24 +3,23 @@ import cn from "classnames";
 
 import DataSourceTag from "@/components/DataSourceTag";
 import AccessType from "@/components/AccessType";
-import type { AccessType as Access } from "@/types/access";
-import type { DataSource } from "@/types/dataSource";
+import type { DataSourceAccess } from "@/types/access";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-interface AccessCardProps {
-  url: string;
-  access: Access;
-  dataSource: DataSource;
+interface AccessCardProps extends DataSourceAccess {
   active?: boolean;
+  onClick?: (access: DataSourceAccess) => void;
 }
 
 const AccessCard: FC<AccessCardProps> = ({
+  id,
   url,
   access,
   dataSource,
+  onClick,
   active,
 }) => {
   return (
@@ -28,6 +27,7 @@ const AccessCard: FC<AccessCardProps> = ({
       className={cn(styles.card, { [styles.active]: active })}
       bodyStyle={{ padding: 0 }}
       hoverable
+      onClick={() => onClick?.({ id, url, access, dataSource })}
     >
       <Space direction="vertical" size={14}>
         <span className={styles.url}>{url}</span>

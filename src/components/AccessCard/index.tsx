@@ -27,13 +27,13 @@ const AccessCard: FC<AccessCardProps> = ({
     <Card
       className={cn(styles.card, { [styles.active]: active })}
       bodyStyle={{ padding: 0 }}
+      hoverable
     >
       <Space direction="vertical" size={14}>
         <span className={styles.url}>{url}</span>
 
         <Space size={29}>
           <AccessType access={access} />
-
           <DataSourceTag dataSource={dataSource} />
         </Space>
       </Space>

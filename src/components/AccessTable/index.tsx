@@ -1,12 +1,12 @@
-import { Space, Table } from "antd";
+import { Table } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
+import AccessType from "@/components/AccessType";
+import type { AccessType as AccessAlias } from "@/types/access";
 
 import TrashIcon from "@/assets/trash.svg";
-import LockOpenIcon from "@/assets/lock-open.svg";
-import LockClosedIcon from "@/assets/lock-close.svg";
 
 import styles from "./index.module.less";
 
@@ -15,7 +15,7 @@ import type { FC } from "react";
 
 interface DataSourceAccess {
   url: string;
-  type: "partial" | "full";
+  type: AccessAlias;
 }
 
 interface Access {
@@ -98,20 +98,7 @@ const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
         title: "type",
         dataIndex: "type",
         key: "type",
-        render: (value) => (
-          <Space className={styles.type} size={10} align="center">
-            {value === "partial" ? (
-              <>
-                <LockOpenIcon /> {t("common:words.partial_access")}
-              </>
-            ) : (
-              <>
-                <LockClosedIcon />
-                {t("common:words.full_access")}
-              </>
-            )}
-          </Space>
-        ),
+        render: (value) => <AccessType access={value} />,
       },
     ];
 

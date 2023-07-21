@@ -27,7 +27,8 @@
     "email": "Email",
     "actions": "Actions",
     "partial_access": "Pratial access",
-    "full_access": "Full access"
+    "full_access": "Full access",
+    "no_access": "No access"
   },
   "form": {
     "labels": {

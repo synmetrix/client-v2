@@ -24,15 +24,7 @@ const AccessSelection: FC<AccessSelectionProps> = ({
   active,
 }) => {
   return (
-    <Swiper
-      slidesPerView={3}
-      spaceBetween={30}
-      freeMode={true}
-      pagination={{
-        clickable: true,
-      }}
-      modules={[FreeMode]}
-    >
+    <Swiper slidesPerView={4} spaceBetween={6} freeMode modules={[FreeMode]}>
       {items.map((i) => (
         <SwiperSlide key={i.id} className={styles.sliderItem}>
           <AccessCard {...i} onClick={onSelect} active={i.id === active} />

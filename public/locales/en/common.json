@@ -28,7 +28,8 @@
     "actions": "Actions",
     "partial_access": "Pratial access",
     "full_access": "Full access",
-    "no_access": "No access"
+    "no_access": "No access",
+    "data_models": "Data models"
   },
   "form": {
     "labels": {

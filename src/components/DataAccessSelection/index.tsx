@@ -62,7 +62,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
     }
 
     if (!newValue.length) {
-      value[key] = undefined;
+      value[key] = [];
       return onChange?.(value);
     }
 

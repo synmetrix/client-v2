@@ -77,6 +77,15 @@ const AccessController: <T extends FieldValues>(
     } as DataAccessOption;
   };
 
+  const onAccessChange = (v: DataAccessOption) => {
+    if (typeof value === "object") {
+      value[selectedModel] = v;
+      onChange(value);
+    } else {
+      onChange({ [selectedModel]: v } as typeof value);
+    }
+  };
+
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} lg={12}>
@@ -91,14 +100,7 @@ const AccessController: <T extends FieldValues>(
         {selectedModel && (
           <DataAccessSelection
             options={createDataAccessSelection()}
-            onChange={(v) => {
-              if (typeof value === "object") {
-                value[selectedModel] = v;
-                onChange(value);
-              } else {
-                onChange({ [selectedModel]: v } as typeof value);
-              }
-            }}
+            onChange={onAccessChange}
             value={value?.[selectedModel]}
           />
         )}

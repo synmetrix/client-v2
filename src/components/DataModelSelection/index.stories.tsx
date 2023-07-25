@@ -9,16 +9,19 @@ export default {
   component: DataModelSelection,
 } as Meta<typeof DataModelSelection>;
 
-const Template: StoryFn<typeof DataModelSelection> = (args) => (
-  <RootLayout>
-    <DataModelSelection {...args} />
-  </RootLayout>
-);
+const Template: StoryFn<typeof DataModelSelection> = (args) => {
+  const [active, setActive] = useState<string>("");
+  return (
+    <RootLayout>
+      <DataModelSelection {...args} active={active} onChange={setActive} />
+    </RootLayout>
+  );
+};
 
 export const Default = Template.bind({});
 
 Default.args = {
-  resource: "github.demo.altinity.cloud",
+  title: "github.demo.altinity.cloud",
   dataModels: [
     {
       title: "LineItems",
@@ -33,5 +36,4 @@ Default.args = {
       access: "partial",
     },
   ],
-  onChange: console.log,
 };

@@ -1,14 +1,12 @@
 import { Typography, Space, Input, Checkbox } from "antd";
 
+import type { DataAccessOption } from "@/types/access";
+
 import styles from "./index.module.less";
 
 import type { ChangeEvent, FC } from "react";
 
 const { Text } = Typography;
-
-export type DataAccessOption = Partial<
-  Record<"measures" | "deminsions" | "segments", string[]>
->;
 
 interface DataAccessSelectionProps {
   options: DataAccessOption;
@@ -22,14 +20,13 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
   onChange,
 }) => {
   const [searchValue, setSearchValue] = useState<string>("");
-
   const filterOptions = (option?: string[]) => {
     const res = option?.filter((m) => m.toLowerCase().includes(searchValue));
     return res && res.length > 0 ? res : undefined;
   };
 
   const measures = filterOptions(options.measures),
-    deminsions = filterOptions(options.deminsions),
+    dimensions = filterOptions(options.dimensions),
     segments = filterOptions(options.segments);
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) =>
@@ -45,14 +42,14 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
 
   const onSelectAll = () => {
     if (isAllSelected()) {
-      onChange?.({ measures: [], deminsions: [], segments: [] });
+      onChange?.({ measures: [], dimensions: [], segments: [] });
     } else {
-      onChange?.({ measures, deminsions, segments });
+      onChange?.({ measures, dimensions, segments });
     }
   };
 
   const onSelect = (newValue: string[], key: keyof DataAccessOption) => {
-    if (!value) return;
+    if (!value) return onChange?.({ [key]: newValue });
 
     if (!newValue.length && searchValue) {
       value[key] = value[key]?.filter(
@@ -100,14 +97,14 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
             </>
           )}
 
-          {deminsions && (
+          {dimensions && (
             <>
               <Text className={styles.groupTitle}>deminsions</Text>
               <Checkbox.Group
                 className={styles.checkboxGroup}
-                options={deminsions}
-                value={value?.deminsions}
-                onChange={(v) => onSelect(v as string[], "deminsions")}
+                options={dimensions}
+                value={value?.dimensions}
+                onChange={(v) => onSelect(v as string[], "dimensions")}
               />
             </>
           )}

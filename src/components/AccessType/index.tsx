@@ -23,14 +23,14 @@ const AccessType: FC<AccessTypeProps> = ({ access }) => {
         return (
           <>
             <FullAccessIcon className={styles.icon} />
-            {t("common:words.partial_access")}
+            {t("common:words.full_access")}
           </>
         );
       case "partial":
         return (
           <>
             <PartialAccessIcon className={styles.icon} />
-            {t("common:words.full_access")}
+            {t("common:words.partial_access")}
           </>
         );
 

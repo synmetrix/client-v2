@@ -1,8 +1,8 @@
 import RootLayout from "@/layouts/RootLayout";
+import type { DataAccessOption } from "@/types/access";
 
 import DataAccessSelection from ".";
 
-import type { DataAccessOption } from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
@@ -13,7 +13,7 @@ export default {
 const Template: StoryFn<typeof DataAccessSelection> = (args) => {
   const [value, setValue] = useState<DataAccessOption>({
     measures: [],
-    deminsions: [],
+    dimensions: [],
     segments: [],
   });
 
@@ -33,7 +33,7 @@ export const Default = Template.bind({});
 Default.args = {
   options: {
     measures: ["Stocks"],
-    deminsions: ["Name", "Address", "Stocks"],
+    dimensions: ["Name", "Address", "Stocks"],
     segments: ["Stocks"],
   },
 };

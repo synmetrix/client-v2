@@ -3,46 +3,38 @@ import { Col, Row, Space, Typography } from "antd";
 import cn from "classnames";
 
 import AccessType from "@/components/AccessType";
-import type { AccessType as Access } from "@/types/access";
+import type { DataModelOption } from "@/types/access";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-interface DataModel {
-  title: string;
-  access: Access;
-}
-
 interface DataModelSelectionProps {
-  resource: string;
-  dataModels: DataModel[];
-  defaultActive?: string;
+  title: string;
+  dataModels: DataModelOption[];
+  active?: string;
   onChange?: (activeTitle: string) => void;
 }
 
 const { Text } = Typography;
 
 const DataModelSelection: FC<DataModelSelectionProps> = ({
-  resource,
+  title,
   dataModels,
-  defaultActive = "",
+  active = "",
   onChange,
 }) => {
   const { t } = useTranslation(["settings", "common"]);
 
-  const [active, setActive] = useState<string>(defaultActive);
-
-  const onClick = (title: string) => {
-    setActive(title);
-    onChange?.(title);
+  const onClick = (activeTitle: string) => {
+    onChange?.(activeTitle);
   };
 
   return (
     <Space className={styles.wrapper} direction="vertical" size={16}>
       <Space direction="vertical" size={16}>
         <Text className={styles.title}>{t("common:words.data_models")}</Text>
-        <Text className={styles.resource}>{resource}</Text>
+        <Text className={styles.resource}>{title}</Text>
       </Space>
 
       <Space className={styles.dataModels} direction="vertical" size={8}>

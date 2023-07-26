@@ -1,6 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Typography, Space, Input, Checkbox } from "antd";
 
 import type { DataAccessOption } from "@/types/access";
+
+import FilterIcon from "@/assets/filter.svg";
 
 import styles from "./index.module.less";
 
@@ -19,6 +22,8 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
   value,
   onChange,
 }) => {
+  const { t } = useTranslation(["common"]);
+
   const [searchValue, setSearchValue] = useState<string>("");
   const filterOptions = (option?: string[]) => {
     const res = option?.filter((m) => m.toLowerCase().includes(searchValue));
@@ -77,11 +82,12 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
         size="large"
         value={searchValue}
         onChange={onSearch}
+        prefix={<FilterIcon />}
       />
 
       <Space size={16} direction="vertical">
         <Checkbox checked={isAllSelected()} onChange={onSelectAll}>
-          Select all
+          {t("common:words.select_all")}
         </Checkbox>
 
         <Space size={8} direction="vertical">

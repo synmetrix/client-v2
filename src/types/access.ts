@@ -15,6 +15,7 @@ export interface DataModelOption {
 }
 
 export interface DataResource {
+  id: string;
   title: string;
   dataModels: DataModel[];
 }

@@ -13,6 +13,7 @@ export default {
 } as Meta<typeof AccessController>;
 
 const resourceMock: DataResource = {
+  id: "1",
   title: "github.demo.altinity.cloud",
   dataModels: [
     {

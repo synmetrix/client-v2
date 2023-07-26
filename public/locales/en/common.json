@@ -29,7 +29,8 @@
     "partial_access": "Partial access",
     "full_access": "Full access",
     "no_access": "No access",
-    "data_models": "Data models"
+    "data_models": "Data models",
+    "create": "Create"
   },
   "form": {
     "labels": {

@@ -99,7 +99,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
 
           {dimensions && (
             <>
-              <Text className={styles.groupTitle}>deminsions</Text>
+              <Text className={styles.groupTitle}>dimensions</Text>
               <Checkbox.Group
                 className={styles.checkboxGroup}
                 options={dimensions}

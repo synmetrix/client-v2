@@ -27,3 +27,12 @@ export interface DataModel extends Required<DataAccessOption> {
 export type DataAccessOption = Partial<
   Record<"measures" | "dimensions" | "segments", string[]>
 >;
+
+export interface Role {
+  id: string;
+  name: string;
+  count: number;
+  createdAt: string;
+  updatedAt: string;
+  dataSources: { url: string; type: AccessType }[];
+}

@@ -73,7 +73,12 @@ const RoleForm: FC<RoleFormProps> = ({ resources, dataSourceAccess }) => {
           </Suspense>
         )}
 
-        <Button type="primary" size="large" onClick={handleSubmit(console.log)}>
+        <Button
+          className={styles.submit}
+          type="primary"
+          size="large"
+          onClick={handleSubmit(console.log)}
+        >
           {t("common:words.create")}
         </Button>
       </Space>

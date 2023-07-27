@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import AccessType from "@/components/AccessType";
-import type { AccessType as AccessAlias } from "@/types/access";
+import type { Role } from "@/types/access";
 
 import TrashIcon from "@/assets/trash.svg";
 
@@ -13,30 +13,16 @@ import styles from "./index.module.less";
 import type { ColumnsType } from "antd/es/table";
 import type { FC } from "react";
 
-interface DataSourceAccess {
-  url: string;
-  type: AccessAlias;
-}
-
-interface Access {
-  id: string;
-  name: string;
-  count: number;
-  createdAt: string;
-  updatedAt: string;
-  dataSources: DataSourceAccess[];
-}
-
 interface AccessTableProps {
-  access: Access[];
-  onRemove: (access: Access) => void;
-  onEdit: (access: Access) => void;
+  access: Role[];
+  onRemove: (access: Role) => void;
+  onEdit: (access: Role) => void;
 }
 
 const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
   const { t } = useTranslation(["settings", "common"]);
 
-  const columns: ColumnsType<Access> = [
+  const columns: ColumnsType<Role> = [
     {
       title: t("common:words.role"),
       dataIndex: "name",
@@ -74,10 +60,18 @@ const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
       key: "actions",
       render: (_, record) => (
         <div className={styles.actionsCell}>
-          <Button type="text" onClick={() => onEdit(record)}>
+          <Button
+            className={styles.action}
+            type="text"
+            onClick={() => onEdit(record)}
+          >
             <SettingOutlined key="setting" />
           </Button>
-          <Button type="text" onClick={() => onRemove(record)}>
+          <Button
+            className={styles.action}
+            type="text"
+            onClick={() => onRemove(record)}
+          >
             <TrashIcon />
           </Button>
         </div>
@@ -85,8 +79,8 @@ const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
     },
   ];
 
-  const expandedRowRender = (record: Access) => {
-    const expandedColumns: ColumnsType<DataSourceAccess> = [
+  const expandedRowRender = (record: Role) => {
+    const expandedColumns: ColumnsType<Role["dataSources"][number]> = [
       {
         title: "url",
         dataIndex: "url",

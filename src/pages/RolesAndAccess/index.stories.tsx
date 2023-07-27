@@ -6,7 +6,7 @@ import RolesAndAccess from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Pages/RolesAndAccess",
+  title: "Pages/Settings/RolesAndAccess",
   component: RolesAndAccess,
 } as Meta<typeof RolesAndAccess>;
 

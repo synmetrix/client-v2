@@ -15,27 +15,35 @@ const Template: StoryFn<typeof Header> = (args) => (
   </RootLayout>
 );
 
+const user = {
+  fullName: "User Name",
+  teams: [
+    {
+      label: "team1",
+      href: "",
+    },
+  ],
+};
+
 export const Default = Template.bind({});
 
 export const WithAuth = Template.bind({});
 WithAuth.args = {
-  user: {
-    fullName: "User Name",
-    teams: [
-      {
-        label: "team1",
-        href: "",
-      },
-    ],
-  },
+  user,
 };
 
 export const SignIn = Template.bind({});
 SignIn.args = {
-  location: "signup",
+  location: "sign_up",
 };
 
 export const SignUp = Template.bind({});
 SignUp.args = {
-  location: "signin",
+  location: "sign_in",
+};
+
+export const WithTitle = Template.bind({});
+WithTitle.args = {
+  location: "settings/roles_and_access",
+  user,
 };

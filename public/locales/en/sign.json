@@ -1,0 +1,21 @@
+{
+  "sign_in": {
+    "title": "Welcome Back",
+    "text": "Please Enter your details!",
+    "bottom_text": " Don't have an account?",
+    "sign_up_link": "Sing up for free",
+    "login": "Login"
+  },
+  "sign_up": {
+    "title": "Sing Up",
+    "text": "Please Enter your details!",
+    "magic_link_login": "Sing Up with Magic Link",
+    "privacy_text_1": "By checking this box, you accept our.",
+    "privacy_link_1": "terms of use",
+    "privacy_text_2": "and our",
+    "privacy_link_2": "privacy policy",
+    "bottom_text": "Have an account?",
+    "sign_in_link": "Login for free",
+    "sign_up": "Sing Up"
+  }
+}

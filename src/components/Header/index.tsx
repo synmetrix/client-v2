@@ -22,7 +22,10 @@ const { Title } = Typography;
 const Header: React.FC<HeaderProps> = ({ user = null, location = "" }) => {
   const { t } = useTranslation(["common", "pages"]);
   const responsive = useResponsive();
+
   const isMobile = responsive.md === false;
+  const isSignUpPage = location === "sign_up";
+  const withLogo = WITHOUT_TITLE_ROUTES.includes(location);
 
   const navbar = (
     <Navbar
@@ -40,8 +43,6 @@ const Header: React.FC<HeaderProps> = ({ user = null, location = "" }) => {
       teams={user?.teams}
     />
   );
-
-  const isSignUpPage = location === "sign_up";
 
   const authLinks = (
     <Space>
@@ -64,10 +65,12 @@ const Header: React.FC<HeaderProps> = ({ user = null, location = "" }) => {
   const content = user ? navbar : authLinks;
 
   return (
-    <BasicHeader className={cx(styles.header, isMobile && styles.headerMobile)}>
+    <BasicHeader
+      className={cx(styles.header, !withLogo && styles.headerBordered)}
+    >
       <Row className={styles.root} justify="space-between">
         <Col span={12} className={cx(styles.col)}>
-          {WITHOUT_TITLE_ROUTES.includes(location) ? (
+          {withLogo ? (
             <a className={styles.logo} href="/">
               <img
                 className={styles.logoText}

@@ -1,4 +1,4 @@
-import { Button as AntButton } from "antd";
+import { Button as BasicButton } from "antd";
 import cn from "classnames";
 
 import styles from "./index.module.less";
@@ -8,7 +8,7 @@ import type { FC } from "react";
 
 const Button: FC<ButtonProps> = (props) => {
   return (
-    <AntButton
+    <BasicButton
       {...props}
       className={cn(
         styles.btn,

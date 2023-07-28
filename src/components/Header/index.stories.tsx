@@ -1,4 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
+import { user } from "@/mocks/user";
 
 import Header from ".";
 
@@ -14,16 +15,6 @@ const Template: StoryFn<typeof Header> = (args) => (
     <Header {...args} />
   </RootLayout>
 );
-
-const user = {
-  fullName: "User Name",
-  teams: [
-    {
-      label: "team1",
-      href: "",
-    },
-  ],
-};
 
 export const Default = Template.bind({});
 

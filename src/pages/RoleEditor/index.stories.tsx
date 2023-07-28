@@ -1,6 +1,7 @@
 import RootLayout from "@/layouts/RootLayout";
 import BasicLayout from "@/layouts/BasicLayout";
 import { accessItems, resourceMock } from "@/mocks/access";
+import { user } from "@/mocks/user";
 
 import RoleEditor from ".";
 
@@ -13,7 +14,7 @@ export default {
 
 const Template: StoryFn<typeof RoleEditor> = (args) => (
   <RootLayout>
-    <BasicLayout>
+    <BasicLayout location="settings/roles_and_access" user={user}>
       <RoleEditor {...args} />
     </BasicLayout>
   </RootLayout>

@@ -1,5 +1,6 @@
 import RootLayout from "@/layouts/RootLayout";
 import BasicLayout from "@/layouts/BasicLayout";
+import { user } from "@/mocks/user";
 
 import RolesAndAccess from ".";
 
@@ -12,7 +13,7 @@ export default {
 
 const Template: StoryFn<typeof RolesAndAccess> = (args) => (
   <RootLayout>
-    <BasicLayout>
+    <BasicLayout location="settings/roles_and_access" user={user}>
       <RolesAndAccess {...args} />
     </BasicLayout>
   </RootLayout>

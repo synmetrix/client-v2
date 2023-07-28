@@ -11,12 +11,17 @@ const { Content } = Layout;
 export type BasicLayoutProps = {
   children: React.ReactNode;
   user?: User | null;
+  location?: string;
 };
 
-const BasicLayout: React.FC<BasicLayoutProps> = ({ user = null, children }) => {
+const BasicLayout: React.FC<BasicLayoutProps> = ({
+  user = null,
+  location = "",
+  children,
+}) => {
   return (
     <Layout className={styles.root}>
-      <Header user={user} />
+      <Header location={location} user={user} />
       <Content>{children}</Content>
       <Footer />
     </Layout>

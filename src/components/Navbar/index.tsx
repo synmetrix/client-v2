@@ -4,6 +4,7 @@ import { DownOutlined } from "@ant-design/icons";
 import cn from "classnames";
 
 import Avatar from "@/components/Avatar";
+import type { Team } from "@/types/user";
 
 import TeamIcon from "@/assets/team.svg";
 
@@ -17,9 +18,9 @@ interface MenuItem {
 }
 
 interface NavbarProps {
-  teams: MenuItem[];
   userMenu: MenuItem[];
   direction?: "horizontal" | "vertical";
+  teams?: Team[];
 }
 
 const Navbar: FC<NavbarProps> = ({ direction, teams, userMenu }) => {
@@ -33,20 +34,22 @@ const Navbar: FC<NavbarProps> = ({ direction, teams, userMenu }) => {
         {t("common:words.docs")}
       </Button>
 
-      <Dropdown
-        onOpenChange={setTeamsOpen}
-        menu={{ items: teams.map((tm, i) => ({ ...tm, key: i })) }}
-      >
-        <Button>
-          <Space align="start">
-            <TeamIcon />
-            <span className={styles.team}> {t("common:words.team")}</span>
-            <span className={cn(styles.icon, { [styles.rotate]: teamsOpen })}>
-              <DownOutlined />
-            </span>
-          </Space>
-        </Button>
-      </Dropdown>
+      {teams && (
+        <Dropdown
+          onOpenChange={setTeamsOpen}
+          menu={{ items: teams.map((tm, i) => ({ ...tm, key: i })) }}
+        >
+          <Button>
+            <Space align="start">
+              <TeamIcon />
+              <span className={styles.team}> {t("common:words.team")}</span>
+              <span className={cn(styles.icon, { [styles.rotate]: teamsOpen })}>
+                <DownOutlined />
+              </span>
+            </Space>
+          </Button>
+        </Dropdown>
+      )}
 
       <Dropdown
         onOpenChange={setAccountOpen}

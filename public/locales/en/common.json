@@ -30,7 +30,9 @@
     "full_access": "Full access",
     "no_access": "No access",
     "data_models": "Data models",
-    "create": "Create"
+    "create": "Create",
+    "sign_in": "Sign in",
+    "sign_up": "Sign up"
   },
   "form": {
     "labels": {

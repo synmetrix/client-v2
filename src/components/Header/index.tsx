@@ -1,18 +1,23 @@
 import { Layout, Row, Col, Space, Button } from "antd";
 import { useResponsive } from "ahooks";
+import { useTranslation } from "react-i18next";
 import cx from "classnames";
 
 import Navbar from "@/components/Navbar";
 import BurgerMenu from "@/components/BurgerMenu";
+import type { User } from "@/types/user";
 
 import styles from "./index.module.less";
 
 const { Header: BasicHeader } = Layout;
 
-// TODO use store
-const isAuth = false;
+interface HeaderProps {
+  user?: User | null;
+  location?: string;
+}
 
-const Header: React.FC = () => {
+const Header: React.FC<HeaderProps> = ({ user = null, location }) => {
+  const { t } = useTranslation(["common"]);
   const responsive = useResponsive();
   const isMobile = responsive.md === false;
 
@@ -29,31 +34,31 @@ const Header: React.FC = () => {
           href: "/",
         },
       ]}
-      teams={[
-        {
-          label: "1st team item",
-          href: "/",
-        },
-        {
-          label: "2nd team item",
-          href: "/",
-        },
-      ]}
+      teams={user?.teams}
     />
   );
 
+  const isSignUpPage = location === "signup";
+
   const authLinks = (
     <Space>
-      <Button type="link" className={styles.button}>
-        Sign in
-      </Button>
-      <Button type="primary" className={styles.button}>
-        Sign up
-      </Button>
+      {location !== "signin" && (
+        <Button
+          type={isSignUpPage ? "primary" : "link"}
+          className={styles.button}
+        >
+          {isSignUpPage ? t("common:words.login") : t("common:words.sign_in")}
+        </Button>
+      )}
+      {location !== "signup" && (
+        <Button type="primary" className={styles.button}>
+          {t("common:words.sign_up")}
+        </Button>
+      )}
     </Space>
   );
 
-  const content = isAuth ? navbar : authLinks;
+  const content = user ? navbar : authLinks;
 
   return (
     <BasicHeader className={cx(styles.header, isMobile && styles.headerMobile)}>

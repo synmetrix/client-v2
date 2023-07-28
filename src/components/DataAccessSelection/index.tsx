@@ -74,7 +74,10 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
 
   return (
     <Space className={styles.wrapper} size={16} direction="vertical">
-      <Text className={styles.title}>Measures/dimensions/segments</Text>
+      <Text className={styles.title}>
+        {t("common:words.measures")}/{t("common:words.dimensions")}/
+        {t("common:words.segments")}
+      </Text>
 
       <Input
         className={styles.input}
@@ -93,7 +96,9 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
         <Space size={8} direction="vertical">
           {measures && (
             <>
-              <Text className={styles.groupTitle}>measures</Text>
+              <Text className={styles.groupTitle}>
+                {t("common:words.measures")}
+              </Text>
               <Checkbox.Group
                 className={styles.checkboxGroup}
                 options={measures}
@@ -105,7 +110,9 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
 
           {dimensions && (
             <>
-              <Text className={styles.groupTitle}>dimensions</Text>
+              <Text className={styles.groupTitle}>
+                {t("common:words.dimensions")}
+              </Text>
               <Checkbox.Group
                 className={styles.checkboxGroup}
                 options={dimensions}
@@ -117,7 +124,9 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
 
           {segments && (
             <>
-              <Text className={styles.groupTitle}>segments</Text>
+              <Text className={styles.groupTitle}>
+                {t("common:words.segments")}
+              </Text>
               <Checkbox.Group
                 className={styles.checkboxGroup}
                 options={segments}

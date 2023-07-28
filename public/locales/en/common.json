@@ -32,7 +32,10 @@
     "data_models": "Data models",
     "create": "Create",
     "sign_in": "Sign in",
-    "sign_up": "Sign up"
+    "sign_up": "Sign up",
+    "measures": "measures",
+    "dimensions": "dimensions",
+    "segments": "segments"
   },
   "form": {
     "labels": {

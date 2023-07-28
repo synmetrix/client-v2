@@ -19,11 +19,19 @@ interface MenuItem {
 
 interface NavbarProps {
   userMenu: MenuItem[];
+  username: string;
+  userAvatar?: string;
   direction?: "horizontal" | "vertical";
   teams?: Team[];
 }
 
-const Navbar: FC<NavbarProps> = ({ direction, teams, userMenu }) => {
+const Navbar: FC<NavbarProps> = ({
+  direction,
+  teams,
+  userMenu,
+  username,
+  userAvatar,
+}) => {
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
   const { t } = useTranslation(["common"]);
@@ -56,7 +64,7 @@ const Navbar: FC<NavbarProps> = ({ direction, teams, userMenu }) => {
         menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })) }}
       >
         <Space className={styles.dropdownHeader} align="center">
-          <Avatar username="user name" />
+          <Avatar username={username} img={userAvatar} />
           <span className={cn(styles.icon, { [styles.rotate]: accountOpen })}>
             <DownOutlined />
           </span>

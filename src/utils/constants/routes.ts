@@ -1,1 +1,1 @@
-export const WITHOUT_TITLE_ROUTES = ["sign_in", "sign_up", ""];
+export const WITH_LOGO_ROUTES = ["sign_in", "sign_up", ""];

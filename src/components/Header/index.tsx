@@ -1,76 +1,36 @@
-import { Layout, Row, Col, Space, Button, Typography } from "antd";
+import { Layout, Row, Col, Typography } from "antd";
 import { useResponsive } from "ahooks";
-import { useTranslation } from "react-i18next";
 import cx from "classnames";
-
-import Navbar from "@/components/Navbar";
-import BurgerMenu from "@/components/BurgerMenu";
-import type { User } from "@/types/user";
-import { WITHOUT_TITLE_ROUTES } from "@/utils/constants/routes";
 
 import styles from "./index.module.less";
 
 const { Header: BasicHeader } = Layout;
 
 interface HeaderProps {
-  user?: User | null;
-  location?: string;
+  content: React.ReactNode;
+  withLogo?: boolean;
+  bordered?: boolean;
+  title?: string;
 }
 
 const { Title } = Typography;
 
-const Header: React.FC<HeaderProps> = ({ user = null, location = "" }) => {
-  const { t } = useTranslation(["common", "pages"]);
+const Header: React.FC<HeaderProps> = ({
+  withLogo,
+  bordered = false,
+  title,
+  content,
+}) => {
   const responsive = useResponsive();
-
   const isMobile = responsive.md === false;
-  const isSignUpPage = location === "sign_up";
-  const withLogo = WITHOUT_TITLE_ROUTES.includes(location);
-
-  const navbar = (
-    <Navbar
-      direction={isMobile ? "vertical" : "horizontal"}
-      userMenu={[
-        {
-          label: "1st menu item",
-          href: "/",
-        },
-        {
-          label: "2nd menu item",
-          href: "/",
-        },
-      ]}
-      teams={user?.teams}
-    />
-  );
-
-  const authLinks = (
-    <Space>
-      {location !== "sign_in" && (
-        <Button
-          type={isSignUpPage ? "primary" : "link"}
-          className={styles.button}
-        >
-          {isSignUpPage ? t("common:words.login") : t("common:words.sign_in")}
-        </Button>
-      )}
-      {location !== "sign_up" && (
-        <Button type="primary" className={styles.button}>
-          {t("common:words.sign_up")}
-        </Button>
-      )}
-    </Space>
-  );
-
-  const content = user ? navbar : authLinks;
 
   return (
     <BasicHeader
-      className={cx(styles.header, !withLogo && styles.headerBordered)}
+      className={cx(styles.header, bordered && styles.headerBordered)}
     >
       <Row className={styles.root} justify="space-between">
         <Col span={12} className={cx(styles.col)}>
-          {withLogo ? (
+          {withLogo && (
             <a className={styles.logo} href="/">
               <img
                 className={styles.logoText}
@@ -78,14 +38,15 @@ const Header: React.FC<HeaderProps> = ({ user = null, location = "" }) => {
                 src="/logo_with_text.png"
               />
             </a>
-          ) : (
+          )}
+          {title && (
             <Title className={cx(isMobile && styles.title)} level={4}>
-              {t(`pages:${location}`, location)}
+              {title}
             </Title>
           )}
         </Col>
         <Col span={12} className={cx(styles.col, styles.colRight)}>
-          {isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
+          {content}
         </Col>
       </Row>
     </BasicHeader>

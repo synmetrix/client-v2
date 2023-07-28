@@ -1,3 +1,5 @@
 {
-  "/settings/roles_and_access": "Roles and access"
+  "settings": {
+    "roles_and_access": "Roles and access"
+  }
 }

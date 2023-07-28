@@ -21,4 +21,5 @@ export const Default = Template.bind({});
 Default.args = {
   dataSourceAccess: accessItems,
   resources: resourceMock,
+  onSubmit: console.log,
 };

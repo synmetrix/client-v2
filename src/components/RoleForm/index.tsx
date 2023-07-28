@@ -8,27 +8,26 @@ import AccessSelection from "@/components/AccessSelection";
 import AccessController from "@/components/AccessController";
 import Button from "@/components/Button";
 import type {
-  DataAccessOption,
   DataResource,
   DataSourceAccess,
+  RoleForm as RoleFormType,
 } from "@/types/access";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-interface RoleFormType {
-  name: string;
-  resource: DataSourceAccess;
-  access: Record<string, DataAccessOption>;
-}
-
 interface RoleFormProps {
   resources: DataResource[];
   dataSourceAccess: DataSourceAccess[];
+  onSubmit: (data: RoleFormType) => void;
 }
 
-const RoleForm: FC<RoleFormProps> = ({ resources, dataSourceAccess }) => {
+const RoleForm: FC<RoleFormProps> = ({
+  resources,
+  dataSourceAccess,
+  onSubmit,
+}) => {
   const { t } = useTranslation(["settings", "common"]);
 
   const { control, handleSubmit, watch } = useForm<RoleFormType>();
@@ -77,7 +76,7 @@ const RoleForm: FC<RoleFormProps> = ({ resources, dataSourceAccess }) => {
           className={styles.submit}
           type="primary"
           size="large"
-          onClick={handleSubmit(console.log)}
+          onClick={handleSubmit(onSubmit)}
         >
           {t("common:words.create")}
         </Button>

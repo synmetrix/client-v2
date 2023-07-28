@@ -36,3 +36,9 @@ export interface Role {
   updatedAt: string;
   dataSources: { url: string; type: AccessType }[];
 }
+
+export interface RoleForm {
+  name: string;
+  resource: DataSourceAccess;
+  access: Record<string, DataAccessOption>;
+}

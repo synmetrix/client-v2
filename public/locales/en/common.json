@@ -35,7 +35,8 @@
     "sign_up": "Sign up",
     "measures": "measures",
     "dimensions": "dimensions",
-    "segments": "segments"
+    "segments": "segments",
+    "or": "or"
   },
   "form": {
     "labels": {
@@ -78,7 +79,8 @@
       "name": "Name",
       "use_ssl": "I want use SSL",
       "attach_file_credentials": "Attach the file credentials, please",
-      "schema": "schema"
+      "schema": "schema",
+      "password": "Password"
     },
     "errors": {
       "email": "Enter a valid e-mail",

@@ -23,6 +23,7 @@ import type {
 } from "antd";
 import type { Control, Path, PathValue, FieldValues } from "react-hook-form";
 import type { PasswordProps } from "antd/es/input/Password";
+import type { ReactNode } from "react";
 
 type ParentProps = BasicCheckboxProps &
   BasicInputProps &
@@ -36,7 +37,7 @@ interface InputProps<T extends FieldValues> extends ParentProps {
   control: Control<T>;
   name: Path<T>;
   defaultValue?: PathValue<T, Path<T>>;
-  label?: string;
+  label?: ReactNode;
   placeholder?: string;
   fieldType?: string;
   rules?: object;
@@ -51,9 +52,17 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   placeholder,
   fieldType,
   rules,
+  children,
   ...props
 }) => {
   const getLabel = () => (rules && "required" in rules ? label + "*" : label);
+
+  const WrapperComponent = label ? Form.Item : "div";
+  const wrapperProps = {
+    className: styles.label,
+    label: label ? getLabel() : undefined,
+  };
+
   switch (fieldType) {
     case "file":
       return (
@@ -66,7 +75,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={getLabel()}>
+            <WrapperComponent {...wrapperProps} className="">
               <Upload
                 {...props}
                 fileList={value}
@@ -83,7 +92,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 </Button>
               </Upload>
               <span className={styles.error}>{error?.message}</span>
-            </Form.Item>
+            </WrapperComponent>
           )}
         />
       );
@@ -98,7 +107,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={getLabel()}>
+            <WrapperComponent {...wrapperProps} className="">
               <Radio.Group
                 className={cn({ [styles.radioError]: invalid })}
                 {...props}
@@ -107,7 +116,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 onChange={(e) => onChange(e.target.value)}
               />
               <span className={styles.error}>{error?.message}</span>
-            </Form.Item>
+            </WrapperComponent>
           )}
         />
       );
@@ -119,7 +128,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           name={name}
           defaultValue={defaultValue}
           render={({ field: { onChange, value }, fieldState: { invalid } }) => (
-            <Form.Item label={getLabel()} className={styles.label}>
+            <WrapperComponent {...wrapperProps}>
               <Checkbox
                 className={cn({ [styles.error]: invalid })}
                 checked={value}
@@ -131,10 +140,10 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 <span
                   className={cn(styles.checkbox, { [styles.error]: invalid })}
                 >
-                  {placeholder}
+                  {children || placeholder}
                 </span>
               </Checkbox>
-            </Form.Item>
+            </WrapperComponent>
           )}
         />
       );
@@ -149,7 +158,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={getLabel()} className={styles.label}>
+            <WrapperComponent {...wrapperProps}>
               <BasicInput.Password
                 {...props}
                 size={size}
@@ -160,7 +169,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 status={invalid ? "error" : undefined}
               />
               <span className={styles.error}>{error?.message}</span>
-            </Form.Item>
+            </WrapperComponent>
           )}
         />
       );
@@ -176,7 +185,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={getLabel()} className={styles.label}>
+            <WrapperComponent {...wrapperProps}>
               <BasicInput.TextArea
                 {...props}
                 size={size}
@@ -187,7 +196,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 status={invalid ? "error" : undefined}
               />
               <span className={styles.error}>{error?.message}</span>
-            </Form.Item>
+            </WrapperComponent>
           )}
         />
       );
@@ -202,7 +211,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={getLabel()} className={styles.label}>
+            <WrapperComponent {...wrapperProps}>
               <Select
                 {...props}
                 size={size}
@@ -212,7 +221,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 onChange={onChange}
               />
               <span className={styles.error}>{error?.message}</span>
-            </Form.Item>
+            </WrapperComponent>
           )}
         />
       );
@@ -231,7 +240,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <Form.Item label={getLabel()} className={styles.label}>
+            <WrapperComponent {...wrapperProps}>
               <BasicInput
                 {...props}
                 size={size}
@@ -242,7 +251,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 status={invalid ? "error" : undefined}
               />
               <span className={styles.error}>{error?.message}</span>
-            </Form.Item>
+            </WrapperComponent>
           )}
         />
       );

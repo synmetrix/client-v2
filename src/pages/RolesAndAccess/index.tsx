@@ -15,7 +15,11 @@ export default function RolesAndAccess({ access }: RolesAndAccessProps) {
   const onEdit = (item: Role) => console.log(item);
 
   return (
-    <BasicLayout loggedIn divider title={t("pages:settings.roles_and_access")}>
+    <BasicLayout
+      loggedIn
+      divider
+      headerProps={{ title: t("pages:settings.roles_and_access") }}
+    >
       <AccessTable access={access} onRemove={onRemove} onEdit={onEdit} />
     </BasicLayout>
   );

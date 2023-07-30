@@ -17,17 +17,20 @@ export type BasicLayoutProps = {
   children: React.ReactNode;
   loggedIn?: boolean;
   page?: string;
-  title?: string;
-  withLogo?: boolean;
   divider?: boolean;
+  headerProps?: {
+    title?: string;
+    withLogo?: boolean;
+  };
 };
 
 const BasicLayout: React.FC<BasicLayoutProps> = ({
   loggedIn = false,
-  withLogo = false,
   divider = false,
   page,
-  title,
+  headerProps = {
+    withLogo: false,
+  },
   children,
 }) => {
   const responsive = useResponsive();
@@ -52,9 +55,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
   return (
     <Layout className={styles.root}>
       <Header
-        withLogo={withLogo}
+        withLogo={headerProps.withLogo}
+        title={headerProps.title}
         bordered={divider}
-        title={title}
         content={isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
       />
       <Content>{children}</Content>

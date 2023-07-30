@@ -22,7 +22,11 @@ export default function RoleEditor({
   const onSubmit = (data: RoleFormType) => console.log(data);
 
   return (
-    <BasicLayout loggedIn divider title={t("pages:settings.roles_and_access")}>
+    <BasicLayout
+      loggedIn
+      divider
+      headerProps={{ title: t("pages:settings.roles_and_access") }}
+    >
       <RoleForm
         dataSourceAccess={accessItems}
         resources={resources}

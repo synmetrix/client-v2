@@ -21,8 +21,8 @@ const SideMenu: FC = () => {
 
   const [open, setOpen] = useState<number | null>(null);
 
-  const onOpen = (index: number) => {
-    if (open === index) {
+  const onClick = (index: number) => {
+    if (open === index || items[index].href) {
       setOpen(null);
     } else {
       setOpen(index);
@@ -32,7 +32,7 @@ const SideMenu: FC = () => {
   const links =
     open !== null
       ? items[open].items?.map((i) => (
-          <Button className={styles.link} key={i.key} type="text">
+          <Button className={styles.link} href={i.href} key={i.key} type="text">
             <Space>
               {i.icon} {i.label}
             </Space>
@@ -68,7 +68,8 @@ const SideMenu: FC = () => {
               key={i.key}
               className={cn(styles.btn, isMobile && styles.mobile)}
               type="text"
-              onClick={() => onOpen(idx)}
+              href={i.href}
+              onClick={() => onClick(idx)}
             >
               {i.icon}
               {i.label}
@@ -76,19 +77,20 @@ const SideMenu: FC = () => {
           ))}
         </div>
 
-        {isMobile ? (
-          <Drawer
-            open={open !== null}
-            onClose={() => setOpen(null)}
-            placement="left"
-            width={270}
-            title={header}
-          >
-            {links}
-          </Drawer>
-        ) : (
-          <Sidebar title={header}>{links}</Sidebar>
-        )}
+        {links &&
+          (isMobile ? (
+            <Drawer
+              open={open !== null}
+              onClose={() => setOpen(null)}
+              placement="left"
+              width={270}
+              title={header}
+            >
+              {links}
+            </Drawer>
+          ) : (
+            <Sidebar title={header}>{links}</Sidebar>
+          ))}
       </Space>
     </Sider>
   );

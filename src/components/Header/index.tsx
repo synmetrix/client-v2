@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({
       className={cx(styles.header, bordered && styles.headerBordered)}
     >
       <Row className={styles.root} justify="space-between">
-        <Col span={12} className={cx(styles.col)}>
+        <Col span={16} md={12} className={cx(styles.col)}>
           {withLogo && (
             <a className={styles.logo} href="/">
               <img className={styles.logoText} alt="" src={logo} />
@@ -43,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({
             </Title>
           )}
         </Col>
-        <Col span={12} className={cx(styles.col, styles.colRight)}>
+        <Col span={8} md={12} className={cx(styles.col, styles.colRight)}>
           {content}
         </Col>
       </Row>

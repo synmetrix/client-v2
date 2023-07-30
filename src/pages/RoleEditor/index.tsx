@@ -25,6 +25,7 @@ export default function RoleEditor({
     <BasicLayout
       loggedIn
       divider
+      withSideMenu
       headerProps={{ title: t("pages:settings.roles_and_access") }}
     >
       <RoleForm

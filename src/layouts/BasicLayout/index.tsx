@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import AuthLinks from "@/components/AuthLinks";
 import Navbar from "@/components/Navbar";
 import BurgerMenu from "@/components/BurgerMenu";
+import SideMenu from "@/components/SideMenu";
 import { userMenu } from "@/mocks/user";
 import { useUserData } from "@/hooks/useUserData";
 
@@ -18,6 +19,7 @@ export type BasicLayoutProps = {
   loggedIn?: boolean;
   page?: string;
   divider?: boolean;
+  withSideMenu?: boolean;
   headerProps?: {
     title?: string;
     withLogo?: boolean;
@@ -27,6 +29,7 @@ export type BasicLayoutProps = {
 const BasicLayout: React.FC<BasicLayoutProps> = ({
   loggedIn = false,
   divider = false,
+  withSideMenu = false,
   page,
   headerProps = {
     withLogo: false,
@@ -54,14 +57,17 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
 
   return (
     <Layout className={styles.root}>
-      <Header
-        withLogo={headerProps.withLogo}
-        title={headerProps.title}
-        bordered={divider}
-        content={isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
-      />
-      <Content>{children}</Content>
-      <Footer />
+      {withSideMenu && <SideMenu />}
+      <Layout>
+        <Header
+          withLogo={headerProps.withLogo}
+          title={headerProps.title}
+          bordered={divider}
+          content={isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
+        />
+        <Content>{children}</Content>
+        <Footer />
+      </Layout>
     </Layout>
   );
 };

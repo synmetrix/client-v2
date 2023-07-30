@@ -18,6 +18,7 @@ export default function RolesAndAccess({ access }: RolesAndAccessProps) {
     <BasicLayout
       loggedIn
       divider
+      withSideMenu
       headerProps={{ title: t("pages:settings.roles_and_access") }}
     >
       <AccessTable access={access} onRemove={onRemove} onEdit={onEdit} />

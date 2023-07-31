@@ -1,5 +1,6 @@
 {
   "settings": {
-    "roles_and_access": "Roles and access"
+    "roles_and_access": "Roles and access",
+    "data_sources": "Data Sources"
   }
 }

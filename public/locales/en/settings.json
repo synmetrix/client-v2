@@ -1,5 +1,7 @@
 {
   "data_sources": {
+    "title": "List and manage your data sources",
+    "create_now": "Create now",
     "not_found": {
       "title": "You have no Data Sources yet",
       "text": "Click \"Add Data Source\" to add one.",

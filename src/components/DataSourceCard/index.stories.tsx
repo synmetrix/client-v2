@@ -20,6 +20,7 @@ const Template: StoryFn<typeof DataSourceCard> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
+  id: "1",
   type: {
     name: "Clickhouse",
     icon: <CickHouseIcon />,

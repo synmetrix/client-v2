@@ -4,20 +4,13 @@ import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import DataSourceTag from "@/components/DataSourceTag";
-import type { DataSource } from "@/types/dataSource";
+import type { DataSourceInfo } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-interface DataSourceCardProps {
-  type: DataSource;
-  host: string;
-  updatedAt: string;
-  createdAt: string;
-}
-
-const DataSourceCard: FC<DataSourceCardProps> = ({
+const DataSourceCard: FC<DataSourceInfo> = ({
   host,
   type,
   updatedAt,

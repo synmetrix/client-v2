@@ -1,14 +1,17 @@
 import { Col, Row, Typography } from "antd";
+import cn from "classnames";
 
 import Button from "@/components/Button";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
+import type { ButtonProps } from "antd";
 
 interface SettingsHeaderProps {
   title?: string;
   action?: string;
+  actionProps?: ButtonProps;
   onClick?: () => void;
   href?: string;
 }
@@ -20,6 +23,7 @@ const SettingsHeader: FC<SettingsHeaderProps> = ({
   action,
   onClick,
   href,
+  actionProps,
 }) => {
   return (
     <Row justify="space-between" align="middle">
@@ -30,7 +34,12 @@ const SettingsHeader: FC<SettingsHeaderProps> = ({
       </Col>
       <Col>
         {action && (
-          <Button className={styles.action} href={href} onClick={onClick}>
+          <Button
+            className={cn(!actionProps?.type && styles.action)}
+            {...actionProps}
+            href={href}
+            onClick={onClick}
+          >
             {action}
           </Button>
         )}

@@ -26,7 +26,7 @@ const SettingsHeader: FC<SettingsHeaderProps> = ({
   actionProps,
 }) => {
   return (
-    <Row justify="space-between" align="middle">
+    <Row className={styles.wrapper} justify="space-between" align="middle">
       <Col>
         <Title level={5} className={styles.title}>
           {title}

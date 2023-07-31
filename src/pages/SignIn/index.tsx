@@ -6,9 +6,7 @@ import type { SignInFormType } from "@/components/SignInForm";
 
 import styles from "./index.module.less";
 
-export default function SignIn(props: any) {
-  console.log(props);
-
+const SignIn: React.FC = () => {
   const onSubmit = (data: SignInFormType) => console.log(data);
 
   return (
@@ -20,4 +18,6 @@ export default function SignIn(props: any) {
       </Row>
     </BasicLayout>
   );
-}
+};
+
+export default SignIn;

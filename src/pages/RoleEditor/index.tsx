@@ -9,15 +9,14 @@ import RoleForm from "@/components/RoleForm";
 import BasicLayout from "@/layouts/BasicLayout";
 import SettingsHeader from "@/components/SettingsHeader";
 
+import styles from "./index.module.less";
+
 interface RoleEditorProps {
   accessItems: DataSourceAccess[];
   resources: DataResource[];
 }
 
-export default function RoleEditor({
-  accessItems,
-  resources,
-}: RoleEditorProps) {
+const RoleEditor: React.FC<RoleEditorProps> = ({ accessItems, resources }) => {
   const { t } = useTranslation(["pages"]);
 
   const onSubmit = (data: RoleFormType) => console.log(data);
@@ -30,11 +29,15 @@ export default function RoleEditor({
       headerProps={{ title: t("pages:settings.roles_and_access") }}
     >
       <SettingsHeader title={t("settings:roles_and_access.create_role")} />
-      <RoleForm
-        dataSourceAccess={accessItems}
-        resources={resources}
-        onSubmit={onSubmit}
-      />
+      <div className={styles.wrapper}>
+        <RoleForm
+          dataSourceAccess={accessItems}
+          resources={resources}
+          onSubmit={onSubmit}
+        />
+      </div>
     </BasicLayout>
   );
-}
+};
+
+export default RoleEditor;

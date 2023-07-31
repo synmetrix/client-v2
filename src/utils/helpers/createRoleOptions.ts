@@ -1,8 +1,8 @@
-import type { Role } from "@/types/team";
+import type { Roles } from "@/types/team";
 
 import { capitalize } from "./capitalize";
 
-export const createRoleOptions = (role: typeof Role) =>
+export const createRoleOptions = (role: typeof Roles) =>
   Object.keys(role)
     .filter((v: string | number) => isNaN(v as number))
     .map((v) => ({

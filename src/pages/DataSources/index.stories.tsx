@@ -7,7 +7,7 @@ import DataSources from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Pages/DataSources",
+  title: "Pages/Settings/DataSources",
   component: DataSources,
 } as Meta<typeof DataSources>;
 

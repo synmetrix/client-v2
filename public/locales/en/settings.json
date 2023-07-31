@@ -23,6 +23,8 @@
     }
   },
   "members": {
+    "title": "Manage Members",
+    "action": "Invite to team",
     "team_settings": {
       "title": "Team Settings",
       "team_name": "Team Name",

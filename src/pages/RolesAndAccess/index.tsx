@@ -9,7 +9,7 @@ interface RolesAndAccessProps {
   access: Role[];
 }
 
-export default function RolesAndAccess({ access }: RolesAndAccessProps) {
+const RolesAndAccess: React.FC<RolesAndAccessProps> = ({ access }) => {
   const { t } = useTranslation(["settings", "pages"]);
 
   const onRemove = (item: Role) => console.log(item);
@@ -29,4 +29,6 @@ export default function RolesAndAccess({ access }: RolesAndAccessProps) {
       <AccessTable access={access} onRemove={onRemove} onEdit={onEdit} />
     </BasicLayout>
   );
-}
+};
+
+export default RolesAndAccess;

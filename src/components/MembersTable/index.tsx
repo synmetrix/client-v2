@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
-import { Role } from "@/types/team";
+import { Roles } from "@/types/team";
+import type { Member } from "@/types/team";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 
 import TrashIcon from "@/assets/trash.svg";
@@ -13,13 +14,6 @@ import styles from "./index.module.less";
 
 import type { FC } from "react";
 import type { TableProps } from "antd";
-
-interface Member {
-  id: string;
-  fullName: string;
-  email: string;
-  role: string;
-}
 
 interface MembersTableProps {
   members: Member[];
@@ -81,7 +75,7 @@ const MembersTable: FC<MembersTableProps> = ({
               onChange={(role) => onRoleChange({ ...record, role })}
               bordered={false}
               value={record.role}
-              options={createRoleOptions(Role)}
+              options={createRoleOptions(Roles)}
             />
           </span>
         ),

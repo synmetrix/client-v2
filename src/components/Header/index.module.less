@@ -1,8 +1,17 @@
 .header {
+  display: flex;
+  align-items: center;
   height: 68.89px;
-  &.headerMobile {
-    padding: 0;
-  }
+  padding: 0 16px;
+}
+
+.headerBordered {
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.root {
+  width: 100%;
 }
 
 .logo {
@@ -32,4 +41,13 @@
 
 .colMobile.colRight {
   display: none !important;
+}
+
+.title {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

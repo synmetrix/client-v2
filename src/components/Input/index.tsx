@@ -1,6 +1,6 @@
 import { Controller } from "react-hook-form";
 import {
-  Input as AntInput,
+  Input as BasicInput,
   Button,
   Checkbox,
   Form,
@@ -15,8 +15,8 @@ import styles from "./index.module.less";
 
 import type { TextAreaProps } from "antd/es/input/TextArea";
 import type {
-  InputProps as AntInputProps,
-  CheckboxProps as AntCheckboxProps,
+  InputProps as BasicInputProps,
+  CheckboxProps as BasicCheckboxProps,
   RadioGroupProps,
   UploadProps,
   SelectProps,
@@ -25,8 +25,8 @@ import type { Control, Path, PathValue, FieldValues } from "react-hook-form";
 import type { PasswordProps } from "antd/es/input/Password";
 import type { ReactNode } from "react";
 
-type ParentProps = AntCheckboxProps &
-  AntInputProps &
+type ParentProps = BasicCheckboxProps &
+  BasicInputProps &
   TextAreaProps &
   RadioGroupProps &
   UploadProps &
@@ -159,7 +159,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             fieldState: { invalid, error },
           }) => (
             <WrapperComponent {...wrapperProps}>
-              <AntInput.Password
+              <BasicInput.Password
                 {...props}
                 size={size}
                 className={cn(styles.input, props.className)}
@@ -186,7 +186,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             fieldState: { invalid, error },
           }) => (
             <WrapperComponent {...wrapperProps}>
-              <AntInput.TextArea
+              <BasicInput.TextArea
                 {...props}
                 size={size}
                 className={cn(styles.input, props.className)}
@@ -241,7 +241,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             fieldState: { invalid, error },
           }) => (
             <WrapperComponent {...wrapperProps}>
-              <AntInput
+              <BasicInput
                 {...props}
                 size={size}
                 className={cn(styles.input, props.className)}

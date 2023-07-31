@@ -44,5 +44,16 @@
       "text": "Please set up your API credentials.",
       "attach_btn": "Attach SQL API"
     }
+  },
+  "roles_and_access": {
+    "access_table": {
+      "count": "Access to data sources"
+    },
+    "form": {
+      "labels": {
+        "1": "1. Role name",
+        "2": "2. Set access to data source resources"
+      }
+    }
   }
 }

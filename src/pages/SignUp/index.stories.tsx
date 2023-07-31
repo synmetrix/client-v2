@@ -12,7 +12,7 @@ export default {
 
 const Template: StoryFn<typeof SignUp> = (args) => (
   <RootLayout>
-    <BasicLayout>
+    <BasicLayout withLogo>
       <SignUp {...args} />
     </BasicLayout>
   </RootLayout>

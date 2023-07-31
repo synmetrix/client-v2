@@ -1,4 +1,4 @@
-import { Avatar as AntAvatar } from "antd";
+import { Avatar as BasicAvatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 import styles from "./index.module.less";
@@ -13,20 +13,20 @@ interface AvatarProps {
 const Avatar: FC<AvatarProps> = ({ username, img }) => {
   if (!username && !img)
     return (
-      <AntAvatar className={styles.avatar}>
+      <BasicAvatar className={styles.avatar}>
         <UserOutlined />
-      </AntAvatar>
+      </BasicAvatar>
     );
 
   const name = username?.split(" ");
 
   return (
-    <AntAvatar src={img} className={styles.avatar}>
+    <BasicAvatar src={img} className={styles.avatar}>
       <div>
         {name?.[0]?.[0]}
         {name?.[1]?.[0]}
       </div>
-    </AntAvatar>
+    </BasicAvatar>
   );
 };
 

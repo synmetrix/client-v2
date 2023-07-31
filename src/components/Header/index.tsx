@@ -1,70 +1,50 @@
-import { Layout, Row, Col, Space, Button } from "antd";
+import { Layout, Row, Col, Typography } from "antd";
 import { useResponsive } from "ahooks";
 import cx from "classnames";
 
-import Navbar from "@/components/Navbar";
-import BurgerMenu from "@/components/BurgerMenu";
+import logo from "@/assets/logo_with_text.png";
 
 import styles from "./index.module.less";
 
 const { Header: BasicHeader } = Layout;
 
-// TODO use store
-const isAuth = false;
+interface HeaderProps {
+  content: React.ReactNode;
+  withLogo?: boolean;
+  bordered?: boolean;
+  title?: string;
+}
 
-const Header: React.FC = () => {
+const { Title } = Typography;
+
+const Header: React.FC<HeaderProps> = ({
+  withLogo,
+  bordered = false,
+  title,
+  content,
+}) => {
   const responsive = useResponsive();
   const isMobile = responsive.md === false;
 
-  const navbar = (
-    <Navbar
-      direction={isMobile ? "vertical" : "horizontal"}
-      userMenu={[
-        {
-          label: "1st menu item",
-          href: "/",
-        },
-        {
-          label: "2nd menu item",
-          href: "/",
-        },
-      ]}
-      teams={[
-        {
-          label: "1st team item",
-          href: "/",
-        },
-        {
-          label: "2nd team item",
-          href: "/",
-        },
-      ]}
-    />
-  );
-
-  const authLinks = (
-    <Space>
-      <Button type="link" className={styles.button}>
-        Sign in
-      </Button>
-      <Button type="primary" className={styles.button}>
-        Sign up
-      </Button>
-    </Space>
-  );
-
-  const content = isAuth ? navbar : authLinks;
-
   return (
-    <BasicHeader className={cx(styles.header, isMobile && styles.headerMobile)}>
+    <BasicHeader
+      className={cx(styles.header, bordered && styles.headerBordered)}
+    >
       <Row className={styles.root} justify="space-between">
-        <Col span={12} className={cx(styles.col)}>
-          <a className={styles.logo} href="/">
-            <img className={styles.logoText} alt="" src="/logo_with_text.png" />
-          </a>
+        <Col span={16} md={12} className={cx(styles.col)}>
+          {withLogo && (
+            <a className={styles.logo} href="/">
+              <img className={styles.logoText} alt="" src={logo} />
+            </a>
+          )}
+          {title && (
+            <Title className={cx(isMobile && styles.title)} level={4}>
+              {title}
+            </Title>
+          )}
         </Col>
-        <Col span={12} className={cx(styles.col, styles.colRight)}>
-          {isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
+        <Col span={8} md={12} className={cx(styles.col, styles.colRight)}>
+          {content}
         </Col>
       </Row>
     </BasicHeader>

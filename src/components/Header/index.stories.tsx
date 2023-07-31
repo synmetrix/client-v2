@@ -1,4 +1,8 @@
+import { Button, Space } from "antd";
+
 import RootLayout from "@/layouts/RootLayout";
+import Navbar from "@/components/Navbar";
+import { userMenu } from "@/mocks/user";
 
 import Header from ".";
 
@@ -16,3 +20,30 @@ const Template: StoryFn<typeof Header> = (args) => (
 );
 
 export const Default = Template.bind({});
+Default.args = {
+  withLogo: true,
+};
+
+export const WithAuth = Template.bind({});
+WithAuth.args = {
+  title: "Auth",
+  content: (
+    <Navbar
+      direction={"horizontal"}
+      userMenu={userMenu}
+      username={"user name"}
+    />
+  ),
+};
+
+export const WithTitle = Template.bind({});
+WithTitle.args = {
+  title: "Roles and access",
+  bordered: true,
+  content: (
+    <Space>
+      <Button type="link">Sign in</Button>
+      <Button type="primary">Sign up</Button>
+    </Space>
+  ),
+};

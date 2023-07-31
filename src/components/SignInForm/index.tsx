@@ -13,22 +13,22 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-interface SignInForm {
+export interface SignInFormType {
   username: string;
   password: string;
 }
 
-const SignIn: FC = () => {
+interface SignInFormProps {
+  onSubmit: (data: SignInFormType) => void;
+}
+
+const SignInForm: FC<SignInFormProps> = ({ onSubmit }) => {
   const { t } = useTranslation(["sign", "common"]);
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInForm>();
-
-  const onSubmit = (data: SignInForm) => {
-    console.log(data);
-  };
+  } = useForm<SignInFormType>();
 
   return (
     <div className={styles.wrapper}>
@@ -79,4 +79,4 @@ const SignIn: FC = () => {
   );
 };
 
-export default SignIn;
+export default SignInForm;

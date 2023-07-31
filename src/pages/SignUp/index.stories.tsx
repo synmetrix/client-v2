@@ -1,5 +1,4 @@
 import RootLayout from "@/layouts/RootLayout";
-import BasicLayout from "@/layouts/BasicLayout";
 
 import SignUp from ".";
 
@@ -12,9 +11,7 @@ export default {
 
 const Template: StoryFn<typeof SignUp> = (args) => (
   <RootLayout>
-    <BasicLayout withLogo>
-      <SignUp {...args} />
-    </BasicLayout>
+    <SignUp {...args} />
   </RootLayout>
 );
 

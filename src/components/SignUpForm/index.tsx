@@ -13,23 +13,23 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-interface SignUpForm {
+export interface SignUpFormType {
   username: string;
   password: string;
   privacy: boolean;
 }
 
-const SignUp: FC = () => {
+interface SignUpProps {
+  onSubmit: (data: SignUpFormType) => void;
+}
+
+const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
   const { t } = useTranslation(["sign", "common"]);
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUpForm>();
-
-  const onSubmit = (data: SignUpForm) => {
-    console.log(data);
-  };
+  } = useForm<SignUpFormType>();
 
   return (
     <div className={styles.wrapper}>
@@ -113,4 +113,4 @@ const SignUp: FC = () => {
   );
 };
 
-export default SignUp;
+export default SignUpForm;

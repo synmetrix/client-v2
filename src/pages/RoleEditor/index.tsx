@@ -7,6 +7,7 @@ import type {
 } from "@/types/access";
 import RoleForm from "@/components/RoleForm";
 import BasicLayout from "@/layouts/BasicLayout";
+import SettingsHeader from "@/components/SettingsHeader";
 
 interface RoleEditorProps {
   accessItems: DataSourceAccess[];
@@ -28,6 +29,7 @@ export default function RoleEditor({
       withSideMenu
       headerProps={{ title: t("pages:settings.roles_and_access") }}
     >
+      <SettingsHeader title={t("settings:roles_and_access.create_role")} />
       <RoleForm
         dataSourceAccess={accessItems}
         resources={resources}

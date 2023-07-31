@@ -15,8 +15,8 @@ interface MembersProps {
 const Members: React.FC<MembersProps> = ({ members }) => {
   const { t } = useTranslation(["settings", "pages"]);
 
-  const onRemove = () => console.log("remove");
-  const onRoleChange = () => console.log("role change");
+  const onRemove = (member: Member) => console.log("remove", member);
+  const onRoleChange = (member: Member) => console.log("role change", member);
 
   return (
     <BasicLayout

@@ -13,28 +13,39 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-interface SignInForm {
+export interface SignUpFormType {
   username: string;
   password: string;
+  privacy: boolean;
 }
 
-const SignIn: FC = () => {
+interface SignUpProps {
+  onSubmit: (data: SignUpFormType) => void;
+}
+
+const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
   const { t } = useTranslation(["sign", "common"]);
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInForm>();
-
-  const onSubmit = (data: SignInForm) => {
-    console.log(data);
-  };
+  } = useForm<SignUpFormType>();
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
-        <Title>{t("sign_in.title")}</Title>
-        <Text>{t("sign_in.text")}</Text>
+        <Title>{t("sign_up.title")}</Title>
+        <Text>{t("sign_up.text")}</Text>
+      </div>
+
+      <div className={styles.magicLinkWrapper}>
+        <Button className={styles.magicLink} type="default">
+          {t("sign_up.magic_link_login")}
+        </Button>
+      </div>
+
+      <div className={styles.or}>
+        <Text>{t("common:words.or")}</Text>
       </div>
 
       <Form className={styles.form}>
@@ -59,19 +70,39 @@ const SignIn: FC = () => {
           name="password"
           fieldType="password"
         />
+
+        <div className={styles.checkboxWrapper}>
+          <Input
+            className={styles.checkbox}
+            control={control}
+            rules={{ required: true }}
+            name="privacy"
+            fieldType="checkbox"
+          >
+            {t("sign_up.privacy_text_1")}{" "}
+            <Button className={cn(styles.link, styles.privacyLink)} type="link">
+              {t("sign_up.privacy_link_1")}
+            </Button>{" "}
+            {t("sign_up.privacy_text_2")}{" "}
+            <Button className={cn(styles.link, styles.privacyLink)} type="link">
+              {t("sign_up.privacy_link_2")}
+            </Button>
+          </Input>
+        </div>
+
         <Button
           className={styles.formItem}
           type="primary"
           htmlType="submit"
           onClick={handleSubmit(onSubmit)}
         >
-          {t("sign_in.login")}
+          {t("sign_up.sign_up")}
         </Button>
 
         <Text className={styles.text}>
-          {t("sign_in.bottom_text")}{" "}
+          {t("sign_up.bottom_text")}{" "}
           <Button className={styles.link} type="link">
-            {t("sign_in.sign_up_link")}
+            {t("sign_up.sign_in_link")}
           </Button>
         </Text>
       </Form>
@@ -79,4 +110,4 @@ const SignIn: FC = () => {
   );
 };
 
-export default SignIn;
+export default SignUpForm;

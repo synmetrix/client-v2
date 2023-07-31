@@ -5,7 +5,7 @@ import SignIn from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/SignIn",
+  title: "Pages/SignIn",
   component: SignIn,
 } as Meta<typeof SignIn>;
 

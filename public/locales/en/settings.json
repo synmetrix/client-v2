@@ -46,6 +46,8 @@
     }
   },
   "roles_and_access": {
+    "manage_roles": "Manage roles",
+    "create_role": "Create Role",
     "access_table": {
       "count": "Access to data sources"
     },

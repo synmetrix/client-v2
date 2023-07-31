@@ -16,8 +16,9 @@ import type { FC } from "react";
 interface DataSourceFormBodyProps {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  formState?: DataSourceForm;
+  onFinish: (data: DataSourceForm) => void;
   setState: React.Dispatch<React.SetStateAction<DataSourceForm>>;
+  formState?: DataSourceForm;
 }
 
 const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
@@ -25,6 +26,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   setStep,
   formState,
   setState,
+  onFinish,
 }) => {
   const onGoBack = () => setStep((prevState) => prevState - 1);
   const onSkip = () => console.log("skip");
@@ -62,6 +64,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
 
   const onApiSetupSubmit = (data: ApiSetupForm) => {
     setState((prevState) => ({ ...prevState, apiSetup: data }));
+    if (formState) onFinish(formState);
   };
 
   if (!formState?.dataSource && step > 0) setStep(0);

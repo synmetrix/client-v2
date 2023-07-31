@@ -6,8 +6,7 @@ import type { DataSourceForm as DataSourceFormType } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
-export default function Onboarding(props: any) {
-  console.log(props);
+export default function Onboarding() {
   const onFinish = (data: DataSourceFormType) => console.log(data);
 
   return (

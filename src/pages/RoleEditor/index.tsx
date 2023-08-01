@@ -1,3 +1,4 @@
+import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type {
@@ -28,14 +29,16 @@ const RoleEditor: React.FC<RoleEditorProps> = ({ accessItems, resources }) => {
       withSideMenu
       headerProps={{ title: t("pages:settings.roles_and_access") }}
     >
-      <SettingsHeader title={t("settings:roles_and_access.create_role")} />
-      <div className={styles.wrapper}>
-        <RoleForm
-          dataSourceAccess={accessItems}
-          resources={resources}
-          onSubmit={onSubmit}
-        />
-      </div>
+      <Space className={styles.wrapper} direction="vertical" size={13}>
+        <SettingsHeader title={t("settings:roles_and_access.create_role")} />
+        <div className={styles.inner}>
+          <RoleForm
+            dataSourceAccess={accessItems}
+            resources={resources}
+            onSubmit={onSubmit}
+          />
+        </div>
+      </Space>
     </BasicLayout>
   );
 };

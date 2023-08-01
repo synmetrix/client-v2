@@ -59,7 +59,7 @@ const SideMenu: FC = () => {
       collapsed={open !== null}
       trigger={null}
     >
-      <Space className={styles.inner} size={0}>
+      <Space className={styles.inner} size={0} align="center">
         <div className={cn(styles.menu, isMobile && styles.mobile)}>
           <img className={styles.logo} alt="" src="/logo_bg.png" />
 

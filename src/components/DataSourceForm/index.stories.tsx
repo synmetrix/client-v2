@@ -16,3 +16,6 @@ const Template: StoryFn<typeof DataSourceForm> = (args) => (
 );
 
 export const Default = Template.bind({});
+Default.args = {
+  onFinish: console.log,
+};

@@ -51,7 +51,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   label,
   placeholder,
   fieldType,
-  rules,
+  rules = {},
   children,
   ...props
 }) => {
@@ -230,7 +230,13 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
         <Controller
           rules={
             fieldType === "number"
-              ? { ...rules, validate: (v) => !isNaN(v) }
+              ? {
+                  ...rules,
+                  validate: (v) =>
+                    "validate" in rules && typeof rules.validate === "function"
+                      ? rules.validate(v) && !isNaN(v)
+                      : !isNaN(v),
+                }
               : rules
           }
           control={control}

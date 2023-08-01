@@ -1,3 +1,4 @@
+import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
 import BasicLayout from "@/layouts/BasicLayout";
@@ -5,11 +6,13 @@ import AccessTable from "@/components/AccessTable";
 import type { Role } from "@/types/access";
 import SettingsHeader from "@/components/SettingsHeader";
 
+import styles from "./index.module.less";
+
 interface RolesAndAccessProps {
   access: Role[];
 }
 
-export default function RolesAndAccess({ access }: RolesAndAccessProps) {
+const RolesAndAccess: React.FC<RolesAndAccessProps> = ({ access }) => {
   const { t } = useTranslation(["settings", "pages"]);
 
   const onRemove = (item: Role) => console.log(item);
@@ -22,11 +25,15 @@ export default function RolesAndAccess({ access }: RolesAndAccessProps) {
       withSideMenu
       headerProps={{ title: t("pages:settings.roles_and_access") }}
     >
-      <SettingsHeader
-        title={t("settings:roles_and_access.manage_roles")}
-        action={t("settings:roles_and_access.create_role")}
-      />
-      <AccessTable access={access} onRemove={onRemove} onEdit={onEdit} />
+      <Space className={styles.wrapper} direction="vertical" size={13}>
+        <SettingsHeader
+          title={t("settings:roles_and_access.manage_roles")}
+          action={t("settings:roles_and_access.create_role")}
+        />
+        <AccessTable access={access} onRemove={onRemove} onEdit={onEdit} />
+      </Space>
     </BasicLayout>
   );
-}
+};
+
+export default RolesAndAccess;

@@ -17,8 +17,8 @@ interface Security {
 }
 
 interface SecurityFormProps {
-  initialValue: Security;
   onSubmit: (data: Security) => void;
+  initialValue?: Security;
 }
 
 const SecurityForm: FC<SecurityFormProps> = ({ initialValue, onSubmit }) => {

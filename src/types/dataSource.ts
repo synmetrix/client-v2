@@ -60,3 +60,11 @@ export interface DataSourceForm {
   dataModel?: DynamicForm;
   apiSetup?: ApiSetupForm;
 }
+
+export interface DataSourceInfo {
+  id: string;
+  type: DataSource;
+  host: string;
+  updatedAt: string;
+  createdAt: string;
+}

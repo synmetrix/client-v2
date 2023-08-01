@@ -1,5 +1,7 @@
 {
   "data_sources": {
+    "title": "List and manage your data sources",
+    "create_now": "Create now",
     "not_found": {
       "title": "You have no Data Sources yet",
       "text": "Click \"Add Data Source\" to add one.",
@@ -7,6 +9,7 @@
     }
   },
   "personal_info": {
+    "title": "General Information",
     "general_info": {
       "title": "General Information",
       "update": "Update"
@@ -21,6 +24,8 @@
     }
   },
   "members": {
+    "title": "Manage Members",
+    "action": "Invite to team",
     "team_settings": {
       "title": "Team Settings",
       "team_name": "Team Name",

@@ -52,14 +52,14 @@ const SideMenu: FC = () => {
 
   return (
     <Sider
-      width={isMobile ? 55 : 88}
+      width={isMobile ? 55 : 70}
       collapsedWidth={isMobile ? "100%" : 371}
       className={styles.wrapper}
       collapsible
       collapsed={open !== null}
       trigger={null}
     >
-      <Space className={styles.inner} size={0}>
+      <Space className={styles.inner} size={0} align="center">
         <div className={cn(styles.menu, isMobile && styles.mobile)}>
           <img className={styles.logo} alt="" src="/logo_bg.png" />
 

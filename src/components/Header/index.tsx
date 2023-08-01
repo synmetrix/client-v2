@@ -28,7 +28,11 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <BasicHeader
-      className={cx(styles.header, bordered && styles.headerBordered)}
+      className={cx(
+        styles.header,
+        bordered && styles.headerBordered,
+        isMobile && styles.mobile
+      )}
     >
       <Row className={styles.root} justify="space-between">
         <Col span={16} md={12} className={cx(styles.col)}>
@@ -38,7 +42,10 @@ const Header: React.FC<HeaderProps> = ({
             </a>
           )}
           {title && (
-            <Title className={cx(isMobile && styles.title)} level={4}>
+            <Title
+              className={cx(isMobile && styles.title)}
+              level={isMobile ? 5 : 4}
+            >
               {title}
             </Title>
           )}

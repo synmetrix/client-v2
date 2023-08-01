@@ -52,7 +52,7 @@ const SideMenu: FC = () => {
 
   return (
     <Sider
-      width={70}
+      width={isMobile ? 55 : 70}
       collapsedWidth={isMobile ? "100%" : 371}
       className={styles.wrapper}
       collapsible

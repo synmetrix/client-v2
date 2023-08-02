@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import BasicLayout from "@/layouts/BasicLayout";
 import SettingsHeader from "@/components/SettingsHeader";
 import MembersTable from "@/components/MembersTable";
+import Modal from "@/components/Modal";
+import MembersForm from "@/components/MembersForm";
 import type { Member } from "@/types/team";
 
 import styles from "./index.module.less";
@@ -15,6 +17,9 @@ interface MembersProps {
 const Members: React.FC<MembersProps> = ({ members }) => {
   const { t } = useTranslation(["settings", "pages"]);
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const onSubmit = (member: Member) => console.log(member);
   const onRemove = (member: Member) => console.log("remove", member);
   const onRoleChange = (member: Member) => console.log("role change", member);
 
@@ -29,6 +34,7 @@ const Members: React.FC<MembersProps> = ({ members }) => {
         <SettingsHeader
           title={t("settings:members.title")}
           action={t("settings:members.action")}
+          onClick={() => setIsOpen(true)}
         />
         <MembersTable
           members={members}
@@ -36,6 +42,10 @@ const Members: React.FC<MembersProps> = ({ members }) => {
           onRoleChange={onRoleChange}
         />
       </Space>
+
+      <Modal open={isOpen} closable onClose={() => setIsOpen(true)}>
+        <MembersForm onSubmit={onSubmit} />
+      </Modal>
     </BasicLayout>
   );
 };

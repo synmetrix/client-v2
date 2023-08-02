@@ -14,18 +14,25 @@ import type { FC } from "react";
 interface DataSourceFormProps {
   onFinish: (data: DataSourceFormType) => void;
   withSteps?: boolean;
+  bordered?: boolean;
+  shadow?: boolean;
 }
 
 const DataSourceForm: FC<DataSourceFormProps> = ({
   onFinish,
   withSteps = false,
+  bordered = true,
+  shadow = true,
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
   const [formData, setFormData] = useState<DataSourceFormType>({});
   const [step, setStep] = useState<number>(0);
 
   return (
-    <Card>
+    <Card
+      style={shadow === false ? { boxShadow: "0 0 0 0" } : undefined}
+      bordered={bordered}
+    >
       {withSteps && (
         <div className={styles.header}>
           <StepFormHeader

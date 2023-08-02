@@ -4,17 +4,13 @@ import { useForm } from "react-hook-form";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import { Role } from "@/types/team";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
+import { Roles } from "@/types/team";
+import type { Member } from "@/types/team";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
-
-interface Member {
-  email: string;
-  role: Role;
-}
 
 interface MembersFormProps {
   onSubmit: (data: Member) => void;
@@ -47,7 +43,7 @@ const MembersForm: FC<MembersFormProps> = ({ onSubmit, initialValue }) => {
             name="role"
             control={control}
             fieldType="select"
-            options={createRoleOptions(Role)}
+            options={createRoleOptions(Roles)}
           />
         </Col>
       </Row>

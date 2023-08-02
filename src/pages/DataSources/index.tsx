@@ -4,12 +4,22 @@ import { Col, Row, Space } from "antd";
 import SettingsHeader from "@/components/SettingsHeader";
 import BasicLayout from "@/layouts/BasicLayout";
 import DataSourceCard from "@/components/DataSourceCard";
-import type { DataSourceInfo } from "@/types/dataSource";
+import Modal from "@/components/Modal";
+import DataSourceForm from "@/components/DataSourceForm";
+import type {
+  DataSourceForm as DataSourceFormType,
+  DataSourceInfo,
+} from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
 const DataSources = ({ dataSources }: { dataSources: DataSourceInfo[] }) => {
   const { t } = useTranslation(["settings", "pages"]);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const onFinish = (data: DataSourceFormType) => console.log(data);
+
   return (
     <BasicLayout
       loggedIn
@@ -25,6 +35,7 @@ const DataSources = ({ dataSources }: { dataSources: DataSourceInfo[] }) => {
             type: "primary",
             size: "large",
           }}
+          onClick={() => setIsOpen(true)}
         />
 
         <Row justify="space-between">
@@ -35,6 +46,15 @@ const DataSources = ({ dataSources }: { dataSources: DataSourceInfo[] }) => {
           ))}
         </Row>
       </Space>
+
+      <Modal
+        width={1000}
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        closable
+      >
+        <DataSourceForm onFinish={onFinish} />
+      </Modal>
     </BasicLayout>
   );
 };

@@ -38,7 +38,7 @@ const DataSources = ({ dataSources }: { dataSources: DataSourceInfo[] }) => {
           onClick={() => setIsOpen(true)}
         />
 
-        <Row justify="space-between">
+        <Row className={styles.body} justify={"start"} gutter={[32, 32]}>
           {dataSources.map((d) => (
             <Col key={d.id}>
               <DataSourceCard {...d} />

@@ -4,8 +4,8 @@ export enum Roles {
 }
 
 export interface Member {
-  id: string;
-  fullName: string;
   email: string;
   role: string;
+  id?: string;
+  fullName?: string;
 }

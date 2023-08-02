@@ -14,10 +14,16 @@ interface ModalProps extends BasicModalProps {
   onClose: () => void;
 }
 
-const Modal: FC<ModalProps> = ({ children, closable, ...props }) => {
+const Modal: FC<ModalProps> = ({
+  children,
+  closable,
+  footer = null,
+  ...props
+}) => {
   return (
     <BasicModal
       {...props}
+      footer={footer}
       onCancel={props.onCancel || props.onClose}
       closable={false}
       maskStyle={{ backdropFilter: "blur(10px)" }}

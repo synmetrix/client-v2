@@ -53,7 +53,7 @@ const DataSources = ({ dataSources }: { dataSources: DataSourceInfo[] }) => {
         onClose={() => setIsOpen(false)}
         closable
       >
-        <DataSourceForm onFinish={onFinish} />
+        <DataSourceForm bordered={false} shadow={false} onFinish={onFinish} />
       </Modal>
     </BasicLayout>
   );

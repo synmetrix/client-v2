@@ -72,7 +72,7 @@ const SideMenu: FC = () => {
               onClick={() => onClick(idx)}
             >
               {i.icon}
-              {i.label}
+              <span className={styles.label}>{i.label}</span>
             </Button>
           ))}
         </div>

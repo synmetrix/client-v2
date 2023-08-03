@@ -9,20 +9,24 @@ import type { FC } from "react";
 interface StepFormHeaderProps {
   steps: string[];
   currentStep: number;
+  numbers?: boolean;
   onChange?: (step: number) => void;
 }
 
 const StepFormHeader: FC<StepFormHeaderProps> = ({
   steps,
   currentStep,
+  numbers = true,
   onChange,
 }) => {
   const windowSize = useResponsive();
   return (
     <div className={styles.wrapper}>
-      <div className={styles.currentStep}>
-        {currentStep + 1}/{steps.length}
-      </div>
+      {numbers && (
+        <div className={styles.currentStep}>
+          {currentStep + 1}/{steps.length}
+        </div>
+      )}
       <Breadcrumb
         separator={
           <span
@@ -35,7 +39,7 @@ const StepFormHeader: FC<StepFormHeaderProps> = ({
               className={cn(styles.step, { [styles.active]: currentStep >= i })}
               onClick={() => onChange?.(i)}
             >
-              {i + 1}. {t}
+              {numbers && i + 1 + "."} {t}
             </span>
           ),
         }))}

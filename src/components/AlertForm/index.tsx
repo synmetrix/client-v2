@@ -8,18 +8,26 @@ import {
   Tag,
   Typography,
   Table,
+  Alert,
 } from "antd";
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  MinusOutlined,
+  PlusOutlined,
+  UpOutlined,
+} from "@ant-design/icons";
 import cn from "classnames";
 
 import StepFormHeader from "@/components/StepFormHeader";
 import Button from "@/components/Button";
 
 import ArrowIcon from "@/assets/arrow.svg";
+import SendIcon from "@/assets/send.svg";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
+import type { TableProps } from "antd";
 
 const { Title } = Typography;
 const { Panel } = Collapse;
@@ -36,6 +44,43 @@ const { Panel } = Collapse;
 // }
 
 const AlertForm: FC = () => {
+  const records = [
+    {
+      name: "name1.name",
+    },
+    {
+      name: "name2.name",
+    },
+    {
+      name: "name3.name",
+    },
+  ];
+
+  const colums: TableProps<{ name: string }>["columns"] = [
+    {
+      title: "Measure",
+      width: "50%",
+      render: (record) => {
+        const name = record.name.split(".");
+        return (
+          <Tag className={styles.tag} color="#470D6999">
+            {name[0]}
+            <Tag className={cn(styles.tag, styles.inner)} color="#470D6999">
+              {name[1]}
+            </Tag>
+          </Tag>
+        );
+      },
+    },
+    {
+      title: "Lower Bound",
+      render: () => <Input className={styles.input} size="large" />,
+    },
+    {
+      title: "Upper Bound",
+      render: () => <Input className={styles.input} size="large" />,
+    },
+  ];
   return (
     <Form className={styles.space} layout="vertical">
       <Title className={styles.title} level={3}>
@@ -50,7 +95,7 @@ const AlertForm: FC = () => {
         />
       </div>
 
-      <Space className={styles.space} size={16}>
+      <Space className={cn(styles.space, styles.body)} size={16}>
         <Row gutter={[16, 16]}>
           <Col span={24} md={12}>
             <Form.Item label="Alert Name:">
@@ -68,9 +113,7 @@ const AlertForm: FC = () => {
         <Collapse
           expandIcon={({ isActive }) => (
             <Button className={styles.collapseBtn} size="small">
-              <span className={styles.test}>
-                {isActive ? <MinusOutlined /> : <PlusOutlined />}
-              </span>
+              {isActive ? <MinusOutlined /> : <PlusOutlined />}
             </Button>
           )}
           bordered={false}
@@ -156,8 +199,108 @@ const AlertForm: FC = () => {
           </Panel>
         </Collapse>
 
-        <span className={styles.subtitle}>Set metrics boundaries</span>
+        <Space
+          className={cn(styles.space, styles.metrics)}
+          size={10}
+          direction="vertical"
+        >
+          <span className={styles.subtitle}>Set metrics boundaries</span>
+          <Table
+            rootClassName={styles.table}
+            columns={colums}
+            dataSource={records}
+            pagination={false}
+          />
+        </Space>
+
+        <Row gutter={[16, 16]} align="stretch">
+          <Col span={24} md={12}>
+            <Space className={styles.space} size={10} direction="vertical">
+              <span className={styles.subtitle}>Delivery Settings</span>
+              <Form.Item label="Webhook:">
+                <Input size="large" />
+              </Form.Item>
+            </Space>
+          </Col>
+
+          <Col span={24} md={12}>
+            <Space className={styles.space} size={10} direction="vertical">
+              <span className={styles.subtitle}>Trigger Settings</span>
+              <Form.Item
+                label={
+                  <span>
+                    Schedule (
+                    <a
+                      className={styles.link}
+                      href="https://crontab.guru/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Build cron expression
+                    </a>
+                    ):
+                  </span>
+                }
+              >
+                <Input size="large" />
+              </Form.Item>
+            </Space>
+          </Col>
+        </Row>
+
+        <Collapse
+          expandIcon={({ isActive }) =>
+            isActive ? (
+              <DownOutlined className={styles.arrow} />
+            ) : (
+              <UpOutlined className={styles.arrow} />
+            )
+          }
+          bordered={false}
+          className={styles.collapse}
+        >
+          <Panel
+            className={styles.panel}
+            header={<span className={styles.subtitle}>Advanced Settings</span>}
+            key={"1"}
+          >
+            <Row gutter={[16, 16]}>
+              <Col span={24} md={12}>
+                <Form.Item label="Timeout On Fire (minutes):">
+                  <Input className={styles.input} size="large" />
+                </Form.Item>
+              </Col>
+
+              <Col span={24} md={12}>
+                <Form.Item label="TImeout On FIre (minutes):">
+                  <Input className={styles.input} size="large" />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Panel>
+        </Collapse>
+
+        <Alert
+          className={styles.alert}
+          message={
+            <Row justify="space-between" align="middle">
+              <Col>
+                <span>Summary</span>: At 14:15 on day-of-month 1, via Webhook
+              </Col>
+              <Col>
+                <Button className={styles.sendTest}>
+                  <SendIcon /> Send test
+                </Button>
+              </Col>
+            </Row>
+          }
+          type="info"
+        />
       </Space>
+
+      <Button className={styles.saveBtn} type="primary" size="large">
+        Save
+      </Button>
     </Form>
   );
 };

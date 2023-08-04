@@ -104,7 +104,7 @@ const MembersTable: FC<MembersTableProps> = ({
     <Table
       rootClassName={styles.table}
       dataSource={members}
-      rowKey={(record) => record.id}
+      rowKey={(record) => record.id || record.email}
       pagination={false}
       columns={columns}
     />

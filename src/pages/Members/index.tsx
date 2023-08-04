@@ -43,7 +43,7 @@ const Members: React.FC<MembersProps> = ({ members }) => {
         />
       </Space>
 
-      <Modal open={isOpen} closable onClose={() => setIsOpen(true)}>
+      <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
         <MembersForm onSubmit={onSubmit} />
       </Modal>
     </BasicLayout>

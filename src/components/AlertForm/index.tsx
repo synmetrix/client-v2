@@ -43,7 +43,21 @@ const { Panel } = Collapse;
 //   measures: Record<string, Measure>;
 // }
 
-const AlertForm: FC = () => {
+interface AlertFormProps {
+  measures: string[];
+  dimensions: string[];
+  segments: string[];
+  filters: string[];
+  timeDimensions: string[];
+  order: {
+    name: string;
+    order: "asc" | "desc";
+  }[];
+}
+
+const AlertForm: FC<AlertFormProps> = (props) => {
+  console.log(props);
+
   const records = [
     {
       name: "name1.name",
@@ -210,6 +224,7 @@ const AlertForm: FC = () => {
             columns={colums}
             dataSource={records}
             pagination={false}
+            rowKey={(record) => record.name}
           />
         </Space>
 

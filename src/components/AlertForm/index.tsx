@@ -167,7 +167,7 @@ const AlertForm: FC<AlertFormProps> = (props) => {
               size={10}
             >
               <Space size={9}>
-                <span>BY</span>
+                <span className={styles.tagLabel}>BY</span>
                 <Tag className={styles.tag} color="#A31BCB80">
                   Compnay{" "}
                   <Tag
@@ -180,7 +180,7 @@ const AlertForm: FC<AlertFormProps> = (props) => {
               </Space>
 
               <Space size={9}>
-                <span>IN</span>
+                <span className={styles.tagLabel}>IN</span>
                 <Tag className={styles.tag} color="#33679199">
                   product_categories{" "}
                   <Tag
@@ -193,7 +193,7 @@ const AlertForm: FC<AlertFormProps> = (props) => {
               </Space>
 
               <Space size={9}>
-                <span>ORDERED BY</span>
+                <span className={styles.tagLabel}>ORDERED BY</span>
                 <Tag className={styles.tag} color="#892C6C99">
                   product{" "}
                   <Tag

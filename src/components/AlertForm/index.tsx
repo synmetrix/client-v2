@@ -21,6 +21,7 @@ import cn from "classnames";
 import StepFormHeader from "@/components/StepFormHeader";
 import Button from "@/components/Button";
 
+import InfoIcon from "@/assets/info.svg";
 import ArrowIcon from "@/assets/arrow.svg";
 import SendIcon from "@/assets/send.svg";
 
@@ -257,7 +258,7 @@ const AlertForm: FC<AlertFormProps> = (props) => {
                   </span>
                 }
               >
-                <Input size="large" />
+                <Input size="large" suffix={<InfoIcon />} />
               </Form.Item>
             </Space>
           </Col>

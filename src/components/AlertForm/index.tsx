@@ -183,24 +183,29 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
               direction="vertical"
               size={10}
             >
-              <Space size={9}>
-                <span className={styles.tagLabel}>BY</span>
-                {renderTags(COLORS.dimension, dimensions)}
-                {renderTags(COLORS.timeDimension, timeDimensions)}
-              </Space>
+              {(dimensions || timeDimensions) && (
+                <Space size={9}>
+                  <span className={styles.tagLabel}>BY</span>
+                  {renderTags(COLORS.dimension, dimensions)}
+                  {renderTags(COLORS.timeDimension, timeDimensions)}
+                </Space>
+              )}
+              {segments && (
+                <Space size={9}>
+                  <span className={styles.tagLabel}>IN</span>
+                  {renderTags(COLORS.segment, segments)}
+                </Space>
+              )}
 
-              <Space size={9}>
-                <span className={styles.tagLabel}>IN</span>
-                {renderTags(COLORS.segment, segments)}
-              </Space>
-
-              <Space size={9}>
-                <span className={styles.tagLabel}>ORDERED BY</span>
-                {renderTags(
-                  COLORS.order,
-                  order?.map((o) => `${o.name}.${o.order}`)
-                )}
-              </Space>
+              {order && (
+                <Space size={9}>
+                  <span className={styles.tagLabel}>ORDERED BY</span>
+                  {renderTags(
+                    COLORS.order,
+                    order?.map((o) => `${o.name}.${o.order}`)
+                  )}
+                </Space>
+              )}
             </Space>
           </Panel>
         </Collapse>

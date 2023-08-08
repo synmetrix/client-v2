@@ -5,7 +5,6 @@ import {
   Input,
   Row,
   Space,
-  Tag,
   Typography,
   Table,
   Alert,
@@ -45,33 +44,34 @@ const { Panel } = Collapse;
 //   measures: Record<string, Measure>;
 // }
 
+interface Order {
+  name: string;
+  order: "asc" | "desc";
+}
+
 interface AlertFormProps {
   measures: string[];
   dimensions: string[];
   segments: string[];
-  filters: string[];
   timeDimensions: string[];
-  order: {
-    name: string;
-    order: "asc" | "desc";
-  }[];
+  order: Order[];
 }
 
-const AlertForm: FC<AlertFormProps> = (props) => {
-  console.log(props);
+const COLORS = {
+  measure: ["#470D6999", "#470D6999"],
+  dimension: ["#A31BCB80", "#A31BCB80"],
+  timeDimension: ["#4386FA", "#470D6999"],
+  segment: ["#33679199", "#33679199"],
+  order: ["#892C6C99", "#892C6C99"],
+};
 
-  const records = [
-    {
-      name: "name1.name",
-    },
-    {
-      name: "name2.name",
-    },
-    {
-      name: "name3.name",
-    },
-  ];
-
+const AlertForm: FC<Partial<AlertFormProps>> = ({
+  measures,
+  dimensions,
+  segments,
+  timeDimensions,
+  order,
+}) => {
   const colums: TableProps<{ name: string }>["columns"] = [
     {
       title: "Measure",
@@ -80,10 +80,10 @@ const AlertForm: FC<AlertFormProps> = (props) => {
         const name = record.name.split(".");
         return (
           <NestedTag
-            tag={{ title: name[0], color: "#470D6999" }}
+            tag={{ title: name[0], color: COLORS.measure[0] }}
             nested={name.slice(1).map((n: string) => ({
               title: n,
-              color: "#470D6999",
+              color: COLORS.measure[1],
               key: typeof n,
             }))}
           />
@@ -99,6 +99,38 @@ const AlertForm: FC<AlertFormProps> = (props) => {
       render: () => <Input className={styles.input} size="large" />,
     },
   ];
+
+  const detectIcon = (title: string) => {
+    switch (title) {
+      case "asc":
+        return <ArrowIcon />;
+      case "desc":
+        return <ArrowIcon className={styles.arrowDown} />;
+      default:
+        return title;
+    }
+  };
+
+  const renderTags = (colors: string[], content?: string[]) => {
+    if (!content) return null;
+
+    return content.map((tag) => {
+      const tagSplited = tag.split(".");
+
+      return (
+        <NestedTag
+          key={tagSplited[0]}
+          tag={{ title: tagSplited[0], color: colors[0] }}
+          nested={tagSplited.slice(1).map((t) => ({
+            title: detectIcon(t),
+            color: colors[1],
+            key: typeof t === "string" ? t : "icon",
+          }))}
+        />
+      );
+    });
+  };
+
   return (
     <Form className={styles.space} layout="vertical">
       <Title className={styles.title} level={3}>
@@ -141,18 +173,7 @@ const AlertForm: FC<AlertFormProps> = (props) => {
             className={styles.panel}
             header={
               <Space size={10} align="center">
-                <NestedTag
-                  tag={{ title: "product", color: "#470D6999" }}
-                  nested={[
-                    { title: "count", color: "#470D6999", key: "count" },
-                  ]}
-                />
-                <NestedTag
-                  tag={{ title: "data_table2", color: "#470D6999" }}
-                  nested={[
-                    { title: "count", color: "#470D6999", key: "count" },
-                  ]}
-                />
+                {renderTags(COLORS.measure, measures)}
               </Space>
             }
             key={"1"}
@@ -164,44 +185,21 @@ const AlertForm: FC<AlertFormProps> = (props) => {
             >
               <Space size={9}>
                 <span className={styles.tagLabel}>BY</span>
-                <NestedTag
-                  tag={{ title: "Company", color: "#A31BCB80" }}
-                  nested={[{ title: "name", color: "#A31BCB80", key: "name" }]}
-                />
-                <NestedTag
-                  tag={{ title: "products", color: "#4386FA" }}
-                  nested={[
-                    {
-                      title: "created_at",
-                      color: "#470D6999",
-                      key: "created_at",
-                    },
-                    { title: "by year", color: "#470D6999", key: "by year" },
-                  ]}
-                />
+                {renderTags(COLORS.dimension, dimensions)}
+                {renderTags(COLORS.timeDimension, timeDimensions)}
               </Space>
 
               <Space size={9}>
                 <span className={styles.tagLabel}>IN</span>
-                <NestedTag
-                  tag={{ title: "product_categories", color: "#33679199" }}
-                  nested={[{ title: "toys", color: "#33679199", key: "toys" }]}
-                />
+                {renderTags(COLORS.segment, segments)}
               </Space>
 
               <Space size={9}>
                 <span className={styles.tagLabel}>ORDERED BY</span>
-                <NestedTag
-                  tag={{ title: "product", color: "#892C6C99" }}
-                  nested={[
-                    {
-                      title: "created_at",
-                      color: "#892C6C99",
-                      key: "created_at",
-                    },
-                    { title: <ArrowIcon />, color: "#892C6C99", key: "icon" },
-                  ]}
-                />
+                {renderTags(
+                  COLORS.order,
+                  order?.map((o) => `${o.name}.${o.order}`)
+                )}
               </Space>
             </Space>
           </Panel>
@@ -216,7 +214,7 @@ const AlertForm: FC<AlertFormProps> = (props) => {
           <Table
             rootClassName={styles.table}
             columns={colums}
-            dataSource={records}
+            dataSource={measures?.map((m) => ({ name: m }))}
             pagination={false}
             rowKey={(record) => record.name}
           />

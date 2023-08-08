@@ -18,14 +18,13 @@ const Template: StoryFn<typeof AlertForm> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  measures: ["stories.count"],
+  measures: ["stories.count", "data_table2.count"],
   dimensions: ["stories.category"],
-  filters: ["stories.count"],
   timeDimensions: ["stories.time"],
   order: [
     {
       name: "stories.count",
-      order: "asc",
+      order: "desc",
     },
   ],
 };

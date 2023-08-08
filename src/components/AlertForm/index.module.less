@@ -19,17 +19,6 @@
   border: none !important;
 }
 
-.tag {
-  padding: 4px;
-  color: var(--color-white);
-  font-size: 14px;
-
-  &.inner {
-    margin-right: 0;
-    margin-left: 5px;
-  }
-}
-
 .tagLabel {
   font-weight: 700;
   opacity: 0.5;
@@ -38,7 +27,7 @@
 .collapse {
   background: none;
   border: none;
-  *:not(.tag, .collapseBtn, .input) {
+  *:not([class*="tag"], .collapseBtn, .input) {
     padding-left: 0 !important;
   }
 }
@@ -72,7 +61,7 @@
 
 .table {
   background: transparent !important;
-  *:not(.tag) {
+  *:not([class*="tag"]) {
     background: transparent !important;
   }
 }

@@ -20,6 +20,7 @@ import cn from "classnames";
 
 import StepFormHeader from "@/components/StepFormHeader";
 import Button from "@/components/Button";
+import NestedTag from "@/components/NestedTag";
 
 import InfoIcon from "@/assets/info.svg";
 import ArrowIcon from "@/assets/arrow.svg";
@@ -78,12 +79,14 @@ const AlertForm: FC<AlertFormProps> = (props) => {
       render: (record) => {
         const name = record.name.split(".");
         return (
-          <Tag className={styles.tag} color="#470D6999">
-            {name[0]}
-            <Tag className={cn(styles.tag, styles.inner)} color="#470D6999">
-              {name[1]}
-            </Tag>
-          </Tag>
+          <NestedTag
+            tag={{ title: name[0], color: "#470D6999" }}
+            nested={name.slice(1).map((n: string) => ({
+              title: n,
+              color: "#470D6999",
+              key: typeof n,
+            }))}
+          />
         );
       },
     },
@@ -138,25 +141,18 @@ const AlertForm: FC<AlertFormProps> = (props) => {
             className={styles.panel}
             header={
               <Space size={10} align="center">
-                <Tag className={styles.tag} color="#470D6999">
-                  product
-                  <Tag
-                    className={cn(styles.tag, styles.inner)}
-                    color="#470D6999"
-                  >
-                    count
-                  </Tag>
-                </Tag>
-
-                <Tag className={styles.tag} color="#470D6999">
-                  data_table2
-                  <Tag
-                    className={cn(styles.tag, styles.inner)}
-                    color="#470D6999"
-                  >
-                    count
-                  </Tag>
-                </Tag>
+                <NestedTag
+                  tag={{ title: "product", color: "#470D6999" }}
+                  nested={[
+                    { title: "count", color: "#470D6999", key: "count" },
+                  ]}
+                />
+                <NestedTag
+                  tag={{ title: "data_table2", color: "#470D6999" }}
+                  nested={[
+                    { title: "count", color: "#470D6999", key: "count" },
+                  ]}
+                />
               </Space>
             }
             key={"1"}
@@ -168,47 +164,44 @@ const AlertForm: FC<AlertFormProps> = (props) => {
             >
               <Space size={9}>
                 <span className={styles.tagLabel}>BY</span>
-                <Tag className={styles.tag} color="#A31BCB80">
-                  Compnay{" "}
-                  <Tag
-                    className={cn(styles.tag, styles.inner)}
-                    color="#A31BCB80"
-                  >
-                    name
-                  </Tag>
-                </Tag>
+                <NestedTag
+                  tag={{ title: "Company", color: "#A31BCB80" }}
+                  nested={[{ title: "name", color: "#A31BCB80", key: "name" }]}
+                />
+                <NestedTag
+                  tag={{ title: "products", color: "#4386FA" }}
+                  nested={[
+                    {
+                      title: "created_at",
+                      color: "#470D6999",
+                      key: "created_at",
+                    },
+                    { title: "by year", color: "#470D6999", key: "by year" },
+                  ]}
+                />
               </Space>
 
               <Space size={9}>
                 <span className={styles.tagLabel}>IN</span>
-                <Tag className={styles.tag} color="#33679199">
-                  product_categories{" "}
-                  <Tag
-                    className={cn(styles.tag, styles.inner)}
-                    color="#33679199"
-                  >
-                    toys
-                  </Tag>
-                </Tag>
+                <NestedTag
+                  tag={{ title: "product_categories", color: "#33679199" }}
+                  nested={[{ title: "toys", color: "#33679199", key: "toys" }]}
+                />
               </Space>
 
               <Space size={9}>
                 <span className={styles.tagLabel}>ORDERED BY</span>
-                <Tag className={styles.tag} color="#892C6C99">
-                  product{" "}
-                  <Tag
-                    className={cn(styles.tag, styles.inner)}
-                    color="#892C6C99"
-                  >
-                    created_at
-                  </Tag>
-                  <Tag
-                    className={cn(styles.tag, styles.inner)}
-                    color="#892C6C99"
-                  >
-                    <ArrowIcon />
-                  </Tag>
-                </Tag>
+                <NestedTag
+                  tag={{ title: "product", color: "#892C6C99" }}
+                  nested={[
+                    {
+                      title: "created_at",
+                      color: "#892C6C99",
+                      key: "created_at",
+                    },
+                    { title: <ArrowIcon />, color: "#892C6C99", key: "icon" },
+                  ]}
+                />
               </Space>
             </Space>
           </Panel>

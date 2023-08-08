@@ -114,7 +114,7 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
   const renderTags = (colors: string[], content?: string[]) => {
     if (!content) return null;
 
-    return content.map((tag) => {
+    return content.map((tag, i) => {
       const tagSplited = tag.split(".");
 
       return (
@@ -124,7 +124,7 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
           nested={tagSplited.slice(1).map((t) => ({
             title: detectIcon(t),
             color: colors[1],
-            key: typeof t === "string" ? t : "icon",
+            key: i,
           }))}
         />
       );

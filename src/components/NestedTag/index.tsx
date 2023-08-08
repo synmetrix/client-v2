@@ -8,7 +8,7 @@ import type { FC, ReactNode } from "react";
 interface TagType {
   title: ReactNode;
   color: string;
-  key?: string;
+  key?: string | number;
 }
 
 interface NestedTagProps {

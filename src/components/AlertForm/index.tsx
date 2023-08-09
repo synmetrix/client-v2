@@ -2,7 +2,6 @@ import {
   Col,
   Collapse,
   Form,
-  Input,
   Row,
   Space,
   Typography,
@@ -15,11 +14,14 @@ import {
   PlusOutlined,
   UpOutlined,
 } from "@ant-design/icons";
+import { useForm } from "react-hook-form";
 import cn from "classnames";
 
 import StepFormHeader from "@/components/StepFormHeader";
 import Button from "@/components/Button";
 import NestedTag from "@/components/NestedTag";
+import Input from "@/components/Input";
+import { capitalize } from "@/utils/helpers/capitalize";
 
 import InfoIcon from "@/assets/info.svg";
 import ArrowIcon from "@/assets/arrow.svg";
@@ -33,16 +35,23 @@ import type { TableProps } from "antd";
 const { Title } = Typography;
 const { Panel } = Collapse;
 
-// interface Measure {
-//   lowerBound: number;
-//   upperBound: number;
-// }
+interface Measure {
+  lowerBound: number;
+  upperBound: number;
+}
 
-// interface AlertFormType {
-//   name: string;
-//   type: "webhook" | "slack" | "email";
-//   measures: Record<string, Measure>;
-// }
+type AlertType = "webhook" | "slack" | "email";
+
+export type AlertFormType = {
+  [key in AlertType]?: string;
+} & {
+  name: string;
+  type: AlertType;
+  measures: Record<string, Measure>;
+  schedule: string;
+  requestTimeout: number;
+  timeoutOnFire: number;
+};
 
 interface Order {
   name: string;
@@ -50,11 +59,15 @@ interface Order {
 }
 
 interface AlertFormProps {
-  measures: string[];
-  dimensions: string[];
-  segments: string[];
-  timeDimensions: string[];
-  order: Order[];
+  onSubmit: (data: AlertFormType) => void;
+  onTest: (data: AlertFormType) => void;
+  type: AlertType;
+  measures?: string[];
+  dimensions?: string[];
+  segments?: string[];
+  timeDimensions?: string[];
+  order?: Order[];
+  initialValue?: AlertFormType;
 }
 
 const COLORS = {
@@ -65,13 +78,19 @@ const COLORS = {
   order: ["#892C6C99", "#892C6C99"],
 };
 
-const AlertForm: FC<Partial<AlertFormProps>> = ({
+const AlertForm: FC<AlertFormProps> = ({
+  type,
   measures,
   dimensions,
   segments,
   timeDimensions,
   order,
+  initialValue,
+  onSubmit,
+  onTest,
 }) => {
+  const { control, handleSubmit, getValues } = useForm<AlertFormType>();
+
   const colums: TableProps<{ name: string }>["columns"] = [
     {
       title: "Measure",
@@ -81,10 +100,10 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
         return (
           <NestedTag
             tag={{ title: name[0], color: COLORS.measure[0] }}
-            nested={name.slice(1).map((n: string) => ({
+            nested={name.slice(1).map((n: string, i: number) => ({
               title: n,
               color: COLORS.measure[1],
-              key: typeof n,
+              key: typeof n === "string" ? name[0] + "." + n : i,
             }))}
           />
         );
@@ -92,11 +111,25 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
     },
     {
       title: "Lower Bound",
-      render: () => <Input className={styles.input} size="large" />,
+      render: (record) => (
+        <Input
+          className={styles.input}
+          control={control}
+          name={`measures.${record.name}.lowerBound`}
+          defaultValue={initialValue?.measures?.[record.name]?.lowerBound}
+        />
+      ),
     },
     {
       title: "Upper Bound",
-      render: () => <Input className={styles.input} size="large" />,
+      render: (record) => (
+        <Input
+          className={styles.input}
+          control={control}
+          name={`measures.${record.name}.upperBound`}
+          defaultValue={initialValue?.measures?.[record.name]?.upperBound}
+        />
+      ),
     },
   ];
 
@@ -114,17 +147,16 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
   const renderTags = (colors: string[], content?: string[]) => {
     if (!content) return null;
 
-    return content.map((tag, i) => {
+    return content.map((tag) => {
       const tagSplited = tag.split(".");
-
       return (
         <NestedTag
-          key={tagSplited[0]}
+          key={JSON.stringify(tag)}
           tag={{ title: tagSplited[0], color: colors[0] }}
-          nested={tagSplited.slice(1).map((t) => ({
+          nested={tagSplited.slice(1).map((t, idx) => ({
             title: detectIcon(t),
             color: colors[1],
-            key: i,
+            key: idx,
           }))}
         />
       );
@@ -132,30 +164,39 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
   };
 
   return (
-    <Form className={styles.space} layout="vertical">
+    <Form className={styles.space} layout="vertical" id="alert-form">
       <Title className={styles.title} level={3}>
-        New Alert
+        {initialValue ? "Edit Alert" : "New Alert"}
       </Title>
 
-      <div className={styles.header}>
-        <StepFormHeader
-          numbers={false}
-          steps={["Alerts", "New", "Webhook"]}
-          currentStep={0}
-        />
-      </div>
+      {!initialValue && (
+        <div className={styles.header}>
+          <StepFormHeader
+            numbers={false}
+            steps={["Alerts", "New", "Webhook"]}
+            currentStep={0}
+          />
+        </div>
+      )}
 
       <Space className={cn(styles.space, styles.body)} size={16}>
         <Row gutter={[16, 16]}>
           <Col span={24} md={12}>
-            <Form.Item label="Alert Name:">
-              <Input size="large" />
-            </Form.Item>
+            <Input
+              label="Alert Name:"
+              control={control}
+              name="name"
+              defaultValue={initialValue?.name}
+            />
           </Col>
           <Col span={24} md={12}>
-            <Form.Item label="Type:">
-              <Input size="large" />
-            </Form.Item>
+            <Input
+              label="Type:"
+              control={control}
+              name="type"
+              defaultValue={initialValue?.type || type}
+              disabled
+            />
           </Col>
         </Row>
 
@@ -229,16 +270,19 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
           <Col span={24} md={12}>
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>Delivery Settings</span>
-              <Form.Item label="Webhook:">
-                <Input size="large" />
-              </Form.Item>
+              <Input
+                label={`${capitalize(type)}:`}
+                control={control}
+                name={type}
+                defaultValue={initialValue?.[type]}
+              />
             </Space>
           </Col>
 
           <Col span={24} md={12}>
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>Trigger Settings</span>
-              <Form.Item
+              <Input
                 label={
                   <span>
                     Schedule (
@@ -253,9 +297,11 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
                     ):
                   </span>
                 }
-              >
-                <Input size="large" suffix={<InfoIcon />} />
-              </Form.Item>
+                control={control}
+                name="schedule"
+                defaultValue={initialValue?.schedule}
+                suffix={<InfoIcon />}
+              />
             </Space>
           </Col>
         </Row>
@@ -278,15 +324,23 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
           >
             <Row gutter={[16, 16]}>
               <Col span={24} md={12}>
-                <Form.Item label="Timeout On Fire (minutes):">
-                  <Input className={styles.input} size="large" />
-                </Form.Item>
+                <Input
+                  className={styles.input}
+                  label="Request Timeout (minutes):"
+                  control={control}
+                  name="requestTimeout"
+                  fieldType="number"
+                />
               </Col>
 
               <Col span={24} md={12}>
-                <Form.Item label="TImeout On FIre (minutes):">
-                  <Input className={styles.input} size="large" />
-                </Form.Item>
+                <Input
+                  className={styles.input}
+                  label="TImeout On FIre (minutes):"
+                  control={control}
+                  name="timeoutOnFire"
+                  fieldType="number"
+                />
               </Col>
             </Row>
           </Panel>
@@ -300,7 +354,10 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
                 <span>Summary</span>: At 14:15 on day-of-month 1, via Webhook
               </Col>
               <Col>
-                <Button className={styles.sendTest}>
+                <Button
+                  className={styles.sendTest}
+                  onClick={() => onTest(getValues())}
+                >
                   <SendIcon /> Send test
                 </Button>
               </Col>
@@ -310,7 +367,14 @@ const AlertForm: FC<Partial<AlertFormProps>> = ({
         />
       </Space>
 
-      <Button className={styles.saveBtn} type="primary" size="large">
+      <Button
+        className={styles.saveBtn}
+        type="primary"
+        size="large"
+        htmlType="submit"
+        form="alert-form"
+        onClick={handleSubmit(onSubmit)}
+      >
         Save
       </Button>
     </Form>

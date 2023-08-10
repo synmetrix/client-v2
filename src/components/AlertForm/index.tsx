@@ -8,13 +8,7 @@ import {
   Table,
   Alert,
 } from "antd";
-import {
-  DownOutlined,
-  MinusOutlined,
-  PlusOutlined,
-  UpOutlined,
-} from "@ant-design/icons";
-import { useResponsive } from "ahooks";
+import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
 
@@ -22,10 +16,12 @@ import StepFormHeader from "@/components/StepFormHeader";
 import Button from "@/components/Button";
 import NestedTag from "@/components/NestedTag";
 import Input from "@/components/Input";
+import QueryPreview from "@/components/QueryPreview";
 import { capitalize } from "@/utils/helpers/capitalize";
+import { QUERY_COLORS } from "@/utils/constants/colors";
+import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
 
 import InfoIcon from "@/assets/info.svg";
-import ArrowIcon from "@/assets/arrow.svg";
 import SendIcon from "@/assets/send.svg";
 
 import styles from "./index.module.less";
@@ -54,30 +50,12 @@ export type AlertFormType = {
   timeoutOnFire: number;
 };
 
-interface Order {
-  name: string;
-  order: "asc" | "desc";
-}
-
-interface AlertFormProps {
+interface AlertFormProps extends QueryPreviewType {
   onSubmit: (data: AlertFormType) => void;
   onTest: (data: AlertFormType) => void;
   type: AlertType;
-  measures?: string[];
-  dimensions?: string[];
-  segments?: string[];
-  timeDimensions?: string[];
-  order?: Order[];
   initialValue?: AlertFormType;
 }
-
-const COLORS = {
-  measure: ["#470D6999", "#470D6999"],
-  dimension: ["#A31BCB80", "#A31BCB80"],
-  timeDimension: ["#4386FA", "#470D6999"],
-  segment: ["#33679199", "#33679199"],
-  order: ["#892C6C99", "#892C6C99"],
-};
 
 const AlertForm: FC<AlertFormProps> = ({
   type,
@@ -91,10 +69,6 @@ const AlertForm: FC<AlertFormProps> = ({
   onTest,
 }) => {
   const { control, handleSubmit, getValues } = useForm<AlertFormType>();
-  const windowSize = useResponsive();
-  const isMobile = windowSize.md === false;
-
-  const [activePanel, setActivePanel] = useState<string>();
 
   const colums: TableProps<{ name: string }>["columns"] = [
     {
@@ -104,10 +78,10 @@ const AlertForm: FC<AlertFormProps> = ({
         const name = record.name.split(".");
         return (
           <NestedTag
-            tag={{ title: name[0], color: COLORS.measure[0] }}
+            tag={{ title: name[0], color: QUERY_COLORS.measure[0] }}
             nested={name.slice(1).map((n: string, i: number) => ({
               title: n,
-              color: COLORS.measure[1],
+              color: QUERY_COLORS.measure[1],
               key: typeof n === "string" ? name[0] + "." + n : i,
             }))}
           />
@@ -137,36 +111,6 @@ const AlertForm: FC<AlertFormProps> = ({
       ),
     },
   ];
-
-  const detectIcon = (title: string) => {
-    switch (title) {
-      case "asc":
-        return <ArrowIcon />;
-      case "desc":
-        return <ArrowIcon className={styles.arrowDown} />;
-      default:
-        return title;
-    }
-  };
-
-  const renderTags = (colors: string[], content?: string[]) => {
-    if (!content) return null;
-
-    return content.map((tag) => {
-      const tagSplited = tag.split(".");
-      return (
-        <NestedTag
-          key={JSON.stringify(tag)}
-          tag={{ title: tagSplited[0], color: colors[0] }}
-          nested={tagSplited.slice(1).map((t, idx) => ({
-            title: detectIcon(t),
-            color: colors[1],
-            key: idx,
-          }))}
-        />
-      );
-    });
-  };
 
   return (
     <Form className={styles.space} layout="vertical" id="alert-form">
@@ -206,77 +150,13 @@ const AlertForm: FC<AlertFormProps> = ({
         </Row>
 
         <span className={styles.subtitle}>preview</span>
-        <Collapse
-          expandIcon={({ isActive }) => (
-            <Button className={styles.collapseBtn} size="small">
-              {isActive ? <MinusOutlined /> : <PlusOutlined />}
-            </Button>
-          )}
-          bordered={false}
-          className={styles.collapse}
-          activeKey={activePanel}
-          onChange={(keys) => setActivePanel(keys[0])}
-        >
-          <Panel
-            className={styles.panel}
-            header={
-              <div
-                className={cn(
-                  !activePanel && !isMobile && styles.headerWrapperDots
-                )}
-              >
-                <Space className={styles.header} size={10} align="center">
-                  {renderTags(COLORS.measure, measures)}
-                  {!activePanel && (
-                    <>
-                      <span className={styles.tagLabel}>BY</span>
-                      {renderTags(COLORS.dimension, dimensions)}
-                      {renderTags(COLORS.timeDimension, timeDimensions)}
-                      <span className={styles.tagLabel}>IN</span>
-                      {renderTags(COLORS.segment, segments)}
-                      <span className={styles.tagLabel}>ORDERED BY</span>
-                      {renderTags(
-                        COLORS.order,
-                        order?.map((o) => `${o.name}.${o.order}`)
-                      )}
-                    </>
-                  )}
-                </Space>
-              </div>
-            }
-            key={"1"}
-          >
-            <Space
-              className={styles.collapseInner}
-              direction="vertical"
-              size={10}
-            >
-              {(dimensions || timeDimensions) && (
-                <Space size={9}>
-                  <span className={styles.tagLabel}>BY</span>
-                  {renderTags(COLORS.dimension, dimensions)}
-                  {renderTags(COLORS.timeDimension, timeDimensions)}
-                </Space>
-              )}
-              {segments && (
-                <Space size={9}>
-                  <span className={styles.tagLabel}>IN</span>
-                  {renderTags(COLORS.segment, segments)}
-                </Space>
-              )}
-
-              {order && (
-                <Space size={9}>
-                  <span className={styles.tagLabel}>ORDERED BY</span>
-                  {renderTags(
-                    COLORS.order,
-                    order?.map((o) => `${o.name}.${o.order}`)
-                  )}
-                </Space>
-              )}
-            </Space>
-          </Panel>
-        </Collapse>
+        <QueryPreview
+          measures={measures}
+          dimensions={dimensions}
+          segments={segments}
+          timeDimensions={timeDimensions}
+          order={order}
+        />
 
         <Space
           className={cn(styles.space, styles.metrics)}

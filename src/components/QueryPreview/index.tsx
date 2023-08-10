@@ -1,6 +1,7 @@
 import { Collapse, Space } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import cn from "classnames";
+import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 
 import Button from "@/components/Button";
@@ -20,6 +21,7 @@ const QueryPreview: FC<QueryPreviewProps> = ({
   timeDimensions,
   orders,
 }) => {
+  const { t } = useTranslation();
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
@@ -49,12 +51,12 @@ const QueryPreview: FC<QueryPreviewProps> = ({
               <QueryTags content={measures} type="measure" />
               {!activePanel && (
                 <>
-                  <span className={styles.tagLabel}>BY</span>
+                  <span className={styles.tagLabel}>{t("BY")}</span>
                   <QueryTags content={dimensions} type="dimension" />
                   <QueryTags content={timeDimensions} type="timeDimension" />
-                  <span className={styles.tagLabel}>IN</span>
+                  <span className={styles.tagLabel}>{t("IN")}</span>
                   <QueryTags content={segments} type="segment" />
-                  <span className={styles.tagLabel}>ORDERED BY</span>
+                  <span className={styles.tagLabel}>{t("ORDERED BY")}</span>
                   <QueryTags content={orders} type="order" />
                 </>
               )}
@@ -66,21 +68,21 @@ const QueryPreview: FC<QueryPreviewProps> = ({
         <Space className={styles.collapseInner} direction="vertical" size={10}>
           {(dimensions || timeDimensions) && (
             <Space size={9}>
-              <span className={styles.tagLabel}>BY</span>
+              <span className={styles.tagLabel}>{t("BY")}</span>
               <QueryTags content={dimensions} type="dimension" />
               <QueryTags content={timeDimensions} type="timeDimension" />
             </Space>
           )}
           {segments && (
             <Space size={9}>
-              <span className={styles.tagLabel}>IN</span>
+              <span className={styles.tagLabel}>{t("IN")}</span>
               <QueryTags content={segments} type="segment" />
             </Space>
           )}
 
           {orders && (
             <Space size={9}>
-              <span className={styles.tagLabel}>ORDERED BY</span>
+              <span className={styles.tagLabel}>{t("ORDERED BY")}</span>
               <QueryTags content={orders} type="order" />
             </Space>
           )}

@@ -4,11 +4,8 @@ import cn from "classnames";
 import { useResponsive } from "ahooks";
 
 import Button from "@/components/Button";
-import NestedTag from "@/components/NestedTag";
-import { QUERY_COLORS } from "@/utils/constants/colors";
+import QueryTags from "@/components/QueryTags";
 import type { QueryPreview as QueryPreviewProps } from "@/types/queryPreview";
-
-import ArrowIcon from "@/assets/arrow.svg";
 
 import styles from "./index.module.less";
 
@@ -27,36 +24,6 @@ const QueryPreview: FC<QueryPreviewProps> = ({
   const isMobile = windowSize.md === false;
 
   const [activePanel, setActivePanel] = useState<string>();
-
-  const detectIcon = (title: string) => {
-    switch (title) {
-      case "asc":
-        return <ArrowIcon />;
-      case "desc":
-        return <ArrowIcon className={styles.arrowDown} />;
-      default:
-        return title;
-    }
-  };
-
-  const renderTags = (colors: string[], content?: string[]) => {
-    if (!content) return null;
-
-    return content.map((tag) => {
-      const tagSplited = tag.split(".");
-      return (
-        <NestedTag
-          key={JSON.stringify(tag)}
-          tag={{ title: tagSplited[0], color: colors[0] }}
-          nested={tagSplited.slice(1).map((t, idx) => ({
-            title: detectIcon(t),
-            color: colors[1],
-            key: idx,
-          }))}
-        />
-      );
-    });
-  };
 
   return (
     <Collapse
@@ -79,19 +46,19 @@ const QueryPreview: FC<QueryPreviewProps> = ({
             )}
           >
             <Space className={styles.header} size={10} align="center">
-              {renderTags(QUERY_COLORS.measure, measures)}
+              <QueryTags content={measures} type="measure" />
               {!activePanel && (
                 <>
                   <span className={styles.tagLabel}>BY</span>
-                  {renderTags(QUERY_COLORS.dimension, dimensions)}
-                  {renderTags(QUERY_COLORS.timeDimension, timeDimensions)}
+                  <QueryTags content={dimensions} type="dimension" />
+                  <QueryTags content={timeDimensions} type="timeDimension" />
                   <span className={styles.tagLabel}>IN</span>
-                  {renderTags(QUERY_COLORS.segment, segments)}
+                  <QueryTags content={segments} type="segment" />
                   <span className={styles.tagLabel}>ORDERED BY</span>
-                  {renderTags(
-                    QUERY_COLORS.order,
-                    order?.map((o) => `${o.name}.${o.order}`)
-                  )}
+                  <QueryTags
+                    content={order?.map((o) => `${o.name}.${o.order}`)}
+                    type="order"
+                  />
                 </>
               )}
             </Space>
@@ -103,24 +70,24 @@ const QueryPreview: FC<QueryPreviewProps> = ({
           {(dimensions || timeDimensions) && (
             <Space size={9}>
               <span className={styles.tagLabel}>BY</span>
-              {renderTags(QUERY_COLORS.dimension, dimensions)}
-              {renderTags(QUERY_COLORS.timeDimension, timeDimensions)}
+              <QueryTags content={dimensions} type="dimension" />
+              <QueryTags content={timeDimensions} type="timeDimension" />
             </Space>
           )}
           {segments && (
             <Space size={9}>
               <span className={styles.tagLabel}>IN</span>
-              {renderTags(QUERY_COLORS.segment, segments)}
+              <QueryTags content={segments} type="segment" />
             </Space>
           )}
 
           {order && (
             <Space size={9}>
               <span className={styles.tagLabel}>ORDERED BY</span>
-              {renderTags(
-                QUERY_COLORS.order,
-                order?.map((o) => `${o.name}.${o.order}`)
-              )}
+              <QueryTags
+                content={order?.map((o) => `${o.name}.${o.order}`)}
+                type="order"
+              />
             </Space>
           )}
         </Space>

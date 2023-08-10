@@ -118,3 +118,18 @@
 .arrowDown {
   transform: rotate(180deg);
 }
+
+.headerWrapperDots {
+  position: relative;
+  &::after {
+    margin-left: 25px;
+    font-size: 25px;
+    opacity: 0.5;
+    content: "...";
+  }
+}
+
+.header {
+  width: 80%;
+  overflow: hidden;
+}

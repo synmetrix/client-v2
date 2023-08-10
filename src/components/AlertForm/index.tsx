@@ -14,6 +14,7 @@ import {
   PlusOutlined,
   UpOutlined,
 } from "@ant-design/icons";
+import { useResponsive } from "ahooks";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
 
@@ -90,6 +91,10 @@ const AlertForm: FC<AlertFormProps> = ({
   onTest,
 }) => {
   const { control, handleSubmit, getValues } = useForm<AlertFormType>();
+  const windowSize = useResponsive();
+  const isMobile = windowSize.md === false;
+
+  const [activePanel, setActivePanel] = useState<string>();
 
   const colums: TableProps<{ name: string }>["columns"] = [
     {
@@ -209,13 +214,35 @@ const AlertForm: FC<AlertFormProps> = ({
           )}
           bordered={false}
           className={styles.collapse}
+          activeKey={activePanel}
+          onChange={(keys) => setActivePanel(keys[0])}
         >
           <Panel
             className={styles.panel}
             header={
-              <Space size={10} align="center">
-                {renderTags(COLORS.measure, measures)}
-              </Space>
+              <div
+                className={cn(
+                  !activePanel && !isMobile && styles.headerWrapperDots
+                )}
+              >
+                <Space className={styles.header} size={10} align="center">
+                  {renderTags(COLORS.measure, measures)}
+                  {!activePanel && (
+                    <>
+                      <span className={styles.tagLabel}>BY</span>
+                      {renderTags(COLORS.dimension, dimensions)}
+                      {renderTags(COLORS.timeDimension, timeDimensions)}
+                      <span className={styles.tagLabel}>IN</span>
+                      {renderTags(COLORS.segment, segments)}
+                      <span className={styles.tagLabel}>ORDERED BY</span>
+                      {renderTags(
+                        COLORS.order,
+                        order?.map((o) => `${o.name}.${o.order}`)
+                      )}
+                    </>
+                  )}
+                </Space>
+              </div>
             }
             key={"1"}
           >

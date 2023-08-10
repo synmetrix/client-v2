@@ -9,6 +9,7 @@ import {
   Alert,
 } from "antd";
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
 
@@ -65,11 +66,12 @@ const AlertForm: FC<AlertFormProps> = ({
   onSubmit,
   onTest,
 }) => {
+  const { t } = useTranslation();
   const { control, handleSubmit, getValues } = useForm<AlertFormType>();
 
   const colums: TableProps<{ name: string }>["columns"] = [
     {
-      title: "Measure",
+      title: t("Measure"),
       width: "50%",
       render: (record) => {
         const name = record.name.split(".");
@@ -86,7 +88,7 @@ const AlertForm: FC<AlertFormProps> = ({
       },
     },
     {
-      title: "Lower Bound",
+      title: t("Lower Bound"),
       render: (record) => (
         <Input
           className={styles.input}
@@ -97,7 +99,7 @@ const AlertForm: FC<AlertFormProps> = ({
       ),
     },
     {
-      title: "Upper Bound",
+      title: t("Upper Bound"),
       render: (record) => (
         <Input
           className={styles.input}
@@ -112,14 +114,14 @@ const AlertForm: FC<AlertFormProps> = ({
   return (
     <Form className={styles.space} layout="vertical" id="alert-form">
       <Title className={styles.title} level={3}>
-        {initialValue ? "Edit Alert" : "New Alert"}
+        {initialValue ? t("Edit Alert") : t("New Alert")}
       </Title>
 
       {!initialValue && (
         <div className={styles.header}>
           <StepFormHeader
             numbers={false}
-            steps={["Alerts", "New", "Webhook"]}
+            steps={[t("Alerts"), t("New"), t("Webhook")]}
             currentStep={0}
           />
         </div>
@@ -129,7 +131,7 @@ const AlertForm: FC<AlertFormProps> = ({
         <Row gutter={[16, 16]}>
           <Col span={24} md={12}>
             <Input
-              label="Alert Name:"
+              label={t("Alert Name:")}
               control={control}
               name="name"
               defaultValue={initialValue?.name}
@@ -137,7 +139,7 @@ const AlertForm: FC<AlertFormProps> = ({
           </Col>
           <Col span={24} md={12}>
             <Input
-              label="Type:"
+              label={t("Type:")}
               control={control}
               name="type"
               defaultValue={initialValue?.type || type}
@@ -146,7 +148,7 @@ const AlertForm: FC<AlertFormProps> = ({
           </Col>
         </Row>
 
-        <span className={styles.subtitle}>preview</span>
+        <span className={styles.subtitle}>{t("preview")}</span>
         <QueryPreview {...query} />
 
         <Space
@@ -154,7 +156,7 @@ const AlertForm: FC<AlertFormProps> = ({
           size={10}
           direction="vertical"
         >
-          <span className={styles.subtitle}>Set metrics boundaries</span>
+          <span className={styles.subtitle}>{t("Set metrics boundaries")}</span>
           <Table
             rootClassName={styles.table}
             columns={colums}
@@ -167,7 +169,7 @@ const AlertForm: FC<AlertFormProps> = ({
         <Row gutter={[16, 16]} align="stretch">
           <Col span={24} md={12}>
             <Space className={styles.space} size={10} direction="vertical">
-              <span className={styles.subtitle}>Delivery Settings</span>
+              <span className={styles.subtitle}>{t("Delivery Settings")}</span>
               <Input
                 rules={{ required: true }}
                 starPosition="left"
@@ -182,21 +184,21 @@ const AlertForm: FC<AlertFormProps> = ({
 
           <Col span={24} md={12}>
             <Space className={styles.space} size={10} direction="vertical">
-              <span className={styles.subtitle}>Trigger Settings</span>
+              <span className={styles.subtitle}>{t("Trigger Settings")}</span>
               <Input
                 rules={{ required: true }}
                 starPosition="left"
                 starColor="#A31BCB"
                 label={
                   <span>
-                    Schedule (
+                    {t("Schedule")} (
                     <a
                       className={styles.link}
                       href="https://crontab.guru/"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Build cron expression
+                      {t("Build cron expression")}
                     </a>
                     ):
                   </span>
@@ -223,7 +225,9 @@ const AlertForm: FC<AlertFormProps> = ({
         >
           <Panel
             className={styles.panel}
-            header={<span className={styles.subtitle}>Advanced Settings</span>}
+            header={
+              <span className={styles.subtitle}>{t("Advanced Settings")}</span>
+            }
             key={"1"}
           >
             <Row gutter={[16, 16]}>
@@ -233,7 +237,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   starPosition="left"
                   starColor="#A31BCB"
                   className={styles.input}
-                  label="Request Timeout (minutes):"
+                  label={t("Request Timeout (minutes):")}
                   control={control}
                   name="requestTimeout"
                   fieldType="number"
@@ -246,7 +250,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   starPosition="left"
                   starColor="#A31BCB"
                   className={styles.input}
-                  label="TImeout On FIre (minutes):"
+                  label={t("TImeout On FIre (minutes):")}
                   control={control}
                   name="timeoutOnFire"
                   fieldType="number"
@@ -261,14 +265,15 @@ const AlertForm: FC<AlertFormProps> = ({
           message={
             <Row justify="space-between" align="middle">
               <Col>
-                <span>Summary</span>: At 14:15 on day-of-month 1, via Webhook
+                <span>{t("Summary")}</span>:{" "}
+                {t("At 14:15 on day-of-month 1, via Webhook")}
               </Col>
               <Col>
                 <Button
                   className={styles.sendTest}
                   onClick={() => onTest(getValues())}
                 >
-                  <SendIcon /> Send test
+                  <SendIcon /> {t("Send test")}
                 </Button>
               </Col>
             </Row>
@@ -285,7 +290,7 @@ const AlertForm: FC<AlertFormProps> = ({
         form="alert-form"
         onClick={handleSubmit(onSubmit)}
       >
-        Save
+        {t("Save")}
       </Button>
     </Form>
   );

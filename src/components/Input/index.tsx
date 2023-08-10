@@ -41,6 +41,8 @@ interface InputProps<T extends FieldValues> extends ParentProps {
   placeholder?: string;
   fieldType?: string;
   rules?: object;
+  starPosition?: "left" | "right";
+  starColor?: string;
 }
 
 const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
@@ -52,10 +54,32 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   placeholder,
   fieldType,
   rules = {},
+  starPosition = "right",
+  starColor = "#000000",
   children,
   ...props
 }) => {
-  const getLabel = () => (rules && "required" in rules ? label + "*" : label);
+  const getLabel = () => {
+    if (rules && "required" in rules) {
+      if (starPosition === "left") {
+        return (
+          <>
+            <span className={styles.rightStar} style={{ color: starColor }}>
+              *
+            </span>
+            {label}
+          </>
+        );
+      } else {
+        return (
+          <>
+            {label} <span style={{ color: starColor }}>*</span>
+          </>
+        );
+      }
+    }
+    return label;
+  };
 
   const WrapperComponent = label ? Form.Item : "div";
   const wrapperProps = {

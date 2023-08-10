@@ -271,6 +271,9 @@ const AlertForm: FC<AlertFormProps> = ({
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>Delivery Settings</span>
               <Input
+                rules={{ required: true }}
+                starPosition="left"
+                starColor="#A31BCB"
                 label={`${capitalize(type)}:`}
                 control={control}
                 name={type}
@@ -283,6 +286,9 @@ const AlertForm: FC<AlertFormProps> = ({
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>Trigger Settings</span>
               <Input
+                rules={{ required: true }}
+                starPosition="left"
+                starColor="#A31BCB"
                 label={
                   <span>
                     Schedule (
@@ -325,6 +331,9 @@ const AlertForm: FC<AlertFormProps> = ({
             <Row gutter={[16, 16]}>
               <Col span={24} md={12}>
                 <Input
+                  rules={{ required: true }}
+                  starPosition="left"
+                  starColor="#A31BCB"
                   className={styles.input}
                   label="Request Timeout (minutes):"
                   control={control}
@@ -335,6 +344,9 @@ const AlertForm: FC<AlertFormProps> = ({
 
               <Col span={24} md={12}>
                 <Input
+                  rules={{ required: true }}
+                  starPosition="left"
+                  starColor="#A31BCB"
                   className={styles.input}
                   label="TImeout On FIre (minutes):"
                   control={control}

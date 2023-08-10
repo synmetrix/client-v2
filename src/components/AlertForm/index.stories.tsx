@@ -1,4 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
+import { queryPreviewMock } from "@/mocks/queryPreview";
 
 import AlertForm from ".";
 
@@ -18,11 +19,8 @@ const Template: StoryFn<typeof AlertForm> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
+  ...queryPreviewMock,
   type: "webhook",
-  measures: ["stories.count", "data_table2.count"],
-  segments: ["product_categories.toys"],
-  dimensions: ["stories.category"],
-  timeDimensions: ["stories.time"],
   order: [
     {
       name: "stories.count",

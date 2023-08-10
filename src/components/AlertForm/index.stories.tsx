@@ -19,7 +19,7 @@ const Template: StoryFn<typeof AlertForm> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  ...queryPreviewMock,
+  query: queryPreviewMock,
   type: "webhook",
   initialValue: {
     name: "asd",

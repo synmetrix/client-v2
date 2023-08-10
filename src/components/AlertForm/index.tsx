@@ -50,7 +50,8 @@ export type AlertFormType = {
   timeoutOnFire: number;
 };
 
-interface AlertFormProps extends QueryPreviewType {
+interface AlertFormProps {
+  query: QueryPreviewType;
   onSubmit: (data: AlertFormType) => void;
   onTest: (data: AlertFormType) => void;
   type: AlertType;
@@ -59,11 +60,7 @@ interface AlertFormProps extends QueryPreviewType {
 
 const AlertForm: FC<AlertFormProps> = ({
   type,
-  measures,
-  dimensions,
-  segments,
-  timeDimensions,
-  orders,
+  query,
   initialValue,
   onSubmit,
   onTest,
@@ -150,13 +147,7 @@ const AlertForm: FC<AlertFormProps> = ({
         </Row>
 
         <span className={styles.subtitle}>preview</span>
-        <QueryPreview
-          measures={measures}
-          dimensions={dimensions}
-          segments={segments}
-          timeDimensions={timeDimensions}
-          orders={orders}
-        />
+        <QueryPreview {...query} />
 
         <Space
           className={cn(styles.space, styles.metrics)}
@@ -167,7 +158,7 @@ const AlertForm: FC<AlertFormProps> = ({
           <Table
             rootClassName={styles.table}
             columns={colums}
-            dataSource={measures?.map((m) => ({ name: m }))}
+            dataSource={query.measures?.map((m) => ({ name: m }))}
             pagination={false}
             rowKey={(record) => record.name}
           />

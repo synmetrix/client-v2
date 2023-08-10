@@ -18,7 +18,7 @@ const QueryPreview: FC<QueryPreviewProps> = ({
   dimensions,
   segments,
   timeDimensions,
-  order,
+  orders,
 }) => {
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
@@ -55,10 +55,7 @@ const QueryPreview: FC<QueryPreviewProps> = ({
                   <span className={styles.tagLabel}>IN</span>
                   <QueryTags content={segments} type="segment" />
                   <span className={styles.tagLabel}>ORDERED BY</span>
-                  <QueryTags
-                    content={order?.map((o) => `${o.name}.${o.order}`)}
-                    type="order"
-                  />
+                  <QueryTags content={orders} type="order" />
                 </>
               )}
             </Space>
@@ -81,13 +78,10 @@ const QueryPreview: FC<QueryPreviewProps> = ({
             </Space>
           )}
 
-          {order && (
+          {orders && (
             <Space size={9}>
               <span className={styles.tagLabel}>ORDERED BY</span>
-              <QueryTags
-                content={order?.map((o) => `${o.name}.${o.order}`)}
-                type="order"
-              />
+              <QueryTags content={orders} type="order" />
             </Space>
           )}
         </Space>

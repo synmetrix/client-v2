@@ -3,4 +3,5 @@ export const queryPreviewMock = {
   segments: ["product_categories.toys"],
   dimensions: ["stories.category"],
   timeDimensions: ["stories.time"],
+  orders: ["stories.count.asc"],
 };

@@ -21,12 +21,6 @@ export const Default = Template.bind({});
 Default.args = {
   ...queryPreviewMock,
   type: "webhook",
-  order: [
-    {
-      name: "stories.count",
-      order: "desc",
-    },
-  ],
   initialValue: {
     name: "asd",
     type: "webhook",

@@ -63,7 +63,7 @@ const AlertForm: FC<AlertFormProps> = ({
   dimensions,
   segments,
   timeDimensions,
-  order,
+  orders,
   initialValue,
   onSubmit,
   onTest,
@@ -155,7 +155,7 @@ const AlertForm: FC<AlertFormProps> = ({
           dimensions={dimensions}
           segments={segments}
           timeDimensions={timeDimensions}
-          order={order}
+          orders={orders}
         />
 
         <Space

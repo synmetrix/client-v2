@@ -36,7 +36,16 @@
     "measures": "measures",
     "dimensions": "dimensions",
     "segments": "segments",
-    "or": "or"
+    "or": "or",
+    "new": "New",
+    "alert": "Alert",
+    "edit": "Edit",
+    "lower_bound": "Lower Bound",
+    "upper_bound": "Upper Bound",
+    "save": "Save",
+    "by": "BY",
+    "in": "IN",
+    "ordered_by": "ORDERED BY"
   },
   "form": {
     "labels": {

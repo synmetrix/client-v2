@@ -1,0 +1,46 @@
+.headerWrapperDots {
+  position: relative;
+  &::after {
+    margin-left: 25px;
+    font-size: 25px;
+    opacity: 0.5;
+    content: "...";
+  }
+}
+
+.header {
+  width: 80%;
+  overflow: hidden;
+}
+
+.collapseInner {
+  margin-left: 28px;
+}
+
+.panel {
+  background: none;
+  border: none !important;
+}
+
+.tagLabel {
+  font-weight: 700;
+  opacity: 0.5;
+}
+
+.collapse {
+  background: none;
+  border: none;
+  *:not([class*="tag"], [class*="collapseBtn"], [class*="input"]) {
+    padding-left: 0 !important;
+  }
+}
+
+.collapseBtn {
+  text-align: center;
+  border-color: #a5a5a5;
+
+  svg {
+    width: 10px;
+    fill: #a5a5a5;
+  }
+}

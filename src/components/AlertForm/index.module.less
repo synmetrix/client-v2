@@ -21,6 +21,14 @@
   opacity: 0.5;
 }
 
+.collapse {
+  background: none;
+  border: none;
+  *:not([class*="tag"], [class*="collapseBtn"], [class*="input"]) {
+    padding-left: 0 !important;
+  }
+}
+
 .table {
   background: transparent !important;
   *:not([class*="tag"]) {

@@ -1,0 +1,21 @@
+{
+  "new_alert": "New Alert",
+  "edit_alert": "Edit Alert",
+  "preview": "preview",
+  "set_metrics_boundaries": "Set metrics boundaries",
+  "delivery_settings": "Delivery Settings",
+  "trigger_settings": "Trigger Settings",
+  "schedule": "Schedule",
+  "build_cron_expression": "Build cron expression",
+  "advanced_settings": "Advanced Settings",
+  "summary": "Summary",
+  "at": "At",
+  "on_day-of-month": "on day-of-month",
+  "via": "via",
+  "form": {
+    "alert_name": "Alert Name:",
+    "type": "Type:",
+    "request_timeout": "Request Timeout (minutes):",
+    "timeout_on_fire": "Timeout On Fire (minutes):"
+  }
+}

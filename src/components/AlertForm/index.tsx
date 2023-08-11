@@ -66,12 +66,12 @@ const AlertForm: FC<AlertFormProps> = ({
   onSubmit,
   onTest,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["alerts", "common"]);
   const { control, handleSubmit, getValues } = useForm<AlertFormType>();
 
   const colums: TableProps<{ name: string }>["columns"] = [
     {
-      title: t("Measure"),
+      title: capitalize(t("common:words.measures")),
       width: "50%",
       render: (record) => {
         const name = record.name.split(".");
@@ -88,7 +88,7 @@ const AlertForm: FC<AlertFormProps> = ({
       },
     },
     {
-      title: t("Lower Bound"),
+      title: t("common:words.lower_bound"),
       render: (record) => (
         <Input
           className={styles.input}
@@ -99,7 +99,7 @@ const AlertForm: FC<AlertFormProps> = ({
       ),
     },
     {
-      title: t("Upper Bound"),
+      title: t("common:words.upper_bound"),
       render: (record) => (
         <Input
           className={styles.input}
@@ -114,14 +114,18 @@ const AlertForm: FC<AlertFormProps> = ({
   return (
     <Form className={styles.space} layout="vertical" id="alert-form">
       <Title className={styles.title} level={3}>
-        {initialValue ? t("Edit Alert") : t("New Alert")}
+        {initialValue ? t("edit_alert") : t("new_alert")}
       </Title>
 
       {!initialValue && (
         <div className={styles.header}>
           <StepFormHeader
             numbers={false}
-            steps={[t("Alerts"), t("New"), t("Webhook")]}
+            steps={[
+              t("common:words.alerts"),
+              t("common:words.new"),
+              capitalize(type),
+            ]}
             currentStep={0}
           />
         </div>
@@ -131,7 +135,7 @@ const AlertForm: FC<AlertFormProps> = ({
         <Row gutter={[16, 16]}>
           <Col span={24} md={12}>
             <Input
-              label={t("Alert Name:")}
+              label={t("form.alert_name")}
               control={control}
               name="name"
               defaultValue={initialValue?.name}
@@ -139,7 +143,7 @@ const AlertForm: FC<AlertFormProps> = ({
           </Col>
           <Col span={24} md={12}>
             <Input
-              label={t("Type:")}
+              label={t("form.type")}
               control={control}
               name="type"
               defaultValue={initialValue?.type || type}
@@ -156,7 +160,7 @@ const AlertForm: FC<AlertFormProps> = ({
           size={10}
           direction="vertical"
         >
-          <span className={styles.subtitle}>{t("Set metrics boundaries")}</span>
+          <span className={styles.subtitle}>{t("set_metrics_boundaries")}</span>
           <Table
             rootClassName={styles.table}
             columns={colums}
@@ -169,7 +173,7 @@ const AlertForm: FC<AlertFormProps> = ({
         <Row gutter={[16, 16]} align="stretch">
           <Col span={24} md={12}>
             <Space className={styles.space} size={10} direction="vertical">
-              <span className={styles.subtitle}>{t("Delivery Settings")}</span>
+              <span className={styles.subtitle}>{t("delivery_settings")}</span>
               <Input
                 rules={{ required: true }}
                 starPosition="left"
@@ -184,21 +188,21 @@ const AlertForm: FC<AlertFormProps> = ({
 
           <Col span={24} md={12}>
             <Space className={styles.space} size={10} direction="vertical">
-              <span className={styles.subtitle}>{t("Trigger Settings")}</span>
+              <span className={styles.subtitle}>{t("trigger_settings")}</span>
               <Input
                 rules={{ required: true }}
                 starPosition="left"
                 starColor="#A31BCB"
                 label={
                   <span>
-                    {t("Schedule")} (
+                    {t("schedule")} (
                     <a
                       className={styles.link}
                       href="https://crontab.guru/"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {t("Build cron expression")}
+                      {t("build_cron_expression")}
                     </a>
                     ):
                   </span>
@@ -226,7 +230,7 @@ const AlertForm: FC<AlertFormProps> = ({
           <Panel
             className={styles.panel}
             header={
-              <span className={styles.subtitle}>{t("Advanced Settings")}</span>
+              <span className={styles.subtitle}>{t("advanced_settings")}</span>
             }
             key={"1"}
           >
@@ -237,7 +241,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   starPosition="left"
                   starColor="#A31BCB"
                   className={styles.input}
-                  label={t("Request Timeout (minutes):")}
+                  label={t("form.request_timeout")}
                   control={control}
                   name="requestTimeout"
                   fieldType="number"
@@ -250,7 +254,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   starPosition="left"
                   starColor="#A31BCB"
                   className={styles.input}
-                  label={t("TImeout On FIre (minutes):")}
+                  label={t("form.timeout_on_fire")}
                   control={control}
                   name="timeoutOnFire"
                   fieldType="number"
@@ -265,8 +269,13 @@ const AlertForm: FC<AlertFormProps> = ({
           message={
             <Row justify="space-between" align="middle">
               <Col>
-                <span>{t("Summary")}</span>:{" "}
-                {t("At 14:15 on day-of-month 1, via Webhook")}
+                <span>{t("summary")}</span>:{" "}
+                {t("at 1") +
+                  t("on_day-of-month") +
+                  " 1, " +
+                  t("via") +
+                  " 14:15 " +
+                  capitalize(type)}
               </Col>
               <Col>
                 <Button
@@ -290,7 +299,7 @@ const AlertForm: FC<AlertFormProps> = ({
         form="alert-form"
         onClick={handleSubmit(onSubmit)}
       >
-        {t("Save")}
+        {t("common:words.save")}
       </Button>
     </Form>
   );

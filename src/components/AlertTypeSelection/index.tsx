@@ -1,4 +1,5 @@
 import { Col, Row, Space, Typography } from "antd";
+import { useTranslation } from "react-i18next";
 
 import FormTile from "@/components/FormTile";
 import StepFormHeader from "@/components/StepFormHeader";
@@ -26,6 +27,8 @@ const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
   initialValue,
   onSubmit,
 }) => {
+  const { t } = useTranslation(["alerts"]);
+
   const [activeTile, setActiveTile] = useState<Tile | undefined>(initialValue);
 
   const onChange = (value: Tile) => {
@@ -36,7 +39,7 @@ const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
   return (
     <Space className={styles.wrapper} direction="vertical" size={24}>
       <Title className={styles.title} level={3}>
-        New Alert
+        {t("new_alert")}
       </Title>
       <Row>
         <div className={styles.header}>

@@ -21,7 +21,7 @@ const QueryPreview: FC<QueryPreviewProps> = ({
   timeDimensions,
   orders,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["alerts", "common"]);
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
@@ -51,12 +51,18 @@ const QueryPreview: FC<QueryPreviewProps> = ({
               <QueryTags content={measures} type="measure" />
               {!activePanel && (
                 <>
-                  <span className={styles.tagLabel}>{t("BY")}</span>
+                  <span className={styles.tagLabel}>
+                    {t("common:words.by")}
+                  </span>
                   <QueryTags content={dimensions} type="dimension" />
                   <QueryTags content={timeDimensions} type="timeDimension" />
-                  <span className={styles.tagLabel}>{t("IN")}</span>
+                  <span className={styles.tagLabel}>
+                    {t("common:words.in")}
+                  </span>
                   <QueryTags content={segments} type="segment" />
-                  <span className={styles.tagLabel}>{t("ORDERED BY")}</span>
+                  <span className={styles.tagLabel}>
+                    {t("common:words.ordered_by")}
+                  </span>
                   <QueryTags content={orders} type="order" />
                 </>
               )}
@@ -68,21 +74,23 @@ const QueryPreview: FC<QueryPreviewProps> = ({
         <Space className={styles.collapseInner} direction="vertical" size={10}>
           {(dimensions || timeDimensions) && (
             <Space size={9}>
-              <span className={styles.tagLabel}>{t("BY")}</span>
+              <span className={styles.tagLabel}>{t("common:words.by")}</span>
               <QueryTags content={dimensions} type="dimension" />
               <QueryTags content={timeDimensions} type="timeDimension" />
             </Space>
           )}
           {segments && (
             <Space size={9}>
-              <span className={styles.tagLabel}>{t("IN")}</span>
+              <span className={styles.tagLabel}>{t("common.words.in")}</span>
               <QueryTags content={segments} type="segment" />
             </Space>
           )}
 
           {orders && (
             <Space size={9}>
-              <span className={styles.tagLabel}>{t("ORDERED BY")}</span>
+              <span className={styles.tagLabel}>
+                {t("common:words.ordered_by")}
+              </span>
               <QueryTags content={orders} type="order" />
             </Space>
           )}

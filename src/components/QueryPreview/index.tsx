@@ -81,7 +81,7 @@ const QueryPreview: FC<QueryPreviewProps> = ({
           )}
           {segments && (
             <Space size={9}>
-              <span className={styles.tagLabel}>{t("common.words.in")}</span>
+              <span className={styles.tagLabel}>{t("common:words.in")}</span>
               <QueryTags content={segments} type="segment" />
             </Space>
           )}

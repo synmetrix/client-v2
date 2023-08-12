@@ -8,7 +8,7 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 import type { ButtonProps } from "antd";
 
-interface SettingsHeaderProps {
+interface PageHeaderProps {
   title?: string;
   action?: string;
   actionProps?: ButtonProps;
@@ -18,7 +18,7 @@ interface SettingsHeaderProps {
 
 const { Title } = Typography;
 
-const SettingsHeader: FC<SettingsHeaderProps> = ({
+const PageHeader: FC<PageHeaderProps> = ({
   title,
   action,
   onClick,
@@ -48,4 +48,4 @@ const SettingsHeader: FC<SettingsHeaderProps> = ({
   );
 };
 
-export default SettingsHeader;
+export default PageHeader;

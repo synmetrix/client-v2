@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import BasicLayout from "@/layouts/BasicLayout";
 import AccessTable from "@/components/AccessTable";
 import type { Role } from "@/types/access";
-import SettingsHeader from "@/components/SettingsHeader";
+import PageHeader from "@/components/PageHeader";
 
 import styles from "./index.module.less";
 
@@ -26,7 +26,7 @@ const RolesAndAccess: React.FC<RolesAndAccessProps> = ({ access }) => {
       headerProps={{ title: t("pages:settings.roles_and_access") }}
     >
       <Space className={styles.wrapper} direction="vertical" size={13}>
-        <SettingsHeader
+        <PageHeader
           title={t("settings:roles_and_access.manage_roles")}
           action={t("settings:roles_and_access.create_role")}
         />

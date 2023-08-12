@@ -21,7 +21,7 @@ import QueryPreview from "@/components/QueryPreview";
 import { capitalize } from "@/utils/helpers/capitalize";
 import { QUERY_COLORS } from "@/utils/constants/colors";
 import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
-import type { AlertType } from "@/types/alert";
+import type { AlertFormType, AlertType } from "@/types/alert";
 
 import InfoIcon from "@/assets/info.svg";
 import SendIcon from "@/assets/send.svg";
@@ -34,32 +34,16 @@ import type { TableProps } from "antd";
 const { Title } = Typography;
 const { Panel } = Collapse;
 
-interface Measure {
-  lowerBound: number;
-  upperBound: number;
-}
-
-export type AlertFormType = {
-  [key in AlertType]?: string;
-} & {
-  name: string;
-  type: AlertType;
-  measures: Record<string, Measure>;
-  schedule: string;
-  requestTimeout: number;
-  timeoutOnFire: number;
-};
-
 interface AlertFormProps {
   query: QueryPreviewType;
   onSubmit: (data: AlertFormType) => void;
   onTest: (data: AlertFormType) => void;
-  type: AlertType;
+  type?: AlertType;
   initialValue?: AlertFormType;
 }
 
 const AlertForm: FC<AlertFormProps> = ({
-  type,
+  type = "webhook",
   query,
   initialValue,
   onSubmit,

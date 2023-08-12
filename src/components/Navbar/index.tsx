@@ -7,6 +7,7 @@ import Avatar from "@/components/Avatar";
 import type { Team } from "@/types/user";
 
 import TeamIcon from "@/assets/team.svg";
+import DocsIcon from "@/assets/docs.svg";
 
 import styles from "./index.module.less";
 
@@ -39,7 +40,12 @@ const Navbar: FC<NavbarProps> = ({
   return (
     <Space size={20} direction={direction} align="start">
       <Button className={styles.docs} href="/">
-        {t("common:words.docs")}
+        <Space size={10} align="start">
+          <span className={styles.docsIcon}>
+            <DocsIcon />
+          </span>
+          {t("common:words.docs")}
+        </Space>
       </Button>
 
       {teams && (

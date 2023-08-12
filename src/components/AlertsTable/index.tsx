@@ -6,8 +6,7 @@ import cn from "classnames";
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
 import { capitalize } from "@/utils/helpers/capitalize";
-import type { AlertType } from "@/types/alert";
-import type { User } from "@/types/user";
+import type { Alert } from "@/types/alert";
 
 import TrashIcon from "@/assets/trash.svg";
 import EllipseIcon from "@/assets/ellipse.svg";
@@ -16,18 +15,6 @@ import styles from "./index.module.less";
 
 import type { FC } from "react";
 import type { TableProps } from "antd";
-
-interface Alert {
-  id: string;
-  name: string;
-  type: AlertType;
-  schedule: string;
-  creator: User;
-  updatedAt: string;
-  createdAt: string;
-  lastActivity: string | null;
-  status: "success" | "processing" | "error" | "default" | "warning";
-}
 
 interface AlertTableProps {
   alerts: Alert[];
@@ -42,7 +29,9 @@ const AlertsTable: FC<AlertTableProps> = ({ alerts, onEdit, onRemove }) => {
       title: t("common:words.name"),
       dataIndex: "name",
       key: "name",
-      render: (value) => <span className={styles.cell}>{value}</span>,
+      render: (value) => (
+        <span className={cn(styles.cell, styles.nameCell)}>{value}</span>
+      ),
     },
     {
       title: t("common:words.delivery_type"),

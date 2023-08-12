@@ -9,7 +9,7 @@ import AlertTypeSelection from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Alert/AlertTypeSelection",
+  title: "Components/Alerts/AlertTypeSelection",
   component: AlertTypeSelection,
 } as Meta<typeof AlertTypeSelection>;
 

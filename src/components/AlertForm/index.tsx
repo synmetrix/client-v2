@@ -21,6 +21,7 @@ import QueryPreview from "@/components/QueryPreview";
 import { capitalize } from "@/utils/helpers/capitalize";
 import { QUERY_COLORS } from "@/utils/constants/colors";
 import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
+import type { AlertType } from "@/types/alert";
 
 import InfoIcon from "@/assets/info.svg";
 import SendIcon from "@/assets/send.svg";
@@ -37,8 +38,6 @@ interface Measure {
   lowerBound: number;
   upperBound: number;
 }
-
-type AlertType = "webhook" | "slack" | "email";
 
 export type AlertFormType = {
   [key in AlertType]?: string;

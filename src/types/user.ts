@@ -1,5 +1,6 @@
 export interface User {
   fullName: string;
+  email?: string;
   avatar?: string;
   teams?: Team[];
 }

@@ -49,7 +49,6 @@ const MembersTable: FC<MembersTableProps> = ({
     {
       title: (
         <span className={cn(styles.cell, styles.header)}>
-          {" "}
           {t("common:words.email")}
         </span>
       ),

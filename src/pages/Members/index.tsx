@@ -2,7 +2,7 @@ import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
 import BasicLayout from "@/layouts/BasicLayout";
-import SettingsHeader from "@/components/SettingsHeader";
+import PageHeader from "@/components/PageHeader";
 import MembersTable from "@/components/MembersTable";
 import Modal from "@/components/Modal";
 import MembersForm from "@/components/MembersForm";
@@ -31,7 +31,7 @@ const Members: React.FC<MembersProps> = ({ members }) => {
       headerProps={{ title: t("pages:settings.members") }}
     >
       <Space className={styles.wrapper} direction="vertical" size={13}>
-        <SettingsHeader
+        <PageHeader
           title={t("settings:members.title")}
           action={t("settings:members.action")}
           onClick={() => setIsOpen(true)}

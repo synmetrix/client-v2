@@ -17,5 +17,11 @@
     "type": "Type:",
     "request_timeout": "Request Timeout (minutes):",
     "timeout_on_fire": "Timeout On Fire (minutes):"
+  },
+  "list_and_manage_your_alerts": "List and manage your alerts",
+  "not_found": {
+    "title": "No Alerts Found",
+    "text": "There are currently no alerts to display",
+    "explore_btn": "Explore"
   }
 }

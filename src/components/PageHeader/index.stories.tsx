@@ -1,17 +1,17 @@
 import RootLayout from "@/layouts/RootLayout";
 
-import SettingsHeader from ".";
+import PageHeader from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Settings/SettingsHeader",
-  component: SettingsHeader,
-} as Meta<typeof SettingsHeader>;
+  title: "Components/PageHeader",
+  component: PageHeader,
+} as Meta<typeof PageHeader>;
 
-const Template: StoryFn<typeof SettingsHeader> = (args) => (
+const Template: StoryFn<typeof PageHeader> = (args) => (
   <RootLayout>
-    <SettingsHeader {...args} />
+    <PageHeader {...args} />
   </RootLayout>
 );
 

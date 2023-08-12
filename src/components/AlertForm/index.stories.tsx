@@ -6,7 +6,7 @@ import AlertForm from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Alert/AlertForm",
+  title: "Components/Alerts/AlertForm",
   component: AlertForm,
 } as Meta<typeof AlertForm>;
 

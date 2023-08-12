@@ -45,7 +45,12 @@
     "save": "Save",
     "by": "BY",
     "in": "IN",
-    "ordered_by": "ORDERED BY"
+    "ordered_by": "ORDERED BY",
+    "name": "Name",
+    "last_activity": "Last Activity",
+    "schedule": "Schedule",
+    "creator": "Creator",
+    "delivery_type": "Delivery Type"
   },
   "form": {
     "labels": {

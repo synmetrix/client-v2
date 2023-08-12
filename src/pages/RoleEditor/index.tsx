@@ -8,7 +8,7 @@ import type {
 } from "@/types/access";
 import RoleForm from "@/components/RoleForm";
 import BasicLayout from "@/layouts/BasicLayout";
-import SettingsHeader from "@/components/SettingsHeader";
+import PageHeader from "@/components/PageHeader";
 
 import styles from "./index.module.less";
 
@@ -30,7 +30,7 @@ const RoleEditor: React.FC<RoleEditorProps> = ({ accessItems, resources }) => {
       headerProps={{ title: t("pages:settings.roles_and_access") }}
     >
       <Space className={styles.wrapper} direction="vertical" size={13}>
-        <SettingsHeader title={t("settings:roles_and_access.create_role")} />
+        <PageHeader title={t("settings:roles_and_access.create_role")} />
         <div className={styles.inner}>
           <RoleForm
             dataSourceAccess={accessItems}

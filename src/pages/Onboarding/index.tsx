@@ -6,7 +6,7 @@ import type { DataSourceForm as DataSourceFormType } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
-export default function Onboarding() {
+const Onboarding: React.FC = () => {
   const onFinish = (data: DataSourceFormType) => console.log(data);
 
   return (
@@ -18,4 +18,6 @@ export default function Onboarding() {
       </Row>
     </BasicLayout>
   );
-}
+};
+
+export default Onboarding;

@@ -5,12 +5,12 @@ import Button from "@/components/Button";
 
 import styles from "./index.module.less";
 
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 import type { ButtonProps } from "antd";
 
 interface PageHeaderProps {
   title?: string;
-  action?: string;
+  action?: ReactNode;
   actionProps?: ButtonProps;
   onClick?: () => void;
   href?: string;
@@ -35,8 +35,11 @@ const PageHeader: FC<PageHeaderProps> = ({
       <Col>
         {action && (
           <Button
-            className={cn(!actionProps?.type && styles.action)}
             {...actionProps}
+            className={cn(
+              !actionProps?.type && styles.action,
+              actionProps?.className
+            )}
             href={href}
             onClick={onClick}
           >

@@ -1,18 +1,19 @@
 import RootLayout from "@/layouts/RootLayout";
 import { alerts } from "@/mocks/alerts";
+import { queryPreviewMock } from "@/mocks/queryPreview";
 
-import AlertsTable from ".";
+import Alerts from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Alerts/AlertsTable",
-  component: AlertsTable,
-} as Meta<typeof AlertsTable>;
+  title: "Pages/Alerts",
+  component: Alerts,
+} as Meta<typeof Alerts>;
 
-const Template: StoryFn<typeof AlertsTable> = (args) => (
+const Template: StoryFn<typeof Alerts> = (args) => (
   <RootLayout>
-    <AlertsTable {...args} />
+    <Alerts {...args} />
   </RootLayout>
 );
 
@@ -20,6 +21,5 @@ export const Default = Template.bind({});
 
 Default.args = {
   alerts,
-  onEdit: console.log,
-  onRemove: console.log,
+  query: queryPreviewMock,
 };

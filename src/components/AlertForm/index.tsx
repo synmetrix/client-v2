@@ -265,7 +265,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   className={styles.sendTest}
                   onClick={() => onTest(getValues())}
                 >
-                  <SendIcon /> {t("Send test")}
+                  <SendIcon /> {t("common:words.send_test")}
                 </Button>
               </Col>
             </Row>

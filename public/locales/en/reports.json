@@ -1,0 +1,18 @@
+{
+  "new_report": "New Report",
+  "edit_report": "Edit Report",
+  "preview": "preview",
+  "delivery_settings": "Delivery Settings",
+  "trigger_settings": "Trigger Settings",
+  "schedule": "Schedule",
+  "build_cron_expression": "Build cron expression",
+  "advanced_settings": "Advanced Settings",
+  "summary": "Summary",
+  "at": "At",
+  "on_day-of-month": "on day-of-month",
+  "via": "via",
+  "form": {
+    "report_name": "Report Name:",
+    "type": "Type:"
+  }
+}

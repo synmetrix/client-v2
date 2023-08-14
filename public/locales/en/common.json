@@ -50,7 +50,12 @@
     "last_activity": "Last Activity",
     "schedule": "Schedule",
     "creator": "Creator",
-    "delivery_type": "Delivery Type"
+    "delivery_type": "Delivery Type",
+    "reports": "Reports",
+    "alerts": "Alerts",
+    "send_test": "Send test",
+    "new_alert": "New Alert",
+    "new_report": "New Report"
   },
   "form": {
     "labels": {

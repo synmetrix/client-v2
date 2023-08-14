@@ -21,4 +21,5 @@ export const Default = Template.bind({});
 Default.args = {
   query: queryPreviewMock,
   type: "email",
+  onSubmit: console.log,
 };

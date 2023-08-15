@@ -8,6 +8,7 @@ import Button from "@/components/Button";
 import QueryPreview from "@/components/QueryPreview";
 import StepFormHeader from "@/components/StepFormHeader";
 import { capitalize } from "@/utils/helpers/capitalize";
+import validate from "@/utils/validations";
 import type { AlertType } from "@/types/alert";
 import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
 
@@ -105,7 +106,10 @@ const ReportForm: FC<ReportFormProps> = ({
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>{t("trigger_settings")}</span>
               <Input
-                rules={{ required: true }}
+                rules={{
+                  required: true,
+                  validate: validate.cronExp,
+                }}
                 starPosition="left"
                 starColor="#A31BCB"
                 label={

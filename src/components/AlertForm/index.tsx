@@ -19,6 +19,7 @@ import NestedTag from "@/components/NestedTag";
 import Input from "@/components/Input";
 import QueryPreview from "@/components/QueryPreview";
 import { capitalize } from "@/utils/helpers/capitalize";
+import validate from "@/utils/validations";
 import { QUERY_COLORS } from "@/utils/constants/colors";
 import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
 import type { AlertFormType, AlertType } from "@/types/alert";
@@ -173,7 +174,7 @@ const AlertForm: FC<AlertFormProps> = ({
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>{t("trigger_settings")}</span>
               <Input
-                rules={{ required: true }}
+                rules={{ required: true, validate: validate.cronExp }}
                 starPosition="left"
                 starColor="#A31BCB"
                 label={

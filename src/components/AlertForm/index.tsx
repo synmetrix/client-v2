@@ -12,6 +12,7 @@ import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
+import construe from "cronstrue/i18n";
 
 import StepFormHeader from "@/components/StepFormHeader";
 import Button from "@/components/Button";
@@ -19,6 +20,7 @@ import NestedTag from "@/components/NestedTag";
 import Input from "@/components/Input";
 import QueryPreview from "@/components/QueryPreview";
 import { capitalize } from "@/utils/helpers/capitalize";
+import validate from "@/utils/validations";
 import { QUERY_COLORS } from "@/utils/constants/colors";
 import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
 import type { AlertFormType, AlertType } from "@/types/alert";
@@ -49,8 +51,13 @@ const AlertForm: FC<AlertFormProps> = ({
   onSubmit,
   onTest,
 }) => {
-  const { t } = useTranslation(["alerts", "common"]);
-  const { control, handleSubmit, getValues } = useForm<AlertFormType>();
+  const {
+    t,
+    i18n: { language: locale },
+  } = useTranslation(["alerts", "common"]);
+  const { control, handleSubmit, getValues, watch } = useForm<AlertFormType>();
+
+  const schedule = watch("schedule");
 
   const colums: TableProps<{ name: string }>["columns"] = [
     {
@@ -173,7 +180,7 @@ const AlertForm: FC<AlertFormProps> = ({
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>{t("trigger_settings")}</span>
               <Input
-                rules={{ required: true }}
+                rules={{ required: true, validate: validate.cronExp }}
                 starPosition="left"
                 starColor="#A31BCB"
                 label={
@@ -253,19 +260,18 @@ const AlertForm: FC<AlertFormProps> = ({
             <Row justify="space-between" align="middle">
               <Col>
                 <span>{t("summary")}</span>:{" "}
-                {t("at 1") +
-                  t("on_day-of-month") +
-                  " 1, " +
-                  t("via") +
-                  " 14:15 " +
-                  capitalize(type)}
+                {schedule && validate.cronExp(schedule)
+                  ? construe.toString(schedule, {
+                      locale,
+                    })
+                  : `${t("schedule_not_set")}, ${t("via")} ${capitalize(type)}`}
               </Col>
               <Col>
                 <Button
                   className={styles.sendTest}
                   onClick={() => onTest(getValues())}
                 >
-                  <SendIcon /> {t("Send test")}
+                  <SendIcon /> {t("common:words.send_test")}
                 </Button>
               </Col>
             </Row>

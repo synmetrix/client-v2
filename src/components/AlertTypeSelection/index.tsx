@@ -15,6 +15,7 @@ interface Tile {
 }
 
 interface AlertTypeSelectionProps {
+  type: "alert" | "report";
   options: Tile[];
   onSubmit: (value: Tile) => void;
   initialValue?: Tile;
@@ -23,11 +24,12 @@ interface AlertTypeSelectionProps {
 const { Title } = Typography;
 
 const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
+  type = "alert",
   options,
   initialValue,
   onSubmit,
 }) => {
-  const { t } = useTranslation(["alerts"]);
+  const { t } = useTranslation(["alerts", "common"]);
 
   const [activeTile, setActiveTile] = useState<Tile | undefined>(initialValue);
 
@@ -39,13 +41,15 @@ const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
   return (
     <Space className={styles.wrapper} direction="vertical" size={24}>
       <Title className={styles.title} level={3}>
-        {t("new_alert")}
+        {type === "report"
+          ? t("common:words.new_report")
+          : t("common:words.new_alert")}
       </Title>
       <Row>
         <div className={styles.header}>
           <StepFormHeader
             numbers={false}
-            steps={["Alerts", "New"]}
+            steps={[t("common:words.alerts"), t("common:words.new")]}
             currentStep={0}
           />
         </div>

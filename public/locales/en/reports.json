@@ -10,6 +10,7 @@
   "summary": "Summary",
   "at": "At",
   "on_day-of-month": "on day-of-month",
+  "schedule_not_set": "Schedule not set",
   "via": "via",
   "form": {
     "report_name": "Report Name:",

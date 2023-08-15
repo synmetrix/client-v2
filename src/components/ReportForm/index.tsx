@@ -2,6 +2,7 @@ import { Alert, Col, Form, Row, Space, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
+import construe from "cronstrue/i18n";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
@@ -40,8 +41,13 @@ const ReportForm: FC<ReportFormProps> = ({
   initialValue,
   onSubmit,
 }) => {
-  const { t } = useTranslation(["reports", "common"]);
-  const { control, handleSubmit } = useForm<ReportFormType>();
+  const {
+    t,
+    i18n: { language: locale },
+  } = useTranslation(["reports", "common"]);
+  const { control, handleSubmit, watch } = useForm<ReportFormType>();
+
+  const schedule = watch("schedule");
 
   return (
     <Form layout="vertical">
@@ -141,12 +147,11 @@ const ReportForm: FC<ReportFormProps> = ({
             <Row justify="space-between" align="middle">
               <Col>
                 <span>{t("summary")}</span>:{" "}
-                {t("at 1") +
-                  t("on_day-of-month") +
-                  " 1, " +
-                  t("via") +
-                  " 14:15 " +
-                  capitalize(type)}
+                {schedule && validate.cronExp(schedule)
+                  ? construe.toString(schedule, {
+                      locale,
+                    })
+                  : `${t("schedule_not_set")}, ${t("via")} ${capitalize(type)}`}
               </Col>
               <Col>
                 <Button className={styles.sendTest}>

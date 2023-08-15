@@ -12,6 +12,7 @@
   "at": "At",
   "on_day-of-month": "on day-of-month",
   "via": "via",
+  "schedule_not_set": "Schedule not set",
   "form": {
     "alert_name": "Alert Name:",
     "type": "Type:",

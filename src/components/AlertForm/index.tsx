@@ -12,6 +12,7 @@ import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
+import construe from "cronstrue/i18n";
 
 import StepFormHeader from "@/components/StepFormHeader";
 import Button from "@/components/Button";
@@ -50,8 +51,13 @@ const AlertForm: FC<AlertFormProps> = ({
   onSubmit,
   onTest,
 }) => {
-  const { t } = useTranslation(["alerts", "common"]);
-  const { control, handleSubmit, getValues } = useForm<AlertFormType>();
+  const {
+    t,
+    i18n: { language: locale },
+  } = useTranslation(["alerts", "common"]);
+  const { control, handleSubmit, getValues, watch } = useForm<AlertFormType>();
+
+  const schedule = watch("schedule");
 
   const colums: TableProps<{ name: string }>["columns"] = [
     {
@@ -254,12 +260,11 @@ const AlertForm: FC<AlertFormProps> = ({
             <Row justify="space-between" align="middle">
               <Col>
                 <span>{t("summary")}</span>:{" "}
-                {t("at 1") +
-                  t("on_day-of-month") +
-                  " 1, " +
-                  t("via") +
-                  " 14:15 " +
-                  capitalize(type)}
+                {schedule && validate.cronExp(schedule)
+                  ? construe.toString(schedule, {
+                      locale,
+                    })
+                  : `${t("schedule_not_set")}, ${t("via")} ${capitalize(type)}`}
               </Col>
               <Col>
                 <Button

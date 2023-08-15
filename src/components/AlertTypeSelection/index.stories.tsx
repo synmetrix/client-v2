@@ -1,8 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
-
-import WebhookIcon from "@/assets/webhook.svg";
-import SlackIcon from "@/assets/slack.svg";
-import MailIcon from "@/assets/mail.svg";
+import { alertTypes } from "@/mocks/alertTypes";
 
 import AlertTypeSelection from ".";
 
@@ -22,10 +19,6 @@ const Template: StoryFn<typeof AlertTypeSelection> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  options: [
-    { name: "Webhook", icon: <WebhookIcon />, value: "webhook" },
-    { name: "Slack", icon: <SlackIcon />, value: "slack" },
-    { name: "Mail", icon: <MailIcon />, value: "mail" },
-  ],
+  options: alertTypes,
   onSubmit: console.log,
 };

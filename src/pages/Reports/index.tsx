@@ -5,42 +5,43 @@ import BasicLayout from "@/layouts/BasicLayout";
 import PageHeader from "@/components/PageHeader";
 import AlertsTable from "@/components/AlertsTable";
 import Modal from "@/components/Modal";
-import AlertForm from "@/components/AlertForm";
+import ReportForm from "@/components/ReportForm";
 import AlertTypeSelection from "@/components/AlertTypeSelection";
 import { alertTypes } from "@/mocks/alertTypes";
-import type { Alert, AlertFormType, AlertType } from "@/types/alert";
+import type { Alert, AlertType } from "@/types/alert";
+import type { Report, ReportFormType } from "@/types/report";
 import type { QueryPreview } from "@/types/queryPreview";
 
 import DocsIcon from "@/assets/docs.svg";
 
 import styles from "./index.module.less";
 
-interface AlertsProps {
+interface ReportsProps {
   alerts: Alert[];
   query: QueryPreview;
 }
 
-const Alerts: React.FC<AlertsProps> = ({ alerts, query }) => {
-  const { t } = useTranslation(["alerts", "pages"]);
+const Reports: React.FC<ReportsProps> = ({ alerts, query }) => {
+  const { t } = useTranslation(["reports", "pages"]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedType, setSelectedType] = useState<AlertType | undefined>();
-  const [selectedAlert, setSelectedAlert] = useState<
-    AlertFormType | undefined
+  const [selectedReport, setSelectedReport] = useState<
+    ReportFormType | undefined
   >();
 
-  const onEdit = (alert: Alert) => {
-    setSelectedAlert(alert);
+  const onEdit = (report: Report) => {
+    setSelectedReport(report);
     setIsOpen(true);
   };
 
   const onCreate = () => {
-    setSelectedAlert(undefined);
+    setSelectedReport(undefined);
     setIsOpen(true);
   };
 
   const onClose = () => {
-    setSelectedAlert(undefined);
+    setSelectedReport(undefined);
     setSelectedType(undefined);
     setIsOpen(false);
   };
@@ -50,17 +51,17 @@ const Alerts: React.FC<AlertsProps> = ({ alerts, query }) => {
       loggedIn
       divider
       withSideMenu
-      headerProps={{ title: t("pages:alerts") }}
+      headerProps={{ title: t("pages:reports") }}
     >
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
-          title={t("list_and_manage_your_alerts")}
+          title={t("list_and_manage_your_reports")}
           action={
             <Space size={10} align="start">
               <span className={styles.actionIcon}>
                 <DocsIcon />
               </span>
-              {t("how_to_create_alert")}
+              {t("how_to_create_report")}
             </Space>
           }
           actionProps={{
@@ -78,17 +79,17 @@ const Alerts: React.FC<AlertsProps> = ({ alerts, query }) => {
         className={styles.modal}
         width={"100%"}
       >
-        {selectedAlert || selectedType ? (
-          <AlertForm
+        {selectedReport || selectedType ? (
+          <ReportForm
             query={query}
-            onTest={console.log}
-            type={selectedAlert?.type}
+            type={selectedReport?.type || selectedType}
             onSubmit={console.log}
-            initialValue={selectedAlert}
+            onTest={console.log}
+            initialValue={selectedReport}
           />
         ) : (
           <AlertTypeSelection
-            type="alert"
+            type="report"
             options={alertTypes}
             onSubmit={(v) => setSelectedType(v.value)}
           />
@@ -98,4 +99,4 @@ const Alerts: React.FC<AlertsProps> = ({ alerts, query }) => {
   );
 };
 
-export default Alerts;
+export default Reports;

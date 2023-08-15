@@ -12,6 +12,7 @@ import { capitalize } from "@/utils/helpers/capitalize";
 import validate from "@/utils/validations";
 import type { AlertType } from "@/types/alert";
 import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
+import type { ReportFormType } from "@/types/report";
 
 import InfoIcon from "@/assets/info.svg";
 import SendIcon from "@/assets/send.svg";
@@ -22,30 +23,26 @@ import type { FC } from "react";
 
 interface ReportFormProps {
   query: QueryPreviewType;
-  type: AlertType;
   onSubmit: (data: ReportFormType) => void;
+  onTest: (data: ReportFormType) => void;
+  type?: AlertType;
   initialValue?: ReportFormType;
 }
-
-type ReportFormType = Record<AlertType, string> & {
-  name: string;
-  type: AlertType;
-  schedule: string;
-};
 
 const { Title } = Typography;
 
 const ReportForm: FC<ReportFormProps> = ({
   query,
-  type,
+  type = "webhook",
   initialValue,
   onSubmit,
+  onTest,
 }) => {
   const {
     t,
     i18n: { language: locale },
   } = useTranslation(["reports", "common"]);
-  const { control, handleSubmit, watch } = useForm<ReportFormType>();
+  const { control, handleSubmit, watch, getValues } = useForm<ReportFormType>();
 
   const schedule = watch("schedule");
 
@@ -154,7 +151,10 @@ const ReportForm: FC<ReportFormProps> = ({
                   : `${t("schedule_not_set")}, ${t("via")} ${capitalize(type)}`}
               </Col>
               <Col>
-                <Button className={styles.sendTest}>
+                <Button
+                  className={styles.sendTest}
+                  onClick={() => onTest(getValues())}
+                >
                   <SendIcon /> {t("common:words.send_test")}
                 </Button>
               </Col>

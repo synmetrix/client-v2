@@ -9,7 +9,7 @@ import DataSourceSelection from "@/components/DataSourceSelection";
 import DataSourceSetup from "@/components/DataSourceSetup";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import ApiSetup from "@/components/ApiSetup";
-import { dataSourceForms, dbTiles } from "@/components/DataSourceFormBody/data";
+import { dataSourceForms, dbTiles } from "@/mocks/dataSources";
 
 import type { FC } from "react";
 

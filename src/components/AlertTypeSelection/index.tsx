@@ -3,16 +3,11 @@ import { useTranslation } from "react-i18next";
 
 import FormTile from "@/components/FormTile";
 import StepFormHeader from "@/components/StepFormHeader";
+import type { Tile } from "@/types/formTile";
 
 import styles from "./index.module.less";
 
-import type { FC, ReactNode } from "react";
-
-interface Tile {
-  name: string;
-  icon: ReactNode;
-  value: string;
-}
+import type { FC } from "react";
 
 interface AlertTypeSelectionProps {
   type: "alert" | "report";

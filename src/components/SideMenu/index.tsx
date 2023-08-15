@@ -5,7 +5,7 @@ import cn from "classnames";
 import Sidebar from "@/components/Sidebar";
 import Button from "@/components/Button";
 
-import { items } from "./data";
+import { items } from "../../mocks/sideMenu";
 
 import styles from "./index.module.less";
 

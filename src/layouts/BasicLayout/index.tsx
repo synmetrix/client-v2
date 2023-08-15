@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import BurgerMenu from "@/components/BurgerMenu";
 import SideMenu from "@/components/SideMenu";
 import { userMenu } from "@/mocks/user";
-import { useUserData } from "@/hooks/useUserData";
+import useUserData from "@/hooks/useUserData";
 
 import styles from "./index.module.less";
 
@@ -37,17 +37,17 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
   children,
 }) => {
   const responsive = useResponsive();
-  const user = useUserData();
+  const { currentUser } = useUserData();
 
   const isMobile = responsive.md === false;
 
   const navbar = (
     <Navbar
       direction={isMobile ? "vertical" : "horizontal"}
-      username={user.fullName}
-      userAvatar={user.avatar}
+      username={currentUser.displayName}
+      userAvatar={currentUser.avatarUrl}
       userMenu={userMenu}
-      teams={user?.teams}
+      teams={currentUser?.teams}
     />
   );
 

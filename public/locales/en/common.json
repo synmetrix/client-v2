@@ -99,7 +99,8 @@
       "use_ssl": "I want use SSL",
       "attach_file_credentials": "Attach the file credentials, please",
       "schema": "schema",
-      "password": "Password"
+      "password": "Password",
+      "email": "E-mail"
     },
     "errors": {
       "email": "Enter a valid e-mail",

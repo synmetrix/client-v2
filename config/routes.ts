@@ -15,6 +15,14 @@ export default [
                 component: "./pages/SignUp",
               },
               {
+                path: "/signin",
+                component: "./pages/SignIn",
+              },
+              {
+                path: "/datasources",
+                component: "./pages/DataSources",
+              },
+              {
                 component: "./pages/404",
               },
             ],

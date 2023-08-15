@@ -13,7 +13,11 @@ import type {
 
 import styles from "./index.module.less";
 
-const DataSources = ({ dataSources }: { dataSources: DataSourceInfo[] }) => {
+const DataSources = ({
+  dataSources = [],
+}: {
+  dataSources: DataSourceInfo[];
+}) => {
   const { t } = useTranslation(["settings", "pages"]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);

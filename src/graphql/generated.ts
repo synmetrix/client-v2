@@ -2,9 +2,7 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends Record<string, unknown>> = {
-  [K in keyof T]: T[K];
-};
+export type Exact<T extends Record<string, unknown>> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]?: Maybe<T[SubKey]>;
 };
@@ -9832,6 +9830,65 @@ export type Versions_Updates = {
   where: Versions_Bool_Exp;
 };
 
+export type CurrentUserQueryVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type CurrentUserQuery = {
+  __typename?: "query_root";
+  users_by_pk?: {
+    __typename?: "users";
+    id: any;
+    display_name?: string | null;
+    avatar_url?: string | null;
+    members: {
+      __typename?: "members";
+      team: { __typename?: "teams"; id: any; name: string };
+    }[];
+  } | null;
+  datasources: {
+    __typename?: "datasources";
+    id: any;
+    name: string;
+    user_id: any;
+    team_id?: any | null;
+  }[];
+};
+
+export type DatasourcesQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Datasources_Bool_Exp>;
+  order_by?: InputMaybe<Datasources_Order_By[] | Datasources_Order_By>;
+}>;
+
+export type DatasourcesQuery = {
+  __typename?: "query_root";
+  datasources: {
+    __typename?: "datasources";
+    id: any;
+    name: string;
+    db_type: string;
+    created_at: any;
+    updated_at: any;
+    sql_credentials: {
+      __typename?: "sql_credentials";
+      id: any;
+      username: string;
+      created_at: any;
+      updated_at: any;
+      user: { __typename?: "users"; id: any; display_name?: string | null };
+    }[];
+  }[];
+  datasources_aggregate: {
+    __typename?: "datasources_aggregate";
+    aggregate?: {
+      __typename?: "datasources_aggregate_fields";
+      count: number;
+    } | null;
+  };
+};
+
 export type GetUsersQueryVariables = Exact<Record<string, never>>;
 
 export type GetUsersQuery = {
@@ -9839,6 +9896,164 @@ export type GetUsersQuery = {
   users: { __typename?: "users"; id: any }[];
 };
 
+export const CurrentUserDocument = gql`
+  query CurrentUser($id: uuid!) {
+    users_by_pk(id: $id) {
+      id
+      display_name
+      avatar_url
+      members(order_by: { created_at: desc }) {
+        team {
+          id
+          name
+        }
+      }
+    }
+    datasources(order_by: { created_at: desc }) {
+      id
+      name
+      user_id
+      team_id
+    }
+  }
+`;
+
+/**
+ * __useCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentUserQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCurrentUserQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    CurrentUserQuery,
+    CurrentUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<CurrentUserQuery, CurrentUserQueryVariables>(
+    CurrentUserDocument,
+    options
+  );
+}
+export function useCurrentUserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CurrentUserQuery,
+    CurrentUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<CurrentUserQuery, CurrentUserQueryVariables>(
+    CurrentUserDocument,
+    options
+  );
+}
+export type CurrentUserQueryHookResult = ReturnType<typeof useCurrentUserQuery>;
+export type CurrentUserLazyQueryHookResult = ReturnType<
+  typeof useCurrentUserLazyQuery
+>;
+export type CurrentUserQueryResult = Apollo.QueryResult<
+  CurrentUserQuery,
+  CurrentUserQueryVariables
+>;
+export const DatasourcesDocument = gql`
+  query Datasources(
+    $offset: Int
+    $limit: Int
+    $where: datasources_bool_exp
+    $order_by: [datasources_order_by!]
+  ) {
+    datasources(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+      name
+      db_type
+      created_at
+      updated_at
+      sql_credentials {
+        id
+        username
+        created_at
+        updated_at
+        user {
+          id
+          display_name
+        }
+      }
+    }
+    datasources_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+/**
+ * __useDatasourcesQuery__
+ *
+ * To run a query within a React component, call `useDatasourcesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDatasourcesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDatasourcesQuery({
+ *   variables: {
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *      where: // value for 'where'
+ *      order_by: // value for 'order_by'
+ *   },
+ * });
+ */
+export function useDatasourcesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    DatasourcesQuery,
+    DatasourcesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<DatasourcesQuery, DatasourcesQueryVariables>(
+    DatasourcesDocument,
+    options
+  );
+}
+export function useDatasourcesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    DatasourcesQuery,
+    DatasourcesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<DatasourcesQuery, DatasourcesQueryVariables>(
+    DatasourcesDocument,
+    options
+  );
+}
+export type DatasourcesQueryHookResult = ReturnType<typeof useDatasourcesQuery>;
+export type DatasourcesLazyQueryHookResult = ReturnType<
+  typeof useDatasourcesLazyQuery
+>;
+export type DatasourcesQueryResult = Apollo.QueryResult<
+  DatasourcesQuery,
+  DatasourcesQueryVariables
+>;
 export const GetUsersDocument = gql`
   query GetUsers {
     users {
@@ -9893,6 +10108,8 @@ export type GetUsersQueryResult = Apollo.QueryResult<
 >;
 export const namedOperations = {
   Query: {
+    CurrentUser: "CurrentUser",
+    Datasources: "Datasources",
     GetUsers: "GetUsers",
   },
 };

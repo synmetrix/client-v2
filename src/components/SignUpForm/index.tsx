@@ -14,9 +14,9 @@ import type { FC } from "react";
 const { Title, Text } = Typography;
 
 export interface SignUpFormType {
-  username: string;
+  email: string;
   password: string;
-  privacy: boolean;
+  privacy?: boolean;
 }
 
 interface SignUpProps {
@@ -51,13 +51,13 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
       <Form className={styles.form}>
         <Input
           className={cn(styles.formItem, styles.input, {
-            [styles.error]: errors?.username,
+            [styles.error]: errors?.email,
           })}
           bordered={false}
-          placeholder="Placeholder"
+          placeholder={t("common:form.placeholders.email")}
           control={control}
           rules={{ required: true }}
-          name="username"
+          name="email"
         />
         <Input
           className={cn(styles.formItem, styles.input, {

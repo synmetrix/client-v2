@@ -20,7 +20,7 @@ interface MenuItem {
 
 interface NavbarProps {
   userMenu: MenuItem[];
-  username: string;
+  username?: string;
   userAvatar?: string;
   direction?: "horizontal" | "vertical";
   teams?: Team[];

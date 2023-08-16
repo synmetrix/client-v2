@@ -2,19 +2,19 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import jwtDecode from "jwt-decode";
 
-type JWTPayload = {
+type HasuraJWTPayload = {
   "x-hasura-role": string[];
   "x-hasura-user-id": string;
 };
 
 type Payload = {
-  hasura: JWTPayload;
+  hasura: HasuraJWTPayload;
 };
 
 interface TokensState {
   refreshToken: string | null;
   accessToken: string | null;
-  JWTpayload: JWTPayload | null;
+  JWTpayload: HasuraJWTPayload | null;
   setRefreshToken: (refreshToken: string) => void;
   setAccessToken: (accesToken: string) => void;
   cleanTokens: () => void;

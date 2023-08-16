@@ -1,9 +1,11 @@
 import AuthTokensStore from "@/stores/AuthTokensStore";
+import type { SignInFormType } from "@/components/SignInForm";
+import type { SignUpFormType } from "@/components/SignUpForm";
 
 const VITE_GRAPHQL_PLUS_SERVER_URL = import.meta.env
   .VITE_GRAPHQL_PLUS_SERVER_URL;
 
-type RegisterResponse = {
+type Response = {
   jwt_token: string;
   refresh_token: string;
   statusCode: number;
@@ -30,7 +32,7 @@ export const validateResponse = async (response: any) => {
   return data;
 };
 
-export const fetchRefreshToken = async (refreshToken: any) => {
+export const fetchRefreshToken = async (refreshToken: string) => {
   return await fetch(
     `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/token/refresh?refresh_token=${refreshToken}`,
     {
@@ -45,7 +47,7 @@ export const fetchRefreshToken = async (refreshToken: any) => {
 export default () => {
   const authTokensState = AuthTokensStore.getState();
 
-  const login = async (values: any) => {
+  const login = async (values: SignInFormType) => {
     const response = await fetch(`${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/login`, {
       method: "POST",
       headers: {
@@ -57,7 +59,7 @@ export default () => {
       }),
     });
 
-    const res = <any>await validateResponse(response);
+    const res = <Response>await validateResponse(response);
 
     if (res.error) {
       return {
@@ -70,7 +72,7 @@ export default () => {
     authTokensState.setAccessToken(res.jwt_token);
   };
 
-  const register = async (values: any) => {
+  const register = async (values: SignUpFormType) => {
     const response = await fetch(
       `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/register`,
       {
@@ -85,7 +87,7 @@ export default () => {
       }
     );
 
-    const res = <RegisterResponse>await validateResponse(response);
+    const res = <Response>await validateResponse(response);
 
     if (res.error) {
       return {

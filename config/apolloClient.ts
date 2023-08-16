@@ -13,7 +13,10 @@ import decodeJWT from "jwt-decode";
 import { fetchRefreshToken } from "@/hooks/useAuth";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 
-type headers = {
+import type { JwtPayload } from "jwt-decode";
+import type { Operation } from "@apollo/client/link/core/types";
+
+type Headers = {
   Authorization: string;
 };
 
@@ -21,13 +24,13 @@ const HASURA_GRAPHQL_ENDPOINT = import.meta.env.VITE_HASURA_GRAPHQL_ENDPOINT;
 const HASURA_WS_ENDPOINT = import.meta.env.VITE_HASURA_WS_ENDPOINT;
 
 const getHeaders = () => {
-  const headers = {} as headers;
+  const headers = {} as Headers;
   const { accessToken } = AuthTokensStore.getState();
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
   return headers;
 };
 
-const operationIsSubscription = (operation: any): boolean => {
+const operationIsSubscription = (operation: Operation): boolean => {
   const definition = getMainDefinition(operation.query);
   const isSubscription =
     definition.kind === "OperationDefinition" &&
@@ -58,8 +61,8 @@ const makeTokenRefreshLink = () => {
 
       if (!token) return true;
 
-      const claims: any = decodeJWT(token);
-      const expirationTimeInSeconds = claims.exp * 1000;
+      const claims: JwtPayload = decodeJWT(token);
+      const expirationTimeInSeconds = (claims?.exp || 0) * 1000;
       const now = new Date();
       const isValid = expirationTimeInSeconds >= now.getTime();
 
@@ -67,9 +70,11 @@ const makeTokenRefreshLink = () => {
     },
     fetchAccessToken: async () => {
       const refreshToken = authTokensState.refreshToken;
-      const request = await fetchRefreshToken(refreshToken);
 
-      return request.json();
+      if (refreshToken) {
+        const request = await fetchRefreshToken(refreshToken);
+        return request.json();
+      }
     },
     handleFetch: (accessToken) => authTokensState.setAccessToken(accessToken),
     handleResponse: () => (response: any) => {

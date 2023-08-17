@@ -1,0 +1,7 @@
+{
+  "not_found": {
+    "title": "You have no teams yet",
+    "text": "Please create team for manage roles.",
+    "btn": "Create New Team"
+  }
+}

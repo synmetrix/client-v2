@@ -1,4 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
+import { teams } from "@/mocks/teams";
 
 import TeamsTable from ".";
 
@@ -18,68 +19,8 @@ const Template: StoryFn<typeof TeamsTable> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  teams: [
-    {
-      id: "1",
-      name: "Developers",
-      members: [
-        {
-          id: "1",
-          displayName: "User Name",
-          email: "useremail@mail/com",
-        },
-        {
-          id: "2",
-          displayName: "User Name",
-          email: "useremail@mail/com",
-        },
-        {
-          id: "3",
-          displayName: "User Name",
-          email: "useremail@mail/com",
-        },
-        {
-          id: "4",
-          displayName: "User Name",
-          email: "useremail@mail/com",
-        },
-        {
-          id: "5",
-          displayName: "User Name",
-          email: "useremail@mail/com",
-        },
-        {
-          id: "6",
-          displayName: "User Name",
-          email: "useremail@mail/com",
-        },
-      ],
-      createdAt: "10/10/2023 8:30PM",
-    },
-    {
-      id: "2",
-      name: "AI Science Team",
-      members: [
-        {
-          id: "1",
-          displayName: "User Name",
-          email: "useremail@mail/com",
-        },
-        {
-          id: "2",
-          displayName: "User Name",
-          email: "useremail@mail/com",
-        },
-        {
-          id: "3",
-          displayName: "User Name",
-          email: "useremail@mail/com",
-        },
-      ],
-      createdAt: "10/10/2023 8:30PM",
-    },
-  ],
-  currentTag: "1",
+  teams,
+  currentTeam: "1",
   onEdit: console.log,
   onRemove: console.log,
 };

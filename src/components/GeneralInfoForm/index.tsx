@@ -27,7 +27,7 @@ const GeneralInfoForm: FC<GeneralInfoFormProps> = ({
   const { t } = useTranslation(["settings", "common"]);
 
   const { control, handleSubmit } = useForm<GeneralInfo>({
-    defaultValues: initialValue,
+    values: initialValue,
   });
   return (
     <Form layout="vertical">

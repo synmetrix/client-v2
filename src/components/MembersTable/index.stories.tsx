@@ -20,7 +20,7 @@ const Template: StoryFn<typeof MembersTable> = (args) => {
         members={members}
         onRoleChange={(member) => {
           const index = members.findIndex(
-            (m) => m.fullName === member.fullName
+            (m) => m.displayName === member.displayName
           );
           const newMembers = [...members];
           newMembers[index] = member;
@@ -28,7 +28,7 @@ const Template: StoryFn<typeof MembersTable> = (args) => {
         }}
         onRemove={(member) =>
           setMembers((prevState) =>
-            prevState.filter((m) => m.fullName !== member.fullName)
+            prevState.filter((m) => m.displayName !== member.displayName)
           )
         }
       />

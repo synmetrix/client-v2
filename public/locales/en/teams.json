@@ -1,4 +1,6 @@
 {
+  "manage_teams": "Manage Teams",
+  "create_team": "Create Team",
   "not_found": {
     "title": "You have no teams yet",
     "text": "Please create team for manage roles.",

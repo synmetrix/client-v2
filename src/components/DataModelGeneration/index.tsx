@@ -46,7 +46,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   const { t } = useTranslation(["dataModelGeneration", "common"]);
 
   const { control, handleSubmit, watch } = useForm<DynamicForm>({
-    defaultValues: initialValue,
+    values: initialValue,
   });
 
   const windowSize = useResponsive();

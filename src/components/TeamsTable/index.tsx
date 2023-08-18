@@ -26,11 +26,18 @@ type TagId = string;
 interface TeamsTableProps {
   teams: Team[];
   currentTag?: TagId;
+  onRemove?: (team: Team) => void;
+  onEdit?: (team: Team) => void;
 }
 
 const AVATAR_COLORS = ["#000000", "#470D69", "#A31BCB"];
 
-const TeamsTable: FC<TeamsTableProps> = ({ teams, currentTag }) => {
+const TeamsTable: FC<TeamsTableProps> = ({
+  teams,
+  currentTag,
+  onEdit,
+  onRemove,
+}) => {
   const { t } = useTranslation(["teams", "common"]);
 
   const columns: TableProps<Team>["columns"] = [
@@ -101,14 +108,14 @@ const TeamsTable: FC<TeamsTableProps> = ({ teams, currentTag }) => {
           <Button
             className={styles.action}
             type="text"
-            onClick={() => console.log(record)}
+            onClick={() => onEdit?.(record)}
           >
             <SettingOutlined key="setting" />
           </Button>
           <Button
             className={styles.action}
             type="text"
-            onClick={() => console.log(record)}
+            onClick={() => onRemove?.(record)}
           >
             <TrashIcon />
           </Button>

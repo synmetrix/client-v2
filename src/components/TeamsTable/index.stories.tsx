@@ -80,4 +80,6 @@ Default.args = {
     },
   ],
   currentTag: "1",
+  onEdit: console.log,
+  onRemove: console.log,
 };

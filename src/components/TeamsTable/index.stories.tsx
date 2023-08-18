@@ -57,7 +57,7 @@ Default.args = {
       createdAt: "10/10/2023 8:30PM",
     },
     {
-      id: "1",
+      id: "2",
       name: "AI Science Team",
       members: [
         {
@@ -79,4 +79,5 @@ Default.args = {
       createdAt: "10/10/2023 8:30PM",
     },
   ],
+  currentTag: "1",
 };

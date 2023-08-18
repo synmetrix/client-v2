@@ -1,4 +1,4 @@
-import { Space, Table } from "antd";
+import { Space, Table, Tag } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
@@ -21,13 +21,16 @@ interface Team {
   createdAt: string;
 }
 
+type TagId = string;
+
 interface TeamsTableProps {
   teams: Team[];
+  currentTag?: TagId;
 }
 
 const AVATAR_COLORS = ["#000000", "#470D69", "#A31BCB"];
 
-const TeamsTable: FC<TeamsTableProps> = ({ teams }) => {
+const TeamsTable: FC<TeamsTableProps> = ({ teams, currentTag }) => {
   const { t } = useTranslation(["teams", "common"]);
 
   const columns: TableProps<Team>["columns"] = [
@@ -35,8 +38,15 @@ const TeamsTable: FC<TeamsTableProps> = ({ teams }) => {
       title: t("common:words.team_name"),
       dataIndex: "name",
       key: "name",
-      render: (value) => (
-        <span className={cn(styles.cell, styles.nameCell)}>{value}</span>
+      render: (value, record) => (
+        <Space className={cn(styles.cell, styles.nameCell)} size={10}>
+          {value}
+          {record.id === currentTag && (
+            <Tag className={styles.tag} color="#EDE7F0">
+              {t("common:words.current")}
+            </Tag>
+          )}
+        </Space>
       ),
     },
     {

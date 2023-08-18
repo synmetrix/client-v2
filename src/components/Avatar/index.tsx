@@ -8,12 +8,18 @@ import type { FC } from "react";
 interface AvatarProps {
   username?: string;
   img?: string;
+  width?: number;
+  height?: number;
+  color?: string;
 }
 
-const Avatar: FC<AvatarProps> = ({ username, img }) => {
+const Avatar: FC<AvatarProps> = ({ username, img, width, height, color }) => {
   if (!username && !img)
     return (
-      <BasicAvatar className={styles.avatar}>
+      <BasicAvatar
+        style={{ width, height, background: color }}
+        className={styles.avatar}
+      >
         <UserOutlined />
       </BasicAvatar>
     );
@@ -21,7 +27,11 @@ const Avatar: FC<AvatarProps> = ({ username, img }) => {
   const name = username?.split(" ");
 
   return (
-    <BasicAvatar src={img} className={styles.avatar}>
+    <BasicAvatar
+      style={{ width, height, background: color }}
+      src={img}
+      className={styles.avatar}
+    >
       <div>
         {name?.[0]?.[0]}
         {name?.[1]?.[0]}
@@ -31,3 +41,5 @@ const Avatar: FC<AvatarProps> = ({ username, img }) => {
 };
 
 export default Avatar;
+
+export const AvatarGroup = BasicAvatar.Group;

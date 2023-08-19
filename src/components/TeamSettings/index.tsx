@@ -4,16 +4,13 @@ import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import type { TeamSettingsForm } from "@/types/team";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
 const { Title } = Typography;
-
-interface TeamSettingsForm {
-  name: string;
-}
 
 interface TeamSettingsProps {
   onSubmit: (data: TeamSettingsForm) => void;
@@ -23,7 +20,7 @@ interface TeamSettingsProps {
 const TeamSettings: FC<TeamSettingsProps> = ({ initialValue, onSubmit }) => {
   const { t } = useTranslation(["settings", "common"]);
   const { control, handleSubmit } = useForm<TeamSettingsForm>({
-    defaultValues: initialValue,
+    values: initialValue,
   });
 
   return (

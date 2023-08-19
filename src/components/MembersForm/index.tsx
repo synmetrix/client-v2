@@ -22,7 +22,7 @@ const { Title } = Typography;
 const MembersForm: FC<MembersFormProps> = ({ onSubmit, initialValue }) => {
   const { t } = useTranslation(["settings", "common"]);
   const { control, handleSubmit } = useForm<Member>({
-    defaultValues: initialValue,
+    values: initialValue,
   });
 
   return (

@@ -55,7 +55,9 @@ const AlertForm: FC<AlertFormProps> = ({
     t,
     i18n: { language: locale },
   } = useTranslation(["alerts", "common"]);
-  const { control, handleSubmit, getValues, watch } = useForm<AlertFormType>();
+  const { control, handleSubmit, getValues, watch } = useForm<AlertFormType>({
+    values: initialValue,
+  });
 
   const schedule = watch("schedule");
 

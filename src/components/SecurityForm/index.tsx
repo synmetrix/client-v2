@@ -25,7 +25,7 @@ const SecurityForm: FC<SecurityFormProps> = ({ initialValue, onSubmit }) => {
   const { t } = useTranslation(["settings", "common"]);
 
   const { control, handleSubmit } = useForm<Security>({
-    defaultValues: initialValue,
+    values: initialValue,
   });
 
   return (

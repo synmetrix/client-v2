@@ -55,7 +55,10 @@
     "alerts": "Alerts",
     "send_test": "Send test",
     "new_alert": "New Alert",
-    "new_report": "New Report"
+    "new_report": "New Report",
+    "team_name": "Team Name",
+    "members": "Members",
+    "current": "Current"
   },
   "form": {
     "labels": {

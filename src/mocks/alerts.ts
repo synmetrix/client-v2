@@ -7,7 +7,8 @@ export const alerts: Alert[] = [
     type: "webhook",
     schedule: "dasdasdadad",
     creator: {
-      fullName: "User Name",
+      id: "1",
+      displayName: "User Name",
       email: "usermail@mail.com",
     },
     updatedAt: "5 day ago",
@@ -26,11 +27,12 @@ export const alerts: Alert[] = [
   },
   {
     id: "2",
-    name: "First",
+    name: "Second",
     type: "email",
     schedule: "dasdasdadad",
     creator: {
-      fullName: "User Name",
+      id: "2",
+      displayName: "User Name",
       email: "usermail@mail.com",
     },
     updatedAt: "5 day ago",

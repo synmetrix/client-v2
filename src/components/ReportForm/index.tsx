@@ -42,7 +42,9 @@ const ReportForm: FC<ReportFormProps> = ({
     t,
     i18n: { language: locale },
   } = useTranslation(["reports", "common"]);
-  const { control, handleSubmit, watch, getValues } = useForm<ReportFormType>();
+  const { control, handleSubmit, watch, getValues } = useForm<ReportFormType>({
+    values: initialValue,
+  });
 
   const schedule = watch("schedule");
 
@@ -50,7 +52,7 @@ const ReportForm: FC<ReportFormProps> = ({
     <Form layout="vertical">
       <Space className={cn(styles.space, styles.body)} size={16}>
         <Title className={styles.title} level={3}>
-          {initialValue ? "edit_report" : t("new_report")}
+          {initialValue ? t("edit_report") : t("new_report")}
         </Title>
 
         {!initialValue && (

@@ -40,8 +40,8 @@ const MembersTable: FC<MembersTableProps> = ({
       render: (_, record) => ({
         children: (
           <Space size={10} className={styles.cell}>
-            <Avatar username={record.fullName} />
-            <span className={styles.memberName}>{record.fullName}</span>
+            <Avatar username={record.displayName} />
+            <span className={styles.memberName}>{record.displayName}</span>
           </Space>
         ),
       }),

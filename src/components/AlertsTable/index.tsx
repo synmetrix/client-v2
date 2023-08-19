@@ -57,7 +57,7 @@ const AlertsTable: FC<AlertTableProps> = ({ alerts, onEdit, onRemove }) => {
       key: "creator",
       render: (value) => (
         <Space size={10} className={styles.cell}>
-          <Avatar username={value.fullName} img={value.avatar} />
+          <Avatar username={value.displayName} img={value.avatar} />
           <span>{value.email}</span>
         </Space>
       ),

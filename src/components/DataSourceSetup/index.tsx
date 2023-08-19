@@ -43,7 +43,9 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 
   const windowSize = useResponsive();
 
-  const { control, handleSubmit } = useForm<DataSourceSetupForm>();
+  const { control, handleSubmit } = useForm<DataSourceSetupForm>({
+    values: initialValue,
+  });
 
   const getLabel = (key: string) => t(`common:form.labels.${key}`, key);
   const getPlaceholder = (key?: string) =>

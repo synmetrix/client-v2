@@ -42,8 +42,8 @@ const Credentials: FC<CredentialsProps> = ({ credentials }) => {
       key: "member",
       render: (record) => (
         <Space size={10} className={cn(styles.ceil, styles.bold)}>
-          <Avatar username={record.fullName} img={record.avatar} />
-          <span>{record.fullName}</span>
+          <Avatar username={record.displayName} img={record.avatar} />
+          <span>{record.displayName}</span>
         </Space>
       ),
     },

@@ -15,11 +15,11 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 import type { TableProps } from "antd";
 
-type TagId = string;
+type TeamId = string;
 
 interface TeamsTableProps {
   teams: Team[];
-  currentTeam?: TagId;
+  currentTeam?: TeamId;
   onRemove: (team: Team) => void;
   onEdit: (team: Team) => void;
 }

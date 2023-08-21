@@ -9,6 +9,7 @@
   "reports": "Reports",
   "teams": "Teams",
   "logs": {
-    "alerts": "Alerts Logs"
+    "alerts": "Alerts Logs",
+    "reports": "Reports Logs"
   }
 }

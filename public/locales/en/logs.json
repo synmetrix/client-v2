@@ -7,5 +7,9 @@
   "alerts": {
     "title": "Track the history of system alerts and notifications",
     "action": "What is Alerts Logs?"
+  },
+  "reports": {
+    "title": "Track the history of generated reports and their changes",
+    "action": "What is Report Logs?"
   }
 }

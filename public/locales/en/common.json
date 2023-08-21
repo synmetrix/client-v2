@@ -58,7 +58,9 @@
     "new_report": "New Report",
     "team_name": "Team Name",
     "members": "Members",
-    "current": "Current"
+    "current": "Current",
+    "success": "Succesesful",
+    "error": "Error"
   },
   "form": {
     "labels": {

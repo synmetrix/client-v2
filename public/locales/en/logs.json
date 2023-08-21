@@ -1,0 +1,11 @@
+{
+  "event_time": "Event time",
+  "trigger_name": "Trigger name",
+  "status": "Status",
+  "alert_type": "Alert Type",
+  "message": "Message",
+  "alerts": {
+    "title": "Track the history of system alerts and notifications",
+    "action": "What is Alerts Logs?"
+  }
+}

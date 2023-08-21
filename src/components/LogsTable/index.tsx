@@ -1,32 +1,25 @@
 import { Table } from "antd";
+import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
 import StatusBadge from "@/components/StatusBadge";
-import type { Status } from "@/types/status";
-import type { AlertType } from "@/types/alert";
+import type { Log } from "@/types/logs";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 import type { TableProps } from "antd";
 
-interface Log {
-  id: string;
-  date: string;
-  status: Status;
-  name: string;
-  type: AlertType;
-  message: string;
-}
-
 interface LogsTableProps {
   logs: Log[];
 }
 
 const LogsTable: FC<LogsTableProps> = ({ logs }) => {
+  const { t } = useTranslation(["logs", "pages"]);
+
   const columns: TableProps<Log>["columns"] = [
     {
-      title: "Event time",
+      title: t("event_time"),
       dataIndex: "date",
       key: "date",
       render: (value) => (
@@ -34,7 +27,7 @@ const LogsTable: FC<LogsTableProps> = ({ logs }) => {
       ),
     },
     {
-      title: "Trigger name",
+      title: t("trigger_name"),
       dataIndex: "name",
       key: "name",
       render: (value) => (
@@ -42,7 +35,7 @@ const LogsTable: FC<LogsTableProps> = ({ logs }) => {
       ),
     },
     {
-      title: "Status",
+      title: t("status"),
       dataIndex: "status",
       key: "status",
       render: (value) => (
@@ -52,13 +45,13 @@ const LogsTable: FC<LogsTableProps> = ({ logs }) => {
       ),
     },
     {
-      title: "Alert Type",
+      title: t("alert_type"),
       dataIndex: "type",
       key: "type",
       render: (value) => <span className={styles.cell}>{value}</span>,
     },
     {
-      title: "Message",
+      title: t("message"),
       dataIndex: "message",
       key: "message",
       render: (value, record) => (

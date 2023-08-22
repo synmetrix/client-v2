@@ -5,13 +5,17 @@ import { useTranslation } from "react-i18next";
 import StepFormHeader from "@/components/StepFormHeader";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import DataSourceFormBody from "@/components/DataSourceFormBody";
-import type { DataSourceForm as DataSourceFormType } from "@/types/dataSource";
+import type {
+  DataSourceForm as DataSourceFormType,
+  DataSourceInfo,
+} from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
 interface DataSourceFormProps {
+  curDataSource?: DataSourceInfo;
   onFinish: (data: DataSourceFormType) => void;
   withSteps?: boolean;
   bordered?: boolean;
@@ -19,6 +23,7 @@ interface DataSourceFormProps {
 }
 
 const DataSourceForm: FC<DataSourceFormProps> = ({
+  curDataSource,
   onFinish,
   withSteps = false,
   bordered = true,
@@ -27,6 +32,26 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
   const { t } = useTranslation(["dataSourceStepForm"]);
   const [formData, setFormData] = useState<DataSourceFormType>({});
   const [step, setStep] = useState<number>(0);
+
+  useEffect(() => {
+    if (!curDataSource) {
+      // form state wont reset
+      setFormData({});
+      setStep(0);
+    }
+  }, [curDataSource]);
+
+  useEffect(() => {
+    if (curDataSource) {
+      setFormData({
+        dataSource: curDataSource.type,
+        dataSourceSetup: {
+          ...curDataSource,
+        },
+      });
+      setStep(1);
+    }
+  }, [curDataSource]);
 
   return (
     <Card
@@ -44,6 +69,7 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
       )}
       <Suspense fallback={<BouncingDotsLoader />}>
         <DataSourceFormBody
+          isEditing={!!curDataSource}
           step={step}
           setStep={setStep}
           formState={formData}

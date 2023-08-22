@@ -2,7 +2,7 @@ import RootLayout from "@/layouts/RootLayout";
 
 import CickHouseIcon from "@/assets/databases/click-house.svg";
 
-import DataSources from ".";
+import { DataSources } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
@@ -26,7 +26,10 @@ Default.args = {
         name: "Clickhouse",
         icon: <CickHouseIcon />,
       },
-      host: "gh-api.clickhouse.tech",
+      name: "Clickhouse",
+      db_params: {
+        host: "gh-api.clickhouse.tech",
+      },
       updatedAt: "02.11.2022/ 3:32 PM",
       createdAt: "02.11.2022/ 3:32 PM",
     },
@@ -36,7 +39,10 @@ Default.args = {
         name: "Clickhouse",
         icon: <CickHouseIcon />,
       },
-      host: "gh-api.clickhouse.tech",
+      name: "Clickhouse",
+      db_params: {
+        host: "gh-api.clickhouse.tech",
+      },
       updatedAt: "02.11.2022/ 3:32 PM",
       createdAt: "02.11.2022/ 3:32 PM",
     },
@@ -46,7 +52,10 @@ Default.args = {
         name: "Clickhouse",
         icon: <CickHouseIcon />,
       },
-      host: "gh-api.clickhouse.tech",
+      name: "Clickhouse",
+      db_params: {
+        host: "gh-api.clickhouse.tech",
+      },
       updatedAt: "02.11.2022/ 3:32 PM",
       createdAt: "02.11.2022/ 3:32 PM",
     },

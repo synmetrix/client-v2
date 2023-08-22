@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+
 import type {
   ApiSetupForm,
   DataSource,
@@ -10,6 +13,13 @@ import DataSourceSetup from "@/components/DataSourceSetup";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import ApiSetup from "@/components/ApiSetup";
 import { dataSourceForms, dbTiles } from "@/mocks/dataSources";
+import useDataSources from "@/hooks/useDataSources";
+import useCheckResponse from "@/hooks/useCheckResponse";
+import type {
+  Datasources_Pk_Columns_Input,
+  Datasources_Set_Input,
+  Scalars,
+} from "@/graphql/generated";
 
 import type { FC } from "react";
 
@@ -18,19 +28,92 @@ interface DataSourceFormBodyProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
   onFinish: (data: DataSourceForm) => void;
   setState: React.Dispatch<React.SetStateAction<DataSourceForm>>;
+  isEditing?: boolean;
   formState?: DataSourceForm;
+  onTestConnection?: (data: DataSourceSetupForm) => void;
 }
 
 const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
+  isEditing,
   step,
   setStep,
   formState,
   setState,
   onFinish,
 }) => {
+  const { t } = useTranslation(["dataSourceStepForm"]);
+
+  const {
+    mutations: {
+      createMutation,
+      execCreateMutation,
+      updateMutation,
+      execUpdateMutation,
+      checkConnectionMutation,
+      execCheckConnection,
+      fetchTablesQuery,
+      execFetchTables,
+      genSchemaMutation,
+      execGenSchemaMutation,
+    },
+  } = useDataSources({});
+
+  useCheckResponse(checkConnectionMutation, () => {}, {
+    successMessage: t("connection_ok"),
+    errorMessage: t("connection_error"),
+  });
+
+  useCheckResponse(createMutation, () => {}, {
+    successMessage: t("datasource_created"),
+  });
+
+  useCheckResponse(fetchTablesQuery as any, (res) => {
+    const schema = res?.fetch_tables?.schema;
+    if (schema) {
+      setState((prev) => ({
+        ...prev,
+        schema,
+      }));
+    }
+  });
+
+  useCheckResponse(genSchemaMutation, () => {}, {
+    successMessage: t("schema_generated"),
+  });
+
+  useEffect(() => {
+    const id = formState?.dataSourceSetup?.id;
+
+    if (id) {
+      execFetchTables({ variables: { id: id } });
+    }
+  }, [execFetchTables, formState?.dataSourceSetup?.id]);
+
+  const saveOrCreate = (data: DataSourceSetupForm) => {
+    const id = formState?.dataSourceSetup?.id;
+    console.log(data);
+    if (isEditing && id) {
+      execUpdateMutation({
+        variables: {
+          pk_columns: { id },
+          _set: data,
+        },
+      });
+    } else {
+      execCreateMutation({ variables: { object: data } });
+    }
+  };
+
   const onGoBack = () => setStep((prevState) => prevState - 1);
   const onSkip = () => console.log("skip");
-  const onTestConnection = () => console.log("test connection");
+  const onTestConnection = (data: DataSourceSetupForm) => {
+    const newDataSource = {
+      ...data,
+      db_type: formState?.dataSource?.value?.toUpperCase(),
+    };
+
+    saveOrCreate(newDataSource);
+  };
 
   const onDataSourceSelect = (value: DataSource) => {
     setState((prevState) => ({ ...prevState, dataSource: value }));
@@ -39,7 +122,11 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
 
   const onDataSourceSetupSubmit = (data: DataSourceSetupForm) => {
     setState((prevState) => ({ ...prevState, dataSourceSetup: data }));
-    setStep(2);
+    saveOrCreate(data);
+
+    if (!isEditing) {
+      setStep(2);
+    }
   };
 
   const onDataModelGenerationSubmit = (data: DynamicForm) => {
@@ -82,6 +169,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
         return (
           <DataSourceSetup
             dataSource={formState.dataSource}
+            isEditing={isEditing}
             fields={
               dataSourceForms[
                 Object.keys(dataSourceForms).find(
@@ -101,35 +189,9 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
         <DataModelGeneration
           dataSource={{
             icon: formState?.dataSource?.icon,
-            name: "gh-api.clickhouse.tech (Yandex Demo)",
+            name: formState?.dataSource?.name,
           }}
-          schema={{
-            dev_pre_aggregations: {
-              orders_orders_rollup_0bohozfp_hle2okkq_1i85rfl: [
-                {
-                  attributes: [],
-                  name: "users__last_name",
-                  type: "character varying",
-                },
-              ],
-              orders_orders_rollup_0bohozfp_hle2okkq_1i85rfl222: [
-                {
-                  attributes: [],
-                  name: "users__last_name",
-                  type: "character varying",
-                },
-              ],
-            },
-            dev_prod_preaggregations: {
-              orders_second_rollup_0bohozfp_hle2okkq_1i85rfl: [
-                {
-                  attributes: [],
-                  name: "users__last_name",
-                  type: "character varying",
-                },
-              ],
-            },
-          }}
+          schema={formState?.schema || {}}
           onSubmit={onDataModelGenerationSubmit}
           onGoBack={onGoBack}
           onSkip={onSkip}

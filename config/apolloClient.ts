@@ -2,8 +2,12 @@ import {
   ApolloClient,
   InMemoryCache,
   HttpLink,
-  ApolloLink,
+  from,
+  split,
 } from "@apollo/client";
+import { history } from "@vitjs/runtime";
+import { onError } from "@apollo/client/link/error";
+import { ApolloLink } from "@apollo/client/core";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { TokenRefreshLink } from "apollo-link-token-refresh";
@@ -17,6 +21,8 @@ import type { JwtPayload } from "jwt-decode";
 import type { Operation } from "@apollo/client/link/core/types";
 
 type Headers = {
+  "content-type": string;
+  "x-hasura-role"?: string;
   Authorization: string;
 };
 
@@ -24,7 +30,10 @@ const HASURA_GRAPHQL_ENDPOINT = import.meta.env.VITE_HASURA_GRAPHQL_ENDPOINT;
 const HASURA_WS_ENDPOINT = import.meta.env.VITE_HASURA_WS_ENDPOINT;
 
 const getHeaders = () => {
-  const headers = {} as Headers;
+  const headers = {
+    "content-type": "application/json",
+  } as Headers;
+
   const { accessToken } = AuthTokensStore.getState();
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
   return headers;
@@ -36,20 +45,6 @@ const operationIsSubscription = (operation: Operation): boolean => {
     definition.kind === "OperationDefinition" &&
     definition.operation === "subscription";
   return isSubscription;
-};
-
-let wsLink;
-const getOrCreateWebsocketLink = () => {
-  wsLink ??= new GraphQLWsLink(
-    createClient({
-      url: HASURA_WS_ENDPOINT,
-      connectionParams: {
-        headers: getHeaders(),
-      },
-    })
-  );
-
-  return wsLink;
 };
 
 const makeTokenRefreshLink = () => {
@@ -89,6 +84,7 @@ const makeTokenRefreshLink = () => {
       console.error(err);
 
       authTokensState.cleanTokens();
+      history.push("/signin");
     },
   });
 };
@@ -96,36 +92,56 @@ const makeTokenRefreshLink = () => {
 const createLink = () => {
   const httpLink = new HttpLink({
     uri: HASURA_GRAPHQL_ENDPOINT,
-    credentials: "include",
   });
 
   const authLink = new ApolloLink((operation, forward) => {
-    operation.setContext(({ headers = {} }) => ({
-      headers: {
-        ...headers,
-        ...getHeaders(),
-      },
-    }));
+    const headers = getHeaders();
+    const context = operation.getContext();
+
+    const role = context?.role;
+    if (role) {
+      headers["x-hasura-role"] = role;
+    } else {
+      headers["x-hasura-role"] = "user";
+    }
+
+    operation.setContext({ headers });
     return forward(operation);
   });
 
-  const refreshLink = makeTokenRefreshLink();
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+      graphQLErrors.map(({ message, locations, path }) => {
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        );
+      });
 
-  if (typeof window !== "undefined") {
-    return ApolloLink.from([
-      refreshLink,
-      authLink,
-      // Use "getOrCreateWebsocketLink" to init WS lazily
-      // otherwise WS connection will be created + used even if using "query"
-      ApolloLink.split(
-        operationIsSubscription,
-        getOrCreateWebsocketLink,
-        httpLink
-      ),
-    ]);
-  } else {
-    return ApolloLink.from([authLink, httpLink, refreshLink]);
-  }
+    if (networkError) {
+      // @ts-ignore
+      switch (networkError.statusCode) {
+        case 401:
+          console.error(`Error 401: logging user out`, "error");
+          break;
+        default:
+          console.log(`[Network error]: ${networkError}`);
+      }
+    }
+  });
+
+  const wsLink = new GraphQLWsLink(
+    createClient({
+      url: HASURA_WS_ENDPOINT,
+      connectionParams: () => ({
+        headers: getHeaders(),
+      }),
+    })
+  );
+
+  const refreshLink = makeTokenRefreshLink();
+  const mainLinkChain = from([refreshLink, errorLink, authLink, httpLink]);
+
+  return split(operationIsSubscription, wsLink, mainLinkChain);
 };
 
 const createApolloClient = () => {

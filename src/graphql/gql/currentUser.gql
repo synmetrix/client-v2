@@ -1,8 +1,27 @@
 query CurrentUser ($id: uuid!) {
-  users_by_pk (id: $id) {
+  users_by_pk(id: $id) {
     id
     display_name
     avatar_url
+
+    datasources {
+      id
+      name
+      db_params
+      db_type
+      created_at
+      updated_at
+      sql_credentials {
+        id
+        username
+        created_at
+        updated_at
+        user {
+          id
+          display_name
+        }
+      }
+    }
 
     members(
       order_by: { created_at: desc }
@@ -13,13 +32,40 @@ query CurrentUser ($id: uuid!) {
       }
     }
   }
+}
 
-  datasources (
-    order_by: { created_at: desc }
-  ) {
+subscription SubCurrentUser ($id: uuid!) {
+  users_by_pk(id: $id) {
     id
-    name
-    user_id
-    team_id
+    display_name
+    avatar_url
+
+    datasources {
+      id
+      name
+      db_params
+      db_type
+      created_at
+      updated_at
+      sql_credentials {
+        id
+        username
+        created_at
+        updated_at
+        user {
+          id
+          display_name
+        }
+      }
+    }
+
+    members(
+      order_by: { created_at: desc }
+    ) {
+      team {
+        id
+        name
+      }
+    }
   }
 }

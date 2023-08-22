@@ -2,5 +2,9 @@
   "step1": "Connect Data Source",
   "step2": "Data Source Setup",
   "step3": "Generate Data Model Files",
-  "step4": "SQL API"
+  "step4": "SQL API",
+  "connection_ok": "Connection is OK!",
+  "connection_error": "Connection error!",
+  "datasource_created": "Data Source created.",
+  "schema_generated": "Schema successfully generated."
 }

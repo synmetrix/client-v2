@@ -20,16 +20,18 @@ const { Title, Text } = Typography;
 
 interface DataSourceSetupProps {
   dataSource: DataSource;
+  isEditing?: boolean;
   fields: DataSoureSetupField[];
   onSubmit: (values: DataSourceSetupForm) => void;
   onGoBack: () => void;
   onSkip: () => void;
-  onTestConnection: () => void;
+  onTestConnection: (data: DataSourceSetupForm) => void;
   initialValue?: DataSourceSetupForm;
 }
 
 const DataSourceSetup: FC<DataSourceSetupProps> = ({
   dataSource,
+  isEditing,
   fields,
   onSubmit,
   onGoBack,
@@ -97,16 +99,18 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 
         <Row align="middle" justify="space-between">
           <Col xs={24} md={18}>
-            <Button
-              className={cn(styles.back, {
-                [styles.fullwidth]: !windowSize.md,
-              })}
-              size="large"
-              color="primary"
-              onClick={onGoBack}
-            >
-              {t("common:words.back")}
-            </Button>
+            {!isEditing && (
+              <Button
+                className={cn(styles.back, {
+                  [styles.fullwidth]: !windowSize.md,
+                })}
+                size="large"
+                color="primary"
+                onClick={onGoBack}
+              >
+                {t("common:words.back")}
+              </Button>
+            )}
             <Button
               className={cn(styles.submit, {
                 [styles.fullwidth]: !windowSize.md,
@@ -117,7 +121,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
               htmlType="submit"
               onClick={handleSubmit(onSubmit)}
             >
-              {t("common:words.apply")}
+              {isEditing ? t("common:words.save") : t("common:words.apply")}
             </Button>
 
             <Button
@@ -125,7 +129,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
                 [styles.fullwidth]: !windowSize.md,
               })}
               type="link"
-              onClick={onTestConnection}
+              onClick={handleSubmit(onTestConnection)}
             >
               {t("common:words.test_connection")}
             </Button>
@@ -136,15 +140,17 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             md={6}
             className={cn(styles.skip, { [styles.center]: !windowSize.md })}
           >
-            <Button
-              className={cn(styles.link, {
-                [styles.fullwidth]: !windowSize.md,
-              })}
-              type="link"
-              onClick={onSkip}
-            >
-              {t("common:words.skip")}
-            </Button>
+            {!isEditing && (
+              <Button
+                className={cn(styles.link, {
+                  [styles.fullwidth]: !windowSize.md,
+                })}
+                type="link"
+                onClick={onSkip}
+              >
+                {t("common:words.skip")}
+              </Button>
+            )}
           </Col>
         </Row>
       </Form>

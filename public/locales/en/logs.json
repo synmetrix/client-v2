@@ -11,5 +11,14 @@
   "reports": {
     "title": "Track the history of generated reports and their changes",
     "action": "What is Report Logs?"
+  },
+  "query": {
+    "filter": {
+      "data_source": "By data sourse:",
+      "from": "From:",
+      "to": "To:",
+      "sort": "Sort by duration:",
+      "select": "Select"
+    }
   }
 }

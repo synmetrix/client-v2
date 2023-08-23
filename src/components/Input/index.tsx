@@ -3,13 +3,19 @@ import {
   Input as BasicInput,
   Button,
   Checkbox,
+  DatePicker,
   Form,
   Radio,
   Select,
   Upload,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 import cn from "classnames";
+import ru from "antd/es/date-picker/locale/ru_RU";
+import en from "antd/es/date-picker/locale/en_US";
+
+import CalendarIcon from "@/assets/calendar.svg";
 
 import styles from "./index.module.less";
 
@@ -45,6 +51,11 @@ interface InputProps<T extends FieldValues> extends ParentProps {
   starColor?: string;
 }
 
+const locales = {
+  en,
+  ru,
+};
+
 const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   control,
   name,
@@ -59,6 +70,10 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   children,
   ...props
 }) => {
+  const {
+    i18n: { language },
+  } = useTranslation();
+
   const getLabel = () => {
     if (rules && "required" in rules) {
       if (starPosition === "left") {
@@ -238,11 +253,39 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             <WrapperComponent {...wrapperProps}>
               <Select
                 {...props}
+                placeholder={placeholder}
                 size={size}
                 className={cn(styles.input, props.className)}
                 value={value}
                 status={invalid ? "error" : undefined}
                 onChange={onChange}
+              />
+              <span className={styles.error}>{error?.message}</span>
+            </WrapperComponent>
+          )}
+        />
+      );
+    case "date":
+      return (
+        <Controller
+          rules={rules}
+          control={control}
+          name={name}
+          defaultValue={defaultValue}
+          render={({ field: { onChange }, fieldState: { invalid, error } }) => (
+            <WrapperComponent {...wrapperProps}>
+              <DatePicker
+                size={size}
+                className={cn(styles.input, props.className)}
+                onChange={(_, dateString) =>
+                  onChange(
+                    dateString as PathValue<FieldValues, Path<FieldValues>>
+                  )
+                }
+                locale={locales[language as keyof typeof locales]}
+                suffixIcon={<CalendarIcon />}
+                placeholder={placeholder}
+                status={invalid ? "error" : undefined}
               />
               <span className={styles.error}>{error?.message}</span>
             </WrapperComponent>

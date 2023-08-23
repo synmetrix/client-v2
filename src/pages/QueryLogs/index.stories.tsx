@@ -1,18 +1,18 @@
 import RootLayout from "@/layouts/RootLayout";
 import { queryMocks } from "@/mocks/logs";
 
-import QueryLogsTable from ".";
+import QueryLogs from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Logs/QueryLogsTable",
-  component: QueryLogsTable,
-} as Meta<typeof QueryLogsTable>;
+  title: "Pages/QueryLogs",
+  component: QueryLogs,
+} as Meta<typeof QueryLogs>;
 
-const Template: StoryFn<typeof QueryLogsTable> = (args) => (
+const Template: StoryFn<typeof QueryLogs> = (args) => (
   <RootLayout>
-    <QueryLogsTable {...args} />
+    <QueryLogs {...args} />
   </RootLayout>
 );
 

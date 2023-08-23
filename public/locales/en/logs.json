@@ -13,6 +13,8 @@
     "action": "What is Report Logs?"
   },
   "query": {
+    "title": "Gain insights from logged search queries",
+    "action": "What is Query Logs?",
     "filter": {
       "data_source": "By data sourse:",
       "from": "From:",

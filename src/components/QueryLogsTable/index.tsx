@@ -65,7 +65,9 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
       ),
     },
     {
-      title: t("query.table.startTime"),
+      title: (
+        <div className={styles.headerRight}>{t("query.table.start_time")}</div>
+      ),
       dataIndex: "startTime",
       key: "startTime",
       render: (value) => (
@@ -73,7 +75,9 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
       ),
     },
     {
-      title: t("query.table.createdAt"),
+      title: (
+        <div className={styles.headerRight}>{t("query.table.created_at")}</div>
+      ),
       dataIndex: "createdAt",
       key: "createdAt",
       render: (value) => (

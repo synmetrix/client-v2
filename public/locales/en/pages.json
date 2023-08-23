@@ -10,6 +10,7 @@
   "teams": "Teams",
   "logs": {
     "alerts": "Alerts Logs",
-    "reports": "Reports Logs"
+    "reports": "Reports Logs",
+    "query": "Query Logs"
   }
 }

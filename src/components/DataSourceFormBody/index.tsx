@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 
 import type {
   ApiSetupForm,
@@ -13,172 +13,109 @@ import DataSourceSetup from "@/components/DataSourceSetup";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import ApiSetup from "@/components/ApiSetup";
 import { dataSourceForms, dbTiles } from "@/mocks/dataSources";
-import useDataSources from "@/hooks/useDataSources";
-import useCheckResponse from "@/hooks/useCheckResponse";
-import type {
-  Datasources_Pk_Columns_Input,
-  Datasources_Set_Input,
-  Scalars,
-} from "@/graphql/generated";
+import DataSourceStore from "@/stores/DataSourceStore";
+import type { DataSourceData } from "@/stores/DataSourceStore";
 
 import type { FC } from "react";
 
 interface DataSourceFormBodyProps {
-  step: number;
-  setStep: React.Dispatch<React.SetStateAction<number>>;
-  onFinish: (data: DataSourceForm) => void;
-  setState: React.Dispatch<React.SetStateAction<DataSourceForm>>;
-  isEditing?: boolean;
-  formState?: DataSourceForm;
+  defaultData?:
+    | {
+        step: number;
+        apiSetup: DataSourceForm | null;
+        dataModel: DynamicForm | null;
+        dataSource: DataSource | undefined;
+        dataSourceSetup: DataSourceSetupForm | undefined;
+        formState: DataSourceForm | null;
+        schema: any;
+      }
+    | undefined;
+  onFinish: (data: ApiSetupForm) => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
+  onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
+  onDataModelGenerationSubmit?: (data: DynamicForm) => void;
 }
 
 const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
-  isEditing,
-  step,
-  setStep,
-  formState,
-  setState,
-  onFinish,
+  defaultData,
+  onFinish = () => {},
+  onTestConnection = () => {},
+  onDataSourceSetupSubmit = () => {},
+  onDataModelGenerationSubmit = () => {},
 }) => {
-  const { t } = useTranslation(["dataSourceStepForm"]);
-
   const {
-    mutations: {
-      createMutation,
-      execCreateMutation,
-      updateMutation,
-      execUpdateMutation,
-      checkConnectionMutation,
-      execCheckConnection,
-      fetchTablesQuery,
-      execFetchTables,
-      genSchemaMutation,
-      execGenSchemaMutation,
-    },
-  } = useDataSources({});
+    id,
+    step,
+    dataSource,
+    dataSourceSetup,
+    dataModel,
+    apiSetup,
+    schema,
+    setStep,
+    setData,
+    setDataSource,
+    setDataSourceSetup,
+    clean,
+  } = DataSourceStore();
 
-  useCheckResponse(checkConnectionMutation, () => {}, {
-    successMessage: t("connection_ok"),
-    errorMessage: t("connection_error"),
-  });
-
-  useCheckResponse(createMutation, () => {}, {
-    successMessage: t("datasource_created"),
-  });
-
-  useCheckResponse(fetchTablesQuery as any, (res) => {
-    const schema = res?.fetch_tables?.schema;
-    if (schema) {
-      setState((prev) => ({
-        ...prev,
-        schema,
-      }));
-    }
-  });
-
-  useCheckResponse(genSchemaMutation, () => {}, {
-    successMessage: t("schema_generated"),
-  });
-
-  useEffect(() => {
-    const id = formState?.dataSourceSetup?.id;
-
-    if (id) {
-      execFetchTables({ variables: { id: id } });
-    }
-  }, [execFetchTables, formState?.dataSourceSetup?.id]);
-
-  const saveOrCreate = (data: DataSourceSetupForm) => {
-    const id = formState?.dataSourceSetup?.id;
-    console.log(data);
-    if (isEditing && id) {
-      execUpdateMutation({
-        variables: {
-          pk_columns: { id },
-          _set: data,
-        },
-      });
-    } else {
-      execCreateMutation({ variables: { object: data } });
-    }
-  };
-
-  const onGoBack = () => setStep((prevState) => prevState - 1);
-  const onSkip = () => console.log("skip");
-  const onTestConnection = (data: DataSourceSetupForm) => {
-    const newDataSource = {
-      ...data,
-      db_type: formState?.dataSource?.value?.toUpperCase(),
-    };
-
-    saveOrCreate(newDataSource);
-  };
+  const onGoBack = () => setStep(step - 1);
+  const onSkip = () => setStep(step + 1);
 
   const onDataSourceSelect = (value: DataSource) => {
-    setState((prevState) => ({ ...prevState, dataSource: value }));
+    setDataSource(value);
     setStep(1);
   };
 
-  const onDataSourceSetupSubmit = (data: DataSourceSetupForm) => {
-    setState((prevState) => ({ ...prevState, dataSourceSetup: data }));
-    saveOrCreate(data);
+  const onDataSourceSetup = async (data: DataSourceSetupForm) => {
+    setDataSourceSetup(data);
+    setStep(2);
 
-    if (!isEditing) {
-      setStep(2);
-    }
+    await onDataSourceSetupSubmit(data);
   };
 
-  const onDataModelGenerationSubmit = (data: DynamicForm) => {
-    // TODO get data from api
-    const apiSetup: ApiSetupForm = {
-      name: "gh-api.clickhouse.tech (Yandex Demo)",
-      host: "gh-api.clickhouse.tech",
-      user: "user@api.clickhouse.tech",
-      username: "user@api.clickhouse.tech",
-      port: "12346",
-      password: "132456456",
-      db_username: "db_username",
-      db: "db",
-    };
-    setState((prevState) => ({
-      ...prevState,
-      dataModel: data,
-      apiSetup,
-    }));
+  const onDataModelGeneration = async (data: DynamicForm) => {
     setStep(3);
+
+    await onDataModelGenerationSubmit(data);
+    clean();
   };
 
-  const onApiSetupSubmit = (data: ApiSetupForm) => {
-    setState((prevState) => ({ ...prevState, apiSetup: data }));
-    if (formState) onFinish(formState);
-  };
+  useEffect(() => {
+    if (defaultData) {
+      setData(defaultData as DataSourceData);
+    }
+  }, [defaultData, setData]);
 
-  if (!formState?.dataSource && step > 0) setStep(0);
+  useEffect(() => {
+    if (id) {
+      setStep(1);
+    }
+  }, [id, setStep]);
+
+  if (!dataSource && step > 0) setStep(0);
   switch (step) {
     case 0:
       return (
         <DataSourceSelection
           onSubmit={onDataSourceSelect}
-          initialValue={formState?.dataSource}
+          initialValue={dataSource}
           options={dbTiles}
         />
       );
     case 1:
-      if (formState?.dataSource)
+      if (dataSource)
         return (
           <DataSourceSetup
-            dataSource={formState.dataSource}
-            isEditing={isEditing}
+            dataSource={dataSource}
             fields={
               dataSourceForms[
                 Object.keys(dataSourceForms).find(
-                  (f) => f === formState?.dataSource?.value
+                  (f) => f === dataSource?.value
                 ) ?? "default"
               ]
             }
-            initialValue={formState?.dataSourceSetup}
-            onSubmit={onDataSourceSetupSubmit}
+            initialValue={dataSourceSetup}
+            onSubmit={onDataSourceSetup}
             onGoBack={onGoBack}
             onSkip={onSkip}
             onTestConnection={onTestConnection}
@@ -188,22 +125,22 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
       return (
         <DataModelGeneration
           dataSource={{
-            icon: formState?.dataSource?.icon,
-            name: formState?.dataSource?.name,
+            icon: dataSource?.icon,
+            name: dataSource?.name,
           }}
-          schema={formState?.schema || {}}
-          onSubmit={onDataModelGenerationSubmit}
+          schema={schema || {}}
+          onSubmit={onDataModelGeneration}
           onGoBack={onGoBack}
           onSkip={onSkip}
-          initialValue={formState?.dataModel}
+          initialValue={dataModel || {}}
         />
       );
     case 3:
-      if (formState?.apiSetup)
+      if (apiSetup)
         return (
           <ApiSetup
-            initialValue={formState?.apiSetup}
-            onSubmit={onApiSetupSubmit}
+            initialValue={apiSetup}
+            onSubmit={onFinish}
             onGoBack={onGoBack}
             onSkip={onSkip}
           />
@@ -213,7 +150,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   return (
     <DataSourceSelection
       onSubmit={onDataSourceSelect}
-      initialValue={formState?.dataSource}
+      initialValue={dataSource}
       options={dbTiles}
     />
   );

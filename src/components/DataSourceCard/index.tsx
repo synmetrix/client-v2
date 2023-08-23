@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import DataSourceTag from "@/components/DataSourceTag";
-import useDataSources from "@/hooks/useDataSources";
-import useCheckResponse from "@/hooks/useCheckResponse";
 import formatTime, { CARD_TIME_FORMAT } from "@/utils/helpers/formatTime";
 import type { DataSourceInfo } from "@/types/dataSource";
 
@@ -16,17 +14,15 @@ import type { FC } from "react";
 const { Paragraph } = Typography;
 
 interface DataSourceCardProps extends DataSourceInfo {
-  onEdit?: () => void;
-  onDelete?: () => void;
-}
-interface DataSourceCardWrapperProps {
-  dataSource: DataSourceInfo;
-  setLocation: (location: string) => void;
+  onEdit: (id: string | undefined) => void;
+  onDelete: (id: string | undefined) => void;
 }
 
-export const DataSourceCard: FC<DataSourceCardProps> = ({
+const DataSourceCard: FC<DataSourceCardProps> = ({
+  id,
   name,
-  db_params: { host },
+  // db_params: { host },
+  host,
   type,
   updatedAt,
   createdAt,
@@ -41,7 +37,7 @@ export const DataSourceCard: FC<DataSourceCardProps> = ({
       bodyStyle={{ padding: 16 }}
       headStyle={{ padding: 16 }}
       title={
-        <Button className={styles.btn} type="link" onClick={() => onEdit()}>
+        <Button className={styles.btn} type="link" onClick={() => onEdit(id)}>
           {name}
         </Button>
       }
@@ -54,12 +50,12 @@ export const DataSourceCard: FC<DataSourceCardProps> = ({
               {
                 key: "edit",
                 label: t("common:words.edit"),
-                onClick: () => onEdit(),
+                onClick: () => onEdit(id),
               },
               {
                 key: "delete",
                 label: t("common:words.delete"),
-                onClick: () => onDelete(),
+                onClick: () => onDelete(id),
               },
             ],
           }}
@@ -99,29 +95,4 @@ export const DataSourceCard: FC<DataSourceCardProps> = ({
   );
 };
 
-const DataSourceCardWrapper: FC<DataSourceCardWrapperProps> = ({
-  dataSource,
-  setLocation,
-}) => {
-  const { id } = dataSource;
-
-  const {
-    mutations: { deleteMutation, execDeleteMutation },
-  } = useDataSources({});
-
-  useCheckResponse(deleteMutation, () => {}, {
-    successMessage: "Data Source deleted!",
-  });
-
-  const onDelete = () => {
-    execDeleteMutation({ variables: { id } });
-  };
-
-  const onEdit = () => {
-    setLocation(`/settings/data_sources?id=${id}`);
-  };
-
-  return <DataSourceCard {...dataSource} onEdit={onEdit} onDelete={onDelete} />;
-};
-
-export default DataSourceCardWrapper;
+export default DataSourceCard;

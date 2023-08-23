@@ -62,7 +62,7 @@ export const items: SidebarItem[] = [
       {
         key: "data-sources",
         label: "Data Sources",
-        href: "/settings/data_sources",
+        href: "/settings/sources",
         icon: <DataSourceIcon />,
       },
       {

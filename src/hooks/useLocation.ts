@@ -12,9 +12,15 @@ type Location = {
 };
 
 export default () => {
-  const location = useLocation() as unknown as Location;
+  try {
+    const location = useLocation() as any as Location;
 
-  const setLocation = (newPath: string): void => history.push(newPath);
+    const setLocation = (newPath: string): void => history.push(newPath);
 
-  return [location, setLocation] as const;
+    return [location, setLocation] as const;
+  } catch (e) {
+    // Storybook without routing context gets error
+    const setLocation = (newPath: string): void => console.log(newPath);
+    return [{} as Location, setLocation];
+  }
 };

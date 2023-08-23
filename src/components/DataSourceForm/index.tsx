@@ -6,52 +6,37 @@ import StepFormHeader from "@/components/StepFormHeader";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import DataSourceFormBody from "@/components/DataSourceFormBody";
 import type {
-  DataSourceForm as DataSourceFormType,
-  DataSourceInfo,
+  ApiSetupForm,
+  DataSourceSetupForm,
+  DynamicForm,
 } from "@/types/dataSource";
+import DataSourceStore from "@/stores/DataSourceStore";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
 interface DataSourceFormProps {
-  curDataSource?: DataSourceInfo;
-  onFinish: (data: DataSourceFormType) => void;
+  onFinish: (data: ApiSetupForm) => void;
+  onTestConnection?: (data: DataSourceSetupForm) => void;
+  onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
+  onDataModelGenerationSubmit?: (data: DynamicForm) => void;
   withSteps?: boolean;
   bordered?: boolean;
   shadow?: boolean;
 }
 
 const DataSourceForm: FC<DataSourceFormProps> = ({
-  curDataSource,
-  onFinish,
+  onFinish = () => {},
+  onTestConnection = () => {},
+  onDataSourceSetupSubmit = () => {},
+  onDataModelGenerationSubmit = () => {},
   withSteps = false,
   bordered = true,
   shadow = true,
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const [formData, setFormData] = useState<DataSourceFormType>({});
-  const [step, setStep] = useState<number>(0);
-
-  useEffect(() => {
-    if (!curDataSource) {
-      // form state wont reset
-      setFormData({});
-      setStep(0);
-    }
-  }, [curDataSource]);
-
-  useEffect(() => {
-    if (curDataSource) {
-      setFormData({
-        dataSource: curDataSource.type,
-        dataSourceSetup: {
-          ...curDataSource,
-        },
-      });
-      setStep(1);
-    }
-  }, [curDataSource]);
+  const { step, setStep } = DataSourceStore();
 
   return (
     <Card
@@ -69,12 +54,10 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
       )}
       <Suspense fallback={<BouncingDotsLoader />}>
         <DataSourceFormBody
-          isEditing={!!curDataSource}
-          step={step}
-          setStep={setStep}
-          formState={formData}
-          setState={setFormData}
           onFinish={onFinish}
+          onTestConnection={onTestConnection}
+          onDataSourceSetupSubmit={onDataSourceSetupSubmit}
+          onDataModelGenerationSubmit={onDataModelGenerationSubmit}
         />
       </Suspense>
     </Card>

@@ -22,7 +22,7 @@ export default [
                 path: "/settings",
                 routes: [
                   {
-                    path: "/settings/data_sources",
+                    path: "/settings/sources",
                     component: "./pages/DataSources",
                   },
                   {

@@ -1,4 +1,5 @@
 import { Row, Col } from "antd";
+import { Router } from "react-router-dom";
 
 import RootLayout from "@/layouts/RootLayout";
 
@@ -12,9 +13,11 @@ export default {
 } as Meta<typeof BasicLayout>;
 
 const Template: StoryFn<typeof BasicLayout> = (args) => (
+  // <Router basename="/">
   <RootLayout>
     <BasicLayout {...args} />
   </RootLayout>
+  // </Router>
 );
 
 export const Default = Template.bind({});

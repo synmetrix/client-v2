@@ -10,14 +10,18 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-const NoDataSource: FC = () => {
+interface NoDataSourceProps {
+  onConnect: () => void;
+}
+
+const NoDataSource: FC<NoDataSourceProps> = ({ onConnect }) => {
   const { t } = useTranslation(["settings", "common"]);
   return (
     <div className={styles.wrapper}>
       <img className={styles.img} src={NoDataSourceImg} alt="" />
       <Title level={4}>{t("data_sources.not_found.title")}</Title>
       <Text className={styles.text}>{t("data_sources.not_found.text")}</Text>
-      <Button size="large" type="primary">
+      <Button size="large" type="primary" onClick={onConnect}>
         {t("data_sources.not_found.connect_btn")}
       </Button>
     </div>

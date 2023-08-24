@@ -14,12 +14,13 @@ import type { FC } from "react";
 
 const { Panel } = Collapse;
 
-const QueryPreview: FC<QueryPreviewProps> = ({
+const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
   measures,
   dimensions,
   segments,
   timeDimensions,
   orders,
+  withButton = true,
 }) => {
   const { t } = useTranslation(["alerts", "common"]);
   const windowSize = useResponsive();
@@ -29,11 +30,13 @@ const QueryPreview: FC<QueryPreviewProps> = ({
 
   return (
     <Collapse
-      expandIcon={({ isActive }) => (
-        <Button className={styles.collapseBtn} size="small">
-          {isActive ? <MinusOutlined /> : <PlusOutlined />}
-        </Button>
-      )}
+      expandIcon={({ isActive }) =>
+        withButton && (
+          <Button className={styles.collapseBtn} size="small">
+            {isActive ? <MinusOutlined /> : <PlusOutlined />}
+          </Button>
+        )
+      }
       bordered={false}
       className={styles.collapse}
       activeKey={activePanel}

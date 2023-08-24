@@ -6,7 +6,7 @@ import ReportsLogs from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Pages/ReportsLogs",
+  title: "Pages/Logs/ReportsLogs",
   component: ReportsLogs,
 } as Meta<typeof ReportsLogs>;
 

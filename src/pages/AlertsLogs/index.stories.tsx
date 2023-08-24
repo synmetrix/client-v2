@@ -6,7 +6,7 @@ import AlertsLogs from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Pages/AlertsLogs",
+  title: "Pages/Logs/AlertsLogs",
   component: AlertsLogs,
 } as Meta<typeof AlertsLogs>;
 

@@ -6,7 +6,7 @@ import QueryLogs from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Pages/QueryLogs",
+  title: "Pages/Logs/QueryLogs",
   component: QueryLogs,
 } as Meta<typeof QueryLogs>;
 

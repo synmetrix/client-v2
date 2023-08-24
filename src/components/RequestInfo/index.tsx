@@ -1,19 +1,12 @@
 import { Col, Row } from "antd";
 
+import type { Request } from "@/types/request";
+
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-interface RequestInfoProps {
-  id: string;
-  path: string;
-  duration: number;
-  startTime: string;
-  endtTime: string;
-  queryKey: string;
-}
-
-const RequestInfo: FC<RequestInfoProps> = ({
+const RequestInfo: FC<Request> = ({
   id,
   path,
   duration,

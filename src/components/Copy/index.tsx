@@ -21,7 +21,13 @@ const Copy: FC<CopyProps> = ({ layout = "vertical", value, label }) => {
         className={cn(styles.textareaWrapper, styles.label)}
         label={label}
       >
-        <Input.TextArea className={styles.input} value={value} disabled />
+        <Input.TextArea
+          className={styles.input}
+          style={{ resize: "none" }}
+          autoSize
+          value={value}
+          disabled
+        />
         <CopyIcon
           className={cn(styles.icon, styles.textareaCopy)}
           onClick={() => navigator.clipboard.writeText(value)}

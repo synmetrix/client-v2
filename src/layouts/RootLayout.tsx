@@ -2,6 +2,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ConfigProvider } from "antd";
 import { useTranslation } from "react-i18next";
 import ru from "antd/locale/ru_RU";
+import en from "antd/locale/en_US";
 import { locale } from "dayjs";
 import "dayjs/locale/ru";
 
@@ -27,6 +28,7 @@ const themeProvider = {
 
 const antLocales = {
   ru,
+  en,
 };
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {

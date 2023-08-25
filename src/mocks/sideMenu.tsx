@@ -10,6 +10,10 @@ import SQLAPIIcon from "@/assets/sql-api.svg";
 import MembersIcon from "@/assets/members.svg";
 import RolesAndAccessIcon from "@/assets/roles-and-access.svg";
 import PersonalInfoIcon from "@/assets/personal-info.svg";
+import LogsActiveIcon from "@/assets/logs-active.svg";
+import AlertLogsIcon from "@/assets/alert-logs.svg";
+import ReportLogsIcon from "@/assets/report-logs.svg";
+import QueryLogsIcon from "@/assets/query-logs.svg";
 
 import type { ReactNode } from "react";
 
@@ -50,8 +54,28 @@ export const items: SidebarItem[] = [
   {
     key: "logs",
     label: "Logs",
-    href: "/logs",
     icon: <LogsIcon />,
+    activeIcon: <LogsActiveIcon />,
+    items: [
+      {
+        key: "alerts-logs",
+        label: "Alerts Logs",
+        href: "/logs/alerts",
+        icon: <AlertLogsIcon />,
+      },
+      {
+        key: "reports-logs",
+        label: "Reports Logs",
+        href: "/logs/reports",
+        icon: <ReportLogsIcon />,
+      },
+      {
+        key: "query-logs",
+        label: "Query Logs",
+        href: "/logs/query",
+        icon: <QueryLogsIcon />,
+      },
+    ],
   },
   {
     key: "settings",

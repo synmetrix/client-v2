@@ -7,5 +7,10 @@
   },
   "alerts": "Alets",
   "reports": "Reports",
-  "teams": "Teams"
+  "teams": "Teams",
+  "logs": {
+    "alerts": "Alerts Logs",
+    "reports": "Reports Logs",
+    "query": "Query Logs"
+  }
 }

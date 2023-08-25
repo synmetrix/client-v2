@@ -2,6 +2,10 @@
   display: none;
 }
 
+.table thead tr th {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
 .cell {
   color: rgba(#000, 0.5);
   font-weight: 600;
@@ -17,37 +21,4 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-}
-
-.badge {
-  color: var(--color-black);
-  font-weight: 600;
-  border-radius: 9px;
-  svg {
-    margin-right: 4px;
-    margin-bottom: 1px;
-  }
-}
-
-.error {
-  background: #ede7f0;
-  border: 1px solid #f00;
-  svg {
-    fill: #f00;
-  }
-}
-
-.success {
-  background: rgba(194, 233, 154, 0.3);
-  border: 1px solid #c2e99a;
-  svg {
-    fill: #c2e99a;
-  }
-}
-
-.badgeText {
-  display: inline-block;
-  &::first-letter {
-    text-transform: uppercase;
-  }
 }

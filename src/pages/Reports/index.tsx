@@ -69,7 +69,9 @@ const Reports: React.FC<ReportsProps> = ({ alerts, query }) => {
           }}
           onClick={onCreate}
         />
-        <AlertsTable alerts={alerts} onEdit={onEdit} onRemove={console.log} />
+        <div className={styles.body}>
+          <AlertsTable alerts={alerts} onEdit={onEdit} onRemove={console.log} />
+        </div>
       </Space>
 
       <Modal

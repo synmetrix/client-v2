@@ -1,0 +1,44 @@
+{
+  "event_time": "Event time",
+  "trigger_name": "Trigger name",
+  "status": "Status",
+  "alert_type": "Alert Type",
+  "message": "Message",
+  "alerts": {
+    "title": "Track the history of system alerts and notifications",
+    "action": "What is Alerts Logs?"
+  },
+  "reports": {
+    "title": "Track the history of generated reports and their changes",
+    "action": "What is Report Logs?"
+  },
+  "query": {
+    "title": "Gain insights from logged search queries",
+    "action": "What is Query Logs?",
+    "request": "Request",
+    "filter": {
+      "data_source": "By data sourse:",
+      "from": "From:",
+      "to": "To:",
+      "sort": "Sort by duration:",
+      "select": "Select"
+    },
+    "table": {
+      "data_source": "Data source",
+      "path": "Path",
+      "events": "Events",
+      "creator": "Creator",
+      "duration": "Duration",
+      "start_time": "Start Time",
+      "created_at": "Created At",
+      "ms": "ms",
+      "time_in_queue": "Time in queue (ms)",
+      "timestamp": "Timestamp"
+    },
+    "details": {
+      "query_key": "Query Key",
+      "sql": "SQL",
+      "query": "Query"
+    }
+  }
+}

@@ -1,15 +1,15 @@
-import { Space, Table, Tag } from "antd";
+import { Space, Table } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
+import StatusBadge from "@/components/StatusBadge";
 import { capitalize } from "@/utils/helpers/capitalize";
 import type { Alert } from "@/types/alert";
 
 import TrashIcon from "@/assets/trash.svg";
-import EllipseIcon from "@/assets/ellipse.svg";
 
 import styles from "./index.module.less";
 
@@ -79,13 +79,7 @@ const AlertsTable: FC<AlertTableProps> = ({ alerts, onEdit, onRemove }) => {
       dataIndex: "lastActivity",
       key: "lastActivity",
       render: (value, record) => (
-        <Tag
-          className={cn(styles.badge, styles[record.status])}
-          icon={<EllipseIcon />}
-          color={record.status}
-        >
-          <span className={styles.badgeText}>{value}</span>
-        </Tag>
+        <StatusBadge status={record.status}>{value}</StatusBadge>
       ),
     },
     {

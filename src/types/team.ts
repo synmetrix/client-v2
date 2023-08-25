@@ -9,7 +9,7 @@ export interface Member {
   email: string;
   role: string;
   id?: string;
-  fullName?: string;
+  displayName?: string;
 }
 
 export interface Team {

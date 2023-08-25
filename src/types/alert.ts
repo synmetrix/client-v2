@@ -1,3 +1,4 @@
+import type { Status } from "./status";
 import type { User } from "./user";
 
 export type AlertType = "webhook" | "slack" | "email";
@@ -11,7 +12,7 @@ export type Alert = { [key in AlertType]?: string } & {
   updatedAt: string;
   createdAt: string;
   lastActivity: string | null;
-  status: "success" | "processing" | "error" | "default" | "warning";
+  status: Status;
   measures: Record<string, Measure>;
   requestTimeout: number;
   timeoutOnFire: number;

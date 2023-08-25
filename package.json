@@ -58,7 +58,6 @@
     "react-i18next": "^13.0.1",
     "react-monaco-editor": "^0.54.0",
     "swiper": "^10.0.4",
-    "vite-plugin-monaco-editor": "^1.1.0",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
@@ -111,6 +110,7 @@
     "unplugin-auto-import": "^0.15.3",
     "vite": "^4.3.1",
     "vite-plugin-imp": "^2.4.0",
+    "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-svg-loader": "^1.0.0",
     "vite-plugin-windicss": "^1.8.10",
     "vite-tsconfig-paths": "^4.2.0",

@@ -36,6 +36,7 @@
     "@ant-design/pro-card": "^2.4.1",
     "@ant-design/pro-layout": "^7.12.1",
     "@apollo/client": "^3.7.12",
+    "@monaco-editor/react": "^4.5.2",
     "@vitjs/runtime": "^0.9.2",
     "ahooks": "^3.7.8",
     "antd": "^5.4.5",
@@ -49,12 +50,15 @@
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.2.1",
     "jwt-decode": "^3.1.2",
+    "monaco-editor": "^0.41.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.5.2",
     "react-hook-form": "^7.45.1",
     "react-i18next": "^13.0.1",
+    "react-monaco-editor": "^0.54.0",
     "swiper": "^10.0.4",
+    "vite-plugin-monaco-editor": "^1.1.0",
     "zustand": "^4.4.1"
   },
   "devDependencies": {

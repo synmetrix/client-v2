@@ -1,4 +1,4 @@
-import { Card } from "antd";
+import { Card, Spin, Alert } from "antd";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -36,30 +36,34 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
   shadow = true,
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { step, setStep } = DataSourceStore();
+  const { step, setStep, loading, error, message } = DataSourceStore();
 
   return (
     <Card
       style={shadow === false ? { boxShadow: "0 0 0 0" } : undefined}
       bordered={bordered}
     >
-      {withSteps && (
-        <div className={styles.header}>
-          <StepFormHeader
-            currentStep={step}
-            steps={[t("step1"), t("step2"), t("step3"), t("step4")]}
-            onChange={setStep}
+      <Spin spinning={loading}>
+        {withSteps && (
+          <div className={styles.header}>
+            <StepFormHeader
+              currentStep={step}
+              steps={[t("step1"), t("step2"), t("step3"), t("step4")]}
+              onChange={setStep}
+            />
+          </div>
+        )}
+        <Suspense fallback={<BouncingDotsLoader />}>
+          <DataSourceFormBody
+            onFinish={onFinish}
+            onTestConnection={onTestConnection}
+            onDataSourceSetupSubmit={onDataSourceSetupSubmit}
+            onDataModelGenerationSubmit={onDataModelGenerationSubmit}
           />
-        </div>
-      )}
-      <Suspense fallback={<BouncingDotsLoader />}>
-        <DataSourceFormBody
-          onFinish={onFinish}
-          onTestConnection={onTestConnection}
-          onDataSourceSetupSubmit={onDataSourceSetupSubmit}
-          onDataModelGenerationSubmit={onDataModelGenerationSubmit}
-        />
-      </Suspense>
+        </Suspense>
+        {error && <Alert message={error} type="error" />}
+        {message && <Alert message={message} type="success" />}
+      </Spin>
     </Card>
   );
 };

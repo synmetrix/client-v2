@@ -21,6 +21,6 @@ export default () => {
   } catch (e) {
     // Storybook without routing context gets error
     const setLocation = (newPath: string): void => console.log(newPath);
-    return [{} as Location, setLocation];
+    return [{} as Location, setLocation] as const;
   }
 };

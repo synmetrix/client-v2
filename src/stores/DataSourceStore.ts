@@ -2,80 +2,93 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import type { Datasources } from "@/graphql/generated";
 import type {
   ApiSetupForm,
   DataSource,
-  DataSourceForm,
   DataSourceSetupForm,
   DynamicForm,
+  Schema,
 } from "@/types/dataSource";
 
-import type { ApolloError } from "@apollo/client";
+export interface FormState {
+  step0: DataSource | undefined;
+  step1: DataSourceSetupForm | undefined;
+  step2: DynamicForm | undefined;
+  step3: ApiSetupForm | undefined;
+}
 
 export interface DataSourceData {
-  id: string | null;
+  editId: string | null;
   step: number;
-  apiSetup: ApiSetupForm | null;
-  dataModel: DynamicForm | null;
-  dataSource: DataSource | undefined;
-  dataSourceSetup: DataSourceSetupForm | undefined;
-  object: Datasources | null;
-  formState: DataSourceForm | null;
+  formState: FormState;
   loading: boolean;
-  error: ApolloError | null;
-  schema: any;
+  error: string | null | undefined;
+  message: string | null | undefined;
+  schema: Schema | undefined;
 }
 
 interface DataSourceState extends DataSourceData {
-  setApiSetup: (apiSetup: ApiSetupForm) => void;
   setStep: (step: number) => void;
-  setDataSource: (dataSource: DataSource) => void;
-  setObject: (object: Datasources) => void;
-  setError: (error: ApolloError) => void;
+  nextStep: () => void;
+  setError: (error: string) => void;
+  setMessage: (message: string) => void;
   setLoading: (status: boolean) => void;
-  setFormState: (formState: DataSourceForm) => void;
-  setDataSourceSetup: (dataSourceSetup: DataSourceSetupForm) => void;
-  setData: (data: DataSourceData) => void;
-  setSchema: (schema: any) => void;
+  setSchema: (schema: object) => void;
+  setEditId: (id: string) => void;
+  setFormStateData: (step: number, data: any) => void;
   clean: () => void;
 }
 
+export const defaultFormState = {
+  step0: undefined,
+  step1: undefined,
+  step2: undefined,
+  step3: undefined,
+};
+
 const defaultState = {
-  id: null,
+  editId: null,
   step: 0,
-  dataSourceSetup: undefined,
-  dataModel: null,
-  apiSetup: null,
-  dataSource: undefined,
-  object: null,
-  formState: null,
+  formState: defaultFormState,
   loading: false,
   error: null,
-  schema: null,
+  message: null,
+  schema: undefined,
 };
 
 const dataSourceStore = create<DataSourceState>()(
   persist(
     immer((set, _get) => ({
       ...defaultState,
-      setDataSourceSetup: (dataSourceSetup: DataSourceSetupForm) =>
-        set((prev) => ({ ...prev, dataSourceSetup })),
-      setDataModel: (dataModel: DynamicForm) =>
-        set((prev) => ({ ...prev, dataModel })),
-      setApiSetup: (apiSetup: ApiSetupForm) =>
-        set((prev) => ({ ...prev, apiSetup })),
-      setStep: (step: number) => set((prev) => ({ ...prev, step })),
-      setDataSource: (dataSource: DataSource) =>
-        set((prev) => ({ ...prev, dataSource })),
-      setObject: (object: Datasources) => set((prev) => ({ ...prev, object })),
-      setError: (error: ApolloError) => set((prev) => ({ ...prev, error })),
+      setError: (error: string) =>
+        set((prev) => ({ ...prev, error, message: null })),
+      setMessage: (message: string) =>
+        set((prev) => ({ ...prev, message, error: null })),
       setLoading: (status: boolean) =>
         set((prev) => ({ ...prev, loading: status })),
-      setFormState: (formState: DataSourceForm) =>
-        set((prev) => ({ ...prev, formState })),
-      setSchema: (schema: any) => set((prev) => ({ ...prev, schema })),
-      setData: (data: DataSourceData) => set(data),
+      setSchema: (schema: object) => set((prev) => ({ ...prev, schema })),
+      setEditId: (id: string) => set((prev) => ({ ...prev, id })),
+      setFormStateData: (step: number, data: any) =>
+        set((prev) => {
+          const formStep = `step${step}` as string;
+
+          return {
+            ...prev,
+            formState: {
+              ...prev.formState,
+              [formStep]: data,
+            },
+          };
+        }),
+      setStep: (step: number) =>
+        set((prev) => ({ ...prev, step, error: null, message: null })),
+      nextStep: () =>
+        set((prev) => ({
+          ...prev,
+          step: prev.step + 1,
+          error: null,
+          message: null,
+        })),
       clean: () => set({ ...defaultState }),
     })),
     {

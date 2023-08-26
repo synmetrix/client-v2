@@ -1,10 +1,8 @@
 import { useEffect } from "react";
-// import { useTranslation } from "react-i18next";
 
 import type {
   ApiSetupForm,
   DataSource,
-  DataSourceForm,
   DataSourceSetupForm,
   DynamicForm,
 } from "@/types/dataSource";
@@ -14,22 +12,13 @@ import DataModelGeneration from "@/components/DataModelGeneration";
 import ApiSetup from "@/components/ApiSetup";
 import { dataSourceForms, dbTiles } from "@/mocks/dataSources";
 import DataSourceStore from "@/stores/DataSourceStore";
-import type { DataSourceData } from "@/stores/DataSourceStore";
+import type { FormState } from "@/stores/DataSourceStore";
 
 import type { FC } from "react";
 
 interface DataSourceFormBodyProps {
-  defaultData?:
-    | {
-        step: number;
-        apiSetup: DataSourceForm | null;
-        dataModel: DynamicForm | null;
-        dataSource: DataSource | undefined;
-        dataSourceSetup: DataSourceSetupForm | undefined;
-        formState: DataSourceForm | null;
-        schema: any;
-      }
-    | undefined;
+  activeStep?: number;
+  formState?: FormState;
   onFinish: (data: ApiSetupForm) => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
@@ -37,120 +26,118 @@ interface DataSourceFormBodyProps {
 }
 
 const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
-  defaultData,
+  activeStep,
+  formState,
   onFinish = () => {},
   onTestConnection = () => {},
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
 }) => {
   const {
-    id,
+    editId,
     step,
-    dataSource,
-    dataSourceSetup,
-    dataModel,
-    apiSetup,
+    formState: formData,
     schema,
     setStep,
-    setData,
-    setDataSource,
-    setDataSourceSetup,
-    clean,
+    nextStep,
+    setFormStateData,
   } = DataSourceStore();
 
   const onGoBack = () => setStep(step - 1);
   const onSkip = () => setStep(step + 1);
 
   const onDataSourceSelect = (value: DataSource) => {
-    setDataSource(value);
-    setStep(1);
+    setFormStateData(0, value);
+    nextStep();
   };
 
   const onDataSourceSetup = async (data: DataSourceSetupForm) => {
-    setDataSourceSetup(data);
-    setStep(2);
-
+    setFormStateData(1, data);
     await onDataSourceSetupSubmit(data);
   };
 
   const onDataModelGeneration = async (data: DynamicForm) => {
-    setStep(3);
-
+    setFormStateData(2, data);
     await onDataModelGenerationSubmit(data);
-    clean();
   };
 
   useEffect(() => {
-    if (defaultData) {
-      setData(defaultData as DataSourceData);
+    if (activeStep) {
+      setStep(activeStep);
     }
-  }, [defaultData, setData]);
+  }, [activeStep, setStep]);
 
   useEffect(() => {
-    if (id) {
+    if (editId) {
       setStep(1);
     }
-  }, [id, setStep]);
+  }, [editId, setStep]);
 
-  if (!dataSource && step > 0) setStep(0);
+  const curDataSource = formState?.step0 || formData?.step0;
+
+  if (!curDataSource && step > 0) setStep(0);
   switch (step) {
     case 0:
       return (
         <DataSourceSelection
           onSubmit={onDataSourceSelect}
-          initialValue={dataSource}
+          initialValue={curDataSource}
           options={dbTiles}
         />
       );
     case 1:
-      if (dataSource)
+      if (curDataSource) {
+        const initialValue = formState?.step1 || formData?.step1;
         return (
           <DataSourceSetup
-            dataSource={dataSource}
+            dataSource={curDataSource}
             fields={
               dataSourceForms[
                 Object.keys(dataSourceForms).find(
-                  (f) => f === dataSource?.value
+                  (f) => f === curDataSource?.value
                 ) ?? "default"
               ]
             }
-            initialValue={dataSourceSetup}
+            initialValue={initialValue}
             onSubmit={onDataSourceSetup}
             onGoBack={onGoBack}
             onSkip={onSkip}
             onTestConnection={onTestConnection}
           />
         );
+      }
     case 2:
-      return (
-        <DataModelGeneration
-          dataSource={{
-            icon: dataSource?.icon,
-            name: dataSource?.name,
-          }}
-          schema={schema || {}}
-          onSubmit={onDataModelGeneration}
-          onGoBack={onGoBack}
-          onSkip={onSkip}
-          initialValue={dataModel || {}}
-        />
-      );
-    case 3:
-      if (apiSetup)
+      if (schema)
         return (
-          <ApiSetup
-            initialValue={apiSetup}
-            onSubmit={onFinish}
+          <DataModelGeneration
+            dataSource={{
+              icon: curDataSource?.icon,
+              name: curDataSource?.name,
+            }}
+            schema={schema}
+            onSubmit={onDataModelGeneration}
             onGoBack={onGoBack}
             onSkip={onSkip}
+            initialValue={formState?.step2 || formData?.step2 || {}}
           />
         );
+    case 3:
+      const initialValue = formState?.step3 || formData?.step3;
+      if (initialValue) {
+        return (
+          <ApiSetup
+            initialValue={initialValue}
+            onSubmit={onFinish}
+            onGoBack={onGoBack}
+          />
+        );
+      }
   }
 
   return (
     <DataSourceSelection
       onSubmit={onDataSourceSelect}
-      initialValue={dataSource}
+      initialValue={curDataSource}
       options={dbTiles}
     />
   );

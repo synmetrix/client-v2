@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import DataSourceTag from "@/components/DataSourceTag";
-import formatTime, { CARD_TIME_FORMAT } from "@/utils/helpers/formatTime";
+import formatTime from "@/utils/helpers/formatTime";
 import type { DataSourceInfo } from "@/types/dataSource";
 
 import styles from "./index.module.less";
@@ -13,19 +13,14 @@ import type { FC } from "react";
 
 const { Paragraph } = Typography;
 
-interface DataSourceCardProps extends DataSourceInfo {
-  onEdit: (id: string | undefined) => void;
-  onDelete: (id: string | undefined) => void;
+interface DataSourceCardProps {
+  dataSource: DataSourceInfo;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 const DataSourceCard: FC<DataSourceCardProps> = ({
-  id,
-  name,
-  // db_params: { host },
-  host,
-  type,
-  updatedAt,
-  createdAt,
+  dataSource: { id, name, dbParams, type, updatedAt, createdAt },
   onEdit = () => {},
   onDelete = () => {},
 }) => {
@@ -37,7 +32,11 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
       bodyStyle={{ padding: 16 }}
       headStyle={{ padding: 16 }}
       title={
-        <Button className={styles.btn} type="link" onClick={() => onEdit(id)}>
+        <Button
+          className={styles.btn}
+          type="link"
+          onClick={() => id && onEdit(id)}
+        >
           {name}
         </Button>
       }
@@ -50,12 +49,12 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
               {
                 key: "edit",
                 label: t("common:words.edit"),
-                onClick: () => onEdit(id),
+                onClick: () => id && onEdit(id),
               },
               {
                 key: "delete",
                 label: t("common:words.delete"),
-                onClick: () => onDelete(id),
+                onClick: () => id && onDelete(id),
               },
             ],
           }}
@@ -68,7 +67,7 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
         <li className={styles.listItem}>
           <span className={styles.label}>{t("common:words.host")}</span>
           <Paragraph className={styles.paragraph} ellipsis>
-            {host}
+            {dbParams.host}
           </Paragraph>
         </li>
 
@@ -79,16 +78,12 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
 
         <li className={styles.listItem}>
           <span className={styles.label}>{t("common:words.updated_at")}</span>
-          <span className={styles.value}>
-            {formatTime(updatedAt, CARD_TIME_FORMAT)}
-          </span>
+          <span className={styles.value}>{formatTime(updatedAt)}</span>
         </li>
 
         <li className={styles.listItem}>
           <span className={styles.label}>{t("common:words.created_at")}</span>
-          <span className={styles.value}>
-            {formatTime(createdAt, CARD_TIME_FORMAT)}
-          </span>
+          <span className={styles.value}>{formatTime(createdAt)}</span>
         </li>
       </ul>
     </Card>

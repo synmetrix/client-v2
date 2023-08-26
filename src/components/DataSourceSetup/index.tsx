@@ -39,7 +39,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
   initialValue,
 }) => {
   const { t } = useTranslation(["dataSetupForm", "common"]);
-  const { id } = DataSourceStore();
+  const { editId } = DataSourceStore();
 
   const [error] = useState<boolean>(false);
 
@@ -99,7 +99,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 
         <Row align="middle" justify="space-between">
           <Col xs={24} md={18}>
-            {!id && (
+            {!editId && (
               <Button
                 className={cn(styles.back, {
                   [styles.fullwidth]: !windowSize.md,
@@ -121,7 +121,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
               htmlType="submit"
               onClick={handleSubmit(onSubmit)}
             >
-              {id ? t("common:words.save") : t("common:words.apply")}
+              {editId ? t("common:words.save") : t("common:words.apply")}
             </Button>
 
             <Button
@@ -140,7 +140,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             md={6}
             className={cn(styles.skip, { [styles.center]: !windowSize.md })}
           >
-            {!id && (
+            {!editId && (
               <Button
                 className={cn(styles.link, {
                   [styles.fullwidth]: !windowSize.md,

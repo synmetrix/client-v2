@@ -1,7 +1,8 @@
 import { useEffect } from "react";
+import { useDeepCompareEffect } from "ahooks";
 
 import {
-  useCurrentUserLazyQuery,
+  useCurrentUserQuery,
   useSubCurrentUserSubscription,
 } from "@/graphql/generated";
 import AuthTokensStore from "@/stores/AuthTokensStore";
@@ -23,7 +24,7 @@ const prepareUserData = (
     const dataSource = {
       id: d?.id,
       name: d.name,
-      db_params: d.db_params,
+      dbParams: d.db_params,
       createdAt: d.created_at,
       updatedAt: d.updated_at,
       type: dbTiles?.find((tile) => tile.value === d.db_type.toLowerCase()),
@@ -47,28 +48,28 @@ export default () => {
 
   const userId = JWTpayload?.["x-hasura-user-id"];
 
-  const [execQueryCurrentUser, currentUserData] = useCurrentUserLazyQuery({
-    variables: { id: userId },
-  });
+  const { refetch: execQueryCurrentUser, data: currentUserData } =
+    useCurrentUserQuery({
+      variables: { id: userId },
+      skip: true,
+    });
 
   const { data: subscriptionData } = useSubCurrentUserSubscription({
     variables: { id: userId },
   });
 
   useEffect(() => {
-    const userData = currentUserData?.data;
-
-    if (userData) {
-      const newUserData = prepareUserData(userData);
+    if (currentUserData) {
+      const newUserData = prepareUserData(currentUserData);
       setUserData(newUserData);
     }
-  }, [currentUserData?.data, setUserData]);
+  }, [currentUserData, setUserData]);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (accessToken) {
       execQueryCurrentUser();
     }
-  }, [accessToken, execQueryCurrentUser]);
+  }, [accessToken]);
 
   useEffect(() => {
     if (subscriptionData?.users_by_pk) {

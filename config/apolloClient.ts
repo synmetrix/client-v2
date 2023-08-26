@@ -89,6 +89,7 @@ const makeTokenRefreshLink = () => {
   });
 };
 
+let wsLink;
 const createLink = () => {
   const httpLink = new HttpLink({
     uri: HASURA_GRAPHQL_ENDPOINT,
@@ -129,7 +130,7 @@ const createLink = () => {
     }
   });
 
-  const wsLink = new GraphQLWsLink(
+  wsLink ??= new GraphQLWsLink(
     createClient({
       url: HASURA_WS_ENDPOINT,
       connectionParams: () => ({

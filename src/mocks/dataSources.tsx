@@ -24,7 +24,7 @@ export const dbTiles = [
   { name: "Postgres", value: "postgres", icon: <Postgres /> },
   { name: "MySQL", value: "mysql", icon: <Mysql /> },
   { name: "Mongo DB", value: "mongobi", icon: <Mongo /> },
-  { name: "ClickHouse", value: "click-house", icon: <ClickHouse /> },
+  { name: "ClickHouse", value: "clickhouse", icon: <ClickHouse /> },
   { name: "Redshift", value: "reshift", icon: <Redshift /> },
   { name: "BigQuery", value: "bigquery", icon: <Bigquery /> },
   { name: "Trino", value: "trino", icon: <Trino /> },

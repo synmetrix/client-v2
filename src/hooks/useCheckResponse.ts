@@ -34,13 +34,8 @@ const useCheckResponse = (
       }
 
       cb(response.data);
-
-      if (response.reset) {
-        response.reset();
-      }
-      response.data = undefined;
     }
-  }, [cb, response.data, successMessage]);
+  }, [response.data]);
 
   useDeepCompareEffect(() => {
     if (response.error) {
@@ -52,13 +47,8 @@ const useCheckResponse = (
 
       message.error(responseMessage || errorMessage);
       cb(null, response.error);
-
-      if (response?.reset) {
-        response.reset();
-      }
-      response.error = undefined;
     }
-  }, [cb, errorMessage, response.error, history]);
+  }, [response.error]);
 };
 
 export default useCheckResponse;

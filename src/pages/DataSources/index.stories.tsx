@@ -27,7 +27,7 @@ Default.args = {
         icon: <CickHouseIcon />,
       },
       name: "Clickhouse",
-      db_params: {
+      dbParams: {
         host: "gh-api.clickhouse.tech",
       },
       updatedAt: "02.11.2022/ 3:32 PM",
@@ -40,7 +40,7 @@ Default.args = {
         icon: <CickHouseIcon />,
       },
       name: "Clickhouse",
-      db_params: {
+      dbParams: {
         host: "gh-api.clickhouse.tech",
       },
       updatedAt: "02.11.2022/ 3:32 PM",
@@ -53,7 +53,7 @@ Default.args = {
         icon: <CickHouseIcon />,
       },
       name: "Clickhouse",
-      db_params: {
+      dbParams: {
         host: "gh-api.clickhouse.tech",
       },
       updatedAt: "02.11.2022/ 3:32 PM",

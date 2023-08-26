@@ -11380,6 +11380,18 @@ export type GenDataSchemasMutation = {
   } | null;
 };
 
+export type InsertSqlCredentialsMutationVariables = Exact<{
+  object: Sql_Credentials_Insert_Input;
+}>;
+
+export type InsertSqlCredentialsMutation = {
+  __typename?: "mutation_root";
+  insert_sql_credentials_one?: {
+    __typename?: "sql_credentials";
+    id: any;
+  } | null;
+};
+
 export type GetUsersQueryVariables = Exact<Record<string, never>>;
 
 export type GetUsersQuery = {
@@ -12190,6 +12202,56 @@ export type GenDataSchemasMutationOptions = Apollo.BaseMutationOptions<
   GenDataSchemasMutation,
   GenDataSchemasMutationVariables
 >;
+export const InsertSqlCredentialsDocument = gql`
+  mutation InsertSqlCredentials($object: sql_credentials_insert_input!) {
+    insert_sql_credentials_one(object: $object) {
+      id
+    }
+  }
+`;
+export type InsertSqlCredentialsMutationFn = Apollo.MutationFunction<
+  InsertSqlCredentialsMutation,
+  InsertSqlCredentialsMutationVariables
+>;
+
+/**
+ * __useInsertSqlCredentialsMutation__
+ *
+ * To run a mutation, you first call `useInsertSqlCredentialsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertSqlCredentialsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertSqlCredentialsMutation, { data, loading, error }] = useInsertSqlCredentialsMutation({
+ *   variables: {
+ *      object: // value for 'object'
+ *   },
+ * });
+ */
+export function useInsertSqlCredentialsMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    InsertSqlCredentialsMutation,
+    InsertSqlCredentialsMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    InsertSqlCredentialsMutation,
+    InsertSqlCredentialsMutationVariables
+  >(InsertSqlCredentialsDocument, options);
+}
+export type InsertSqlCredentialsMutationHookResult = ReturnType<
+  typeof useInsertSqlCredentialsMutation
+>;
+export type InsertSqlCredentialsMutationResult =
+  Apollo.MutationResult<InsertSqlCredentialsMutation>;
+export type InsertSqlCredentialsMutationOptions = Apollo.BaseMutationOptions<
+  InsertSqlCredentialsMutation,
+  InsertSqlCredentialsMutationVariables
+>;
 export const GetUsersDocument = gql`
   query GetUsers {
     users {
@@ -12258,6 +12320,7 @@ export const namedOperations = {
     CheckConnection: "CheckConnection",
     DeleteDataSource: "DeleteDataSource",
     GenDataSchemas: "GenDataSchemas",
+    InsertSqlCredentials: "InsertSqlCredentials",
   },
   Subscription: {
     SubCurrentUser: "SubCurrentUser",

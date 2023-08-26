@@ -2,7 +2,7 @@ import RootLayout from "@/layouts/RootLayout";
 
 import CickHouseIcon from "@/assets/databases/click-house.svg";
 
-import { DataSourceCard } from ".";
+import DataSourceCard from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
@@ -20,15 +20,17 @@ const Template: StoryFn<typeof DataSourceCard> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  id: "1",
-  type: {
+  dataSource: {
+    id: "1",
+    type: {
+      name: "Clickhouse",
+      icon: <CickHouseIcon />,
+    },
     name: "Clickhouse",
-    icon: <CickHouseIcon />,
+    dbParams: {
+      host: "gh-api.clickhouse.tech",
+    },
+    updatedAt: "02.11.2022/ 3:32 PM",
+    createdAt: "02.11.2022/ 3:32 PM",
   },
-  name: "Clickhouse",
-  db_params: {
-    host: "gh-api.clickhouse.tech",
-  },
-  updatedAt: "02.11.2022/ 3:32 PM",
-  createdAt: "02.11.2022/ 3:32 PM",
 };

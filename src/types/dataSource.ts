@@ -64,10 +64,10 @@ export interface DataSourceForm {
 }
 
 export interface DataSourceInfo {
-  id?: string;
+  id: string | null | undefined;
   type: DataSource;
   name: string;
-  db_params: DynamicForm;
+  dbParams: DynamicForm;
   updatedAt: string;
   createdAt: string;
 }

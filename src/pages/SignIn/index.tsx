@@ -22,7 +22,7 @@ const SignIn: React.FC = () => {
       return;
     }
 
-    setLocation("datasources");
+    setLocation("/settings/sources");
   };
 
   return (

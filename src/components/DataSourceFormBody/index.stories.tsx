@@ -1,5 +1,4 @@
 import RootLayout from "@/layouts/RootLayout";
-import type { DataSourceForm } from "@/types/dataSource";
 
 import DataSourceFormBody from ".";
 
@@ -11,18 +10,9 @@ export default {
 } as Meta<typeof DataSourceFormBody>;
 
 const Template: StoryFn<typeof DataSourceFormBody> = (args) => {
-  const [formData, setFormData] = useState<DataSourceForm>({});
-  const [step, setStep] = useState<number>(0);
-
   return (
     <RootLayout>
-      <DataSourceFormBody
-        {...args}
-        step={step}
-        setStep={setStep}
-        formState={formData}
-        setState={setFormData || console.log}
-      />
+      <DataSourceFormBody {...args} />
     </RootLayout>
   );
 };
@@ -30,4 +20,11 @@ const Template: StoryFn<typeof DataSourceFormBody> = (args) => {
 export const Default = Template.bind({});
 Default.args = {
   onFinish: console.log,
+  activeStep: 0,
+  formState: {
+    step0: undefined,
+    step1: undefined,
+    step2: undefined,
+    step3: undefined,
+  },
 };

@@ -36,13 +36,12 @@ const defaultConnectionOptions = [
 interface ApiSetupProps {
   onSubmit: (data: ApiSetupForm) => void;
   onGoBack: () => void;
-  onSkip: () => void;
   initialValue: ApiSetupForm;
   connectionOptions?: ApiSetupField[];
 }
 
 const connectionData = [
-  { label: "Host/URL", value: "username", name: "username" },
+  { label: "Host/URL", value: "host", name: "host" },
   { label: "Database", value: "db", name: "db" },
   {
     label: "Login (auto-generated)",
@@ -58,7 +57,6 @@ const connectionData = [
 const ApiSetup: FC<ApiSetupProps> = ({
   connectionOptions = defaultConnectionOptions,
   onSubmit,
-  onSkip,
   onGoBack,
   initialValue,
 }) => {
@@ -214,22 +212,6 @@ const ApiSetup: FC<ApiSetupProps> = ({
               onClick={onDownload}
             >
               {t("common:words.download_credentials")}
-            </Button>
-          </Col>
-
-          <Col
-            xs={24}
-            md={6}
-            className={cn(styles.skip, { [styles.center]: !windowSize.md })}
-          >
-            <Button
-              className={cn(styles.link, {
-                [styles.fullwidth]: !windowSize.md,
-              })}
-              type="link"
-              onClick={onSkip}
-            >
-              {t("common:words.skip")}
             </Button>
           </Col>
         </Row>

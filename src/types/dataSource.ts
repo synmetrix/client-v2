@@ -9,7 +9,7 @@ export interface ApiSetupField {
 }
 
 export interface DataSource {
-  name: string;
+  name?: string;
   icon: ReactNode;
   value?: string;
   url?: string;
@@ -50,6 +50,7 @@ export interface ApiSetupForm {
 }
 
 export interface DataSourceSetupForm {
+  id?: string;
   name: string;
   db_params?: DynamicForm;
 }
@@ -59,12 +60,14 @@ export interface DataSourceForm {
   dataSourceSetup?: DataSourceSetupForm;
   dataModel?: DynamicForm;
   apiSetup?: ApiSetupForm;
+  schema?: Schema;
 }
 
 export interface DataSourceInfo {
-  id: string;
+  id: string | null | undefined;
   type: DataSource;
-  host: string;
+  name: string;
+  dbParams: DynamicForm;
   updatedAt: string;
   createdAt: string;
 }

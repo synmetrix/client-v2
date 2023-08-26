@@ -1,4 +1,4 @@
-import { useHistory } from "@vitjs/runtime";
+import { history } from "@vitjs/runtime";
 import { message } from "antd";
 import { useDeepCompareEffect } from "ahooks";
 
@@ -15,13 +15,15 @@ type Meta = {
 
 type Callback = (data: any, error?: any) => void;
 
+interface QueryResponse<TData> extends QueryResult<TData> {
+  reset?: () => void;
+}
+
 const useCheckResponse = (
-  response: MutationResult | QueryResult,
+  response: MutationResult | QueryResponse<any>,
   cb: Callback = noop,
   meta: Meta = {}
 ) => {
-  const history = useHistory();
-
   const { successMessage = DEFAULT_SUCCESS, errorMessage = DEFAULT_FAILURE } =
     meta;
 
@@ -32,9 +34,8 @@ const useCheckResponse = (
       }
 
       cb(response.data);
-      response.data = undefined;
     }
-  }, [cb, response.data, successMessage]);
+  }, [response.data]);
 
   useDeepCompareEffect(() => {
     if (response.error) {
@@ -46,10 +47,8 @@ const useCheckResponse = (
 
       message.error(responseMessage || errorMessage);
       cb(null, response.error);
-
-      response.error = undefined;
     }
-  }, [cb, errorMessage, response.error, history]);
+  }, [response.error]);
 };
 
 export default useCheckResponse;

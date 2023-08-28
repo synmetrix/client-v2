@@ -63,7 +63,8 @@
     "error": "Error",
     "close": "Close",
     "run": "Run",
-    "sql_runner": "SQL Runner"
+    "sql_runner": "SQL Runner",
+    "branch": "Branch"
   },
   "form": {
     "labels": {

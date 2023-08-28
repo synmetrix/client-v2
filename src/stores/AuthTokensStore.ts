@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import jwtDecode from "jwt-decode";
 
 type HasuraJWTPayload = {
-  "x-hasura-role": string[];
+  "x-hasura-role": string;
   "x-hasura-user-id": string;
 };
 

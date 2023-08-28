@@ -2,7 +2,7 @@ import { history } from "@vitjs/runtime";
 import { message } from "antd";
 import { useDeepCompareEffect } from "ahooks";
 
-import type { MutationResult, QueryResult } from "@apollo/client";
+import type { OperationResult } from "urql";
 
 const noop = () => {};
 const DEFAULT_SUCCESS = "Succefully finished";
@@ -15,12 +15,8 @@ type Meta = {
 
 type Callback = (data: any, error?: any) => void;
 
-interface QueryResponse<TData> extends QueryResult<TData> {
-  reset?: () => void;
-}
-
 const useCheckResponse = (
-  response: MutationResult | QueryResponse<any>,
+  response: OperationResult,
   cb: Callback = noop,
   meta: Meta = {}
 ) => {

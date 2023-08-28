@@ -1,5 +1,5 @@
-import { gql } from "@apollo/client";
-import * as Apollo from "@apollo/client";
+import gql from "graphql-tag";
+import * as Urql from "urql";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends Record<string, unknown>> = { [K in keyof T]: T[K] };
@@ -9,7 +9,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
-const defaultOptions = {} as const;
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -11433,54 +11433,14 @@ export const CurrentUserDocument = gql`
   }
 `;
 
-/**
- * __useCurrentUserQuery__
- *
- * To run a query within a React component, call `useCurrentUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCurrentUserQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
 export function useCurrentUserQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    CurrentUserQuery,
-    CurrentUserQueryVariables
-  >
+  options: Omit<Urql.UseQueryArgs<CurrentUserQueryVariables>, "query">
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<CurrentUserQuery, CurrentUserQueryVariables>(
-    CurrentUserDocument,
-    options
-  );
+  return Urql.useQuery<CurrentUserQuery, CurrentUserQueryVariables>({
+    query: CurrentUserDocument,
+    ...options,
+  });
 }
-export function useCurrentUserLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    CurrentUserQuery,
-    CurrentUserQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<CurrentUserQuery, CurrentUserQueryVariables>(
-    CurrentUserDocument,
-    options
-  );
-}
-export type CurrentUserQueryHookResult = ReturnType<typeof useCurrentUserQuery>;
-export type CurrentUserLazyQueryHookResult = ReturnType<
-  typeof useCurrentUserLazyQuery
->;
-export type CurrentUserQueryResult = Apollo.QueryResult<
-  CurrentUserQuery,
-  CurrentUserQueryVariables
->;
 export const SubCurrentUserDocument = gql`
   subscription SubCurrentUser($id: uuid!) {
     users_by_pk(id: $id) {
@@ -11515,39 +11475,21 @@ export const SubCurrentUserDocument = gql`
   }
 `;
 
-/**
- * __useSubCurrentUserSubscription__
- *
- * To run a query within a React component, call `useSubCurrentUserSubscription` and pass it any options that fit your needs.
- * When your component renders, `useSubCurrentUserSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSubCurrentUserSubscription({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useSubCurrentUserSubscription(
-  baseOptions: Apollo.SubscriptionHookOptions<
-    SubCurrentUserSubscription,
-    SubCurrentUserSubscriptionVariables
-  >
+export function useSubCurrentUserSubscription<
+  TData = SubCurrentUserSubscription
+>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<SubCurrentUserSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<SubCurrentUserSubscription, TData>
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useSubscription<
+  return Urql.useSubscription<
     SubCurrentUserSubscription,
+    TData,
     SubCurrentUserSubscriptionVariables
-  >(SubCurrentUserDocument, options);
+  >({ query: SubCurrentUserDocument, ...options }, handler);
 }
-export type SubCurrentUserSubscriptionHookResult = ReturnType<
-  typeof useSubCurrentUserSubscription
->;
-export type SubCurrentUserSubscriptionResult =
-  Apollo.SubscriptionResult<SubCurrentUserSubscription>;
 export const CreateDataSourceDocument = gql`
   mutation CreateDataSource($object: datasources_insert_input!) {
     insert_datasources_one(object: $object) {
@@ -11556,49 +11498,13 @@ export const CreateDataSourceDocument = gql`
     }
   }
 `;
-export type CreateDataSourceMutationFn = Apollo.MutationFunction<
-  CreateDataSourceMutation,
-  CreateDataSourceMutationVariables
->;
 
-/**
- * __useCreateDataSourceMutation__
- *
- * To run a mutation, you first call `useCreateDataSourceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateDataSourceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createDataSourceMutation, { data, loading, error }] = useCreateDataSourceMutation({
- *   variables: {
- *      object: // value for 'object'
- *   },
- * });
- */
-export function useCreateDataSourceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+export function useCreateDataSourceMutation() {
+  return Urql.useMutation<
     CreateDataSourceMutation,
     CreateDataSourceMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CreateDataSourceMutation,
-    CreateDataSourceMutationVariables
-  >(CreateDataSourceDocument, options);
+  >(CreateDataSourceDocument);
 }
-export type CreateDataSourceMutationHookResult = ReturnType<
-  typeof useCreateDataSourceMutation
->;
-export type CreateDataSourceMutationResult =
-  Apollo.MutationResult<CreateDataSourceMutation>;
-export type CreateDataSourceMutationOptions = Apollo.BaseMutationOptions<
-  CreateDataSourceMutation,
-  CreateDataSourceMutationVariables
->;
 export const DatasourcesDocument = gql`
   query Datasources(
     $offset: Int
@@ -11637,57 +11543,14 @@ export const DatasourcesDocument = gql`
   }
 `;
 
-/**
- * __useDatasourcesQuery__
- *
- * To run a query within a React component, call `useDatasourcesQuery` and pass it any options that fit your needs.
- * When your component renders, `useDatasourcesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useDatasourcesQuery({
- *   variables: {
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *      where: // value for 'where'
- *      order_by: // value for 'order_by'
- *   },
- * });
- */
 export function useDatasourcesQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    DatasourcesQuery,
-    DatasourcesQueryVariables
-  >
+  options?: Omit<Urql.UseQueryArgs<DatasourcesQueryVariables>, "query">
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<DatasourcesQuery, DatasourcesQueryVariables>(
-    DatasourcesDocument,
-    options
-  );
+  return Urql.useQuery<DatasourcesQuery, DatasourcesQueryVariables>({
+    query: DatasourcesDocument,
+    ...options,
+  });
 }
-export function useDatasourcesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    DatasourcesQuery,
-    DatasourcesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<DatasourcesQuery, DatasourcesQueryVariables>(
-    DatasourcesDocument,
-    options
-  );
-}
-export type DatasourcesQueryHookResult = ReturnType<typeof useDatasourcesQuery>;
-export type DatasourcesLazyQueryHookResult = ReturnType<
-  typeof useDatasourcesLazyQuery
->;
-export type DatasourcesQueryResult = Apollo.QueryResult<
-  DatasourcesQuery,
-  DatasourcesQueryVariables
->;
 export const AllDatasourcesDocument = gql`
   subscription AllDatasources(
     $offset: Int
@@ -11721,42 +11584,21 @@ export const AllDatasourcesDocument = gql`
   }
 `;
 
-/**
- * __useAllDatasourcesSubscription__
- *
- * To run a query within a React component, call `useAllDatasourcesSubscription` and pass it any options that fit your needs.
- * When your component renders, `useAllDatasourcesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAllDatasourcesSubscription({
- *   variables: {
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *      where: // value for 'where'
- *      order_by: // value for 'order_by'
- *   },
- * });
- */
-export function useAllDatasourcesSubscription(
-  baseOptions?: Apollo.SubscriptionHookOptions<
-    AllDatasourcesSubscription,
-    AllDatasourcesSubscriptionVariables
-  >
+export function useAllDatasourcesSubscription<
+  TData = AllDatasourcesSubscription
+>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<AllDatasourcesSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<AllDatasourcesSubscription, TData>
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useSubscription<
+  return Urql.useSubscription<
     AllDatasourcesSubscription,
+    TData,
     AllDatasourcesSubscriptionVariables
-  >(AllDatasourcesDocument, options);
+  >({ query: AllDatasourcesDocument, ...options }, handler);
 }
-export type AllDatasourcesSubscriptionHookResult = ReturnType<
-  typeof useAllDatasourcesSubscription
->;
-export type AllDatasourcesSubscriptionResult =
-  Apollo.SubscriptionResult<AllDatasourcesSubscription>;
 export const ValidateDataSourceDocument = gql`
   mutation ValidateDataSource($id: uuid!) {
     validate_datasource(id: $id) {
@@ -11765,49 +11607,13 @@ export const ValidateDataSourceDocument = gql`
     }
   }
 `;
-export type ValidateDataSourceMutationFn = Apollo.MutationFunction<
-  ValidateDataSourceMutation,
-  ValidateDataSourceMutationVariables
->;
 
-/**
- * __useValidateDataSourceMutation__
- *
- * To run a mutation, you first call `useValidateDataSourceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useValidateDataSourceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [validateDataSourceMutation, { data, loading, error }] = useValidateDataSourceMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useValidateDataSourceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+export function useValidateDataSourceMutation() {
+  return Urql.useMutation<
     ValidateDataSourceMutation,
     ValidateDataSourceMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    ValidateDataSourceMutation,
-    ValidateDataSourceMutationVariables
-  >(ValidateDataSourceDocument, options);
+  >(ValidateDataSourceDocument);
 }
-export type ValidateDataSourceMutationHookResult = ReturnType<
-  typeof useValidateDataSourceMutation
->;
-export type ValidateDataSourceMutationResult =
-  Apollo.MutationResult<ValidateDataSourceMutation>;
-export type ValidateDataSourceMutationOptions = Apollo.BaseMutationOptions<
-  ValidateDataSourceMutation,
-  ValidateDataSourceMutationVariables
->;
 export const FetchTablesDocument = gql`
   query FetchTables($id: uuid!) {
     fetch_tables(datasource_id: $id) {
@@ -11816,54 +11622,14 @@ export const FetchTablesDocument = gql`
   }
 `;
 
-/**
- * __useFetchTablesQuery__
- *
- * To run a query within a React component, call `useFetchTablesQuery` and pass it any options that fit your needs.
- * When your component renders, `useFetchTablesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFetchTablesQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
 export function useFetchTablesQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FetchTablesQuery,
-    FetchTablesQueryVariables
-  >
+  options: Omit<Urql.UseQueryArgs<FetchTablesQueryVariables>, "query">
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<FetchTablesQuery, FetchTablesQueryVariables>(
-    FetchTablesDocument,
-    options
-  );
+  return Urql.useQuery<FetchTablesQuery, FetchTablesQueryVariables>({
+    query: FetchTablesDocument,
+    ...options,
+  });
 }
-export function useFetchTablesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FetchTablesQuery,
-    FetchTablesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<FetchTablesQuery, FetchTablesQueryVariables>(
-    FetchTablesDocument,
-    options
-  );
-}
-export type FetchTablesQueryHookResult = ReturnType<typeof useFetchTablesQuery>;
-export type FetchTablesLazyQueryHookResult = ReturnType<
-  typeof useFetchTablesLazyQuery
->;
-export type FetchTablesQueryResult = Apollo.QueryResult<
-  FetchTablesQuery,
-  FetchTablesQueryVariables
->;
 export const FetchMetaDocument = gql`
   query FetchMeta($datasource_id: uuid!) {
     fetch_meta(datasource_id: $datasource_id) {
@@ -11872,51 +11638,14 @@ export const FetchMetaDocument = gql`
   }
 `;
 
-/**
- * __useFetchMetaQuery__
- *
- * To run a query within a React component, call `useFetchMetaQuery` and pass it any options that fit your needs.
- * When your component renders, `useFetchMetaQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFetchMetaQuery({
- *   variables: {
- *      datasource_id: // value for 'datasource_id'
- *   },
- * });
- */
 export function useFetchMetaQuery(
-  baseOptions: Apollo.QueryHookOptions<FetchMetaQuery, FetchMetaQueryVariables>
+  options: Omit<Urql.UseQueryArgs<FetchMetaQueryVariables>, "query">
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<FetchMetaQuery, FetchMetaQueryVariables>(
-    FetchMetaDocument,
-    options
-  );
+  return Urql.useQuery<FetchMetaQuery, FetchMetaQueryVariables>({
+    query: FetchMetaDocument,
+    ...options,
+  });
 }
-export function useFetchMetaLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FetchMetaQuery,
-    FetchMetaQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<FetchMetaQuery, FetchMetaQueryVariables>(
-    FetchMetaDocument,
-    options
-  );
-}
-export type FetchMetaQueryHookResult = ReturnType<typeof useFetchMetaQuery>;
-export type FetchMetaLazyQueryHookResult = ReturnType<
-  typeof useFetchMetaLazyQuery
->;
-export type FetchMetaQueryResult = Apollo.QueryResult<
-  FetchMetaQuery,
-  FetchMetaQueryVariables
->;
 export const CurrentDataSourceDocument = gql`
   query CurrentDataSource($id: uuid!) {
     datasources_by_pk(id: $id) {
@@ -11930,56 +11659,13 @@ export const CurrentDataSourceDocument = gql`
   }
 `;
 
-/**
- * __useCurrentDataSourceQuery__
- *
- * To run a query within a React component, call `useCurrentDataSourceQuery` and pass it any options that fit your needs.
- * When your component renders, `useCurrentDataSourceQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCurrentDataSourceQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
 export function useCurrentDataSourceQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    CurrentDataSourceQuery,
-    CurrentDataSourceQueryVariables
-  >
+  options: Omit<Urql.UseQueryArgs<CurrentDataSourceQueryVariables>, "query">
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    CurrentDataSourceQuery,
-    CurrentDataSourceQueryVariables
-  >(CurrentDataSourceDocument, options);
+  return Urql.useQuery<CurrentDataSourceQuery, CurrentDataSourceQueryVariables>(
+    { query: CurrentDataSourceDocument, ...options }
+  );
 }
-export function useCurrentDataSourceLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    CurrentDataSourceQuery,
-    CurrentDataSourceQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    CurrentDataSourceQuery,
-    CurrentDataSourceQueryVariables
-  >(CurrentDataSourceDocument, options);
-}
-export type CurrentDataSourceQueryHookResult = ReturnType<
-  typeof useCurrentDataSourceQuery
->;
-export type CurrentDataSourceLazyQueryHookResult = ReturnType<
-  typeof useCurrentDataSourceLazyQuery
->;
-export type CurrentDataSourceQueryResult = Apollo.QueryResult<
-  CurrentDataSourceQuery,
-  CurrentDataSourceQueryVariables
->;
 export const UpdateDataSourceDocument = gql`
   mutation UpdateDataSource(
     $pk_columns: datasources_pk_columns_input!
@@ -11990,50 +11676,13 @@ export const UpdateDataSourceDocument = gql`
     }
   }
 `;
-export type UpdateDataSourceMutationFn = Apollo.MutationFunction<
-  UpdateDataSourceMutation,
-  UpdateDataSourceMutationVariables
->;
 
-/**
- * __useUpdateDataSourceMutation__
- *
- * To run a mutation, you first call `useUpdateDataSourceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateDataSourceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateDataSourceMutation, { data, loading, error }] = useUpdateDataSourceMutation({
- *   variables: {
- *      pk_columns: // value for 'pk_columns'
- *      _set: // value for '_set'
- *   },
- * });
- */
-export function useUpdateDataSourceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+export function useUpdateDataSourceMutation() {
+  return Urql.useMutation<
     UpdateDataSourceMutation,
     UpdateDataSourceMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateDataSourceMutation,
-    UpdateDataSourceMutationVariables
-  >(UpdateDataSourceDocument, options);
+  >(UpdateDataSourceDocument);
 }
-export type UpdateDataSourceMutationHookResult = ReturnType<
-  typeof useUpdateDataSourceMutation
->;
-export type UpdateDataSourceMutationResult =
-  Apollo.MutationResult<UpdateDataSourceMutation>;
-export type UpdateDataSourceMutationOptions = Apollo.BaseMutationOptions<
-  UpdateDataSourceMutation,
-  UpdateDataSourceMutationVariables
->;
 export const CheckConnectionDocument = gql`
   mutation CheckConnection($id: uuid!) {
     check_connection(datasource_id: $id) {
@@ -12042,49 +11691,13 @@ export const CheckConnectionDocument = gql`
     }
   }
 `;
-export type CheckConnectionMutationFn = Apollo.MutationFunction<
-  CheckConnectionMutation,
-  CheckConnectionMutationVariables
->;
 
-/**
- * __useCheckConnectionMutation__
- *
- * To run a mutation, you first call `useCheckConnectionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCheckConnectionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [checkConnectionMutation, { data, loading, error }] = useCheckConnectionMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useCheckConnectionMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+export function useCheckConnectionMutation() {
+  return Urql.useMutation<
     CheckConnectionMutation,
     CheckConnectionMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    CheckConnectionMutation,
-    CheckConnectionMutationVariables
-  >(CheckConnectionDocument, options);
+  >(CheckConnectionDocument);
 }
-export type CheckConnectionMutationHookResult = ReturnType<
-  typeof useCheckConnectionMutation
->;
-export type CheckConnectionMutationResult =
-  Apollo.MutationResult<CheckConnectionMutation>;
-export type CheckConnectionMutationOptions = Apollo.BaseMutationOptions<
-  CheckConnectionMutation,
-  CheckConnectionMutationVariables
->;
 export const DeleteDataSourceDocument = gql`
   mutation DeleteDataSource($id: uuid!) {
     delete_datasources_by_pk(id: $id) {
@@ -12092,49 +11705,13 @@ export const DeleteDataSourceDocument = gql`
     }
   }
 `;
-export type DeleteDataSourceMutationFn = Apollo.MutationFunction<
-  DeleteDataSourceMutation,
-  DeleteDataSourceMutationVariables
->;
 
-/**
- * __useDeleteDataSourceMutation__
- *
- * To run a mutation, you first call `useDeleteDataSourceMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteDataSourceMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteDataSourceMutation, { data, loading, error }] = useDeleteDataSourceMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteDataSourceMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+export function useDeleteDataSourceMutation() {
+  return Urql.useMutation<
     DeleteDataSourceMutation,
     DeleteDataSourceMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    DeleteDataSourceMutation,
-    DeleteDataSourceMutationVariables
-  >(DeleteDataSourceDocument, options);
+  >(DeleteDataSourceDocument);
 }
-export type DeleteDataSourceMutationHookResult = ReturnType<
-  typeof useDeleteDataSourceMutation
->;
-export type DeleteDataSourceMutationResult =
-  Apollo.MutationResult<DeleteDataSourceMutation>;
-export type DeleteDataSourceMutationOptions = Apollo.BaseMutationOptions<
-  DeleteDataSourceMutation,
-  DeleteDataSourceMutationVariables
->;
 export const GenDataSchemasDocument = gql`
   mutation GenDataSchemas(
     $datasource_id: uuid!
@@ -12155,53 +11732,13 @@ export const GenDataSchemasDocument = gql`
     }
   }
 `;
-export type GenDataSchemasMutationFn = Apollo.MutationFunction<
-  GenDataSchemasMutation,
-  GenDataSchemasMutationVariables
->;
 
-/**
- * __useGenDataSchemasMutation__
- *
- * To run a mutation, you first call `useGenDataSchemasMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useGenDataSchemasMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [genDataSchemasMutation, { data, loading, error }] = useGenDataSchemasMutation({
- *   variables: {
- *      datasource_id: // value for 'datasource_id'
- *      branch_id: // value for 'branch_id'
- *      tables: // value for 'tables'
- *      overwrite: // value for 'overwrite'
- *      format: // value for 'format'
- *   },
- * });
- */
-export function useGenDataSchemasMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+export function useGenDataSchemasMutation() {
+  return Urql.useMutation<
     GenDataSchemasMutation,
     GenDataSchemasMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    GenDataSchemasMutation,
-    GenDataSchemasMutationVariables
-  >(GenDataSchemasDocument, options);
+  >(GenDataSchemasDocument);
 }
-export type GenDataSchemasMutationHookResult = ReturnType<
-  typeof useGenDataSchemasMutation
->;
-export type GenDataSchemasMutationResult =
-  Apollo.MutationResult<GenDataSchemasMutation>;
-export type GenDataSchemasMutationOptions = Apollo.BaseMutationOptions<
-  GenDataSchemasMutation,
-  GenDataSchemasMutationVariables
->;
 export const InsertSqlCredentialsDocument = gql`
   mutation InsertSqlCredentials($object: sql_credentials_insert_input!) {
     insert_sql_credentials_one(object: $object) {
@@ -12209,49 +11746,13 @@ export const InsertSqlCredentialsDocument = gql`
     }
   }
 `;
-export type InsertSqlCredentialsMutationFn = Apollo.MutationFunction<
-  InsertSqlCredentialsMutation,
-  InsertSqlCredentialsMutationVariables
->;
 
-/**
- * __useInsertSqlCredentialsMutation__
- *
- * To run a mutation, you first call `useInsertSqlCredentialsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useInsertSqlCredentialsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [insertSqlCredentialsMutation, { data, loading, error }] = useInsertSqlCredentialsMutation({
- *   variables: {
- *      object: // value for 'object'
- *   },
- * });
- */
-export function useInsertSqlCredentialsMutation(
-  baseOptions?: Apollo.MutationHookOptions<
+export function useInsertSqlCredentialsMutation() {
+  return Urql.useMutation<
     InsertSqlCredentialsMutation,
     InsertSqlCredentialsMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    InsertSqlCredentialsMutation,
-    InsertSqlCredentialsMutationVariables
-  >(InsertSqlCredentialsDocument, options);
+  >(InsertSqlCredentialsDocument);
 }
-export type InsertSqlCredentialsMutationHookResult = ReturnType<
-  typeof useInsertSqlCredentialsMutation
->;
-export type InsertSqlCredentialsMutationResult =
-  Apollo.MutationResult<InsertSqlCredentialsMutation>;
-export type InsertSqlCredentialsMutationOptions = Apollo.BaseMutationOptions<
-  InsertSqlCredentialsMutation,
-  InsertSqlCredentialsMutationVariables
->;
 export const GetUsersDocument = gql`
   query GetUsers {
     users {
@@ -12260,50 +11761,14 @@ export const GetUsersDocument = gql`
   }
 `;
 
-/**
- * __useGetUsersQuery__
- *
- * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUsersQuery({
- *   variables: {
- *   },
- * });
- */
 export function useGetUsersQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>
+  options?: Omit<Urql.UseQueryArgs<GetUsersQueryVariables>, "query">
 ) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(
-    GetUsersDocument,
-    options
-  );
+  return Urql.useQuery<GetUsersQuery, GetUsersQueryVariables>({
+    query: GetUsersDocument,
+    ...options,
+  });
 }
-export function useGetUsersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUsersQuery,
-    GetUsersQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(
-    GetUsersDocument,
-    options
-  );
-}
-export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
-export type GetUsersLazyQueryHookResult = ReturnType<
-  typeof useGetUsersLazyQuery
->;
-export type GetUsersQueryResult = Apollo.QueryResult<
-  GetUsersQuery,
-  GetUsersQueryVariables
->;
 export const namedOperations = {
   Query: {
     CurrentUser: "CurrentUser",

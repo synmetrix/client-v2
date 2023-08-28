@@ -60,7 +60,10 @@
     "members": "Members",
     "current": "Current",
     "success": "Succesesful",
-    "error": "Error"
+    "error": "Error",
+    "close": "Close",
+    "run": "Run",
+    "sql_runner": "SQL Runner"
   },
   "form": {
     "labels": {

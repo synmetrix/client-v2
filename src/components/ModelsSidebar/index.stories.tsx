@@ -19,4 +19,10 @@ export const Default = Template.bind({});
 
 Default.args = {
   branches: ["main-default", "dev"],
+  version: "34f34fjn5g4j5g95jf3ef4t4ht5",
+  docs: "https://google.com",
+  files: ["GithubEvents.yml", "Stackoverflow.yml", "Stock.yml"],
+  onCreateFile: console.log,
+  onSelectFile: console.log,
+  onSetDefaultVersion: console.log,
 };

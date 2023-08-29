@@ -109,7 +109,8 @@
       "attach_file_credentials": "Attach the file credentials, please",
       "schema": "schema",
       "password": "Password",
-      "email": "E-mail"
+      "email": "E-mail",
+      "search": "Search"
     },
     "errors": {
       "email": "Enter a valid e-mail",

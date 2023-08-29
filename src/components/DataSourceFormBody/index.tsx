@@ -52,12 +52,10 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   };
 
   const onDataSourceSetup = async (data: DataSourceSetupForm) => {
-    setFormStateData(1, data);
     await onDataSourceSetupSubmit(data);
   };
 
   const onDataModelGeneration = async (data: DynamicForm) => {
-    setFormStateData(2, data);
     await onDataModelGenerationSubmit(data);
   };
 

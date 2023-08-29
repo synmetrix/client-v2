@@ -45,7 +45,7 @@ export const fetchRefreshToken = async (refreshToken: string) => {
 };
 
 export default () => {
-  const authTokensState = AuthTokensStore.getState();
+  const { setAuthData } = AuthTokensStore();
 
   const login = async (values: SignInFormType) => {
     const response = await fetch(`${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/login`, {
@@ -68,8 +68,10 @@ export default () => {
       };
     }
 
-    authTokensState.setRefreshToken(res.refresh_token);
-    authTokensState.setAccessToken(res.jwt_token);
+    setAuthData({
+      accessToken: res.jwt_token,
+      refreshToken: res.refresh_token,
+    });
   };
 
   const register = async (values: SignUpFormType) => {
@@ -96,8 +98,10 @@ export default () => {
       };
     }
 
-    authTokensState.setRefreshToken(res.refresh_token);
-    authTokensState.setAccessToken(res.jwt_token);
+    setAuthData({
+      accessToken: res.jwt_token,
+      refreshToken: res.refresh_token,
+    });
   };
 
   return {

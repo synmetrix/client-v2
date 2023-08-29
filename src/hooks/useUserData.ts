@@ -43,37 +43,37 @@ const prepareUserData = (
 };
 
 export default () => {
-  const { currentUser, setUserData } = CurrentUserStore.getState();
-  const { accessToken, JWTpayload } = AuthTokensStore.getState();
+  const { currentUser, setUserData } = CurrentUserStore();
+  const { JWTpayload, accessToken } = AuthTokensStore();
 
   const userId = JWTpayload?.["x-hasura-user-id"];
 
-  const { refetch: execQueryCurrentUser, data: currentUserData } =
-    useCurrentUserQuery({
-      variables: { id: userId },
-      skip: true,
-    });
-
-  const { data: subscriptionData } = useSubCurrentUserSubscription({
+  const [currentUserData, execQueryCurrentUser] = useCurrentUserQuery({
     variables: { id: userId },
+    pause: true,
+  });
+
+  const [subscriptionData, useSubscription] = useSubCurrentUserSubscription({
+    variables: { id: userId },
+    pause: true,
   });
 
   useEffect(() => {
-    if (currentUserData) {
-      const newUserData = prepareUserData(currentUserData);
+    if (currentUserData.data) {
+      const newUserData = prepareUserData(currentUserData.data);
       setUserData(newUserData);
     }
   }, [currentUserData, setUserData]);
-
   useDeepCompareEffect(() => {
-    if (accessToken) {
+    if (accessToken && userId) {
       execQueryCurrentUser();
+      useSubscription();
     }
-  }, [accessToken]);
+  }, [accessToken, userId]);
 
   useEffect(() => {
-    if (subscriptionData?.users_by_pk) {
-      const newUserData = prepareUserData(subscriptionData);
+    if (subscriptionData?.data) {
+      const newUserData = prepareUserData(subscriptionData?.data);
       setUserData(newUserData);
     }
   }, [setUserData, subscriptionData]);

@@ -8,6 +8,7 @@
   "datasource_created": "Data Source created.",
   "datasource_updated": "Data Source updated.",
   "datasource_deleted": "Data Source deleted.",
+  "datasource_update_error": "Data Source update error.",
   "schema_generated": "Schema successfully generated.",
   "no_schema": "Schema was not generated."
 }

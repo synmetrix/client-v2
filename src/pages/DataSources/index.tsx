@@ -8,17 +8,25 @@ import DataSourceCard from "@/components/DataSourceCard";
 import Modal from "@/components/Modal";
 import DataSourceForm from "@/components/DataSourceForm";
 import NoDataSource from "@/components/NoDataSource";
+import CurrentUserStore from "@/stores/CurrentUserStore";
+import useLocation from "@/hooks/useLocation";
+import useCheckResponse from "@/hooks/useCheckResponse";
+import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
+import {
+  useFetchTablesQuery,
+  useGenDataSchemasMutation,
+  useCreateDataSourceMutation,
+  useUpdateDataSourceMutation,
+  useCheckConnectionMutation,
+  useDeleteDataSourceMutation,
+  useInsertSqlCredentialsMutation,
+} from "@/graphql/generated";
 import type {
   ApiSetupForm,
   DataSourceInfo,
   DataSourceSetupForm,
   DynamicForm,
 } from "@/types/dataSource";
-import CurrentUserStore from "@/stores/CurrentUserStore";
-import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
-import useLocation from "@/hooks/useLocation";
-import useDataSources from "@/hooks/useDataSources";
-import useCheckResponse from "@/hooks/useCheckResponse";
 import type {
   Datasources_Pk_Columns_Input,
   Datasources_Set_Input,
@@ -49,6 +57,7 @@ export const DataSources = ({
   onFinish = () => {},
 }: DataSourcesProps) => {
   const { t } = useTranslation(["settings", "pages"]);
+  const [, setLocation] = useLocation();
   const { editId, clean } = DataSourceStore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = () => setIsOpen(true);
@@ -56,6 +65,7 @@ export const DataSources = ({
   const onClose = () => {
     clean();
     setIsOpen(false);
+    setLocation("/settings/sources");
   };
 
   const onFormFinish = () => {
@@ -139,22 +149,19 @@ const DataSourcesWrapper = ({
     nextStep,
   } = DataSourceStore();
 
-  const {
-    queries: { execFetchTables, fetchTablesQuery },
-    mutations: {
-      createMutation,
-      execCreateMutation,
-      updateMutation,
-      execUpdateMutation,
-      checkConnectionMutation,
-      execCheckConnection,
-      genSchemaMutation,
-      execGenSchemaMutation,
-      deleteMutation,
-      execDeleteMutation,
-      execInsertSqlCredentialsMutation,
-    },
-  } = useDataSources({});
+  const [createMutation, execCreateMutation] = useCreateDataSourceMutation();
+  const [updateMutation, execUpdateMutation] = useUpdateDataSourceMutation();
+  const [deleteMutation, execDeleteMutation] = useDeleteDataSourceMutation();
+  const [checkConnectionMutation, execCheckConnection] =
+    useCheckConnectionMutation();
+  const [genSchemaMutation, execGenSchemaMutation] =
+    useGenDataSchemasMutation();
+  const [, execInsertSqlCredentialsMutation] =
+    useInsertSqlCredentialsMutation();
+  const [fetchTablesQuery, execFetchTables] = useFetchTablesQuery({
+    variables: { id: dataSourceSetup?.id || editId },
+    pause: true,
+  });
 
   useCheckResponse(deleteMutation, () => {}, {
     successMessage: t("datasource_deleted"),
@@ -173,21 +180,28 @@ const DataSourcesWrapper = ({
       } as Datasources_Set_Input;
 
       const result = await execCreateMutation({
-        variables: { object: newData },
+        object: newData,
       });
 
       dataSourceId = result?.data?.insert_datasources_one?.id;
     } else {
       const id = editId || dataSourceSetup?.id;
+
+      delete data.id;
       const newData = {
         pk_columns: { id } as Datasources_Pk_Columns_Input,
         _set: data as Datasources_Set_Input,
       };
 
-      const result = await execUpdateMutation({ variables: newData });
+      const result = await execUpdateMutation(newData);
 
-      setMessage(t("datasource_updated"));
       dataSourceId = result?.data?.update_datasources_by_pk?.id;
+
+      if (dataSourceId) {
+        setMessage(t("datasource_updated"));
+      } else {
+        setError(t("datasource_update_error"));
+      }
     }
 
     setFormStateData(1, {
@@ -204,8 +218,8 @@ const DataSourcesWrapper = ({
       return;
     }
 
-    const tables = await execFetchTables({ variables: { id: dataSourceId } });
-    const schema = tables.data?.fetch_tables?.schema;
+    await execFetchTables({ id: dataSourceId });
+    const schema = fetchTablesQuery.data?.fetch_tables?.schema;
 
     if (schema) {
       setSchema(schema);
@@ -223,7 +237,12 @@ const DataSourcesWrapper = ({
   const onTestConnection = async (data: DataSourceSetupForm) => {
     try {
       const dataSourceId = await createOrUpdateDataSource(data);
-      await execCheckConnection({ variables: { id: dataSourceId } });
+      const test = await execCheckConnection({ id: dataSourceId });
+
+      if (!test.data?.check_connection) {
+        setError(t("connection_error"));
+        return null;
+      }
       setMessage(t("connection_ok"));
     } catch (error) {
       setError(JSON.stringify(error));
@@ -250,7 +269,7 @@ const DataSourcesWrapper = ({
       };
 
       try {
-        await execGenSchemaMutation({ variables: genData });
+        await execGenSchemaMutation(genData);
         setMessage(t("schema_generated"));
       } catch (error) {
         setError(JSON.stringify(error));
@@ -278,11 +297,7 @@ const DataSourcesWrapper = ({
       setFormStateData(3, apiSetup);
 
       try {
-        await execInsertSqlCredentialsMutation({
-          variables: {
-            object: credentialParams,
-          },
-        });
+        await execInsertSqlCredentialsMutation({ object: credentialParams });
         nextStep();
       } catch (error) {
         setError(JSON.stringify(error));
@@ -291,7 +306,7 @@ const DataSourcesWrapper = ({
   };
 
   const onDelete = (dataSourceId: string) => {
-    execDeleteMutation({ variables: { id: dataSourceId } });
+    execDeleteMutation({ id: dataSourceId });
   };
 
   const onEdit = (dataSourceId: string) => {
@@ -325,11 +340,11 @@ const DataSourcesWrapper = ({
 
   useEffect(() => {
     const isLoading =
-      createMutation.loading ||
-      updateMutation.loading ||
-      checkConnectionMutation.loading ||
-      genSchemaMutation.loading ||
-      fetchTablesQuery.loading;
+      createMutation.fetching ||
+      updateMutation.fetching ||
+      checkConnectionMutation.fetching ||
+      genSchemaMutation.fetching ||
+      fetchTablesQuery.fetching;
 
     if (isLoading) {
       setLoading(true);
@@ -337,11 +352,11 @@ const DataSourcesWrapper = ({
       setLoading(false);
     }
   }, [
-    createMutation.loading,
-    updateMutation.loading,
-    checkConnectionMutation.loading,
-    genSchemaMutation.loading,
-    fetchTablesQuery.loading,
+    createMutation.fetching,
+    updateMutation.fetching,
+    checkConnectionMutation.fetching,
+    genSchemaMutation.fetching,
+    fetchTablesQuery.fetching,
     setLoading,
   ]);
 

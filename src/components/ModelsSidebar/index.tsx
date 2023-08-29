@@ -158,15 +158,15 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
         {files
           .filter((f) => f.toLowerCase().includes(searchValue.toLowerCase()))
           .map((f) => (
-            <Space
-              className={styles.file}
+            <Button
               key={f}
-              size={5}
-              align="start"
+              className={styles.fileBtn}
+              type="text"
+              icon={<YMLIcon className={styles.fileIcon} />}
               onClick={() => onSelectFile(f)}
             >
-              <YMLIcon /> {f}
-            </Space>
+              {f}
+            </Button>
           ))}
       </Space>
     </Space>

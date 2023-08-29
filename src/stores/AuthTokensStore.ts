@@ -2,21 +2,27 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import jwtDecode from "jwt-decode";
 
-type HasuraJWTPayload = {
+import type { JwtPayload } from "jwt-decode";
+
+interface HasuraJWTPayload extends JwtPayload {
   "x-hasura-role": string;
   "x-hasura-user-id": string;
-};
+}
 
-type Payload = {
-  hasura: HasuraJWTPayload;
+interface Payload extends JwtPayload {
+  hasura?: HasuraJWTPayload | null;
+}
+
+type AuthData = {
+  refreshToken: string;
+  accessToken: string;
 };
 
 interface TokensState {
   refreshToken: string | null;
   accessToken: string | null;
   JWTpayload: HasuraJWTPayload | null;
-  setRefreshToken: (refreshToken: string) => void;
-  setAccessToken: (accesToken: string) => void;
+  setAuthData: (authData: AuthData) => void;
   cleanTokens: () => void;
 }
 
@@ -30,18 +36,23 @@ const AuthTokensStore = create<TokensState>()(
   persist(
     (set) => ({
       ...defaultTokens,
-      setRefreshToken: (refreshToken) =>
-        set((prev) => ({ ...prev, refreshToken })),
-      setAccessToken: (accessToken) => {
-        let payload: Payload;
+      setAuthData: (authData: AuthData) => {
+        const { accessToken, refreshToken } = authData;
+        const payload = jwtDecode<Payload>(accessToken);
 
-        try {
-          payload = jwtDecode(accessToken);
-        } catch (err) {
-          console.error("JWT is broken, reload the application data");
-        }
+        const JWTpayload = {
+          ...payload,
+          ...payload.hasura,
+        };
+        delete JWTpayload.hasura;
 
-        set((prev) => ({ ...prev, accessToken, JWTpayload: payload.hasura }));
+        const newData = {
+          refreshToken,
+          accessToken,
+          JWTpayload,
+        } as TokensState;
+
+        set(newData);
       },
       cleanTokens: () => set({ ...defaultTokens }),
     }),

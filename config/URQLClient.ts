@@ -1,11 +1,14 @@
 import { createClient, fetchExchange, subscriptionExchange } from "urql";
 import { authExchange } from "@urql/exchange-auth";
-import { SubscriptionClient } from "subscriptions-transport-ws";
+import { retryExchange } from "@urql/exchange-retry";
+import { createClient as createWsClient } from "graphql-ws";
+import { history } from "@vitjs/runtime";
 
 import { fetchRefreshToken } from "@/hooks/useAuth";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 
 import type { Operation, CombinedError } from "urql";
+import type { SubscribePayload } from "graphql-ws";
 
 const HASURA_GRAPHQL_ENDPOINT = import.meta.env.VITE_HASURA_GRAPHQL_ENDPOINT;
 const HASURA_WS_ENDPOINT = import.meta.env.VITE_HASURA_WS_ENDPOINT;
@@ -17,24 +20,17 @@ type Headers = {
 };
 
 export default () => {
-  const {
-    accessToken,
-    refreshToken,
-    JWTpayload,
-    setAccessToken,
-    setRefreshToken,
-  } = AuthTokensStore.getState();
+  const { accessToken, refreshToken, JWTpayload, setAuthData, cleanTokens } =
+    AuthTokensStore();
 
   const client = useMemo(() => {
-    const subscriptionClient = new SubscriptionClient(HASURA_WS_ENDPOINT, {
-      reconnect: true,
-      timeout: 30000,
+    const wsClient = createWsClient({
+      url: HASURA_WS_ENDPOINT,
       connectionParams: () => ({
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "content-type": "application/json",
         },
-        lazy: true,
       }),
     });
 
@@ -65,26 +61,46 @@ export default () => {
         willAuthError: () => {
           const expirationTimeInSeconds = (JWTpayload?.exp || 0) * 1000;
           const now = new Date();
-          const isValid = expirationTimeInSeconds >= now.getTime();
+          const isValid = expirationTimeInSeconds <= now.getTime();
 
           return isValid;
         },
-        didAuthError: (error: CombinedError) =>
-          error?.graphQLErrors?.some((e) => e.extensions?.code === "FORBIDDEN"),
+        didAuthError: (error: CombinedError) => {
+          return error?.graphQLErrors?.some(
+            (e) => e.extensions?.code === "FORBIDDEN"
+          );
+        },
         refreshAuth: async () => {
           if (refreshToken) {
             const request = await fetchRefreshToken(refreshToken);
-            const { access_token, refresh_token } = await request.json();
+            const result = await request.json();
 
-            setAccessToken(access_token);
-            setRefreshToken(refresh_token);
+            if (result.error) {
+              cleanTokens();
+              history.push("/signin");
+              return;
+            }
+
+            setAuthData({
+              accessToken: result.jwt_token,
+              refreshToken: result.refresh_token,
+            });
           }
         },
       })),
+      retryExchange({
+        initialDelayMs: 500,
+        maxDelayMs: 1500,
+        randomDelay: true,
+        maxNumberAttempts: Infinity,
+      }),
       fetchExchange,
       subscriptionExchange({
-        forwardSubscription: (operation) =>
-          subscriptionClient.request(operation),
+        forwardSubscription: (op) => ({
+          subscribe: (sink) => ({
+            unsubscribe: wsClient.subscribe(op as SubscribePayload, sink),
+          }),
+        }),
       }),
     ];
 
@@ -92,7 +108,7 @@ export default () => {
       url: HASURA_GRAPHQL_ENDPOINT,
       exchanges,
     });
-  }, [JWTpayload, accessToken, refreshToken, setAccessToken, setRefreshToken]);
+  }, [JWTpayload, accessToken, refreshToken, setAuthData]);
 
   return client;
 };

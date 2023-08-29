@@ -2,7 +2,7 @@ import { history } from "@vitjs/runtime";
 import { message } from "antd";
 import { useDeepCompareEffect } from "ahooks";
 
-import type { OperationResult } from "urql";
+import type { UseMutationState } from "urql";
 
 const noop = () => {};
 const DEFAULT_SUCCESS = "Succefully finished";
@@ -16,7 +16,7 @@ type Meta = {
 type Callback = (data: any, error?: any) => void;
 
 const useCheckResponse = (
-  response: OperationResult,
+  response: UseMutationState,
   cb: Callback = noop,
   meta: Meta = {}
 ) => {

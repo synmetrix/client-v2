@@ -64,7 +64,10 @@
     "close": "Close",
     "run": "Run",
     "sql_runner": "SQL Runner",
-    "branch": "Branch"
+    "branch": "Branch",
+    "author": "Author",
+    "checksum": "Checksum",
+    "restore": "Restore"
   },
   "form": {
     "labels": {

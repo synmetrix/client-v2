@@ -6,17 +6,12 @@ import { useResponsive } from "ahooks";
 import cn from "classnames";
 
 import Button from "@/components/Button";
+import type { File } from "@/types/file";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 import type { editor } from "monaco-editor";
-
-interface File {
-  name: string;
-  language: string;
-  value: string;
-}
 
 interface CodeEditorProps {
   files: Record<string, File>;

@@ -14,7 +14,7 @@ import type { FC } from "react";
 import type { editor } from "monaco-editor";
 
 interface CodeEditorProps {
-  files: Record<string, File>;
+  files: Record<string, File> | null;
   onRemove: (fileName: string) => void;
 }
 
@@ -23,10 +23,13 @@ const MONACO_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
   automaticLayout: true,
   contextmenu: true,
   fontFamily: "monospace",
-  fontSize: 14,
   lineHeight: 24,
   hideCursorInOverviewRuler: true,
   matchBrackets: "always",
+  fontLigatures: "",
+  detectIndentation: true,
+  insertSpaces: true,
+  tabSize: 3,
   minimap: {
     enabled: false,
   },
@@ -42,13 +45,20 @@ const CodeEditor: FC<CodeEditorProps> = ({ files, onRemove }) => {
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
-  const [activeFile, setActiveFile] = useState<File>(
-    files[Object.keys(files)[0]]
-  );
+  const [activeFile, setActiveFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    const fileNames = files ? Object.keys(files) : null;
+    if (fileNames) {
+      const lastFileName = fileNames.at(-1) || fileNames[0];
+      const lastFile = files?.[lastFileName] || null;
+      setActiveFile(lastFile);
+    }
+  }, [files]);
 
   const defaultButtons = [
     <Button className={styles.btn} key="sqlrunner">
-      {t("common:wrods.sql_runner")}
+      {t("common:words.sql_runner")}
     </Button>,
     <Button className={styles.run} type="primary" key="run">
       {t("common:words.run")}
@@ -60,47 +70,50 @@ const CodeEditor: FC<CodeEditorProps> = ({ files, onRemove }) => {
 
   return (
     <div className={styles.wrapper}>
-      <Row className={styles.nav} align="bottom" gutter={16}>
-        <Col
-          className={styles.navBtns}
-          span={24}
-          lg={22}
-          order={isMobile ? 1 : -1}
-        >
-          <Space size={16}>
-            {Object.keys(files).map((fileName) => (
-              <Button
-                type="default"
-                key={fileName}
-                className={cn(styles.btn, {
-                  [styles.active]: fileName === activeFile.name,
-                })}
-                onClick={() => setActiveFile(files[fileName])}
-              >
-                {fileName}
-                <Tooltip title={t("common:words.close")}>
-                  <CloseOutlined
-                    className={styles.closeIcon}
-                    onClick={() => onRemove(fileName)}
-                  />
-                </Tooltip>
-              </Button>
-            ))}
+      <Row
+        className={styles.nav}
+        justify="space-between"
+        align="middle"
+        gutter={16}
+      >
+        <Col className={styles.navBtns} order={isMobile ? 1 : -1}>
+          <Space size={16} align="center">
+            {files &&
+              Object.keys(files).map((fileName) => (
+                <Button
+                  type="default"
+                  key={fileName}
+                  className={cn(styles.btn, {
+                    [styles.active]: fileName === activeFile?.name,
+                  })}
+                  onClick={() => setActiveFile(files[fileName])}
+                >
+                  {fileName}
+                  <Tooltip title={t("common:words.close")}>
+                    <CloseOutlined
+                      className={styles.closeIcon}
+                      onClick={() => onRemove(fileName)}
+                    />
+                  </Tooltip>
+                </Button>
+              ))}
             {defaultButtons}
           </Space>
         </Col>
 
-        <Col span={24} lg={1} order={isMobile ? -1 : 1}>
+        <Col order={isMobile ? -1 : 1}>
           <Button className={styles.save}>{t("common:words.save")}</Button>
         </Col>
       </Row>
-      <Editor
-        height={"100vh"}
-        defaultLanguage={activeFile.language}
-        defaultValue={activeFile.value}
-        path={activeFile.name}
-        options={MONACO_OPTIONS}
-      />
+      {activeFile && (
+        <Editor
+          height="300px"
+          defaultLanguage={activeFile.language}
+          defaultValue={activeFile.value}
+          path={activeFile.name}
+          options={MONACO_OPTIONS}
+        />
+      )}
     </div>
   );
 };

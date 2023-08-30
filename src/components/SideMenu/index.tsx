@@ -4,49 +4,62 @@ import cn from "classnames";
 
 import Sidebar from "@/components/Sidebar";
 import Button from "@/components/Button";
-
-import { items } from "../../mocks/sideMenu";
+import { items } from "@/mocks/sideMenu";
 
 import styles from "./index.module.less";
 
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 
 const { Sider } = Layout;
 
 const { Title } = Typography;
 
-const SideMenu: FC = () => {
+interface SideMenuProps {
+  pageSidebar?: {
+    header: ReactNode;
+    children: ReactNode;
+    trigger: string;
+  };
+}
+
+const SideMenu: FC<SideMenuProps> = ({ pageSidebar }) => {
   const windowSize = useResponsive();
   const isMobile = windowSize.sm === false;
 
-  const [open, setOpen] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
 
   const onClick = (index: number) => {
-    if (open === index || items[index].href) {
-      setOpen(null);
+    if (selected === index) {
+      setSelected(null);
     } else {
-      setOpen(index);
+      setSelected(index);
     }
   };
 
-  const links =
-    open !== null
-      ? items[open].items?.map((i) => (
+  const content =
+    selected !== null
+      ? items[selected].items?.map((i) => (
           <Button className={styles.link} href={i.href} key={i.key} type="text">
             <Space>
               {i.icon} {i.label}
             </Space>
           </Button>
-        ))
+        )) || pageSidebar?.children
       : null;
 
   const header =
-    open !== null ? (
+    selected !== null ? (
       <Space className={styles.header} size={7} align="center">
-        {items[open].activeIcon || items[open].icon}
-        <Title className={styles.title} level={4}>
-          {items[open].label}
-        </Title>
+        {items[selected].items ? (
+          <>
+            {items[selected].activeIcon || items[selected].icon}
+            <Title className={styles.title} level={4}>
+              {items[selected].label}
+            </Title>
+          </>
+        ) : (
+          pageSidebar?.header
+        )}
       </Space>
     ) : null;
 
@@ -56,7 +69,7 @@ const SideMenu: FC = () => {
       collapsedWidth={isMobile ? "100%" : 371}
       className={styles.wrapper}
       collapsible
-      collapsed={open !== null}
+      collapsed={!!content}
       trigger={null}
     >
       <Space className={styles.inner} size={0} align="center">
@@ -69,28 +82,29 @@ const SideMenu: FC = () => {
               className={cn(styles.btn, isMobile && styles.mobile)}
               type="text"
               href={i.href}
-              onClick={() => onClick(idx)}
+              onClick={(e) => {
+                if (i.key === pageSidebar?.trigger) e.preventDefault();
+                onClick(idx);
+              }}
             >
               {i.icon}
               <span className={styles.label}>{i.label}</span>
             </Button>
           ))}
         </div>
-
-        {links &&
-          (isMobile ? (
-            <Drawer
-              open={open !== null}
-              onClose={() => setOpen(null)}
-              placement="left"
-              width={270}
-              title={header}
-            >
-              {links}
-            </Drawer>
-          ) : (
-            <Sidebar title={header}>{links}</Sidebar>
-          ))}
+        {isMobile ? (
+          <Drawer
+            open={selected !== null}
+            onClose={() => setSelected(null)}
+            placement="left"
+            width={270}
+            title={header}
+          >
+            {content}
+          </Drawer>
+        ) : (
+          <Sidebar title={header}>{content}</Sidebar>
+        )}
       </Space>
     </Sider>
   );

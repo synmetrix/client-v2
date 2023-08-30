@@ -56,7 +56,6 @@
     "react-fast-marquee": "^1.5.2",
     "react-hook-form": "^7.45.1",
     "react-i18next": "^13.0.1",
-    "react-monaco-editor": "^0.54.0",
     "swiper": "^10.0.4",
     "zustand": "^4.4.1"
   },
@@ -75,6 +74,7 @@
     "@storybook/addon-interactions": "^7.2.0",
     "@storybook/addon-links": "^7.2.0",
     "@storybook/addon-mdx-gfm": "^7.2.0",
+    "@storybook/builder-vite": "^7.4.0",
     "@storybook/react": "^7.2.0",
     "@storybook/react-vite": "^7.2.0",
     "@storybook/testing-library": "^0.2.0",
@@ -106,6 +106,7 @@
     "lint-staged": ">=13",
     "rollup-plugin-visualizer": "^5.9.0",
     "storybook": "^7.2.0",
+    "storybook-addon-code-editor": "^2.2.0",
     "typescript": "^5.0.4",
     "unplugin-auto-import": "^0.15.3",
     "vite": "^4.3.1",

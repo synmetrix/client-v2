@@ -1,6 +1,8 @@
 import { Dropdown, Space } from "antd";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
+import { useResponsive } from "ahooks";
 import { useTranslation } from "react-i18next";
+import cn from "classnames";
 
 import Button from "@/components/Button";
 import Select from "@/components/Select";
@@ -15,7 +17,7 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 import type { MenuProps } from "antd";
 
-interface ModelsSidebarProps {
+export interface ModelsSidebarProps {
   branches: string[];
   docs: string;
   version: string;
@@ -35,27 +37,31 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   onSetDefaultVersion,
 }) => {
   const { t } = useTranslation(["models", "common"]);
+  const windowSize = useResponsive();
+  const isMobile = windowSize.md === false;
 
-  const [branchMenu, setBrahcnMenu] = useState<boolean>(false);
-  const [searchMenu, setSearchMenu] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
 
   const items: MenuProps["items"] = [
     {
-      label: "Menu",
+      label: <span>Menu</span>,
       key: "1",
+      title: "",
     },
     {
-      label: "Items",
+      label: <span>Items</span>,
       key: "2",
+      title: "",
     },
     {
-      label: "Will be",
+      label: <span>Will be</span>,
       key: "3",
+      title: "",
     },
     {
-      label: "Here",
+      label: <span>Here</span>,
       key: "4",
+      title: "",
     },
   ];
 
@@ -66,7 +72,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
           <div className={styles.label}>{t("common:words.branch")}:</div>
 
           <Select
-            className={styles.select}
+            className={cn(styles.select, isMobile && styles.selectMobile)}
             prefixIcon={<BranchIcon />}
             size="large"
             defaultValue={branches.find((b) => b.includes("default"))}
@@ -81,20 +87,16 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
         <Dropdown
           className={styles.dropdown}
+          trigger={["click"]}
           menu={{
             items: items.map((i) => ({
               ...i,
-              onClick: () => setBrahcnMenu(false),
             })) as MenuProps["items"],
           }}
           placement="bottomRight"
           arrow
-          open={branchMenu}
         >
-          <Button
-            type="ghost"
-            onClick={() => setBrahcnMenu((prevState) => !prevState)}
-          >
+          <Button type="ghost">
             <VerticalDots />
           </Button>
         </Dropdown>
@@ -130,26 +132,24 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
           />
           <Button
             className={styles.addFile}
-            onClick={() => searchValue && onCreateFile(searchValue)}
+            onClick={() =>
+              searchValue?.includes(".") && onCreateFile(searchValue)
+            }
           >
             <PlusOutlined className={styles.plusIcon} />
           </Button>
 
           <Dropdown
+            trigger={["click"]}
             menu={{
               items: items.map((i) => ({
                 ...i,
-                onClick: () => setSearchMenu(false),
               })) as MenuProps["items"],
             }}
             placement="bottomRight"
             arrow
-            open={searchMenu}
           >
-            <Button
-              type="ghost"
-              onClick={() => setSearchMenu((prevState) => !prevState)}
-            >
+            <Button type="ghost">
               <VerticalDots />
             </Button>
           </Dropdown>

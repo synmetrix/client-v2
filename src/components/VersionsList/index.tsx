@@ -6,6 +6,7 @@ import Button from "@/components/Button";
 import Copy from "@/components/Copy";
 import type { User } from "@/types/user";
 import type { File } from "@/types/file";
+import type { Version } from "@/types/version";
 
 import DocsIcon from "@/assets/docs.svg";
 import YAMLIcon from "@/assets/yml-flie.svg";
@@ -16,14 +17,6 @@ import type { FC } from "react";
 import type { TableProps } from "antd";
 
 const { Title } = Typography;
-
-interface Version {
-  id: string;
-  checksum: string;
-  author: User;
-  createdAt: string;
-  files: File[];
-}
 
 interface VersionsListProps {
   versions: Version[];

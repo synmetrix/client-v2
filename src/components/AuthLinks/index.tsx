@@ -22,7 +22,7 @@ const AuthLinks: FC<AuthLinksProps> = ({ page }) => {
         <Button
           className={styles.btn}
           type={page === "signup" ? "primary" : "link"}
-          onClick={() => setLocation("signin")}
+          onClick={() => setLocation("/signin")}
         >
           {page === "signup"
             ? t("common:words.login")
@@ -33,7 +33,7 @@ const AuthLinks: FC<AuthLinksProps> = ({ page }) => {
         <Button
           className={styles.btn}
           type="primary"
-          onClick={() => setLocation("signup")}
+          onClick={() => setLocation("/signup")}
         >
           {t("common:words.sign_up")}
         </Button>

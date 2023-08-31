@@ -11,6 +11,7 @@ import type {
 } from "@/types/dataSource";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import DataSourceStore from "@/stores/DataSourceStore";
 
 import styles from "./index.module.less";
 
@@ -24,7 +25,7 @@ interface DataSourceSetupProps {
   onSubmit: (values: DataSourceSetupForm) => void;
   onGoBack: () => void;
   onSkip: () => void;
-  onTestConnection: () => void;
+  onTestConnection: (data: DataSourceSetupForm) => void;
   initialValue?: DataSourceSetupForm;
 }
 
@@ -38,6 +39,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
   initialValue,
 }) => {
   const { t } = useTranslation(["dataSetupForm", "common"]);
+  const { editId } = DataSourceStore();
 
   const [error] = useState<boolean>(false);
 
@@ -99,16 +101,18 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 
         <Row align="middle" justify="space-between">
           <Col xs={24} md={18}>
-            <Button
-              className={cn(styles.back, {
-                [styles.fullwidth]: !windowSize.md,
-              })}
-              size="large"
-              color="primary"
-              onClick={onGoBack}
-            >
-              {t("common:words.back")}
-            </Button>
+            {!editId && (
+              <Button
+                className={cn(styles.back, {
+                  [styles.fullwidth]: !windowSize.md,
+                })}
+                size="large"
+                color="primary"
+                onClick={onGoBack}
+              >
+                {t("common:words.back")}
+              </Button>
+            )}
             <Button
               className={cn(styles.submit, {
                 [styles.fullwidth]: !windowSize.md,
@@ -119,7 +123,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
               htmlType="submit"
               onClick={handleSubmit(onSubmit)}
             >
-              {t("common:words.apply")}
+              {editId ? t("common:words.save") : t("common:words.apply")}
             </Button>
 
             <Button
@@ -127,7 +131,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
                 [styles.fullwidth]: !windowSize.md,
               })}
               type="link"
-              onClick={onTestConnection}
+              onClick={handleSubmit(onTestConnection)}
             >
               {t("common:words.test_connection")}
             </Button>
@@ -138,15 +142,17 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             md={6}
             className={cn(styles.skip, { [styles.center]: !windowSize.md })}
           >
-            <Button
-              className={cn(styles.link, {
-                [styles.fullwidth]: !windowSize.md,
-              })}
-              type="link"
-              onClick={onSkip}
-            >
-              {t("common:words.skip")}
-            </Button>
+            {!editId && (
+              <Button
+                className={cn(styles.link, {
+                  [styles.fullwidth]: !windowSize.md,
+                })}
+                type="link"
+                onClick={onSkip}
+              >
+                {t("common:words.skip")}
+              </Button>
+            )}
           </Col>
         </Row>
       </Form>

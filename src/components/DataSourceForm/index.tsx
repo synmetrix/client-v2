@@ -1,56 +1,69 @@
-import { Card } from "antd";
+import { Card, Spin, Alert } from "antd";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 
 import StepFormHeader from "@/components/StepFormHeader";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import DataSourceFormBody from "@/components/DataSourceFormBody";
-import type { DataSourceForm as DataSourceFormType } from "@/types/dataSource";
+import type {
+  ApiSetupForm,
+  DataSourceSetupForm,
+  DynamicForm,
+} from "@/types/dataSource";
+import DataSourceStore from "@/stores/DataSourceStore";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
 interface DataSourceFormProps {
-  onFinish: (data: DataSourceFormType) => void;
+  onFinish: (data: ApiSetupForm) => void;
+  onTestConnection?: (data: DataSourceSetupForm) => void;
+  onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
+  onDataModelGenerationSubmit?: (data: DynamicForm) => void;
   withSteps?: boolean;
   bordered?: boolean;
   shadow?: boolean;
 }
 
 const DataSourceForm: FC<DataSourceFormProps> = ({
-  onFinish,
+  onFinish = () => {},
+  onTestConnection = () => {},
+  onDataSourceSetupSubmit = () => {},
+  onDataModelGenerationSubmit = () => {},
   withSteps = false,
   bordered = true,
   shadow = true,
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const [formData, setFormData] = useState<DataSourceFormType>({});
-  const [step, setStep] = useState<number>(0);
+  const { step, setStep, loading, error, message } = DataSourceStore();
 
   return (
     <Card
       style={shadow === false ? { boxShadow: "0 0 0 0" } : undefined}
       bordered={bordered}
     >
-      {withSteps && (
-        <div className={styles.header}>
-          <StepFormHeader
-            currentStep={step}
-            steps={[t("step1"), t("step2"), t("step3"), t("step4")]}
-            onChange={setStep}
+      <Spin spinning={loading}>
+        {withSteps && (
+          <div className={styles.header}>
+            <StepFormHeader
+              currentStep={step}
+              steps={[t("step1"), t("step2"), t("step3"), t("step4")]}
+              onChange={setStep}
+            />
+          </div>
+        )}
+        <Suspense fallback={<BouncingDotsLoader />}>
+          <DataSourceFormBody
+            onFinish={onFinish}
+            onTestConnection={onTestConnection}
+            onDataSourceSetupSubmit={onDataSourceSetupSubmit}
+            onDataModelGenerationSubmit={onDataModelGenerationSubmit}
           />
-        </div>
-      )}
-      <Suspense fallback={<BouncingDotsLoader />}>
-        <DataSourceFormBody
-          step={step}
-          setStep={setStep}
-          formState={formData}
-          setState={setFormData}
-          onFinish={onFinish}
-        />
-      </Suspense>
+        </Suspense>
+        {error && <Alert message={error} type="error" />}
+        {message && <Alert message={message} type="success" />}
+      </Spin>
     </Card>
   );
 };

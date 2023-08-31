@@ -19,8 +19,16 @@ export default [
                 component: "./pages/SignIn",
               },
               {
-                path: "/datasources",
-                component: "./pages/DataSources",
+                path: "/settings",
+                routes: [
+                  {
+                    path: "/settings/sources",
+                    component: "./pages/DataSources",
+                  },
+                  {
+                    component: "./pages/404",
+                  },
+                ],
               },
               {
                 component: "./pages/404",

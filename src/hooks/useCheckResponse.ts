@@ -1,8 +1,8 @@
-import { useHistory } from "@vitjs/runtime";
+import { history } from "@vitjs/runtime";
 import { message } from "antd";
 import { useDeepCompareEffect } from "ahooks";
 
-import type { MutationResult, QueryResult } from "@apollo/client";
+import type { UseMutationState } from "urql";
 
 const noop = () => {};
 const DEFAULT_SUCCESS = "Succefully finished";
@@ -16,12 +16,10 @@ type Meta = {
 type Callback = (data: any, error?: any) => void;
 
 const useCheckResponse = (
-  response: MutationResult | QueryResult,
+  response: UseMutationState,
   cb: Callback = noop,
   meta: Meta = {}
 ) => {
-  const history = useHistory();
-
   const { successMessage = DEFAULT_SUCCESS, errorMessage = DEFAULT_FAILURE } =
     meta;
 
@@ -32,9 +30,8 @@ const useCheckResponse = (
       }
 
       cb(response.data);
-      response.data = undefined;
     }
-  }, [cb, response.data, successMessage]);
+  }, [response.data]);
 
   useDeepCompareEffect(() => {
     if (response.error) {
@@ -46,10 +43,8 @@ const useCheckResponse = (
 
       message.error(responseMessage || errorMessage);
       cb(null, response.error);
-
-      response.error = undefined;
     }
-  }, [cb, errorMessage, response.error, history]);
+  }, [response.error]);
 };
 
 export default useCheckResponse;

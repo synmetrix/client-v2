@@ -20,12 +20,17 @@ const Template: StoryFn<typeof DataSourceCard> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  id: "1",
-  type: {
+  dataSource: {
+    id: "1",
+    type: {
+      name: "Clickhouse",
+      icon: <CickHouseIcon />,
+    },
     name: "Clickhouse",
-    icon: <CickHouseIcon />,
+    dbParams: {
+      host: "gh-api.clickhouse.tech",
+    },
+    updatedAt: "02.11.2022/ 3:32 PM",
+    createdAt: "02.11.2022/ 3:32 PM",
   },
-  host: "gh-api.clickhouse.tech",
-  updatedAt: "02.11.2022/ 3:32 PM",
-  createdAt: "02.11.2022/ 3:32 PM",
 };

@@ -115,7 +115,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
           <Input
             control={control}
             name="type"
-            defaultValue={initialValue.type}
+            defaultValue={initialValue.type || "yml"}
             fieldType="radio"
             optionType="button"
             options={options}

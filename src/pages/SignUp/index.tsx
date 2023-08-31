@@ -23,7 +23,7 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    setLocation("datasources");
+    setLocation("/settings/sources");
   };
 
   return (

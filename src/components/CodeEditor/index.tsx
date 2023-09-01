@@ -107,7 +107,7 @@ const CodeEditor: FC<CodeEditorProps> = ({ files, onRemove }) => {
       </Row>
       {activeFile && (
         <Editor
-          height="300px"
+          className={styles.monaco}
           defaultLanguage={activeFile.language}
           defaultValue={activeFile.value}
           path={activeFile.name}

@@ -1,15 +1,11 @@
 import type { DataSourceInfo } from "./dataSource";
+import type { Team } from "./team";
 
 export interface User {
   id: string;
-  displayName?: string | null;
-  email?: string;
-  avatarUrl?: string | null;
-  teams?: Team[];
-  dataSources?: DataSourceInfo[];
-}
-
-export interface Team {
-  id: string;
-  name: string;
+  displayName?: string;
+  email: string;
+  avatarUrl?: string;
+  teams: Team[];
+  dataSources: DataSourceInfo[];
 }

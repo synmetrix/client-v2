@@ -1,7 +1,7 @@
 import RootLayout from "@/layouts/RootLayout";
 import { teams } from "@/mocks/teams";
 
-import Teams from ".";
+import { Teams } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 

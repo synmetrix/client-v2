@@ -7,6 +7,7 @@ import Avatar, { AvatarGroup } from "@/components/Avatar";
 import Button from "@/components/Button";
 import type { User } from "@/types/user";
 import type { Team } from "@/types/team";
+import formatTime from "@/utils/helpers/formatTime";
 
 import TrashIcon from "@/assets/trash.svg";
 
@@ -20,7 +21,7 @@ type TeamId = string;
 interface TeamsTableProps {
   teams: Team[];
   currentTeam?: TeamId;
-  onRemove: (team: Team) => void;
+  onRemove: (id: string) => void;
   onEdit: (team: Team) => void;
 }
 
@@ -85,7 +86,9 @@ const TeamsTable: FC<TeamsTableProps> = ({
       dataIndex: "createdAt",
       key: "createdAt",
       render: (value) => (
-        <span className={cn(styles.cell, styles.dateCell)}>{value}</span>
+        <span className={cn(styles.cell, styles.dateCell)}>
+          {formatTime(value)}
+        </span>
       ),
     },
     {
@@ -109,7 +112,7 @@ const TeamsTable: FC<TeamsTableProps> = ({
           <Button
             className={styles.action}
             type="text"
-            onClick={() => onRemove(record)}
+            onClick={() => onRemove(record.id)}
           >
             <TrashIcon />
           </Button>

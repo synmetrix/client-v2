@@ -1,24 +1,29 @@
-import type { User } from "./user";
-
 export enum Roles {
   owner,
+  admin,
   role,
+}
+
+export interface TeamRole {
+  id: string;
+  name: Roles;
 }
 
 export interface Member {
   email: string;
-  role: string;
-  id?: string;
+  role: TeamRole;
+  id: string;
   displayName?: string;
 }
 
 export interface Team {
   id: string;
   name: string;
-  members: User[];
+  members: Member[];
   createdAt: string;
 }
 
 export interface TeamSettingsForm {
+  id?: string;
   name: string;
 }

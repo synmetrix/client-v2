@@ -20,7 +20,7 @@ export const Default = Template.bind({});
 Default.args = {
   initialValue: {
     email: "email@email.ge",
-    fullName: "Full Name",
+    displayName: "Full Name",
   },
   onSubmit: console.log,
 };

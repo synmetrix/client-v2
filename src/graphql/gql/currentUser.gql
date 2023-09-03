@@ -3,6 +3,9 @@ query CurrentUser ($id: uuid!) {
     id
     display_name
     avatar_url
+    account {
+      email
+    }
 
     datasources {
       id
@@ -26,9 +29,23 @@ query CurrentUser ($id: uuid!) {
     members(
       order_by: { created_at: desc }
     ) {
+      member_roles {
+        id
+        team_role
+      }
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
       team {
         id
         name
+        created_at
+        updated_at
       }
     }
   }
@@ -39,6 +56,9 @@ subscription SubCurrentUser ($id: uuid!) {
     id
     display_name
     avatar_url
+    account {
+      email
+    }
 
     datasources {
       id
@@ -62,9 +82,23 @@ subscription SubCurrentUser ($id: uuid!) {
     members(
       order_by: { created_at: desc }
     ) {
+      member_roles {
+        id
+        team_role
+      }
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
       team {
         id
         name
+        created_at
+        updated_at
       }
     }
   }

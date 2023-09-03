@@ -5,5 +5,8 @@
     "title": "You have no teams yet",
     "text": "Please create team for manage roles.",
     "btn": "Create New Team"
-  }
+  },
+  "team_created": "Team created.",
+  "team_updated": "Team updated.",
+  "team_deleted": "Team deleted."
 }

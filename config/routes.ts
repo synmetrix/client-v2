@@ -26,6 +26,14 @@ export default [
                     component: "./pages/DataSources",
                   },
                   {
+                    path: "/settings/teams",
+                    component: "./pages/Teams",
+                  },
+                  {
+                    path: "/settings/members",
+                    component: "./pages/Members",
+                  },
+                  {
                     component: "./pages/404",
                   },
                 ],

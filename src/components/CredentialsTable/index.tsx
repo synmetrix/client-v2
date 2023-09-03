@@ -16,7 +16,7 @@ import type { FC } from "react";
 interface DataSourceCrdentials {
   id: string;
   member: {
-    fullName: string;
+    displayName: string;
     avatar?: string;
   };
   dataSource: DataSource;

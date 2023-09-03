@@ -5,23 +5,27 @@ import { useForm } from "react-hook-form";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
-import { Roles } from "@/types/team";
-import type { Member } from "@/types/team";
+import { Team_Roles_Enum } from "@/graphql/generated";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
+export interface Invite {
+  email: string;
+  role: Team_Roles_Enum;
+}
+
 interface MembersFormProps {
-  onSubmit: (data: Member) => void;
-  initialValue?: Member;
+  onSubmit: (data: Invite) => void;
+  initialValue?: Invite;
 }
 
 const { Title } = Typography;
 
 const MembersForm: FC<MembersFormProps> = ({ onSubmit, initialValue }) => {
   const { t } = useTranslation(["settings", "common"]);
-  const { control, handleSubmit } = useForm<Member>({
+  const { control, handleSubmit } = useForm<Invite>({
     values: initialValue,
   });
 
@@ -43,7 +47,7 @@ const MembersForm: FC<MembersFormProps> = ({ onSubmit, initialValue }) => {
             name="role"
             control={control}
             fieldType="select"
-            options={createRoleOptions(Roles)}
+            options={createRoleOptions(Team_Roles_Enum)}
           />
         </Col>
       </Row>

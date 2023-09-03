@@ -11145,6 +11145,7 @@ export type CurrentUserQuery = {
     id: any;
     display_name?: string | null;
     avatar_url?: string | null;
+    account?: { __typename?: "auth_accounts"; email?: any | null } | null;
     datasources: {
       __typename?: "datasources";
       id: any;
@@ -11164,7 +11165,25 @@ export type CurrentUserQuery = {
     }[];
     members: {
       __typename?: "members";
-      team: { __typename?: "teams"; id: any; name: string };
+      member_roles: {
+        __typename?: "member_roles";
+        id: any;
+        team_role: Team_Roles_Enum;
+      }[];
+      user: {
+        __typename?: "users";
+        id: any;
+        avatar_url?: string | null;
+        display_name?: string | null;
+        account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+      };
+      team: {
+        __typename?: "teams";
+        id: any;
+        name: string;
+        created_at: any;
+        updated_at: any;
+      };
     }[];
   } | null;
 };
@@ -11180,6 +11199,7 @@ export type SubCurrentUserSubscription = {
     id: any;
     display_name?: string | null;
     avatar_url?: string | null;
+    account?: { __typename?: "auth_accounts"; email?: any | null } | null;
     datasources: {
       __typename?: "datasources";
       id: any;
@@ -11199,7 +11219,25 @@ export type SubCurrentUserSubscription = {
     }[];
     members: {
       __typename?: "members";
-      team: { __typename?: "teams"; id: any; name: string };
+      member_roles: {
+        __typename?: "member_roles";
+        id: any;
+        team_role: Team_Roles_Enum;
+      }[];
+      user: {
+        __typename?: "users";
+        id: any;
+        avatar_url?: string | null;
+        display_name?: string | null;
+        account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+      };
+      team: {
+        __typename?: "teams";
+        id: any;
+        name: string;
+        created_at: any;
+        updated_at: any;
+      };
     }[];
   } | null;
 };
@@ -11392,6 +11430,125 @@ export type InsertSqlCredentialsMutation = {
   } | null;
 };
 
+export type MembersQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Members_Bool_Exp>;
+  order_by?: InputMaybe<Members_Order_By[] | Members_Order_By>;
+}>;
+
+export type MembersQuery = {
+  __typename?: "query_root";
+  members: {
+    __typename?: "members";
+    id: any;
+    user: { __typename?: "users"; id: any; display_name?: string | null };
+    member_roles: {
+      __typename?: "member_roles";
+      id: any;
+      team_role: Team_Roles_Enum;
+      access_list?: {
+        __typename?: "access_lists";
+        id: any;
+        name: string;
+      } | null;
+    }[];
+  }[];
+};
+
+export type UpdateMemberMutationVariables = Exact<{
+  pk_columns: Members_Pk_Columns_Input;
+  _set: Members_Set_Input;
+}>;
+
+export type UpdateMemberMutation = {
+  __typename?: "mutation_root";
+  update_members_by_pk?: { __typename?: "members"; id: any } | null;
+};
+
+export type UpdateMemberRoleMutationVariables = Exact<{
+  pk_columns: Member_Roles_Pk_Columns_Input;
+  _set: Member_Roles_Set_Input;
+}>;
+
+export type UpdateMemberRoleMutation = {
+  __typename?: "mutation_root";
+  update_member_roles_by_pk?: { __typename?: "member_roles"; id: any } | null;
+};
+
+export type DeleteMemberMutationVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type DeleteMemberMutation = {
+  __typename?: "mutation_root";
+  delete_members_by_pk?: { __typename?: "members"; id: any } | null;
+};
+
+export type InviteMemberMutationVariables = Exact<{
+  email: Scalars["String"];
+  teamId: Scalars["uuid"];
+  role?: InputMaybe<Scalars["String"]>;
+}>;
+
+export type InviteMemberMutation = {
+  __typename?: "mutation_root";
+  invite_team_member?: {
+    __typename?: "InviteTeamMemberOutput";
+    memberId?: any | null;
+  } | null;
+};
+
+export type CreateTeamMutationVariables = Exact<{
+  name: Scalars["String"];
+}>;
+
+export type CreateTeamMutation = {
+  __typename?: "mutation_root";
+  create_team?: {
+    __typename?: "CreateTeamOutput";
+    id?: any | null;
+    name?: string | null;
+  } | null;
+};
+
+export type EditTeamMutationVariables = Exact<{
+  pk_columns: Teams_Pk_Columns_Input;
+  _set: Teams_Set_Input;
+}>;
+
+export type EditTeamMutation = {
+  __typename?: "mutation_root";
+  update_teams_by_pk?: { __typename?: "teams"; id: any; name: string } | null;
+};
+
+export type DeleteTeamMutationVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type DeleteTeamMutation = {
+  __typename?: "mutation_root";
+  delete_teams_by_pk?: { __typename?: "teams"; id: any } | null;
+};
+
+export type CurrentTeamQueryVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type CurrentTeamQuery = {
+  __typename?: "query_root";
+  teams_by_pk?: {
+    __typename?: "teams";
+    id: any;
+    created_at: any;
+    updated_at: any;
+    members: {
+      __typename?: "members";
+      user: { __typename?: "users"; display_name?: string | null };
+    }[];
+  } | null;
+};
+
 export type GetUsersQueryVariables = Exact<Record<string, never>>;
 
 export type GetUsersQuery = {
@@ -11405,6 +11562,9 @@ export const CurrentUserDocument = gql`
       id
       display_name
       avatar_url
+      account {
+        email
+      }
       datasources {
         id
         name
@@ -11424,9 +11584,23 @@ export const CurrentUserDocument = gql`
         }
       }
       members(order_by: { created_at: desc }) {
+        member_roles {
+          id
+          team_role
+        }
+        user {
+          id
+          avatar_url
+          display_name
+          account {
+            email
+          }
+        }
         team {
           id
           name
+          created_at
+          updated_at
         }
       }
     }
@@ -11447,6 +11621,9 @@ export const SubCurrentUserDocument = gql`
       id
       display_name
       avatar_url
+      account {
+        email
+      }
       datasources {
         id
         name
@@ -11466,9 +11643,23 @@ export const SubCurrentUserDocument = gql`
         }
       }
       members(order_by: { created_at: desc }) {
+        member_roles {
+          id
+          team_role
+        }
+        user {
+          id
+          avatar_url
+          display_name
+          account {
+            email
+          }
+        }
         team {
           id
           name
+          created_at
+          updated_at
         }
       }
     }
@@ -11753,6 +11944,170 @@ export function useInsertSqlCredentialsMutation() {
     InsertSqlCredentialsMutationVariables
   >(InsertSqlCredentialsDocument);
 }
+export const MembersDocument = gql`
+  query Members(
+    $offset: Int
+    $limit: Int
+    $where: members_bool_exp
+    $order_by: [members_order_by!]
+  ) {
+    members(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+      user {
+        id
+        display_name
+      }
+      member_roles {
+        id
+        team_role
+        access_list {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+export function useMembersQuery(
+  options?: Omit<Urql.UseQueryArgs<MembersQueryVariables>, "query">
+) {
+  return Urql.useQuery<MembersQuery, MembersQueryVariables>({
+    query: MembersDocument,
+    ...options,
+  });
+}
+export const UpdateMemberDocument = gql`
+  mutation UpdateMember(
+    $pk_columns: members_pk_columns_input!
+    $_set: members_set_input!
+  ) {
+    update_members_by_pk(pk_columns: $pk_columns, _set: $_set) {
+      id
+    }
+  }
+`;
+
+export function useUpdateMemberMutation() {
+  return Urql.useMutation<UpdateMemberMutation, UpdateMemberMutationVariables>(
+    UpdateMemberDocument
+  );
+}
+export const UpdateMemberRoleDocument = gql`
+  mutation UpdateMemberRole(
+    $pk_columns: member_roles_pk_columns_input!
+    $_set: member_roles_set_input!
+  ) {
+    update_member_roles_by_pk(pk_columns: $pk_columns, _set: $_set) {
+      id
+    }
+  }
+`;
+
+export function useUpdateMemberRoleMutation() {
+  return Urql.useMutation<
+    UpdateMemberRoleMutation,
+    UpdateMemberRoleMutationVariables
+  >(UpdateMemberRoleDocument);
+}
+export const DeleteMemberDocument = gql`
+  mutation DeleteMember($id: uuid!) {
+    delete_members_by_pk(id: $id) {
+      id
+    }
+  }
+`;
+
+export function useDeleteMemberMutation() {
+  return Urql.useMutation<DeleteMemberMutation, DeleteMemberMutationVariables>(
+    DeleteMemberDocument
+  );
+}
+export const InviteMemberDocument = gql`
+  mutation InviteMember($email: String!, $teamId: uuid!, $role: String) {
+    invite_team_member(email: $email, teamId: $teamId, role: $role) {
+      memberId
+    }
+  }
+`;
+
+export function useInviteMemberMutation() {
+  return Urql.useMutation<InviteMemberMutation, InviteMemberMutationVariables>(
+    InviteMemberDocument
+  );
+}
+export const CreateTeamDocument = gql`
+  mutation CreateTeam($name: String!) {
+    create_team(name: $name) {
+      id
+      name
+    }
+  }
+`;
+
+export function useCreateTeamMutation() {
+  return Urql.useMutation<CreateTeamMutation, CreateTeamMutationVariables>(
+    CreateTeamDocument
+  );
+}
+export const EditTeamDocument = gql`
+  mutation EditTeam(
+    $pk_columns: teams_pk_columns_input!
+    $_set: teams_set_input!
+  ) {
+    update_teams_by_pk(pk_columns: $pk_columns, _set: $_set) {
+      id
+      name
+    }
+  }
+`;
+
+export function useEditTeamMutation() {
+  return Urql.useMutation<EditTeamMutation, EditTeamMutationVariables>(
+    EditTeamDocument
+  );
+}
+export const DeleteTeamDocument = gql`
+  mutation DeleteTeam($id: uuid!) {
+    delete_teams_by_pk(id: $id) {
+      id
+    }
+  }
+`;
+
+export function useDeleteTeamMutation() {
+  return Urql.useMutation<DeleteTeamMutation, DeleteTeamMutationVariables>(
+    DeleteTeamDocument
+  );
+}
+export const CurrentTeamDocument = gql`
+  query CurrentTeam($id: uuid!) {
+    teams_by_pk(id: $id) {
+      id
+      created_at
+      updated_at
+      members {
+        user {
+          display_name
+        }
+      }
+    }
+  }
+`;
+
+export function useCurrentTeamQuery(
+  options: Omit<Urql.UseQueryArgs<CurrentTeamQueryVariables>, "query">
+) {
+  return Urql.useQuery<CurrentTeamQuery, CurrentTeamQueryVariables>({
+    query: CurrentTeamDocument,
+    ...options,
+  });
+}
 export const GetUsersDocument = gql`
   query GetUsers {
     users {
@@ -11776,6 +12131,8 @@ export const namedOperations = {
     FetchTables: "FetchTables",
     FetchMeta: "FetchMeta",
     CurrentDataSource: "CurrentDataSource",
+    Members: "Members",
+    CurrentTeam: "CurrentTeam",
     GetUsers: "GetUsers",
   },
   Mutation: {
@@ -11786,6 +12143,13 @@ export const namedOperations = {
     DeleteDataSource: "DeleteDataSource",
     GenDataSchemas: "GenDataSchemas",
     InsertSqlCredentials: "InsertSqlCredentials",
+    UpdateMember: "UpdateMember",
+    UpdateMemberRole: "UpdateMemberRole",
+    DeleteMember: "DeleteMember",
+    InviteMember: "InviteMember",
+    CreateTeam: "CreateTeam",
+    EditTeam: "EditTeam",
+    DeleteTeam: "DeleteTeam",
   },
   Subscription: {
     SubCurrentUser: "SubCurrentUser",

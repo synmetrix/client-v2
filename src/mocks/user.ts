@@ -1,5 +1,5 @@
 export const user = {
-  fullName: "Full Name",
+  displayName: "Full Name",
   teams: [
     {
       label: "team1",

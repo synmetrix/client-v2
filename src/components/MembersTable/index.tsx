@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
-import { Roles } from "@/types/team";
 import type { Member } from "@/types/team";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
+import { Team_Roles_Enum } from "@/graphql/generated";
 
 import TrashIcon from "@/assets/trash.svg";
 
@@ -17,7 +17,7 @@ import type { TableProps } from "antd";
 
 interface MembersTableProps {
   members: Member[];
-  onRoleChange: (member: Member) => void;
+  onRoleChange: (id: string, newRole: Team_Roles_Enum) => void;
   onRemove: (member: Member) => void;
 }
 
@@ -71,10 +71,12 @@ const MembersTable: FC<MembersTableProps> = ({
           <span className={styles.cell}>
             <Select
               className={styles.select}
-              onChange={(role) => onRoleChange({ ...record, role })}
+              onChange={(role) =>
+                onRoleChange(record.role.id, role as unknown as Team_Roles_Enum)
+              }
               bordered={false}
-              value={record.role}
-              options={createRoleOptions(Roles)}
+              value={record.role.name}
+              options={createRoleOptions(Team_Roles_Enum)}
             />
           </span>
         ),

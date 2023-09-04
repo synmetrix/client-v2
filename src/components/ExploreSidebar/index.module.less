@@ -1,0 +1,79 @@
+.wrapper {
+  width: 100%;
+  max-width: 282px;
+}
+
+.dataBaseSelect {
+  width: 100%;
+  * {
+    border-color: transparent !important;
+  }
+}
+
+.space {
+  width: 100%;
+}
+
+.collapse {
+  width: 100%;
+}
+
+.panel {
+  width: 100%;
+  * {
+    background: transparent !important;
+  }
+  :global(.ant-collapse-content) {
+    padding: 14px 0;
+    background: var(--color-white) !important;
+  }
+  :global(.ant-collapse-content-box) {
+    padding-bottom: 0 !important;
+  }
+
+  :global(.ant-collapse-header) {
+    background: #470d691a !important;
+    border-radius: 6px !important;
+  }
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge {
+  * {
+    min-width: 25px;
+    color: var(--color-black);
+    background: var(--color-white) !important;
+  }
+}
+
+.collapseTitle {
+  margin-bottom: 4px;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.collapseBody {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  li {
+    margin: 4px 0;
+    padding: 0;
+    font-weight: 600;
+  }
+}
+
+.collapseIcon {
+  transition: transform 0.1s ease;
+}
+
+.collapseOpen {
+  transform: rotate(90deg);
+}

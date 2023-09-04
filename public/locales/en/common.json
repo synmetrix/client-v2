@@ -68,7 +68,8 @@
     "branch": "Branch",
     "author": "Author",
     "checksum": "Checksum",
-    "restore": "Restore"
+    "restore": "Restore",
+    "all": "all"
   },
   "form": {
     "labels": {

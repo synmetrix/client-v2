@@ -46,6 +46,20 @@ query CurrentUser ($id: uuid!) {
         name
         created_at
         updated_at
+        members {
+          member_roles {
+            id
+            team_role
+          }
+          user {
+            id
+            avatar_url
+            display_name
+            account {
+              email
+            }
+          }
+        }
       }
     }
   }
@@ -99,6 +113,20 @@ subscription SubCurrentUser ($id: uuid!) {
         name
         created_at
         updated_at
+        members {
+          member_roles {
+            id
+            team_role
+          }
+          user {
+            id
+            avatar_url
+            display_name
+            account {
+              email
+            }
+          }
+        }
       }
     }
   }

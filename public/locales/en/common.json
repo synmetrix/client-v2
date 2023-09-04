@@ -61,7 +61,8 @@
     "members": "Members",
     "current": "Current",
     "success": "Succesesful",
-    "error": "Error"
+    "error": "Error",
+    "access_list": "Access list"
   },
   "form": {
     "labels": {

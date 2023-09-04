@@ -19,7 +19,7 @@ import styles from "./index.module.less";
 
 interface TeamsProps {
   teams: Team[];
-  currentTeam: string;
+  currentTeam: Team | null;
   onCreateOrEditTeam: (data: TeamSettingsForm) => void;
   onRemoveTeam: (id: string) => void;
   loading: boolean;
@@ -88,7 +88,7 @@ export const Teams: React.FC<TeamsProps> = ({
 
 const TeamsWrapper: React.FC = () => {
   const { t } = useTranslation(["teams", "pages"]);
-  const { currentUser, currentTeamId } = CurrentUserStore();
+  const { currentUser, currentTeam } = CurrentUserStore();
   const [createMutation, execCreateMutation] = useCreateTeamMutation();
   const [updateMutation, execUpdateMutation] = useEditTeamMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteTeamMutation();
@@ -135,7 +135,7 @@ const TeamsWrapper: React.FC = () => {
   return (
     <Teams
       teams={currentUser.teams}
-      currentTeam={currentTeamId}
+      currentTeam={currentTeam}
       onCreateOrEditTeam={onCreateOrEditTeam}
       onRemoveTeam={onRemoveTeam}
       loading={loading}

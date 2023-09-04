@@ -11134,6 +11134,88 @@ export type Versions_Updates = {
   where: Versions_Bool_Exp;
 };
 
+export type AllAccessListsQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Access_Lists_Bool_Exp>;
+  order_by?: InputMaybe<Access_Lists_Order_By[] | Access_Lists_Order_By>;
+}>;
+
+export type AllAccessListsQuery = {
+  __typename?: "query_root";
+  access_lists: {
+    __typename?: "access_lists";
+    id: any;
+    name: string;
+    config: any;
+    team_id: any;
+    created_at: any;
+    updated_at: any;
+  }[];
+};
+
+export type SubAccessListsSubscriptionVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Access_Lists_Bool_Exp>;
+  order_by?: InputMaybe<Access_Lists_Order_By[] | Access_Lists_Order_By>;
+}>;
+
+export type SubAccessListsSubscription = {
+  __typename?: "subscription_root";
+  access_lists: {
+    __typename?: "access_lists";
+    id: any;
+    name: string;
+    config: any;
+    team_id: any;
+    created_at: any;
+    updated_at: any;
+  }[];
+};
+
+export type AccessListQueryVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type AccessListQuery = {
+  __typename?: "query_root";
+  access_lists_by_pk?: {
+    __typename?: "access_lists";
+    name: string;
+    config: any;
+    team_id: any;
+  } | null;
+};
+
+export type UpdateAccessListMutationVariables = Exact<{
+  pk_columns: Access_Lists_Pk_Columns_Input;
+  _set: Access_Lists_Set_Input;
+}>;
+
+export type UpdateAccessListMutation = {
+  __typename?: "mutation_root";
+  update_access_lists_by_pk?: { __typename?: "access_lists"; id: any } | null;
+};
+
+export type DeleteAccessListMutationVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type DeleteAccessListMutation = {
+  __typename?: "mutation_root";
+  delete_access_lists_by_pk?: { __typename?: "access_lists"; id: any } | null;
+};
+
+export type CreteAccessListMutationVariables = Exact<{
+  object: Access_Lists_Insert_Input;
+}>;
+
+export type CreteAccessListMutation = {
+  __typename?: "mutation_root";
+  insert_access_lists_one?: { __typename?: "access_lists"; id: any } | null;
+};
+
 export type CurrentUserQueryVariables = Exact<{
   id: Scalars["uuid"];
 }>;
@@ -11183,6 +11265,24 @@ export type CurrentUserQuery = {
         name: string;
         created_at: any;
         updated_at: any;
+        members: {
+          __typename?: "members";
+          member_roles: {
+            __typename?: "member_roles";
+            id: any;
+            team_role: Team_Roles_Enum;
+          }[];
+          user: {
+            __typename?: "users";
+            id: any;
+            avatar_url?: string | null;
+            display_name?: string | null;
+            account?: {
+              __typename?: "auth_accounts";
+              email?: any | null;
+            } | null;
+          };
+        }[];
       };
     }[];
   } | null;
@@ -11237,6 +11337,24 @@ export type SubCurrentUserSubscription = {
         name: string;
         created_at: any;
         updated_at: any;
+        members: {
+          __typename?: "members";
+          member_roles: {
+            __typename?: "member_roles";
+            id: any;
+            team_role: Team_Roles_Enum;
+          }[];
+          user: {
+            __typename?: "users";
+            id: any;
+            avatar_url?: string | null;
+            display_name?: string | null;
+            account?: {
+              __typename?: "auth_accounts";
+              email?: any | null;
+            } | null;
+          };
+        }[];
       };
     }[];
   } | null;
@@ -11442,7 +11560,12 @@ export type MembersQuery = {
   members: {
     __typename?: "members";
     id: any;
-    user: { __typename?: "users"; id: any; display_name?: string | null };
+    user: {
+      __typename?: "users";
+      id: any;
+      display_name?: string | null;
+      account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+    };
     member_roles: {
       __typename?: "member_roles";
       id: any;
@@ -11556,6 +11679,138 @@ export type GetUsersQuery = {
   users: { __typename?: "users"; id: any }[];
 };
 
+export const AllAccessListsDocument = gql`
+  query AllAccessLists(
+    $offset: Int
+    $limit: Int
+    $where: access_lists_bool_exp
+    $order_by: [access_lists_order_by!]
+  ) {
+    access_lists(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+      name
+      config
+      team_id
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export function useAllAccessListsQuery(
+  options?: Omit<Urql.UseQueryArgs<AllAccessListsQueryVariables>, "query">
+) {
+  return Urql.useQuery<AllAccessListsQuery, AllAccessListsQueryVariables>({
+    query: AllAccessListsDocument,
+    ...options,
+  });
+}
+export const SubAccessListsDocument = gql`
+  subscription SubAccessLists(
+    $offset: Int
+    $limit: Int
+    $where: access_lists_bool_exp
+    $order_by: [access_lists_order_by!]
+  ) {
+    access_lists(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+      name
+      config
+      team_id
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export function useSubAccessListsSubscription<
+  TData = SubAccessListsSubscription
+>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<SubAccessListsSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<SubAccessListsSubscription, TData>
+) {
+  return Urql.useSubscription<
+    SubAccessListsSubscription,
+    TData,
+    SubAccessListsSubscriptionVariables
+  >({ query: SubAccessListsDocument, ...options }, handler);
+}
+export const AccessListDocument = gql`
+  query AccessList($id: uuid!) {
+    access_lists_by_pk(id: $id) {
+      name
+      config
+      team_id
+    }
+  }
+`;
+
+export function useAccessListQuery(
+  options: Omit<Urql.UseQueryArgs<AccessListQueryVariables>, "query">
+) {
+  return Urql.useQuery<AccessListQuery, AccessListQueryVariables>({
+    query: AccessListDocument,
+    ...options,
+  });
+}
+export const UpdateAccessListDocument = gql`
+  mutation UpdateAccessList(
+    $pk_columns: access_lists_pk_columns_input!
+    $_set: access_lists_set_input!
+  ) {
+    update_access_lists_by_pk(pk_columns: $pk_columns, _set: $_set) {
+      id
+    }
+  }
+`;
+
+export function useUpdateAccessListMutation() {
+  return Urql.useMutation<
+    UpdateAccessListMutation,
+    UpdateAccessListMutationVariables
+  >(UpdateAccessListDocument);
+}
+export const DeleteAccessListDocument = gql`
+  mutation DeleteAccessList($id: uuid!) {
+    delete_access_lists_by_pk(id: $id) {
+      id
+    }
+  }
+`;
+
+export function useDeleteAccessListMutation() {
+  return Urql.useMutation<
+    DeleteAccessListMutation,
+    DeleteAccessListMutationVariables
+  >(DeleteAccessListDocument);
+}
+export const CreteAccessListDocument = gql`
+  mutation CreteAccessList($object: access_lists_insert_input!) {
+    insert_access_lists_one(object: $object) {
+      id
+    }
+  }
+`;
+
+export function useCreteAccessListMutation() {
+  return Urql.useMutation<
+    CreteAccessListMutation,
+    CreteAccessListMutationVariables
+  >(CreteAccessListDocument);
+}
 export const CurrentUserDocument = gql`
   query CurrentUser($id: uuid!) {
     users_by_pk(id: $id) {
@@ -11601,6 +11856,20 @@ export const CurrentUserDocument = gql`
           name
           created_at
           updated_at
+          members {
+            member_roles {
+              id
+              team_role
+            }
+            user {
+              id
+              avatar_url
+              display_name
+              account {
+                email
+              }
+            }
+          }
         }
       }
     }
@@ -11660,6 +11929,20 @@ export const SubCurrentUserDocument = gql`
           name
           created_at
           updated_at
+          members {
+            member_roles {
+              id
+              team_role
+            }
+            user {
+              id
+              avatar_url
+              display_name
+              account {
+                email
+              }
+            }
+          }
         }
       }
     }
@@ -11961,6 +12244,9 @@ export const MembersDocument = gql`
       user {
         id
         display_name
+        account {
+          email
+        }
       }
       member_roles {
         id
@@ -12126,6 +12412,8 @@ export function useGetUsersQuery(
 }
 export const namedOperations = {
   Query: {
+    AllAccessLists: "AllAccessLists",
+    AccessList: "AccessList",
     CurrentUser: "CurrentUser",
     Datasources: "Datasources",
     FetchTables: "FetchTables",
@@ -12136,6 +12424,9 @@ export const namedOperations = {
     GetUsers: "GetUsers",
   },
   Mutation: {
+    UpdateAccessList: "UpdateAccessList",
+    DeleteAccessList: "DeleteAccessList",
+    CreteAccessList: "CreteAccessList",
     CreateDataSource: "CreateDataSource",
     ValidateDataSource: "ValidateDataSource",
     UpdateDataSource: "UpdateDataSource",
@@ -12152,6 +12443,7 @@ export const namedOperations = {
     DeleteTeam: "DeleteTeam",
   },
   Subscription: {
+    SubAccessLists: "SubAccessLists",
     SubCurrentUser: "SubCurrentUser",
     AllDatasources: "AllDatasources",
   },

@@ -34,13 +34,13 @@ const Navbar: FC<NavbarProps> = ({
   username,
   userAvatar,
 }) => {
-  const { setCurrentTeam } = CurrentUserStore();
+  const { currentTeam, setCurrentTeamId } = CurrentUserStore();
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
   const { t } = useTranslation(["common"]);
 
   const onSelectTeam = (id: string) => {
-    setCurrentTeam(id);
+    setCurrentTeamId(id);
     setTeamsOpen(false);
   };
 
@@ -69,7 +69,9 @@ const Navbar: FC<NavbarProps> = ({
           <Button>
             <Space align="start">
               <TeamIcon />
-              <span className={styles.team}> {t("common:words.team")}</span>
+              <span className={styles.team}>
+                {currentTeam ? currentTeam.name : t("common:words.team")}
+              </span>
               <span className={cn(styles.icon, { [styles.rotate]: teamsOpen })}>
                 <DownOutlined />
               </span>

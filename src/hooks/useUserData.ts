@@ -12,9 +12,9 @@ import type {
   CurrentUserQuery,
 } from "@/graphql/generated";
 import type { User } from "@/types/user";
-import type { Member, TeamRole } from "@/types/team";
 import type { DataSourceInfo } from "@/types/dataSource";
 import { dbTiles } from "@/mocks/dataSources";
+import type { Team } from "@/types/team";
 
 const prepareUserData = (
   rawData: SubCurrentUserSubscription | CurrentUserQuery
@@ -22,36 +22,29 @@ const prepareUserData = (
   const rawUserData = rawData.users_by_pk || null;
 
   const teams =
-    rawUserData?.members?.reduce((acc, m) => {
-      const memberTeamId = m.team.id;
-
-      const memberData = {
-        id: m.user.id,
-        email: m?.user?.account?.email,
-        avatarUrl: m.user.avatar_url,
-        displayName: m.user.display_name,
+    rawUserData?.members?.reduce((acc: Team[], m) => {
+      const members = (m?.team?.members || []).map((member) => ({
+        id: member.user.id,
+        email: member?.user?.account?.email,
+        avatarUrl: member.user.avatar_url,
+        displayName: member.user.display_name,
         role: {
-          id: m.member_roles?.[0]?.id,
-          name: m.member_roles?.[0]?.team_role as unknown,
-        } as TeamRole,
-      } as Member;
+          id: member.member_roles?.[0]?.id,
+          name: member.member_roles?.[0]?.team_role,
+        },
+      }));
 
-      const teamIndex = acc.findIndex((t) => t.id === memberTeamId);
-      if (teamIndex !== -1) {
-        const teamMembers = acc[teamIndex].members;
-        teamMembers.push(memberData);
-      } else {
-        const newTeam = {
-          ...m.team,
-          updatedAt: m.team.updated_at,
-          createdAt: m.team.created_at,
-          members: [memberData],
-        };
-        delete newTeam.created_at;
-        delete newTeam.updated_at;
+      const newTeam = {
+        ...m.team,
+        role: m?.member_roles?.[0]?.team_role,
+        updatedAt: m.team.updated_at,
+        createdAt: m.team.created_at,
+        members,
+      };
+      delete newTeam.created_at;
+      delete newTeam.updated_at;
 
-        acc.push(newTeam);
-      }
+      acc.push(newTeam as unknown as Team);
 
       return acc;
     }, []) || [];

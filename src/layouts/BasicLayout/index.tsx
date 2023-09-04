@@ -38,7 +38,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
 }) => {
   const responsive = useResponsive();
   const { currentUser } = useUserData();
-  console.log("user", currentUser);
+
   const isMobile = responsive.md === false;
 
   const navbar = (

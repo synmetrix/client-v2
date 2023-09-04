@@ -16,11 +16,9 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 import type { TableProps } from "antd";
 
-type TeamId = string;
-
 interface TeamsTableProps {
   teams: Team[];
-  currentTeam?: TeamId;
+  currentTeam: Team | null;
   onRemove: (id: string) => void;
   onEdit: (team: Team) => void;
 }
@@ -43,7 +41,7 @@ const TeamsTable: FC<TeamsTableProps> = ({
       render: (value, record) => (
         <Space className={cn(styles.cell, styles.nameCell)} size={10}>
           {value}
-          {record.id === currentTeam && (
+          {record.id === currentTeam?.id && (
             <Tag className={styles.tag} color="#EDE7F0">
               {t("common:words.current")}
             </Tag>
@@ -67,8 +65,8 @@ const TeamsTable: FC<TeamsTableProps> = ({
                 <Avatar
                   color={AVATAR_COLORS[idx]}
                   key={member.id}
-                  img={member.avatarUrl}
-                  username={member.displayName}
+                  img={member?.avatarUrl}
+                  username={member?.displayName}
                   width={32}
                   height={32}
                 />

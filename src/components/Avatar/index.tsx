@@ -6,8 +6,8 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface AvatarProps {
-  username?: string;
-  img?: string;
+  username?: string | null;
+  img?: string | null;
   width?: number;
   height?: number;
   color?: string;

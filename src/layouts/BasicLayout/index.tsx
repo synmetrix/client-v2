@@ -12,10 +12,12 @@ import useUserData from "@/hooks/useUserData";
 
 import styles from "./index.module.less";
 
+import type { ReactNode } from "react";
+
 const { Content } = Layout;
 
 export type BasicLayoutProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   loggedIn?: boolean;
   page?: string;
   divider?: boolean;
@@ -23,6 +25,11 @@ export type BasicLayoutProps = {
   headerProps?: {
     title?: string;
     withLogo?: boolean;
+  };
+  sidebar?: {
+    header: ReactNode;
+    children: ReactNode;
+    trigger: string;
   };
 };
 
@@ -34,6 +41,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
   headerProps = {
     withLogo: false,
   },
+  sidebar,
   children,
 }) => {
   const responsive = useResponsive();
@@ -57,7 +65,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
 
   return (
     <Layout className={styles.root}>
-      {withSideMenu && <SideMenu />}
+      {withSideMenu && <SideMenu pageSidebar={sidebar} />}
       <Layout>
         <Header
           withLogo={headerProps.withLogo}

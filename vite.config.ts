@@ -8,6 +8,7 @@ import vitePluginImp from "vite-plugin-imp";
 import windiCSS from "vite-plugin-windicss";
 import tsconfigPaths from "vite-tsconfig-paths";
 import svgx from "@svgx/vite-plugin-react";
+import monacoEditorPlugin from "vite-plugin-monaco-editor";
 
 import routes from "./config/routes";
 
@@ -55,6 +56,7 @@ export default defineConfig({
     windiCSS(),
     visualizer(),
     svgx(),
+    monacoEditorPlugin({}),
   ],
   server: {
     // open: true,

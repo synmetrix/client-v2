@@ -61,7 +61,14 @@
     "members": "Members",
     "current": "Current",
     "success": "Succesesful",
-    "error": "Error"
+    "error": "Error",
+    "close": "Close",
+    "run": "Run",
+    "sql_runner": "SQL Runner",
+    "branch": "Branch",
+    "author": "Author",
+    "checksum": "Checksum",
+    "restore": "Restore"
   },
   "form": {
     "labels": {
@@ -106,7 +113,8 @@
       "attach_file_credentials": "Attach the file credentials, please",
       "schema": "schema",
       "password": "Password",
-      "email": "E-mail"
+      "email": "E-mail",
+      "search": "Search"
     },
     "errors": {
       "email": "Enter a valid e-mail",

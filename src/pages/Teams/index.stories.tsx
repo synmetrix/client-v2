@@ -1,7 +1,8 @@
 import RootLayout from "@/layouts/RootLayout";
+import { Roles } from "@/types/team";
 import { teams } from "@/mocks/teams";
 
-import Teams from ".";
+import { Teams } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
@@ -20,5 +21,12 @@ export const Default = Template.bind({});
 
 Default.args = {
   teams,
-  currentTeam: "2",
+  currentTeam: {
+    id: "2",
+    name: "My Team",
+    members: [],
+    role: Roles.owner,
+    createdAt: "10/10/2023 8:30PM",
+    updatedAt: "10/10/2023 8:30PM",
+  },
 };

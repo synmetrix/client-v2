@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
-import { Roles } from "@/types/team";
-import type { Member } from "@/types/team";
+import type { AccessList, Member } from "@/types/team";
+import { Roles, ChangableRoles } from "@/types/team";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 
 import TrashIcon from "@/assets/trash.svg";
@@ -17,13 +17,19 @@ import type { TableProps } from "antd";
 
 interface MembersTableProps {
   members: Member[];
-  onRoleChange: (member: Member) => void;
+  accessLists: AccessList[];
+  currentRole?: Roles;
+  onRoleChange: (id: string, newRole: ChangableRoles) => void;
+  onAccessListChange: (accessListId: string) => void;
   onRemove: (member: Member) => void;
 }
 
 const MembersTable: FC<MembersTableProps> = ({
   members,
+  accessLists,
+  currentRole,
   onRoleChange,
+  onAccessListChange,
   onRemove,
 }) => {
   const { t } = useTranslation(["settings", "common"]);
@@ -66,19 +72,68 @@ const MembersTable: FC<MembersTableProps> = ({
       ),
       dataIndex: "role",
       key: "role",
-      render: (_, record) => ({
-        children: (
-          <span className={styles.cell}>
-            <Select
-              className={styles.select}
-              onChange={(role) => onRoleChange({ ...record, role })}
-              bordered={false}
-              value={record.role}
-              options={createRoleOptions(Roles)}
-            />
-          </span>
-        ),
-      }),
+      render: (_, record) => {
+        const role = record.role.name;
+        const hasPermission =
+          role !== Roles.owner ||
+          (currentRole === Roles.admin && role !== Roles.owner);
+
+        if (!hasPermission) return role;
+        return {
+          children: (
+            <span className={styles.cell}>
+              <Select
+                className={styles.select}
+                onChange={(value) =>
+                  onRoleChange(
+                    record.role.id,
+                    value as unknown as ChangableRoles
+                  )
+                }
+                bordered={false}
+                value={role}
+                options={createRoleOptions(ChangableRoles)}
+              />
+            </span>
+          ),
+        };
+      },
+    },
+    {
+      title: (
+        <span className={cn(styles.cell, styles.header)}>
+          {t("common:words.access_list")}
+        </span>
+      ),
+      dataIndex: "accessList",
+      key: "accessList",
+      render: (_, record) => {
+        const curAccessList = record.accessList;
+        const role = record?.role?.name;
+
+        if (role === ("member" as unknown as Roles)) {
+          return {
+            children: (
+              <span className={styles.cell}>
+                <Select
+                  className={styles.select}
+                  onChange={(accessList) => onAccessListChange(accessList)}
+                  bordered={false}
+                  disabled={!accessLists?.length}
+                  value={
+                    curAccessList?.id ||
+                    `* ${t("common:words.full_access").toUpperCase()} *`
+                  }
+                  options={(accessLists || []).map((al) => ({
+                    key: al.id,
+                    label: al.name,
+                  }))}
+                />
+              </span>
+            ),
+          };
+        }
+      },
     },
     {
       title: (

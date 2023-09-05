@@ -1,5 +1,5 @@
 export const user = {
-  fullName: "Full Name",
+  displayName: "Full Name",
   teams: [
     {
       label: "team1",
@@ -10,11 +10,7 @@ export const user = {
 
 export const userMenu = [
   {
-    label: "1st menu item",
-    href: "/",
-  },
-  {
-    label: "2nd menu item",
-    href: "/",
+    label: "Teams",
+    href: "/teams",
   },
 ];

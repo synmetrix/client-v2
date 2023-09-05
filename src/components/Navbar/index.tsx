@@ -4,7 +4,8 @@ import { DownOutlined } from "@ant-design/icons";
 import cn from "classnames";
 
 import Avatar from "@/components/Avatar";
-import type { Team } from "@/types/user";
+import CurrentUserStore from "@/stores/CurrentUserStore";
+import type { Team } from "@/types/team";
 
 import TeamIcon from "@/assets/team.svg";
 import DocsIcon from "@/assets/docs.svg";
@@ -33,9 +34,15 @@ const Navbar: FC<NavbarProps> = ({
   username,
   userAvatar,
 }) => {
+  const { currentTeam, setCurrentTeamId } = CurrentUserStore();
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
   const { t } = useTranslation(["common"]);
+
+  const onSelectTeam = (id: string) => {
+    setCurrentTeamId(id);
+    setTeamsOpen(false);
+  };
 
   return (
     <Space size={20} direction={direction} align="start">
@@ -48,15 +55,23 @@ const Navbar: FC<NavbarProps> = ({
         </Space>
       </Button>
 
-      {teams && (
+      {!!teams?.length && (
         <Dropdown
           onOpenChange={setTeamsOpen}
-          menu={{ items: teams.map((tm, i) => ({ ...tm, key: i })) }}
+          menu={{
+            items: teams.map((tm, i) => ({
+              key: i,
+              label: tm.name,
+              onClick: () => onSelectTeam(tm.id),
+            })),
+          }}
         >
           <Button>
             <Space align="start">
               <TeamIcon />
-              <span className={styles.team}> {t("common:words.team")}</span>
+              <span className={styles.team}>
+                {currentTeam ? currentTeam.name : t("common:words.team")}
+              </span>
               <span className={cn(styles.icon, { [styles.rotate]: teamsOpen })}>
                 <DownOutlined />
               </span>

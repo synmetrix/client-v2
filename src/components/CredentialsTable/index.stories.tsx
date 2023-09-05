@@ -24,7 +24,7 @@ Default.args = {
     {
       id: "1",
       member: {
-        fullName: "Ivan Fokeev",
+        displayName: "Ivan Fokeev",
       },
       dataSource: {
         url: "gh-api.clickhouse.tech",
@@ -37,7 +37,7 @@ Default.args = {
     {
       id: "2",
       member: {
-        fullName: "Ivan Fokeev",
+        displayName: "Ivan Fokeev",
       },
       dataSource: {
         url: "gh-api.clickhouse.tech",

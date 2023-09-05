@@ -9,7 +9,7 @@ import validate from "@/utils/validations";
 import type { FC } from "react";
 
 interface GeneralInfo {
-  fullName: string;
+  displayName: string;
   email: string;
 }
 
@@ -38,9 +38,9 @@ const GeneralInfoForm: FC<GeneralInfoFormProps> = ({
           <Input
             control={control}
             rules={{ required: true }}
-            name="fullName"
+            name="displayName"
             label={t("common:form.labels.full_name")}
-            defaultValue={initialValue?.fullName}
+            defaultValue={initialValue?.displayName}
           />
         </Col>
 
@@ -53,7 +53,7 @@ const GeneralInfoForm: FC<GeneralInfoFormProps> = ({
             }}
             name="email"
             label={t("common:form.labels.email")}
-            defaultValue={initialValue?.fullName}
+            defaultValue={initialValue?.displayName}
           />
         </Col>
       </Row>

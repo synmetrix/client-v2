@@ -1,7 +1,7 @@
 import RootLayout from "@/layouts/RootLayout";
 import { membersMock } from "@/mocks/members";
 
-import Members from ".";
+import { Members } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 

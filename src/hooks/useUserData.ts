@@ -14,12 +14,41 @@ import type {
 import type { User } from "@/types/user";
 import type { DataSourceInfo } from "@/types/dataSource";
 import { dbTiles } from "@/mocks/dataSources";
+import type { Team } from "@/types/team";
 
 const prepareUserData = (
   rawData: SubCurrentUserSubscription | CurrentUserQuery
 ): User => {
   const rawUserData = rawData.users_by_pk || null;
-  const teams = (rawUserData?.members || []).map((m) => m.team);
+
+  const teams =
+    rawUserData?.members?.reduce((acc: Team[], m) => {
+      const members = (m?.team?.members || []).map((member) => ({
+        id: member.user.id,
+        email: member?.user?.account?.email,
+        avatarUrl: member.user.avatar_url,
+        displayName: member.user.display_name,
+        role: {
+          id: member.member_roles?.[0]?.id,
+          name: member.member_roles?.[0]?.team_role,
+        },
+      }));
+
+      const newTeam = {
+        ...m.team,
+        role: m?.member_roles?.[0]?.team_role,
+        updatedAt: m.team.updated_at,
+        createdAt: m.team.created_at,
+        members,
+      };
+      delete newTeam.created_at;
+      delete newTeam.updated_at;
+
+      acc.push(newTeam as unknown as Team);
+
+      return acc;
+    }, []) || [];
+
   const dataSources = (rawUserData?.datasources || []).map((d) => {
     const dataSource = {
       id: d?.id,
@@ -35,6 +64,7 @@ const prepareUserData = (
 
   return {
     id: rawUserData?.id,
+    email: rawUserData?.account?.email,
     displayName: rawUserData?.display_name,
     avatarUrl: rawUserData?.avatar_url,
     teams,
@@ -64,6 +94,7 @@ export default () => {
       setUserData(newUserData);
     }
   }, [currentUserData, setUserData]);
+
   useDeepCompareEffect(() => {
     if (accessToken && userId) {
       execQueryCurrentUser();

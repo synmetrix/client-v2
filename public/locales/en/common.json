@@ -62,6 +62,7 @@
     "current": "Current",
     "success": "Succesesful",
     "error": "Error",
+    "access_list": "Access list",
     "close": "Close",
     "run": "Run",
     "sql_runner": "SQL Runner",

@@ -19,15 +19,15 @@ export default [
                 component: "./pages/SignIn",
               },
               {
+                path: "/teams",
+                component: "./pages/Teams",
+              },
+              {
                 path: "/settings",
                 routes: [
                   {
                     path: "/settings/sources",
                     component: "./pages/DataSources",
-                  },
-                  {
-                    path: "/settings/teams",
-                    component: "./pages/Teams",
                   },
                   {
                     path: "/settings/members",

@@ -13,7 +13,7 @@ import styles from "./index.module.less";
 import type { TableProps } from "antd";
 import type { FC } from "react";
 
-interface DataSourceCrdentials {
+interface DataSourceCredentials {
   id: string;
   member: {
     displayName: string;
@@ -25,13 +25,13 @@ interface DataSourceCrdentials {
 }
 
 interface CredentialsProps {
-  credentials: DataSourceCrdentials[];
+  credentials: DataSourceCredentials[];
 }
 
-const Credentials: FC<CredentialsProps> = ({ credentials }) => {
+const CredentialsTable: FC<CredentialsProps> = ({ credentials }) => {
   const { t } = useTranslation(["settings", "common"]);
 
-  const columns: TableProps<DataSourceCrdentials>["columns"] = [
+  const columns: TableProps<DataSourceCredentials>["columns"] = [
     {
       title: (
         <span className={cn(styles.headerCeil)}>
@@ -107,4 +107,4 @@ const Credentials: FC<CredentialsProps> = ({ credentials }) => {
   );
 };
 
-export default Credentials;
+export default CredentialsTable;

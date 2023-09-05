@@ -4,7 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import { useForm } from "react-hook-form";
 
-import type { ApiSetupField, ApiSetupForm } from "@/types/dataSource";
+import type {
+  ApiSetupField,
+  ApiSetupForm,
+  DataSourceInfo,
+} from "@/types/dataSource";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 
@@ -38,6 +42,7 @@ interface ApiSetupProps {
   onGoBack: () => void;
   initialValue: ApiSetupForm;
   connectionOptions?: ApiSetupField[];
+  dataSources?: DataSourceInfo[];
 }
 
 const connectionData = [
@@ -59,6 +64,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
   onSubmit,
   onGoBack,
   initialValue,
+  dataSources,
 }) => {
   const { control, handleSubmit, getValues, watch, resetField } =
     useForm<ApiSetupForm>();

@@ -92,7 +92,7 @@ export const items: SidebarItem[] = [
       {
         key: "sql-api",
         label: "SQL API",
-        href: "/settings/sql_api",
+        href: "/settings/sql",
         icon: <SQLAPIIcon />,
       },
       {

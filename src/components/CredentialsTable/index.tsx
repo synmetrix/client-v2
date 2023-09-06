@@ -8,6 +8,8 @@ import DataSourceTag from "@/components/DataSourceTag";
 import Button from "@/components/Button";
 import Avatar from "@/components/Avatar";
 
+import TrashIcon from "@/assets/trash.svg";
+
 import styles from "./index.module.less";
 
 import type { TableProps } from "antd";
@@ -26,9 +28,17 @@ interface DataSourceCredentials {
 
 interface CredentialsProps {
   credentials: DataSourceCredentials[];
+  editPermission?: boolean;
+  onEdit: (id: string) => void;
+  onRemove: (id: string) => void;
 }
 
-const CredentialsTable: FC<CredentialsProps> = ({ credentials }) => {
+const CredentialsTable: FC<CredentialsProps> = ({
+  credentials,
+  editPermission = false,
+  onEdit = () => {},
+  onRemove = () => {},
+}) => {
   const { t } = useTranslation(["settings", "common"]);
 
   const columns: TableProps<DataSourceCredentials>["columns"] = [
@@ -76,7 +86,7 @@ const CredentialsTable: FC<CredentialsProps> = ({ credentials }) => {
     },
     {
       title: (
-        <span className={cn(styles.headerCeil, styles.date)}>
+        <span className={styles.headerCeil}>
           {" "}
           {t("common:words.created_at")}
         </span>
@@ -84,12 +94,35 @@ const CredentialsTable: FC<CredentialsProps> = ({ credentials }) => {
       dataIndex: "createdAt",
       key: "createdAt",
       render: (record) => (
-        <div className={cn(styles.ceil, styles.dateCeil)}>
+        <div className={styles.ceil}>
           <div className={styles.dateTime}>{record}</div>
-          <Button type="text" size="small">
+        </div>
+      ),
+    },
+    {
+      title: (
+        <span className={styles.actionsCell}>{t("common:words.actions")}</span>
+      ),
+      dataIndex: "actions",
+      render: (_, record) => (
+        <Space size={10} className={styles.actionsCell}>
+          <Button
+            className={styles.action}
+            type="text"
+            onClick={() => onEdit(record.id)}
+          >
             <SettingOutlined key="setting" />
           </Button>
-        </div>
+          {editPermission && (
+            <Button
+              className={styles.action}
+              type="text"
+              onClick={() => onRemove(record.id)}
+            >
+              <TrashIcon />
+            </Button>
+          )}
+        </Space>
       ),
     },
   ];

@@ -11622,8 +11622,22 @@ export type CredentialsQuery = {
     username: string;
     created_at: any;
     user: { __typename?: "users"; display_name?: string | null };
-    datasource: { __typename?: "datasources"; db_type: string; db_params: any };
+    datasource: {
+      __typename?: "datasources";
+      id: any;
+      db_type: string;
+      db_params: any;
+    };
   }[];
+};
+
+export type SubCredentialsSubscriptionVariables = Exact<{
+  teamId: Scalars["uuid"];
+}>;
+
+export type SubCredentialsSubscription = {
+  __typename?: "subscription_root";
+  sql_credentials: { __typename?: "sql_credentials"; id: any }[];
 };
 
 export type InsertSqlCredentialsMutationVariables = Exact<{
@@ -11633,6 +11647,18 @@ export type InsertSqlCredentialsMutationVariables = Exact<{
 export type InsertSqlCredentialsMutation = {
   __typename?: "mutation_root";
   insert_sql_credentials_one?: {
+    __typename?: "sql_credentials";
+    id: any;
+  } | null;
+};
+
+export type DeleteCredentialsMutationVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type DeleteCredentialsMutation = {
+  __typename?: "mutation_root";
+  delete_sql_credentials_by_pk?: {
     __typename?: "sql_credentials";
     id: any;
   } | null;
@@ -12339,6 +12365,7 @@ export const CredentialsDocument = gql`
         display_name
       }
       datasource {
+        id
         db_type
         db_params
       }
@@ -12354,6 +12381,29 @@ export function useCredentialsQuery(
     ...options,
   });
 }
+export const SubCredentialsDocument = gql`
+  subscription SubCredentials($teamId: uuid!) {
+    sql_credentials(where: { datasource: { team_id: { _eq: $teamId } } }) {
+      id
+    }
+  }
+`;
+
+export function useSubCredentialsSubscription<
+  TData = SubCredentialsSubscription
+>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<SubCredentialsSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<SubCredentialsSubscription, TData>
+) {
+  return Urql.useSubscription<
+    SubCredentialsSubscription,
+    TData,
+    SubCredentialsSubscriptionVariables
+  >({ query: SubCredentialsDocument, ...options }, handler);
+}
 export const InsertSqlCredentialsDocument = gql`
   mutation InsertSqlCredentials($object: sql_credentials_insert_input!) {
     insert_sql_credentials_one(object: $object) {
@@ -12367,6 +12417,20 @@ export function useInsertSqlCredentialsMutation() {
     InsertSqlCredentialsMutation,
     InsertSqlCredentialsMutationVariables
   >(InsertSqlCredentialsDocument);
+}
+export const DeleteCredentialsDocument = gql`
+  mutation DeleteCredentials($id: uuid!) {
+    delete_sql_credentials_by_pk(id: $id) {
+      id
+    }
+  }
+`;
+
+export function useDeleteCredentialsMutation() {
+  return Urql.useMutation<
+    DeleteCredentialsMutation,
+    DeleteCredentialsMutationVariables
+  >(DeleteCredentialsDocument);
 }
 export const CreateTeamDocument = gql`
   mutation CreateTeam($name: String!) {
@@ -12480,6 +12544,7 @@ export const namedOperations = {
     DeleteMember: "DeleteMember",
     InviteMember: "InviteMember",
     InsertSqlCredentials: "InsertSqlCredentials",
+    DeleteCredentials: "DeleteCredentials",
     CreateTeam: "CreateTeam",
     EditTeam: "EditTeam",
     DeleteTeam: "DeleteTeam",
@@ -12488,5 +12553,6 @@ export const namedOperations = {
     SubAccessLists: "SubAccessLists",
     SubCurrentUser: "SubCurrentUser",
     AllDatasources: "AllDatasources",
+    SubCredentials: "SubCredentials",
   },
 };

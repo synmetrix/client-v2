@@ -1,13 +1,11 @@
 import RootLayout from "@/layouts/RootLayout";
 
-import CickHouseIcon from "@/assets/databases/click-house.svg";
-
 import { SqlApi } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Pages/Settings/DataSources",
+  title: "Pages/Settings/SqlApi",
   component: SqlApi,
 } as Meta<typeof SqlApi>;
 

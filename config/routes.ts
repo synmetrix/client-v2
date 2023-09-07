@@ -34,7 +34,7 @@ export default [
                     component: "./pages/Members",
                   },
                   {
-                    path: "/settings/sql",
+                    path: "/settings/sql-api",
                     component: "./pages/SqlApi",
                   },
                   {

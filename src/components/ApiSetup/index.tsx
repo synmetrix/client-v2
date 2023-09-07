@@ -21,7 +21,7 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-export const CONNECTION_DEFAULT = "mysql";
+export const CONNECTION_DEFAULT = "psql";
 const CUBEJS_MYSQL_API_URL = import.meta.env
   .VITE_CUBEJS_MYSQL_API_URL as string;
 const CUBEJS_PG_API_URL = import.meta.env.VITE_CUBEJS_PG_API_URL as string;
@@ -33,14 +33,14 @@ export const connectionUrls: Record<string, string> = {
 
 const defaultConnectionOptions = [
   {
-    value: "mysql",
-    label: "MySQL",
+    value: "psql",
+    label: "PSQL",
     disabled: false,
     name: "connection",
   },
   {
-    value: "psql",
-    label: "PSQL",
+    value: "mysql",
+    label: "MySQL",
     disabled: false,
     name: "connection",
   },

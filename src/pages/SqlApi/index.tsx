@@ -62,7 +62,7 @@ export const SqlApi = ({
   const onOpen = () => setIsOpen(true);
 
   const onClose = () => {
-    setLocation("/settings/sql");
+    setLocation("/settings/sql-api");
     setIsOpen(false);
   };
 
@@ -146,9 +146,9 @@ const prepareCredentialsData = (
           userId: c?.user?.id,
           displayName: c.user?.display_name,
         },
-        dataSourceData: {
-          ...prepareDataSourceData([c.datasource])[0],
-        } as DataSourceInfo,
+        dataSourceData: prepareDataSourceData([
+          c.datasource,
+        ])?.[0] as DataSourceInfo,
       } as DataSourceCredentials)
   );
 };
@@ -237,7 +237,7 @@ const SqlApiWrapper = () => {
   };
 
   const onEdit = (id: string) => {
-    setLocation(`/settings/sql?id=${id}`);
+    setLocation(`/settings/sql-api?id=${id}`);
   };
 
   useEffect(() => {

@@ -12358,7 +12358,10 @@ export function useInviteMemberMutation() {
 }
 export const CredentialsDocument = gql`
   query Credentials($teamId: uuid!) {
-    sql_credentials(where: { datasource: { team_id: { _eq: $teamId } } }) {
+    sql_credentials(
+      where: { datasource: { team_id: { _eq: $teamId } } }
+      order_by: { created_at: desc }
+    ) {
       id
       username
       created_at

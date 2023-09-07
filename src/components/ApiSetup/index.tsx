@@ -9,6 +9,7 @@ import type {
   ApiSetupForm,
   DataSourceInfo,
 } from "@/types/dataSource";
+import type { Member } from "@/types/team";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 
@@ -20,7 +21,15 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-const CONNECTION_DEFAULT = "mysql";
+export const CONNECTION_DEFAULT = "mysql";
+const CUBEJS_MYSQL_API_URL = import.meta.env
+  .VITE_CUBEJS_MYSQL_API_URL as string;
+const CUBEJS_PG_API_URL = import.meta.env.VITE_CUBEJS_PG_API_URL as string;
+
+export const connectionUrls: Record<string, string> = {
+  mysql: CUBEJS_MYSQL_API_URL,
+  psql: CUBEJS_PG_API_URL,
+};
 
 const defaultConnectionOptions = [
   {
@@ -40,10 +49,11 @@ const defaultConnectionOptions = [
 interface ApiSetupProps {
   onSubmit: (data: ApiSetupForm) => void;
   onGoBack?: () => void;
+  editId?: string;
   initialValue: ApiSetupForm;
   connectionOptions?: ApiSetupField[];
   dataSources?: DataSourceInfo[];
-  teamMembers?: any[];
+  teamMembers?: Member[];
 }
 
 const connectionData = [
@@ -65,6 +75,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
   initialValue,
   dataSources,
   teamMembers,
+  editId,
   onSubmit,
   onGoBack,
 }) => {
@@ -74,32 +85,28 @@ const ApiSetup: FC<ApiSetupProps> = ({
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
 
-  const isEdit = useMemo(() => !!dataSources?.length, [dataSources]);
+  const isNew = useMemo(() => !!dataSources?.length, [dataSources]);
 
   const getLabel = (key: string) => t(`common:form.labels.${key}`, key);
 
   const createConnectionString = useCallback(
     ({
-      user = initialValue.user,
-      host = initialValue.host,
-      password = initialValue.password,
       connection = CONNECTION_DEFAULT,
+      host = connectionUrls[CONNECTION_DEFAULT],
+      user = initialValue.db_username,
+      password = initialValue.password,
+      database = initialValue.db,
     }) => `${connection}  --host=${host}
     - -user=${user}
-    - -port=${initialValue.port}
-    - -password=${"*".repeat(password?.length)}`,
-    [
-      initialValue.host,
-      initialValue.password,
-      initialValue.port,
-      initialValue.user,
-    ]
+    - -password=${"*".repeat(password?.length)}
+    - -database=${database}`,
+    [initialValue.password, initialValue.db_username, initialValue.db]
   );
 
   const onDownload = () => {
     const formValues = getValues();
     delete formValues.datasource_id;
-    delete formValues.member_id;
+    delete formValues.user_id;
 
     const dataStr =
       "data:text/json;charset=utf-8," +
@@ -113,31 +120,17 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
-      if (
-        ["password", "user", "datasource_id", "connection"].includes(name || "")
-      ) {
-        let connectionValues = {};
-        if (dataSources?.length) {
-          const datasource = dataSources?.find(
-            (d) => d.id === value.datasource_id
-          );
-          const host = datasource?.dbParams.host;
-          const db = datasource?.dbParams.database;
-
-          setValue("host", host);
-          setValue("db", db);
-
-          connectionValues = {
-            host,
-          };
-        }
-
-        connectionValues = {
-          user: value.user,
+      if (["password", "db_username", "connection"].includes(name || "")) {
+        const connectionValues = {
+          user: value.db_username,
           password: value.password,
+          host: connectionUrls[value.connection || CONNECTION_DEFAULT],
           connection: value.connection,
-          ...connectionValues,
         };
+
+        resetField("host", {
+          defaultValue: connectionValues.host,
+        });
 
         resetField("connection_string", {
           defaultValue: createConnectionString(connectionValues),
@@ -155,19 +148,20 @@ const ApiSetup: FC<ApiSetupProps> = ({
       <Text>{t("text")}</Text>
 
       <Form layout="vertical" id="api-setup">
-        {isEdit ? (
+        {isNew ? (
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={12}>
               <Input
                 control={control}
-                name="member_id"
+                name="user_id"
                 fieldType="select"
                 label={getLabel("team_member")}
-                defaultValue={initialValue.member_id}
+                defaultValue={initialValue.user_id}
                 options={(teamMembers || []).map((m) => ({
                   value: m.id,
                   label: m.displayName,
                 }))}
+                disabled={!!editId}
               />
             </Col>
             <Col xs={24} sm={12}>
@@ -179,9 +173,10 @@ const ApiSetup: FC<ApiSetupProps> = ({
                 label={getLabel("data_source")}
                 defaultValue={initialValue.datasource_id}
                 options={(dataSources || []).map((d) => ({
-                  value: d.id,
+                  value: d.id as string,
                   label: d.name,
                 }))}
+                disabled={!!editId}
               />
             </Col>
           </Row>
@@ -217,7 +212,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                   defaultValue={initialValue?.[name]}
                   fieldType={f.type}
                   label={f.label}
-                  disabled={f.disabled || !isEdit}
+                  disabled={f.disabled || !isNew || !!editId}
                   suffix={
                     <CopyIcon
                       className={styles.icon}
@@ -256,7 +251,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
         <Row align="middle" justify={"space-between"}>
           <Col xs={24} md={18}>
-            {!isEdit && (
+            {!isNew && (
               <Button
                 className={cn(styles.back, {
                   [styles.fullwidth]: !windowSize.md,
@@ -278,7 +273,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
               form="api-setup"
               onClick={handleSubmit(onSubmit)}
             >
-              {isEdit ? t("common:words.save") : t("common:words.finish")}
+              {editId ? t("common:words.close") : t("common:words.finish")}
             </Button>
 
             <Button

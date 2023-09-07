@@ -5,9 +5,13 @@ import { Spin, Space, message } from "antd";
 import BasicLayout from "@/layouts/BasicLayout";
 import PageHeader from "@/components/PageHeader";
 import NoCredentials from "@/components/NoCredentials";
+import type { DataSourceCredentials } from "@/components/CredentialsTable";
 import CredentialsTable from "@/components/CredentialsTable";
 import Modal from "@/components/Modal";
-import ApiSetup from "@/components/ApiSetup";
+import ApiSetup, {
+  CONNECTION_DEFAULT,
+  connectionUrls,
+} from "@/components/ApiSetup";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
 import useCheckResponse from "@/hooks/useCheckResponse";
@@ -22,17 +26,18 @@ import {
 import type { Datasources, Sql_Credentials } from "@/graphql/generated";
 import genName from "@/utils/helpers/genName";
 import formatTime from "@/utils/helpers/formatTime";
-import { dbTiles } from "@/mocks/dataSources";
 import type { ApiSetupForm, DataSourceInfo } from "@/types/dataSource";
+import type { Member } from "@/types/team";
 
 import styles from "./index.module.less";
 
 interface SqlApiProps {
   editPermission?: boolean;
-  teamMembers?: any;
+  teamMembers?: Member[];
   dataSources?: DataSourceInfo[];
-  credentials: any;
-  initialValue: any;
+  editId?: string;
+  credentials: DataSourceCredentials[];
+  initialValue: ApiSetupForm;
   loading?: boolean;
   onFinish: (data: ApiSetupForm) => void;
   onEdit?: (id: string) => void;
@@ -45,6 +50,7 @@ export const SqlApi = ({
   dataSources,
   credentials = [],
   initialValue,
+  editId,
   loading = false,
   onEdit = () => {},
   onRemove = () => {},
@@ -56,14 +62,22 @@ export const SqlApi = ({
   const onOpen = () => setIsOpen(true);
 
   const onClose = () => {
-    setIsOpen(false);
     setLocation("/settings/sql");
+    setIsOpen(false);
   };
 
   const onFinishForm = (data: ApiSetupForm) => {
-    onFinish(data);
+    if (!editId) {
+      onFinish(data);
+    }
     onClose();
   };
+
+  useEffect(() => {
+    if (editId) {
+      onOpen();
+    }
+  }, [editId]);
 
   const action =
     editPermission && credentials.length ? t("settings:sql_api.action") : null;
@@ -99,8 +113,15 @@ export const SqlApi = ({
         </Space>
       </Spin>
 
-      <Modal width={1000} open={isOpen} onClose={onClose} closable>
+      <Modal
+        width={1000}
+        open={isOpen}
+        onClose={onClose}
+        closable
+        destroyOnClose
+      >
         <ApiSetup
+          editId={editId}
           dataSources={dataSources}
           teamMembers={teamMembers}
           initialValue={initialValue}
@@ -111,27 +132,48 @@ export const SqlApi = ({
   );
 };
 
-const prepareCredentialsData = (data: Sql_Credentials[]) => {
+const prepareCredentialsData = (
+  data: Sql_Credentials[]
+): DataSourceCredentials[] => {
   if (!data?.length) return [];
-  return data.map((c) => ({
-    id: c.id,
-    login: c.username,
-    createdAt: formatTime(c.created_at),
-    member: {
-      displayName: c.user.display_name,
-    },
-    dataSource: {
-      url: c.datasource.db_params.host,
-      ...dbTiles.find((t) => t.value === c.datasource.db_type.toLowerCase()),
-    },
-  }));
+  return data.map(
+    (c) =>
+      ({
+        id: c.id,
+        login: c.username,
+        createdAt: formatTime(c.created_at),
+        member: {
+          userId: c?.user?.id,
+          displayName: c.user?.display_name,
+        },
+        dataSourceData: {
+          ...prepareDataSourceData([c.datasource])[0],
+        } as DataSourceInfo,
+      } as DataSourceCredentials)
+  );
 };
+
+export const prepareInitValues = (
+  dataSourceId: string | null | undefined,
+  dataSourceName: string,
+  userId: string,
+  username: string | undefined = undefined
+): ApiSetupForm =>
+  ({
+    user_id: userId,
+    datasource_id: dataSourceId,
+    name: dataSourceName,
+    host: connectionUrls[CONNECTION_DEFAULT],
+    db: "db",
+    db_username: username || genName(10),
+    password: genName(10),
+  } as ApiSetupForm);
 
 const SqlApiWrapper = () => {
   const { t } = useTranslation(["apiSetup", "pages"]);
   const { currentTeam, currentTeamId } = CurrentUserStore();
   const [location, setLocation] = useLocation();
-  const { id: curId } = location.query;
+  const { id: editId } = location.query;
 
   const [createMutation, execCreateMutation] =
     useInsertSqlCredentialsMutation();
@@ -182,7 +224,7 @@ const SqlApiWrapper = () => {
   const onFinish = (data: ApiSetupForm) => {
     execCreateMutation({
       object: {
-        user_id: data.member_id,
+        user_id: data.user_id,
         datasource_id: data.datasource_id,
         username: data.db_username,
         password: data.password,
@@ -232,22 +274,33 @@ const SqlApiWrapper = () => {
     [dataSourcesData.data?.datasources]
   );
 
-  const initialValue = {
-    member_id: currentTeam?.members?.[0]?.id,
-    datasource_id: dataSources?.[0]?.id,
-    name: dataSources?.[0]?.name,
-    host: dataSources?.[0]?.dbParams?.host,
-    user: dataSources?.[0]?.dbParams?.user,
-    port: dataSources?.[0]?.dbParams?.port,
-    db: dataSources?.[0]?.dbParams?.database,
-    db_username: genName(10),
-    username: genName(10),
-    password: genName(10),
-  };
+  const initialValue = useMemo(() => {
+    if (editId && credentials.length) {
+      const curCredentials = credentials.find((c) => c.id === editId);
+
+      if (curCredentials) {
+        return prepareInitValues(
+          curCredentials.dataSourceData.id,
+          curCredentials.dataSourceData.name,
+          curCredentials.member.userId,
+          curCredentials.login
+        );
+      } else {
+        message.warning(t("apiSetup:not_found"));
+      }
+    }
+
+    return prepareInitValues(
+      dataSources?.[0]?.id,
+      dataSources?.[0]?.name,
+      currentTeam?.members?.[0]?.id as string
+    );
+  }, [credentials, editId, currentTeam?.members, dataSources, t]);
 
   return (
     <SqlApi
       loading={loading}
+      editId={editId}
       editPermission={currentTeam?.role !== "member"}
       teamMembers={currentTeam?.members}
       dataSources={dataSources}

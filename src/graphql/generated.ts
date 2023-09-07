@@ -11621,10 +11621,11 @@ export type CredentialsQuery = {
     id: any;
     username: string;
     created_at: any;
-    user: { __typename?: "users"; display_name?: string | null };
+    user: { __typename?: "users"; id: any; display_name?: string | null };
     datasource: {
       __typename?: "datasources";
       id: any;
+      name: string;
       db_type: string;
       db_params: any;
     };
@@ -12362,10 +12363,12 @@ export const CredentialsDocument = gql`
       username
       created_at
       user {
+        id
         display_name
       }
       datasource {
         id
+        name
         db_type
         db_params
       }

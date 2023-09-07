@@ -3,7 +3,7 @@ import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
-import type { DataSource } from "@/types/dataSource";
+import type { DataSourceInfo } from "@/types/dataSource";
 import DataSourceTag from "@/components/DataSourceTag";
 import Button from "@/components/Button";
 import Avatar from "@/components/Avatar";
@@ -15,13 +15,14 @@ import styles from "./index.module.less";
 import type { TableProps } from "antd";
 import type { FC } from "react";
 
-interface DataSourceCredentials {
+export interface DataSourceCredentials {
   id: string;
   member: {
+    userId: string;
     displayName: string;
     avatar?: string;
   };
-  dataSource: DataSource;
+  dataSourceData: DataSourceInfo;
   login: string;
   createdAt: string;
 }
@@ -64,12 +65,12 @@ const CredentialsTable: FC<CredentialsProps> = ({
           {t("common:words.data_source")}
         </span>
       ),
-      dataIndex: "dataSource",
-      key: "dataSource",
+      dataIndex: "dataSourceData",
+      key: "dataSourceData",
       render: (record) => (
         <Space size={12} className={cn(styles.ceil, styles.bold)}>
-          <span>{record.url}</span>
-          <DataSourceTag dataSource={record} />
+          <span>{record.name}</span>
+          <DataSourceTag dataSource={record.type} />
         </Space>
       ),
     },

@@ -12,6 +12,7 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
+import { prepareInitValues } from "@/pages/SqlApi";
 import {
   useFetchTablesQuery,
   useGenDataSchemasMutation,
@@ -22,7 +23,6 @@ import {
   useInsertSqlCredentialsMutation,
 } from "@/graphql/generated";
 import type {
-  ApiSetupForm,
   DataSourceInfo,
   DataSourceSetupForm,
   DynamicForm,
@@ -31,7 +31,6 @@ import type {
   Datasources_Pk_Columns_Input,
   Datasources_Set_Input,
 } from "@/graphql/generated";
-import genName from "@/utils/helpers/genName";
 
 import styles from "./index.module.less";
 
@@ -276,23 +275,17 @@ const DataSourcesWrapper = ({
         return null;
       }
 
+      const apiSetup = prepareInitValues(
+        dataSourceSetup.id,
+        dataSourceSetup.name,
+        currentUser.id
+      );
       const credentialParams = {
         user_id: currentUser.id,
         datasource_id: dataSourceSetup.id,
-        username: genName(10),
-        password: genName(10),
+        username: apiSetup.db_username,
+        password: apiSetup.password,
       };
-
-      const apiSetup = {
-        name: dataSourceSetup?.name,
-        host: dataSourceSetup?.db_params?.host,
-        user: dataSourceSetup?.db_params?.user,
-        port: dataSourceSetup?.db_params?.port,
-        db: dataSourceSetup?.db_params?.database,
-        db_username: credentialParams.username,
-        username: credentialParams.username,
-        password: credentialParams.password,
-      } as ApiSetupForm;
 
       setFormStateData(3, apiSetup);
 

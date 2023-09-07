@@ -10,11 +10,28 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
   SubCurrentUserSubscription,
   CurrentUserQuery,
+  Datasources,
 } from "@/graphql/generated";
 import type { User } from "@/types/user";
 import type { DataSourceInfo } from "@/types/dataSource";
 import { dbTiles } from "@/mocks/dataSources";
 import type { Team } from "@/types/team";
+
+export const prepareDataSourceData = (data: Datasources[] | undefined) => {
+  if (!data?.length) return [];
+
+  return data.map(
+    (d) =>
+      ({
+        id: d?.id,
+        name: d.name,
+        dbParams: d.db_params,
+        createdAt: d.created_at,
+        updatedAt: d.updated_at,
+        type: dbTiles.find((tile) => tile.value === d.db_type.toLowerCase()),
+      } as DataSourceInfo)
+  );
+};
 
 const prepareUserData = (
   rawData: SubCurrentUserSubscription | CurrentUserQuery
@@ -49,18 +66,9 @@ const prepareUserData = (
       return acc;
     }, []) || [];
 
-  const dataSources = (rawUserData?.datasources || []).map((d) => {
-    const dataSource = {
-      id: d?.id,
-      name: d.name,
-      dbParams: d.db_params,
-      createdAt: d.created_at,
-      updatedAt: d.updated_at,
-      type: dbTiles?.find((tile) => tile.value === d.db_type.toLowerCase()),
-    };
-
-    return dataSource as DataSourceInfo;
-  });
+  const dataSources = prepareDataSourceData(
+    rawUserData?.datasources as Datasources[]
+  );
 
   return {
     id: rawUserData?.id,

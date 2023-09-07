@@ -10,16 +10,26 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-const NoCredentials: FC = () => {
+interface NoCredentialsProps {
+  editPermission?: boolean;
+  onAttach: () => void;
+}
+
+const NoCredentials: FC<NoCredentialsProps> = ({
+  editPermission,
+  onAttach = () => {},
+}) => {
   const { t } = useTranslation(["settings", "common"]);
   return (
     <div className={styles.wrapper}>
       <img className={styles.img} src={NoCredentialsImg} alt="" />
       <Title level={4}>{t("sql_api.not_found.title")}</Title>
       <Text className={styles.text}>{t("sql_api.not_found.text")}</Text>
-      <Button size="large" type="primary">
-        {t("sql_api.not_found.attach_btn")}
-      </Button>
+      {editPermission && (
+        <Button size="large" type="primary" onClick={onAttach}>
+          {t("sql_api.not_found.attach_btn")}
+        </Button>
+      )}
     </div>
   );
 };

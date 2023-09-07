@@ -1,4 +1,9 @@
 {
   "title": "Setup SQL API",
-  "text": "You can connect any BI tool or other SQL compatible software using the details specified below"
+  "text": "You can connect any BI tool or other SQL compatible software using the details specified below",
+  "sql_credentials_created": "SQL Credentials created.",
+  "sql_credentials_updated": "SQL Credentials updated.",
+  "sql_credentials_deleted": "SQL Credentials deleted.",
+  "uniq_violation": "Username already in use",
+  "not_found": "Credentials not found"
 }

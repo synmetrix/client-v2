@@ -41,7 +41,9 @@ const useCheckResponse = (
         history.push("/403");
       }
 
-      message.error(responseMessage || errorMessage);
+      if (errorMessage !== "") {
+        message.error(responseMessage || errorMessage);
+      }
       cb(null, response.error);
     }
   }, [response.error]);

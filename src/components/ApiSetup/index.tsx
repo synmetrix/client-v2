@@ -4,7 +4,12 @@ import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import { useForm } from "react-hook-form";
 
-import type { ApiSetupField, ApiSetupForm } from "@/types/dataSource";
+import type {
+  ApiSetupField,
+  ApiSetupForm,
+  DataSourceInfo,
+} from "@/types/dataSource";
+import type { Member } from "@/types/team";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 
@@ -16,18 +21,26 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
-const CONNECTION_DEFAULT = "mysql";
+export const CONNECTION_DEFAULT = "psql";
+const CUBEJS_MYSQL_API_URL = import.meta.env
+  .VITE_CUBEJS_MYSQL_API_URL as string;
+const CUBEJS_PG_API_URL = import.meta.env.VITE_CUBEJS_PG_API_URL as string;
+
+export const connectionUrls: Record<string, string> = {
+  mysql: CUBEJS_MYSQL_API_URL,
+  psql: CUBEJS_PG_API_URL,
+};
 
 const defaultConnectionOptions = [
   {
-    value: "mysql",
-    label: "MySQL",
+    value: "psql",
+    label: "PSQL",
     disabled: false,
     name: "connection",
   },
   {
-    value: "psql",
-    label: "PSQL",
+    value: "mysql",
+    label: "MySQL",
     disabled: false,
     name: "connection",
   },
@@ -35,14 +48,17 @@ const defaultConnectionOptions = [
 
 interface ApiSetupProps {
   onSubmit: (data: ApiSetupForm) => void;
-  onGoBack: () => void;
+  onGoBack?: () => void;
+  editId?: string;
   initialValue: ApiSetupForm;
   connectionOptions?: ApiSetupField[];
+  dataSources?: DataSourceInfo[];
+  teamMembers?: Member[];
 }
 
 const connectionData = [
-  { label: "Host/URL", value: "host", name: "host" },
-  { label: "Database", value: "db", name: "db" },
+  { label: "Host/URL", value: "host", name: "host", disabled: true },
+  { label: "Database", value: "db", name: "db", disabled: true },
   {
     label: "Login (auto-generated)",
     name: "db_username",
@@ -56,37 +72,45 @@ const connectionData = [
 
 const ApiSetup: FC<ApiSetupProps> = ({
   connectionOptions = defaultConnectionOptions,
+  initialValue,
+  dataSources,
+  teamMembers,
+  editId,
   onSubmit,
   onGoBack,
-  initialValue,
 }) => {
-  const { control, handleSubmit, getValues, watch, resetField } =
+  const { control, handleSubmit, setValue, getValues, watch, resetField } =
     useForm<ApiSetupForm>();
 
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
 
+  const isNew = useMemo(() => !!dataSources?.length, [dataSources]);
+
   const getLabel = (key: string) => t(`common:form.labels.${key}`, key);
 
   const createConnectionString = useCallback(
-    (connection: string = CONNECTION_DEFAULT) => `${connection}  --host=${
-      initialValue.host
-    }
-    - -user=${initialValue.user}
-    - -port=${initialValue.port}
-    - -password=${"*".repeat(initialValue.password?.length)}`,
-    [
-      initialValue.host,
-      initialValue.password?.length,
-      initialValue.port,
-      initialValue.user,
-    ]
+    ({
+      connection = CONNECTION_DEFAULT,
+      host = connectionUrls[CONNECTION_DEFAULT],
+      user = initialValue.db_username,
+      password = initialValue.password,
+      database = initialValue.db,
+    }) => `${connection}  --host=${host}
+    - -user=${user}
+    - -password=${"*".repeat(password?.length)}
+    - -database=${database}`,
+    [initialValue.password, initialValue.db_username, initialValue.db]
   );
 
   const onDownload = () => {
+    const formValues = getValues();
+    delete formValues.datasource_id;
+    delete formValues.user_id;
+
     const dataStr =
       "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(getValues(), null, 2));
+      encodeURIComponent(JSON.stringify(formValues, null, 2));
     const link = document.createElement("a");
     link.href = dataStr;
     link.download = "credentials.json";
@@ -96,14 +120,26 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
-      if (name === "connection")
-        resetField("connection_string", {
-          defaultValue: createConnectionString(value.connection),
+      if (["password", "db_username", "connection"].includes(name || "")) {
+        const connectionValues = {
+          user: value.db_username,
+          password: value.password,
+          host: connectionUrls[value.connection || CONNECTION_DEFAULT],
+          connection: value.connection,
+        };
+
+        resetField("host", {
+          defaultValue: connectionValues.host,
         });
+
+        resetField("connection_string", {
+          defaultValue: createConnectionString(connectionValues),
+        });
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, [createConnectionString, resetField, watch]);
+  }, [createConnectionString, dataSources, resetField, setValue, watch]);
 
   return (
     <div>
@@ -112,13 +148,47 @@ const ApiSetup: FC<ApiSetupProps> = ({
       <Text>{t("text")}</Text>
 
       <Form layout="vertical" id="api-setup">
-        <Input
-          control={control}
-          name="name"
-          defaultValue={initialValue.name}
-          label={getLabel("data_source")}
-          disabled
-        />
+        {isNew ? (
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={12}>
+              <Input
+                control={control}
+                name="user_id"
+                fieldType="select"
+                label={getLabel("team_member")}
+                defaultValue={initialValue.user_id}
+                options={(teamMembers || []).map((m) => ({
+                  value: m.id,
+                  label: m.displayName,
+                }))}
+                disabled={!!editId}
+              />
+            </Col>
+            <Col xs={24} sm={12}>
+              <Input
+                className={styles.input}
+                control={control}
+                name="datasource_id"
+                fieldType="select"
+                label={getLabel("data_source")}
+                defaultValue={initialValue.datasource_id}
+                options={(dataSources || []).map((d) => ({
+                  value: d.id as string,
+                  label: d.name,
+                }))}
+                disabled={!!editId}
+              />
+            </Col>
+          </Row>
+        ) : (
+          <Input
+            control={control}
+            name="name"
+            defaultValue={initialValue.name}
+            label={getLabel("data_source")}
+            disabled
+          />
+        )}
 
         <Input
           control={control}
@@ -142,7 +212,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                   defaultValue={initialValue?.[name]}
                   fieldType={f.type}
                   label={f.label}
-                  disabled
+                  disabled={f.disabled || !isNew || !!editId}
                   suffix={
                     <CopyIcon
                       className={styles.icon}
@@ -160,7 +230,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
         <div className={cn(styles.textareaWrapper, styles.label)}>
           <Input
             control={control}
-            defaultValue={createConnectionString()}
+            defaultValue={createConnectionString({})}
             name="connection_string"
             fieldType="textarea"
             label={`${getLabel("connect_using")} ${
@@ -181,16 +251,18 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
         <Row align="middle" justify={"space-between"}>
           <Col xs={24} md={18}>
-            <Button
-              className={cn(styles.back, {
-                [styles.fullwidth]: !windowSize.md,
-              })}
-              size="large"
-              color="primary"
-              onClick={onGoBack}
-            >
-              {t("common:words.back")}
-            </Button>
+            {!isNew && (
+              <Button
+                className={cn(styles.back, {
+                  [styles.fullwidth]: !windowSize.md,
+                })}
+                size="large"
+                color="primary"
+                onClick={onGoBack}
+              >
+                {t("common:words.back")}
+              </Button>
+            )}
             <Button
               className={cn(styles.submit, {
                 [styles.fullwidth]: !windowSize.md,
@@ -201,7 +273,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
               form="api-setup"
               onClick={handleSubmit(onSubmit)}
             >
-              {t("common:words.finish")}
+              {editId ? t("common:words.close") : t("common:words.finish")}
             </Button>
 
             <Button

@@ -37,14 +37,13 @@ export type Schema = Record<string, Table>;
 export type DynamicForm = Record<string, any>;
 
 export interface ApiSetupForm {
+  datasource_id?: string;
+  user_id?: string;
   name: string;
   db_username: string;
   db: string;
   host: string;
-  user: string;
-  username: string;
   password: string;
-  port: string;
   connection?: string;
   connection_string?: string;
 }

@@ -3,35 +3,46 @@ import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
-import type { DataSource } from "@/types/dataSource";
+import type { DataSourceInfo } from "@/types/dataSource";
 import DataSourceTag from "@/components/DataSourceTag";
 import Button from "@/components/Button";
 import Avatar from "@/components/Avatar";
+
+import TrashIcon from "@/assets/trash.svg";
 
 import styles from "./index.module.less";
 
 import type { TableProps } from "antd";
 import type { FC } from "react";
 
-interface DataSourceCrdentials {
+export interface DataSourceCredentials {
   id: string;
   member: {
+    userId: string;
     displayName: string;
     avatar?: string;
   };
-  dataSource: DataSource;
+  dataSourceData: DataSourceInfo;
   login: string;
   createdAt: string;
 }
 
 interface CredentialsProps {
-  credentials: DataSourceCrdentials[];
+  credentials: DataSourceCredentials[];
+  editPermission?: boolean;
+  onEdit: (id: string) => void;
+  onRemove: (id: string) => void;
 }
 
-const Credentials: FC<CredentialsProps> = ({ credentials }) => {
+const CredentialsTable: FC<CredentialsProps> = ({
+  credentials,
+  editPermission = false,
+  onEdit = () => {},
+  onRemove = () => {},
+}) => {
   const { t } = useTranslation(["settings", "common"]);
 
-  const columns: TableProps<DataSourceCrdentials>["columns"] = [
+  const columns: TableProps<DataSourceCredentials>["columns"] = [
     {
       title: (
         <span className={cn(styles.headerCeil)}>
@@ -54,12 +65,12 @@ const Credentials: FC<CredentialsProps> = ({ credentials }) => {
           {t("common:words.data_source")}
         </span>
       ),
-      dataIndex: "dataSource",
-      key: "dataSource",
+      dataIndex: "dataSourceData",
+      key: "dataSourceData",
       render: (record) => (
         <Space size={12} className={cn(styles.ceil, styles.bold)}>
-          <span>{record.url}</span>
-          <DataSourceTag dataSource={record} />
+          <span>{record.name}</span>
+          <DataSourceTag dataSource={record.type} />
         </Space>
       ),
     },
@@ -76,7 +87,7 @@ const Credentials: FC<CredentialsProps> = ({ credentials }) => {
     },
     {
       title: (
-        <span className={cn(styles.headerCeil, styles.date)}>
+        <span className={styles.headerCeil}>
           {" "}
           {t("common:words.created_at")}
         </span>
@@ -84,12 +95,35 @@ const Credentials: FC<CredentialsProps> = ({ credentials }) => {
       dataIndex: "createdAt",
       key: "createdAt",
       render: (record) => (
-        <div className={cn(styles.ceil, styles.dateCeil)}>
+        <div className={styles.ceil}>
           <div className={styles.dateTime}>{record}</div>
-          <Button type="text" size="small">
+        </div>
+      ),
+    },
+    {
+      title: (
+        <span className={styles.actionsCell}>{t("common:words.actions")}</span>
+      ),
+      dataIndex: "actions",
+      render: (_, record) => (
+        <Space size={10} className={styles.actionsCell}>
+          <Button
+            className={styles.action}
+            type="text"
+            onClick={() => onEdit(record.id)}
+          >
             <SettingOutlined key="setting" />
           </Button>
-        </div>
+          {editPermission && (
+            <Button
+              className={styles.action}
+              type="text"
+              onClick={() => onRemove(record.id)}
+            >
+              <TrashIcon />
+            </Button>
+          )}
+        </Space>
       ),
     },
   ];
@@ -107,4 +141,4 @@ const Credentials: FC<CredentialsProps> = ({ credentials }) => {
   );
 };
 
-export default Credentials;
+export default CredentialsTable;

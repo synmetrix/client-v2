@@ -3,7 +3,8 @@
     "roles_and_access": "Roles and access",
     "data_sources": "Data Sources",
     "members": "Members",
-    "personal_info": "Personal Info"
+    "personal_info": "Personal Info",
+    "sql_api": "SQL API"
   },
   "alerts": "Alets",
   "reports": "Reports",

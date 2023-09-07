@@ -111,8 +111,3 @@ mutation GenDataSchemas ($datasource_id: uuid!, $branch_id: uuid!, $tables: [Sou
   }
 }
 
-mutation InsertSqlCredentials ($object: sql_credentials_insert_input!) { 
-  insert_sql_credentials_one(object: $object) {
-    id
-  }
-}

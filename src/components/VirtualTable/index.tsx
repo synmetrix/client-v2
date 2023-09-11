@@ -142,6 +142,45 @@ const VirtualTable: FC<VirtualTableProps> = ({
   footer,
   orderByFn,
 }) => {
+  const defaultColumns = useMemo(
+    () =>
+      Object.keys(getOr({}, 0, data)).map((colId) => ({
+        Header: colId,
+        accessor: (row: any) => row[colId],
+        id: colId,
+      })),
+    [data]
+  );
+
+  const columns: any = userColumns || defaultColumns;
+
+  // Use the state and functions returned from useTable to build your UI
+  const {
+    rows,
+    flatHeaders,
+    // @ts-ignore
+    setState,
+  } = useTable(
+    {
+      columns,
+      data,
+      debug: false,
+      // change orderByFn if you need sort from useSortBy
+      orderByFn,
+      initialState: {
+        // @ts-ignore
+        sortBy,
+      },
+    },
+    useSortBy
+  );
+
+  useEffect(() => {
+    setState((prev?: NonNullable<unchanged.Unchangeable | undefined>) =>
+      set("sortBy", sortBy, prev)
+    );
+  }, [sortBy, setState]);
+
   return <>VirtualTable</>;
 };
 

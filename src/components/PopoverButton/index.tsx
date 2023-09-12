@@ -12,25 +12,25 @@ import type { FC, MouseEvent, ReactNode } from "react";
 
 type PopoverButtonProps = (PopoverProps | DropdownProps | PopconfirmProps) & {
   popoverType?: "popconfirm" | "dropdown";
-  shape?: ButtonProps["shape"];
   icon?: ReactNode | null;
   actionText?: string | null;
   defaultVisible?: boolean;
   onVisibleChange?: (isVisible: boolean) => void;
   onClick?: (e: MouseEvent) => void;
   disabled?: boolean;
+  buttonProps?: ButtonProps;
 };
 
 const PopoverButton: FC<PopoverButtonProps> = ({
   popoverType,
   icon = null,
-  shape,
   actionText = null,
   visible,
   defaultVisible,
   disabled = false,
   onVisibleChange,
   onClick,
+  buttonProps,
   ...restProps
 }) => {
   const [visibleState, setVisible] = useState<boolean>(!!defaultVisible);
@@ -56,13 +56,12 @@ const PopoverButton: FC<PopoverButtonProps> = ({
   const actionButton = (
     <Button
       size="small"
-      shape={shape}
       disabled={disabled}
       onClick={(e) => {
         stopPropagation(e);
         onClick?.(e);
       }}
-      {...(restProps as ButtonProps)}
+      {...buttonProps}
     >
       {icon}
       {actionText || null}

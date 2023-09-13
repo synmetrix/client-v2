@@ -28,7 +28,7 @@ import type {
   TableCellRenderer,
   TableHeaderRenderer,
 } from "react-virtualized";
-import type { FC, Requireable, MouseEvent } from "react";
+import type { FC, Requireable } from "react";
 
 const COL_WIDTH = 200;
 
@@ -105,33 +105,38 @@ export const cellRenderer = (args: TableCellProps, membersIndex: any) => {
 };
 
 interface VirtualTableProps {
+  sortBy?: {
+    id: string;
+    desc: boolean;
+  }[];
   messages?: {
     type: string;
     text: string;
   }[];
+  onSortUpdate?: (nextSortBy: SortBySet[]) => void;
+  data?: object[];
+  columns?: object[];
+  width?: number;
+  height?: number;
+  headerHeight?: number;
+  rowHeight?: number;
+  loading: boolean;
+  loadingProgress: {
+    stage: string;
+    timeElapsed: number;
+  };
+  emptyDesc?: string;
+  orderByFn?: OrderByFn<object>;
+  footer?: (rows: object) => void;
   sortDisabled?: boolean;
   scrollToIndex?: number;
-  cellRenderer?: typeof defaultTableCellRenderer;
+  cellRenderer?: TableCellRenderer;
   onScroll?: Requireable<(params: ScrollEventData) => void>;
   tableId?: string | null;
   className?: string;
   settings?: {
     hideIndexColumn: boolean;
   };
-  footer?: (rows: object) => void;
-  emptyDesc?: string;
-  headerHeight?: number;
-  rowHeight?: number;
-  width?: number;
-  height?: number;
-  columns?: object[];
-  data?: object[];
-  sortBy?: {
-    id: string;
-    desc: boolean;
-  }[];
-  onSortUpdate?: (nextSortBy: SortBySet[]) => void;
-  orderByFn?: OrderByFn<object>;
 }
 
 const VirtualTable: FC<VirtualTableProps> = ({
@@ -156,6 +161,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
   onScroll,
   footer,
   orderByFn,
+  loadingProgress,
 }) => {
   const defaultColumns = useMemo(
     () =>
@@ -332,6 +338,12 @@ const VirtualTable: FC<VirtualTableProps> = ({
       </span>
     );
   };
+
+  const loadingTip = loadingProgress.timeElapsed
+    ? `${loadingProgress.stage} ${(
+        parseFloat(loadingProgress.timeElapsed.toString()) / 1000
+      ).toFixed(2)} secs...`
+    : loadingProgress.stage;
 
   return <>VirtualTable</>;
 };

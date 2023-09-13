@@ -25,6 +25,7 @@ import type {
   ScrollEventData,
   TableCellDataGetter,
   TableCellProps,
+  TableCellRenderer,
   TableHeaderRenderer,
 } from "react-virtualized";
 import type { FC, Requireable, MouseEvent } from "react";
@@ -311,6 +312,24 @@ const VirtualTable: FC<VirtualTableProps> = ({
       <div className={styles.noRows} style={{ height: rowHeight }}>
         No rows
       </div>
+    );
+  };
+
+  const internalCellRenderer: TableCellRenderer = (args) => {
+    const { cellData } = args;
+
+    const onDoubleClick = () => {
+      const copied = copy(cellData);
+
+      if (copied) {
+        message.success("Column value copied to the clipboard");
+      }
+    };
+
+    return (
+      <span title={cellData?.toString()} onDoubleClick={onDoubleClick}>
+        {defaultCellRenderer(args)}
+      </span>
     );
   };
 

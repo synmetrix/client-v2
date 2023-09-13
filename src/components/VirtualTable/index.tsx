@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { set, getOr } from "unchanged";
 import cn from "classnames";
-import { MenuProps, message } from "antd";
+import { message } from "antd";
 import { useTable, useSortBy, UseSortByOptions } from "react-table";
 import copy from "copy-to-clipboard";
 import {
@@ -30,6 +30,7 @@ import type {
   TableHeaderRenderer,
 } from "react-virtualized";
 import type { FC, Requireable } from "react";
+import type { MenuProps } from "antd";
 
 const COL_WIDTH = 200;
 

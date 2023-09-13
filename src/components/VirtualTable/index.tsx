@@ -1,7 +1,12 @@
 import React, { useMemo, useEffect } from "react";
+import {
+  MoreOutlined,
+  SortAscendingOutlined,
+  SortDescendingOutlined,
+} from "@ant-design/icons";
 import { set, getOr } from "unchanged";
 import cx from "classnames";
-import { message } from "antd";
+import { MenuProps, message } from "antd";
 import { useTable, useSortBy, UseSortByOptions } from "react-table";
 import copy from "copy-to-clipboard";
 import {
@@ -11,9 +16,16 @@ import {
   defaultTableCellRenderer,
 } from "react-virtualized";
 
+import PopoverButton from "@/components/PopoverButton";
+import MenuView from "@/components/MenuView";
+
 import type { OrderByFn } from "react-table";
-import type { ScrollEventData, TableCellProps } from "react-virtualized";
-import type { FC, Requireable } from "react";
+import type {
+  ScrollEventData,
+  TableCellProps,
+  TableHeaderRenderer,
+} from "react-virtualized";
+import type { FC, Requireable, MouseEvent } from "react";
 
 const COL_WIDTH = 200;
 
@@ -180,6 +192,74 @@ const VirtualTable: FC<VirtualTableProps> = ({
       set("sortBy", sortBy, prev)
     );
   }, [sortBy, setState]);
+
+  const headerRenderer: TableHeaderRenderer = ({ label, columnData }) => {
+    const { sortDirection, onSortChange, columnId, granularity } = columnData;
+    let humanLabel = label;
+
+    if (granularity) {
+      humanLabel = `${label} (by ${granularity})`;
+    }
+
+    const children = [
+      <span
+        className={"headerColumn"}
+        key="label"
+        title={typeof humanLabel === "string" ? humanLabel : undefined}
+      >
+        {humanLabel}
+      </span>,
+    ];
+
+    let icon = <MoreOutlined />;
+    if (sortDirection) {
+      icon =
+        sortDirection === SortDirection.DESC ? (
+          <SortDescendingOutlined />
+        ) : (
+          <SortAscendingOutlined />
+        );
+    }
+
+    const onClickSort = (sortDir: string | null) => {
+      onSortChange(sortDir, columnId);
+      return false;
+    };
+
+    const routes: MenuProps["items"] = [
+      {
+        key: "1",
+        onClick: () => onClickSort(SortDirection.ASC),
+        title: "Sort ASC",
+      },
+      {
+        key: "2",
+        onClick: () => onClickSort(SortDirection.DESC),
+        title: "Sort DESC",
+      },
+      {
+        key: "3",
+        onClick: () => onClickSort(null),
+        title: "Don't sort",
+      },
+    ];
+
+    if (sortDisabled) {
+      return children;
+    }
+
+    children.push(
+      <PopoverButton
+        key="dropdown"
+        popoverType="dropdown"
+        icon={icon}
+        trigger={["click"]}
+        menu={{ items: routes }}
+      />
+    );
+
+    return children;
+  };
 
   return <>VirtualTable</>;
 };

@@ -49,7 +49,7 @@ interface Node {
   key?: string;
   path?: string;
   children?: Node[];
-  onClick?: (node: Node, event?: MouseEvent<HTMLAnchorElement>) => void;
+  onClick?: (node: Node, event: MouseEvent<HTMLAnchorElement>) => boolean;
 }
 
 interface MenuViewProps {

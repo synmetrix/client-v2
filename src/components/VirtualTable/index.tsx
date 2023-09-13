@@ -22,6 +22,7 @@ import MenuView from "@/components/MenuView";
 import type { OrderByFn } from "react-table";
 import type {
   ScrollEventData,
+  TableCellDataGetter,
   TableCellProps,
   TableHeaderRenderer,
 } from "react-virtualized";
@@ -259,6 +260,21 @@ const VirtualTable: FC<VirtualTableProps> = ({
     );
 
     return children;
+  };
+
+  const cellDataGetter: TableCellDataGetter = ({ rowData, dataKey }) => {
+    let val = rowData?.original?.[dataKey];
+
+    if (typeof val === "object") {
+      try {
+        val = JSON.stringify(val);
+      } catch (err) {
+        console.error(`Can't stringify "${dataKey}" value: ${val}`);
+        console.error(err);
+      }
+    }
+
+    return val;
   };
 
   return <>VirtualTable</>;

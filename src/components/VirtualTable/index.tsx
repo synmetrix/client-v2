@@ -5,7 +5,7 @@ import {
   SortDescendingOutlined,
 } from "@ant-design/icons";
 import { set, getOr } from "unchanged";
-import cx from "classnames";
+import cn from "classnames";
 import { MenuProps, message } from "antd";
 import { useTable, useSortBy, UseSortByOptions } from "react-table";
 import copy from "copy-to-clipboard";
@@ -17,7 +17,8 @@ import {
 } from "react-virtualized";
 
 import PopoverButton from "@/components/PopoverButton";
-import MenuView from "@/components/MenuView";
+
+import styles from "./index.module.less";
 
 import type { OrderByFn } from "react-table";
 import type {
@@ -303,6 +304,14 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
       return set("sortBy", nextSortBy, prev);
     });
+  };
+
+  const noRowsRenderer = () => {
+    return (
+      <div className={styles.noRows} style={{ height: rowHeight }}>
+        No rows
+      </div>
+    );
   };
 
   return <>VirtualTable</>;

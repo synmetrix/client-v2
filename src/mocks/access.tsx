@@ -84,21 +84,33 @@ export const resourceMock: DataResource[] = [
     dataModels: [
       {
         title: "LineItems",
-        measures: ["Stocks"],
-        dimensions: ["Name", "Address", "Stocks"],
-        segments: ["Stocks"],
+        measures: [{ label: "Stocks", value: "stocks" }],
+        dimensions: [
+          { label: "Name", value: "name" },
+          { label: "Address", value: "adress" },
+          { label: "Stocks", value: "stocks" },
+        ],
+        segments: [{ label: "Stocks", value: "stocks" }],
       },
       {
         title: "Companies",
-        measures: ["Stocks"],
-        dimensions: ["Name", "Address", "Stocks"],
-        segments: ["Stocks"],
+        measures: [{ label: "Stocks", value: "stocks" }],
+        dimensions: [
+          { label: "Name", value: "name" },
+          { label: "Address", value: "adress" },
+          { label: "Stocks", value: "stocks" },
+        ],
+        segments: [{ label: "Stocks", value: "stocks" }],
       },
       {
         title: "Orders",
-        measures: ["Stocks"],
-        dimensions: ["Name", "Address", "Stocks"],
-        segments: ["Stocks"],
+        measures: [{ label: "Stocks", value: "stocks" }],
+        dimensions: [
+          { label: "Name", value: "name" },
+          { label: "Address", value: "adress" },
+          { label: "Stocks", value: "stocks" },
+        ],
+        segments: [{ label: "Stocks", value: "stocks" }],
       },
     ],
   },

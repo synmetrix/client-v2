@@ -21,6 +21,7 @@ interface AccessSelectionProps {
 
 const AccessSelection: FC<AccessSelectionProps> = ({
   items,
+  permissions,
   onSelect,
   active,
 }) => {
@@ -36,7 +37,12 @@ const AccessSelection: FC<AccessSelectionProps> = ({
     >
       {items.map((i) => (
         <SwiperSlide key={i.id} className={styles.sliderItem}>
-          <AccessCard {...i} onClick={onSelect} active={i.id === active} />
+          <AccessCard
+            {...i}
+            permissions={permissions?.[i.id]}
+            onClick={onSelect}
+            active={i.id === active}
+          />
         </SwiperSlide>
       ))}
     </Swiper>

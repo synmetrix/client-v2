@@ -26,13 +26,15 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
 
   const [searchValue, setSearchValue] = useState<string>("");
   const filterOptions = (option?: string[]) => {
-    const res = option?.filter((m) => m.toLowerCase().includes(searchValue));
+    const res = option?.filter((m) =>
+      m.label.toLowerCase().includes(searchValue)
+    );
     return res && res.length > 0 ? res : undefined;
   };
 
-  const measures = filterOptions(options.measures),
-    dimensions = filterOptions(options.dimensions),
-    segments = filterOptions(options.segments);
+  const measures = filterOptions(options.measures) || [],
+    dimensions = filterOptions(options.dimensions) || [],
+    segments = filterOptions(options.segments) || [];
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) =>
     setSearchValue(e.target.value.trim().toLowerCase());
@@ -41,7 +43,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
     if (!value) return false;
     return Object.keys(options).every((k) => {
       const key = k as keyof DataAccessOption;
-      return options[key]?.every((o) => value[key]?.includes(o));
+      return options[key]?.every((o) => value[key]?.includes(o.value));
     });
   };
 
@@ -49,7 +51,11 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
     if (isAllSelected()) {
       onChange?.({ measures: [], dimensions: [], segments: [] });
     } else {
-      onChange?.({ measures, dimensions, segments });
+      onChange?.({
+        measures: measures.map((m) => m.value),
+        dimensions: dimensions.map((d) => d.value),
+        segments: segments.map((s) => s.value),
+      });
     }
   };
 
@@ -94,7 +100,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
         </Checkbox>
 
         <Space size={8} direction="vertical">
-          {measures && (
+          {!!measures.length && (
             <>
               <Text className={styles.groupTitle}>
                 {t("common:words.measures")}
@@ -108,7 +114,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
             </>
           )}
 
-          {dimensions && (
+          {!!dimensions.length && (
             <>
               <Text className={styles.groupTitle}>
                 {t("common:words.dimensions")}
@@ -122,7 +128,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
             </>
           )}
 
-          {segments && (
+          {!!segments.length && (
             <>
               <Text className={styles.groupTitle}>
                 {t("common:words.segments")}

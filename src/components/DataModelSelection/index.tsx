@@ -38,7 +38,7 @@ const DataModelSelection: FC<DataModelSelectionProps> = ({
       </Space>
 
       <Space className={styles.dataModels} direction="vertical" size={8}>
-        {dataModels.map((d) => (
+        {(dataModels || []).map((d) => (
           <Row
             className={cn(styles.dataModel, {
               [styles.active]: active === d.title,

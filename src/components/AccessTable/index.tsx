@@ -3,8 +3,9 @@ import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
-import AccessType from "@/components/AccessType";
+import { AccessTypeWrapper } from "@/components/AccessType";
 import type { Role } from "@/types/access";
+import formatTime from "@/utils/helpers/formatTime";
 
 import TrashIcon from "@/assets/trash.svg";
 
@@ -14,12 +15,16 @@ import type { ColumnsType } from "antd/es/table";
 import type { FC } from "react";
 
 interface AccessTableProps {
-  access: Role[];
-  onRemove: (access: Role) => void;
-  onEdit: (access: Role) => void;
+  accessLists: Role[];
+  onRemove?: (id: string) => void;
+  onEdit?: (id: string) => void;
 }
 
-const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
+const AccessTable: FC<AccessTableProps> = ({
+  accessLists,
+  onRemove,
+  onEdit,
+}) => {
   const { t } = useTranslation(["settings", "common"]);
 
   const columns: ColumnsType<Role> = [
@@ -43,13 +48,17 @@ const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
       title: t("common:words.created_at"),
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (value) => <span className={styles.dateCell}>{value}</span>,
+      render: (value) => (
+        <span className={styles.dateCell}>{formatTime(value)}</span>
+      ),
     },
     {
       title: t("common:words.updated_at"),
       dataIndex: "updatedAt",
       key: "updatedAt",
-      render: (value) => <span className={styles.dateCell}>{value}</span>,
+      render: (value) => (
+        <span className={styles.dateCell}>{formatTime(value)}</span>
+      ),
     },
 
     {
@@ -63,14 +72,14 @@ const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
           <Button
             className={styles.action}
             type="text"
-            onClick={() => onEdit(record)}
+            onClick={() => onEdit?.(record.id)}
           >
             <SettingOutlined key="setting" />
           </Button>
           <Button
             className={styles.action}
             type="text"
-            onClick={() => onRemove(record)}
+            onClick={() => onRemove?.(record.id)}
           >
             <TrashIcon />
           </Button>
@@ -79,12 +88,12 @@ const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
     },
   ];
 
-  const expandedRowRender = (record: Role) => {
+  const expandedRowRender = (record: Role, i: number) => {
     const expandedColumns: ColumnsType<Role["dataSources"][number]> = [
       {
-        title: "url",
-        dataIndex: "url",
-        key: "url",
+        title: "name",
+        dataIndex: "name",
+        key: "name",
         width: 225,
         render: (value) => <span className={styles.url}>{value}</span>,
       },
@@ -92,7 +101,16 @@ const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
         title: "type",
         dataIndex: "type",
         key: "type",
-        render: (value) => <AccessType access={value} />,
+        render: (_, rec) => {
+          const permissions =
+            accessLists[i]?.config?.datasources?.[rec?.id]?.cubes;
+          return (
+            <AccessTypeWrapper
+              dataSourceId={rec?.id}
+              permissions={permissions}
+            />
+          );
+        },
       },
     ];
 
@@ -113,7 +131,7 @@ const AccessTable: FC<AccessTableProps> = ({ access, onRemove, onEdit }) => {
     <Table
       className={styles.table}
       columns={columns}
-      dataSource={access}
+      dataSource={accessLists}
       rowKey={(record) => record.id}
       expandable={{
         expandedRowRender,

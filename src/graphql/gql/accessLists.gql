@@ -14,7 +14,6 @@ subscription SubAccessLists ($offset: Int, $limit: Int, $where: access_lists_boo
     id
     name
     config
-    team_id
     created_at
     updated_at
   }
@@ -43,7 +42,7 @@ mutation DeleteAccessList ($id: uuid!) {
   }
 }
 
-mutation CreteAccessList ($object: access_lists_insert_input!) {
+mutation CreateAccessList ($object: access_lists_insert_input!) {
   insert_access_lists_one(object: $object) {
     id
   }

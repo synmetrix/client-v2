@@ -1,6 +1,6 @@
 import RootLayout from "@/layouts/RootLayout";
 
-import RolesAndAccess from ".";
+import { RolesAndAccess } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 

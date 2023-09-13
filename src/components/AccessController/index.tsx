@@ -21,6 +21,28 @@ interface AccessControllerProps<T extends FieldValues> {
   defaultValue?: PathValue<T, Path<T>>;
 }
 
+export const detectAccessType = (model: DataModel, value): AccessType => {
+  if (!value || !value || !value?.[model.title]) return "no";
+
+  const noAccess = Object.keys(value?.[model.title])?.every(
+    (k) => value?.[model.title][k]?.length === 0
+  );
+
+  if (noAccess) return "no";
+
+  const selected = Object.keys(value?.[model.title])?.reduce(
+    (sum, k2) => value?.[model.title][k2].length + sum,
+    0
+  );
+  const all = Object.keys(model)
+    .filter((key) => key !== "title")
+    .reduce((sum, key) => sum + model[key as keyof DataModel].length, 0);
+
+  if (selected < all) return "partial";
+
+  return "full";
+};
+
 const AccessController: <T extends FieldValues>(
   props: AccessControllerProps<T>
 ) => JSX.Element = ({
@@ -40,34 +62,6 @@ const AccessController: <T extends FieldValues>(
     defaultValue,
   });
 
-  const detectAccessType = (model: DataModel): AccessType => {
-    if (!value || !value[model.title]) return "no";
-
-    const noAccess = Object.keys(value[model.title])?.every(
-      (k) => value?.[model.title][k]?.length === 0
-    );
-
-    if (noAccess) return "no";
-
-    const selected = Object.keys(value[model.title])?.reduce(
-      (sum, k2) => value[model.title][k2].length + sum,
-      0
-    );
-    const all = Object.keys(model)
-      .filter((key) => key !== "title")
-      .reduce((sum, key) => sum + model[key as keyof DataModel].length, 0);
-
-    if (selected < all) return "partial";
-
-    return "full";
-  };
-
-  const createDataModelOptions = (): DataModelOption[] =>
-    resource.dataModels?.map((m) => ({
-      title: m.title,
-      access: detectAccessType(m),
-    }));
-
   const createDataAccessSelection = (): DataAccessOption => {
     const model = resource.dataModels.find((m) => m.title === selectedModel);
     return {
@@ -78,13 +72,32 @@ const AccessController: <T extends FieldValues>(
   };
 
   const onAccessChange = (v: DataAccessOption) => {
+    console.log("v", v);
     if (typeof value === "object") {
-      value[selectedModel] = v;
+      value[resource.id] = {
+        ...value[resource.id],
+        [selectedModel]: v,
+      };
       onChange(value);
     } else {
-      onChange({ [selectedModel]: v } as typeof value);
+      onChange({
+        [selectedModel]: v,
+      });
     }
   };
+
+  const dataModels = useMemo(() => {
+    return resource.dataModels?.map((m) => ({
+      title: m.title,
+      access: detectAccessType(m, value?.[resource?.id]),
+    }));
+  }, [resource.dataModels, resource?.id, value]);
+
+  useEffect(() => {
+    if (resource?.dataModels?.length) {
+      setSelectedModel(resource.dataModels[0].title);
+    }
+  }, [resource?.dataModels, name]);
 
   return (
     <Row gutter={[16, 16]}>
@@ -92,7 +105,7 @@ const AccessController: <T extends FieldValues>(
         <DataModelSelection
           onChange={(activeTitle) => setSelectedModel(activeTitle)}
           title={resource.title}
-          dataModels={createDataModelOptions()}
+          dataModels={dataModels}
           active={selectedModel}
         />
       </Col>
@@ -101,7 +114,7 @@ const AccessController: <T extends FieldValues>(
           <DataAccessSelection
             options={createDataAccessSelection()}
             onChange={onAccessChange}
-            value={value?.[selectedModel]}
+            value={value?.[resource.id]?.[selectedModel]}
           />
         )}
       </Col>

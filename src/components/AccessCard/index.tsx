@@ -2,7 +2,7 @@ import { Card, Space } from "antd";
 import cn from "classnames";
 
 import DataSourceTag from "@/components/DataSourceTag";
-import AccessType from "@/components/AccessType";
+import { AccessTypeWrapper } from "@/components/AccessType";
 import type { DataSourceAccess } from "@/types/access";
 
 import styles from "./index.module.less";
@@ -18,6 +18,7 @@ const AccessCard: FC<AccessCardProps> = ({
   id,
   url,
   access,
+  permissions,
   dataSource,
   onClick,
   active,
@@ -33,7 +34,11 @@ const AccessCard: FC<AccessCardProps> = ({
         <span className={styles.url}>{url}</span>
 
         <Space size={29}>
-          <AccessType access={access} />
+          <AccessTypeWrapper
+            access={access}
+            dataSourceId={id}
+            permissions={permissions}
+          />
           <DataSourceTag dataSource={dataSource} />
         </Space>
       </Space>

@@ -16,6 +16,7 @@ import {
   defaultTableCellRenderer,
 } from "react-virtualized";
 
+import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import PopoverButton from "@/components/PopoverButton";
 
 import styles from "./index.module.less";
@@ -161,7 +162,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
   onScroll,
   footer,
   orderByFn,
-  loadingProgress,
+  loading,
 }) => {
   const defaultColumns = useMemo(
     () =>
@@ -339,11 +340,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
     );
   };
 
-  const loadingTip = loadingProgress.timeElapsed
-    ? `${loadingProgress.stage} ${(
-        parseFloat(loadingProgress.timeElapsed.toString()) / 1000
-      ).toFixed(2)} secs...`
-    : loadingProgress.stage;
+  if (loading) return <BouncingDotsLoader />;
 
   return <>VirtualTable</>;
 };

@@ -59,6 +59,9 @@
   "roles_and_access": {
     "manage_roles": "Manage roles",
     "create_role": "Create Role",
+    "access_list_created": "Access list created.",
+    "access_list_updated": "Access list updated.",
+    "access_list_removed": "Access list removed.",
     "access_table": {
       "count": "Access to data sources"
     },

@@ -11,30 +11,33 @@ import { useFetchMetaQuery } from "@/graphql/generated";
 import type {
   DataResource,
   DataSourceAccess,
+  Option,
   RoleForm as RoleFormType,
 } from "@/types/access";
-
-import { detectSourceAccessType } from "../AccessType";
+import type { Cube } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
 interface RoleFormProps {
-  resources: DataResource[];
+  resources?: DataResource[];
   dataSourceAccess: DataSourceAccess[];
-  initialValues?: any;
+  initialValues?: RoleFormType;
   onSubmit: (data: RoleFormType) => void;
 }
 
-const cubesToNames = (cubes) =>
-  cubes.map((c) => ({ label: c.shortTitle, value: c.name }));
+const cubesToNames = (cubes: Cube[]): Option[] =>
+  cubes.map((c: any) => ({ label: c.shortTitle, value: c.name }));
 
-export const prepareResourceData = (data, resource) => {
+export const prepareResourceData = (
+  data: Cube[],
+  resource: DataSourceAccess | undefined
+) => {
   return {
     id: resource?.id,
-    title: resource?.url,
-    dataModels: (data || []).map((c) => ({
+    title: resource?.name,
+    dataModels: (data || []).map((c: any) => ({
       title: c.name,
       measures: cubesToNames(c.measures || []),
       dimensions: cubesToNames(c.dimensions || []),
@@ -68,7 +71,7 @@ const RoleForm: FC<RoleFormProps> = ({
     }
 
     return prepareResourceData(metaData.data?.fetch_meta?.cubes, resource);
-  }, [metaData.data?.fetch_meta?.cubes, resource, resources]);
+  }, [metaData.data?.fetch_meta, resource, resources]);
 
   const accessWatch = watch("access");
 
@@ -118,7 +121,7 @@ const RoleForm: FC<RoleFormProps> = ({
               <AccessController
                 control={control}
                 name="access"
-                resource={resourceData}
+                resource={resourceData as DataResource}
               />
             </Suspense>
           )}

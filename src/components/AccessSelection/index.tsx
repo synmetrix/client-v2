@@ -5,7 +5,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 
 import AccessCard from "@/components/AccessCard";
-import type { DataSourceAccess } from "@/types/access";
+import type { DataSourceAccess, Permission } from "@/types/access";
 
 import styles from "./index.module.less";
 
@@ -16,6 +16,7 @@ type AccessId = string;
 interface AccessSelectionProps {
   items: DataSourceAccess[];
   onSelect: (access: DataSourceAccess) => void;
+  permissions?: Permission;
   active?: AccessId;
 }
 

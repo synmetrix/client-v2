@@ -1,11 +1,12 @@
 import type { DataSource } from "./dataSource";
 
 export type AccessType = "partial" | "full" | "no";
+export type Section = "measures" | "dimensions" | "segments";
 
 export interface DataSourceAccess {
   id: string;
-  url: string;
-  access: AccessType;
+  name: string;
+  access?: AccessType;
   dataSource: DataSource;
 }
 
@@ -20,25 +21,41 @@ export interface DataResource {
   dataModels: DataModel[];
 }
 
-export interface DataModel extends Required<DataAccessOption> {
+export interface DataModel extends Required<DataAccessConfigOption> {
   title: string;
 }
 
-export type DataAccessOption = Partial<
-  Record<"measures" | "dimensions" | "segments", string[]>
+export type Option = {
+  label: string;
+  value: string;
+};
+
+export type DataAccessConfigOption = Partial<Record<Section, Option[]>>;
+export type DataAccessFormOption = Partial<Record<Section, string[]>>;
+
+export type Permission = Partial<Record<string, DataAccessFormOption>>;
+
+export type DataAccessConfig = Record<
+  string,
+  Record<string, DataAccessConfigOption[]>
 >;
 
-export interface Role {
+export type DataAccessDataSources = {
+  datasources?: DataAccessConfig;
+};
+
+export interface AccessList {
   id: string;
   name: string;
   count: number;
   createdAt: string;
   updatedAt: string;
-  dataSources: { url: string; type: AccessType }[];
+  dataSources: { id: string; name: string; type: AccessType }[];
+  config: DataAccessDataSources;
 }
 
 export interface RoleForm {
   name: string;
-  resource: DataSourceAccess;
-  access: Record<string, DataAccessOption>;
+  resource?: DataSourceAccess;
+  access: Permission;
 }

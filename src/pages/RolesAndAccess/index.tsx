@@ -18,20 +18,24 @@ import {
   useSubAccessListsSubscription,
   useUpdateAccessListMutation,
 } from "@/graphql/generated";
-import type { DataSourceAccess, Role } from "@/types/access";
-import type { Datasources } from "@/graphql/generated";
+import type {
+  DataSourceAccess,
+  AccessList,
+  RoleForm as RoleFormType,
+} from "@/types/access";
+import type { Datasources, AllAccessListsQuery } from "@/graphql/generated";
+import type { Cube, DataSourceInfo } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 interface RolesAndAccessProps {
-  initialValues?: any;
-  accessLists: Role[];
-  loading?: boolean;
-  // resources: any;
+  initialValues?: RoleFormType;
+  accessLists: AccessList[];
   dataSourceAccess: DataSourceAccess[];
+  loading?: boolean;
   editId?: string;
   onEdit?: (id: string) => void;
   onRemove?: (id: string) => void;
-  onFinish?: (data: any) => void;
+  onFinish?: (data: RoleFormType) => void;
 }
 
 export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
@@ -40,9 +44,8 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   loading,
   onEdit,
   onRemove,
-  // resources,
   dataSourceAccess,
-  onFinish,
+  onFinish = () => {},
 }) => {
   const { t } = useTranslation(["settings", "pages"]);
   const [, setLocation] = useLocation();
@@ -55,7 +58,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
     setLocation("/settings/access");
   };
 
-  const onFormFinish = (data) => {
+  const onFormFinish = (data: RoleFormType) => {
     onFinish(data);
     onClose();
   };
@@ -106,33 +109,38 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   );
 };
 
-const prepareAccessData = (accessData, dataSources): Role[] => {
-  return accessData.map((a) => {
+const prepareAccessData = (
+  accessData: AllAccessListsQuery | undefined,
+  dataSources: DataSourceInfo[]
+) => {
+  return (accessData?.access_lists || []).map((a) => {
     const accessDataSourceIds = Object.keys(a?.config?.datasources || {});
     const sources = dataSources.filter((d) =>
-      accessDataSourceIds.includes(d.id)
+      accessDataSourceIds.includes(d.id || "")
     );
 
     return {
-      id: a.id,
-      name: a.name,
-      count: sources.length,
-      createdAt: a.created_at,
-      updatedAt: a.updated_at,
+      id: a.id as string,
+      name: a.name as string,
+      count: sources.length as number,
+      createdAt: a.created_at as string,
+      updatedAt: a.updated_at as string,
       dataSources: sources,
       config: a.config,
-    };
+    } as unknown as AccessList;
   });
 };
 
-const prepareDataSourceAccess = (dataSources) =>
+const prepareDataSourceAccess = (
+  dataSources: DataSourceInfo[]
+): DataSourceAccess[] =>
   dataSources.map((d) => ({
-    id: d.id,
-    url: d.name,
+    id: d.id as string,
+    name: d.name,
     dataSource: d.type,
   }));
 
-const filterEmpty = (data) =>
+const filterEmpty = (data: Cube) =>
   Object.entries(data).reduce((acc, [name, value]) => {
     let filteredValue = value;
 
@@ -149,6 +157,7 @@ const filterEmpty = (data) =>
   }, {});
 
 const RolesAndAccessWrapper: React.FC = () => {
+  const { t } = useTranslation(["settings", "pages"]);
   const { currentTeam } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { id: editId } = location.query;
@@ -188,21 +197,21 @@ const RolesAndAccessWrapper: React.FC = () => {
   });
 
   useCheckResponse(createMutation, () => {}, {
-    successMessage: "Access list created.",
+    successMessage: t("settings:roles_and_access.access_list_created"),
   });
 
   useCheckResponse(updateMutation, () => {}, {
-    successMessage: "Access list updated.",
+    successMessage: t("settings:roles_and_access.access_list_updated"),
   });
 
   useCheckResponse(deleteMutation, () => {}, {
-    successMessage: "Access list removed.",
+    successMessage: t("settings:roles_and_access.access_list_removed"),
   });
 
-  const onFinish = (data) => {
+  const onFinish = (data: RoleFormType) => {
     const datasources = Object.entries(data.access).reduce(
       (acc, [id, cubes]) => {
-        const filteredCubes = filterEmpty(cubes);
+        const filteredCubes = filterEmpty(cubes as unknown as Cube);
 
         if (!Object.keys(filteredCubes).length) return acc;
 
@@ -274,17 +283,21 @@ const RolesAndAccessWrapper: React.FC = () => {
     [dataSources]
   );
   const accessLists = useMemo(
-    () =>
-      prepareAccessData(accessListsData?.data?.access_lists || [], dataSources),
-    [accessListsData.data?.access_lists, dataSources]
+    () => prepareAccessData(accessListsData?.data, dataSources),
+    [accessListsData.data, dataSources]
   );
 
   const initialValues = useMemo(() => {
     if (editId) {
       const curAccessList = accessLists.find((a) => a.id === editId);
+
+      if (!curAccessList) {
+        return;
+      }
+
       const data = Object.entries(
         curAccessList?.config?.datasources || {}
-      ).reduce((acc, [id, values]) => {
+      ).reduce((acc, [id, values]: any) => {
         return {
           ...acc,
           [id]: {
@@ -296,7 +309,7 @@ const RolesAndAccessWrapper: React.FC = () => {
       return {
         name: curAccessList?.name,
         access: data,
-      };
+      } as RoleFormType;
     }
   }, [accessLists, editId]);
 

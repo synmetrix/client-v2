@@ -5,9 +5,10 @@ import DataModelSelection from "@/components/DataModelSelection";
 import DataAccessSelection from "@/components/DataAccessSelection";
 import type {
   AccessType,
-  DataAccessOption,
+  DataAccessConfig,
+  DataAccessFormOption,
+  DataAccessConfigOption,
   DataModel,
-  DataModelOption,
   DataResource,
 } from "@/types/access";
 
@@ -21,11 +22,14 @@ interface AccessControllerProps<T extends FieldValues> {
   defaultValue?: PathValue<T, Path<T>>;
 }
 
-export const detectAccessType = (model: DataModel, value): AccessType => {
+export const detectAccessType = (
+  model: DataModel,
+  value: DataAccessConfig
+): AccessType => {
   if (!value || !value || !value?.[model.title]) return "no";
 
-  const noAccess = Object.keys(value?.[model.title])?.every(
-    (k) => value?.[model.title][k]?.length === 0
+  const noAccess = Object.keys(value?.[model.title] || {})?.every(
+    (k) => value?.[model.title]?.[k].length === 0
   );
 
   if (noAccess) return "no";
@@ -62,17 +66,16 @@ const AccessController: <T extends FieldValues>(
     defaultValue,
   });
 
-  const createDataAccessSelection = (): DataAccessOption => {
+  const options = useMemo(() => {
     const model = resource.dataModels.find((m) => m.title === selectedModel);
     return {
       measures: model?.measures,
       dimensions: model?.dimensions,
       segments: model?.segments,
-    } as DataAccessOption;
-  };
+    } as DataAccessConfigOption;
+  }, [resource.dataModels, selectedModel]);
 
-  const onAccessChange = (v: DataAccessOption) => {
-    console.log("v", v);
+  const onAccessChange = (v: DataAccessFormOption) => {
     if (typeof value === "object") {
       value[resource.id] = {
         ...value[resource.id],
@@ -82,7 +85,7 @@ const AccessController: <T extends FieldValues>(
     } else {
       onChange({
         [selectedModel]: v,
-      });
+      } as any);
     }
   };
 
@@ -112,7 +115,7 @@ const AccessController: <T extends FieldValues>(
       <Col span={24} lg={12}>
         {selectedModel && (
           <DataAccessSelection
-            options={createDataAccessSelection()}
+            options={options}
             onChange={onAccessChange}
             value={value?.[resource.id]?.[selectedModel]}
           />

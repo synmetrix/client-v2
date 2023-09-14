@@ -70,3 +70,18 @@ export interface DataSourceInfo {
   updatedAt: string;
   createdAt: string;
 }
+
+export interface CubeOption {
+  name: string;
+  title: string;
+  shortTitle: string;
+  type: string;
+}
+
+export interface Cube {
+  name: string;
+  title: string;
+  dimensions: CubeOption[];
+  measures: CubeOption[];
+  segments: CubeOption[];
+}

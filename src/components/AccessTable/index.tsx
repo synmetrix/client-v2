@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import { AccessTypeWrapper } from "@/components/AccessType";
-import type { Role } from "@/types/access";
+import type { AccessList } from "@/types/access";
 import formatTime from "@/utils/helpers/formatTime";
 
 import TrashIcon from "@/assets/trash.svg";
@@ -15,7 +15,7 @@ import type { ColumnsType } from "antd/es/table";
 import type { FC } from "react";
 
 interface AccessTableProps {
-  accessLists: Role[];
+  accessLists: AccessList[];
   onRemove?: (id: string) => void;
   onEdit?: (id: string) => void;
 }
@@ -27,7 +27,7 @@ const AccessTable: FC<AccessTableProps> = ({
 }) => {
   const { t } = useTranslation(["settings", "common"]);
 
-  const columns: ColumnsType<Role> = [
+  const columns: ColumnsType<AccessList> = [
     {
       title: t("common:words.role"),
       dataIndex: "name",
@@ -88,8 +88,8 @@ const AccessTable: FC<AccessTableProps> = ({
     },
   ];
 
-  const expandedRowRender = (record: Role, i: number) => {
-    const expandedColumns: ColumnsType<Role["dataSources"][number]> = [
+  const expandedRowRender = (record: AccessList, i: number) => {
+    const expandedColumns: ColumnsType<AccessList["dataSources"][number]> = [
       {
         title: "name",
         dataIndex: "name",
@@ -119,7 +119,7 @@ const AccessTable: FC<AccessTableProps> = ({
         className={styles.subTable}
         columns={expandedColumns}
         dataSource={record.dataSources}
-        rowKey={(rec) => rec.url}
+        rowKey={(rec) => rec.name}
         showHeader={false}
         pagination={false}
         size="small"

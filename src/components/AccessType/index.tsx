@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Spin } from "antd";
 
 import { useFetchMetaQuery } from "@/graphql/generated";
-import type { AccessType as Access } from "@/types/access";
+import type { AccessType as Access, DataSourceAccess } from "@/types/access";
 
 import FullAccessIcon from "@/assets/access-full.svg";
 import PartialAccessIcon from "@/assets/access-partial.svg";
@@ -85,7 +85,7 @@ export const AccessTypeWrapper: FC<AccessTypeWrapperProps> = ({
       return;
     }
 
-    const resourceData = prepareResourceData(cubes, {});
+    const resourceData = prepareResourceData(cubes, {} as DataSourceAccess);
     const types = resourceData.dataModels.map((m) =>
       detectAccessType(m, permissions)
     );

@@ -171,40 +171,24 @@ const VirtualTable: FC<VirtualTableProps> = ({
         Header: colId,
         accessor: (row: any) => row[colId],
         id: colId,
+        sortType: orderByFn,
+        sortBy,
       })),
-    [data]
+    [data, orderByFn, sortBy]
   );
 
   const columns: any = userColumns || defaultColumns;
 
   // Use the state and functions returned from useTable to build your UI
-  const {
-    rows,
-    flatHeaders,
-    // @ts-ignore
-    setState,
-  } = useTable(
+  const { rows, flatHeaders } = useTable(
     {
       columns,
       data,
-      debug: false,
-      // change orderByFn if you need sort from useSortBy
-      orderByFn,
-      initialState: {
-        // @ts-ignore
-        sortBy,
-      },
     },
     useSortBy
   );
 
   const tableWidth = flatHeaders.length * COL_WIDTH;
-
-  useEffect(() => {
-    // setState((prev?: NonNullable<unchanged.Unchangeable | undefined>) =>
-    //   set("sortBy", sortBy, prev)
-    // );
-  }, [sortBy, setState]);
 
   const headerRenderer: TableHeaderRenderer = ({ label, columnData }) => {
     const { sortDirection, onSortChange, columnId, granularity } = columnData;
@@ -289,29 +273,27 @@ const VirtualTable: FC<VirtualTableProps> = ({
   };
 
   const onSortChange = (direction: string, columnId: string) => {
-    setState((prev?: NonNullable<unchanged.Unchangeable | undefined>) => {
-      const sortBySet = new SortBySet(prev?.sortBy);
+    const sortBySet = new SortBySet(sortBy);
 
-      if (direction) {
-        sortBySet.add({
-          id: columnId,
-          desc: direction === SortDirection.DESC,
-        });
+    if (direction) {
+      sortBySet.add({
+        id: columnId,
+        desc: direction === SortDirection.DESC,
+      });
 
-        sortBySet.reverseUniq("id");
-      } else {
-        sortBySet.forEach((value) => {
-          if (value.id === columnId) {
-            sortBySet.delete(value);
-          }
-        });
-      }
+      sortBySet.reverseUniq("id");
+    } else {
+      sortBySet.forEach((value) => {
+        if (value.id === columnId) {
+          sortBySet.delete(value);
+        }
+      });
+    }
 
-      const nextSortBy = [...sortBySet];
-      onSortUpdate(nextSortBy);
+    const nextSortBy = [...sortBySet];
+    onSortUpdate(nextSortBy);
 
-      return set("sortBy", nextSortBy, prev);
-    });
+    return set("sortBy", nextSortBy);
   };
 
   const noRowsRenderer = () => {

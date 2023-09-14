@@ -16,3 +16,12 @@ const Template: StoryFn<typeof VirtualTable> = (args) => (
 );
 
 export const Default = Template.bind({});
+
+Default.args = {
+  messages: [
+    {
+      type: "error",
+      text: "test",
+    },
+  ],
+};

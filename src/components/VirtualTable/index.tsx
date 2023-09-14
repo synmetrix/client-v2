@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { set, getOr } from "unchanged";
 import cn from "classnames";
-import { Alert, Tooltip, message } from "antd";
+import { Alert, Empty, Tooltip, message } from "antd";
 import { useTable, useSortBy, UseSortByOptions } from "react-table";
 import copy from "copy-to-clipboard";
 import {
@@ -322,6 +322,11 @@ const VirtualTable: FC<VirtualTableProps> = ({
   };
 
   if (loading) return <BouncingDotsLoader />;
+
+  if (!columns.length && !rows.length)
+    return (
+      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={emptyDesc} />
+    );
 
   return (
     <>

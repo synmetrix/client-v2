@@ -30,7 +30,7 @@ Default.args = {
   items: [
     {
       id: "1",
-      url: "gh-api.clickhouse.tech1",
+      name: "gh-api.clickhouse.tech1",
       access: "full",
       dataSource: {
         name: "Clickhouse",
@@ -39,7 +39,7 @@ Default.args = {
     },
     {
       id: "2",
-      url: "gh-api.clickhouse.tech2",
+      name: "gh-api.clickhouse.tech2",
       access: "no",
       dataSource: {
         name: "Clickhouse",
@@ -48,7 +48,7 @@ Default.args = {
     },
     {
       id: "3",
-      url: "gh-api.clickhouse.tech3",
+      name: "gh-api.clickhouse.tech3",
       access: "full",
       dataSource: {
         name: "Clickhouse",
@@ -57,7 +57,7 @@ Default.args = {
     },
     {
       id: "4",
-      url: "gh-api.clickhouse.tech4",
+      name: "gh-api.clickhouse.tech4",
       access: "full",
       dataSource: {
         name: "Clickhouse",
@@ -66,7 +66,7 @@ Default.args = {
     },
     {
       id: "5",
-      url: "gh-api.clickhouse.tech5",
+      name: "gh-api.clickhouse.tech5",
       access: "full",
       dataSource: {
         name: "Clickhouse",
@@ -75,7 +75,7 @@ Default.args = {
     },
     {
       id: "6",
-      url: "gh-api.clickhouse.tech6",
+      name: "gh-api.clickhouse.tech6",
       access: "full",
       dataSource: {
         name: "Clickhouse",
@@ -84,7 +84,7 @@ Default.args = {
     },
     {
       id: "7",
-      url: "gh-api.clickhouse.tech8",
+      name: "gh-api.clickhouse.tech8",
       access: "full",
       dataSource: {
         name: "Clickhouse",
@@ -93,7 +93,7 @@ Default.args = {
     },
     {
       id: "9",
-      url: "gh-api.clickhouse.tech9",
+      name: "gh-api.clickhouse.tech9",
       access: "full",
       dataSource: {
         name: "Clickhouse",

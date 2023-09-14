@@ -22,8 +22,8 @@ interface AccessTableProps {
 
 const AccessTable: FC<AccessTableProps> = ({
   accessLists,
-  onRemove,
-  onEdit,
+  onRemove = () => {},
+  onEdit = () => {},
 }) => {
   const { t } = useTranslation(["settings", "common"]);
 

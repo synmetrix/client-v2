@@ -18,7 +18,7 @@ const Template: StoryFn<typeof AccessTable> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  access: [
+  accessLists: [
     {
       id: "1",
       name: "Team manager",
@@ -27,14 +27,17 @@ Default.args = {
       updatedAt: "10 days ago",
       dataSources: [
         {
-          url: "gh-api.clickhouse.tech1",
+          id: "1",
+          name: "gh-api.clickhouse.tech1",
           type: "full",
         },
         {
-          url: "gh-api.clickhouse.tech2",
+          id: "2",
+          name: "gh-api.clickhouse.tech2",
           type: "partial",
         },
       ],
+      config: {},
     },
     {
       id: "2",
@@ -44,12 +47,12 @@ Default.args = {
       updatedAt: "10 days ago",
       dataSources: [
         {
-          url: "gh-api.clickhouse.tech2",
+          id: "1",
+          name: "gh-api.clickhouse.tech2",
           type: "partial",
         },
       ],
+      config: {},
     },
   ],
-  onRemove: (access) => console.log("remove", access),
-  onEdit: (access) => console.log("edit", access),
 };

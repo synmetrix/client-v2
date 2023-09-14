@@ -32,7 +32,7 @@ export const Default = Template.bind({});
 
 Default.args = {
   id: "1",
-  url: "gh-api.clickhouse.tech",
+  name: "gh-api.clickhouse.tech",
   access: "full",
   dataSource: {
     name: "Clickhouse",

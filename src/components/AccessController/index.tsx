@@ -26,15 +26,16 @@ export const detectAccessType = (
   model: DataModel,
   value: DataAccessConfig
 ): AccessType => {
-  if (!value || !value || !value?.[model.title]) return "no";
+  if (!value || !value?.[model.title]) return "no";
 
-  const noAccess = Object.keys(value?.[model.title] || {})?.every(
+  const valueModel = value?.[model.title] || {};
+  const noAccess = Object.keys(valueModel)?.every(
     (k) => value?.[model.title]?.[k].length === 0
   );
 
   if (noAccess) return "no";
 
-  const selected = Object.keys(value?.[model.title])?.reduce(
+  const selected = Object.keys(valueModel)?.reduce(
     (sum, k2) => value?.[model.title][k2].length + sum,
     0
   );

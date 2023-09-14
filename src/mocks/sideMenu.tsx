@@ -102,9 +102,9 @@ export const items: SidebarItem[] = [
         icon: <MembersIcon />,
       },
       {
-        key: "roles-and-access",
+        key: "access",
         label: "Roles and Access",
-        href: "/settings/roles_and_access",
+        href: "/settings/access",
         icon: <RolesAndAccessIcon />,
       },
       {

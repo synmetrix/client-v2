@@ -38,6 +38,10 @@ export default [
                     component: "./pages/SqlApi",
                   },
                   {
+                    path: "/settings/access",
+                    component: "./pages/RolesAndAccess",
+                  },
+                  {
                     component: "./pages/404",
                   },
                 ],

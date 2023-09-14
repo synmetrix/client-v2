@@ -5,9 +5,10 @@ import DataModelSelection from "@/components/DataModelSelection";
 import DataAccessSelection from "@/components/DataAccessSelection";
 import type {
   AccessType,
-  DataAccessOption,
+  DataAccessConfig,
+  DataAccessFormOption,
+  DataAccessConfigOption,
   DataModel,
-  DataModelOption,
   DataResource,
 } from "@/types/access";
 
@@ -20,6 +21,32 @@ interface AccessControllerProps<T extends FieldValues> {
   defaultOpen?: string;
   defaultValue?: PathValue<T, Path<T>>;
 }
+
+export const detectAccessType = (
+  model: DataModel,
+  value: DataAccessConfig
+): AccessType => {
+  if (!value || !value?.[model.title]) return "no";
+
+  const valueModel = value?.[model.title] || {};
+  const noAccess = Object.keys(valueModel)?.every(
+    (k) => value?.[model.title]?.[k].length === 0
+  );
+
+  if (noAccess) return "no";
+
+  const selected = Object.keys(valueModel)?.reduce(
+    (sum, k2) => value?.[model.title][k2].length + sum,
+    0
+  );
+  const all = Object.keys(model)
+    .filter((key) => key !== "title")
+    .reduce((sum, key) => sum + model[key as keyof DataModel].length, 0);
+
+  if (selected < all) return "partial";
+
+  return "full";
+};
 
 const AccessController: <T extends FieldValues>(
   props: AccessControllerProps<T>
@@ -40,51 +67,41 @@ const AccessController: <T extends FieldValues>(
     defaultValue,
   });
 
-  const detectAccessType = (model: DataModel): AccessType => {
-    if (!value || !value[model.title]) return "no";
-
-    const noAccess = Object.keys(value[model.title])?.every(
-      (k) => value?.[model.title][k]?.length === 0
-    );
-
-    if (noAccess) return "no";
-
-    const selected = Object.keys(value[model.title])?.reduce(
-      (sum, k2) => value[model.title][k2].length + sum,
-      0
-    );
-    const all = Object.keys(model)
-      .filter((key) => key !== "title")
-      .reduce((sum, key) => sum + model[key as keyof DataModel].length, 0);
-
-    if (selected < all) return "partial";
-
-    return "full";
-  };
-
-  const createDataModelOptions = (): DataModelOption[] =>
-    resource.dataModels?.map((m) => ({
-      title: m.title,
-      access: detectAccessType(m),
-    }));
-
-  const createDataAccessSelection = (): DataAccessOption => {
+  const options = useMemo(() => {
     const model = resource.dataModels.find((m) => m.title === selectedModel);
     return {
       measures: model?.measures,
       dimensions: model?.dimensions,
       segments: model?.segments,
-    } as DataAccessOption;
-  };
+    } as DataAccessConfigOption;
+  }, [resource.dataModels, selectedModel]);
 
-  const onAccessChange = (v: DataAccessOption) => {
+  const onAccessChange = (v: DataAccessFormOption) => {
     if (typeof value === "object") {
-      value[selectedModel] = v;
+      value[resource.id] = {
+        ...value[resource.id],
+        [selectedModel]: v,
+      };
       onChange(value);
     } else {
-      onChange({ [selectedModel]: v } as typeof value);
+      onChange({
+        [selectedModel]: v,
+      } as any);
     }
   };
+
+  const dataModels = useMemo(() => {
+    return resource.dataModels?.map((m) => ({
+      title: m.title,
+      access: detectAccessType(m, value?.[resource?.id]),
+    }));
+  }, [resource.dataModels, resource?.id, value]);
+
+  useEffect(() => {
+    if (resource?.dataModels?.length) {
+      setSelectedModel(resource.dataModels[0].title);
+    }
+  }, [resource?.dataModels, name]);
 
   return (
     <Row gutter={[16, 16]}>
@@ -92,16 +109,16 @@ const AccessController: <T extends FieldValues>(
         <DataModelSelection
           onChange={(activeTitle) => setSelectedModel(activeTitle)}
           title={resource.title}
-          dataModels={createDataModelOptions()}
+          dataModels={dataModels}
           active={selectedModel}
         />
       </Col>
       <Col span={24} lg={12}>
         {selectedModel && (
           <DataAccessSelection
-            options={createDataAccessSelection()}
+            options={options}
             onChange={onAccessChange}
-            value={value?.[selectedModel]}
+            value={value?.[resource.id]?.[selectedModel]}
           />
         )}
       </Col>

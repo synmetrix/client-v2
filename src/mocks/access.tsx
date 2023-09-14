@@ -5,7 +5,7 @@ import CickHouseIcon from "@/assets/databases/click-house.svg";
 export const accessItems: DataSourceAccess[] = [
   {
     id: "1",
-    url: "gh-api.clickhouse.tech1",
+    name: "gh-api.clickhouse.tech1",
     access: "full",
     dataSource: {
       name: "Clickhouse",
@@ -14,7 +14,7 @@ export const accessItems: DataSourceAccess[] = [
   },
   {
     id: "2",
-    url: "gh-api.clickhouse.tech2",
+    name: "gh-api.clickhouse.tech2",
     access: "no",
     dataSource: {
       name: "Clickhouse",
@@ -23,7 +23,7 @@ export const accessItems: DataSourceAccess[] = [
   },
   {
     id: "3",
-    url: "gh-api.clickhouse.tech3",
+    name: "gh-api.clickhouse.tech3",
     access: "full",
     dataSource: {
       name: "Clickhouse",
@@ -32,7 +32,7 @@ export const accessItems: DataSourceAccess[] = [
   },
   {
     id: "4",
-    url: "gh-api.clickhouse.tech4",
+    name: "gh-api.clickhouse.tech4",
     access: "full",
     dataSource: {
       name: "Clickhouse",
@@ -41,7 +41,7 @@ export const accessItems: DataSourceAccess[] = [
   },
   {
     id: "5",
-    url: "gh-api.clickhouse.tech5",
+    name: "gh-api.clickhouse.tech5",
     access: "full",
     dataSource: {
       name: "Clickhouse",
@@ -50,7 +50,7 @@ export const accessItems: DataSourceAccess[] = [
   },
   {
     id: "6",
-    url: "gh-api.clickhouse.tech6",
+    name: "gh-api.clickhouse.tech6",
     access: "full",
     dataSource: {
       name: "Clickhouse",
@@ -59,7 +59,7 @@ export const accessItems: DataSourceAccess[] = [
   },
   {
     id: "7",
-    url: "gh-api.clickhouse.tech8",
+    name: "gh-api.clickhouse.tech8",
     access: "full",
     dataSource: {
       name: "Clickhouse",
@@ -68,7 +68,7 @@ export const accessItems: DataSourceAccess[] = [
   },
   {
     id: "9",
-    url: "gh-api.clickhouse.tech9",
+    name: "gh-api.clickhouse.tech9",
     access: "full",
     dataSource: {
       name: "Clickhouse",
@@ -84,21 +84,33 @@ export const resourceMock: DataResource[] = [
     dataModels: [
       {
         title: "LineItems",
-        measures: ["Stocks"],
-        dimensions: ["Name", "Address", "Stocks"],
-        segments: ["Stocks"],
+        measures: [{ label: "Stocks", value: "stocks" }],
+        dimensions: [
+          { label: "Name", value: "name" },
+          { label: "Address", value: "adress" },
+          { label: "Stocks", value: "stocks" },
+        ],
+        segments: [{ label: "Stocks", value: "stocks" }],
       },
       {
         title: "Companies",
-        measures: ["Stocks"],
-        dimensions: ["Name", "Address", "Stocks"],
-        segments: ["Stocks"],
+        measures: [{ label: "Stocks", value: "stocks" }],
+        dimensions: [
+          { label: "Name", value: "name" },
+          { label: "Address", value: "adress" },
+          { label: "Stocks", value: "stocks" },
+        ],
+        segments: [{ label: "Stocks", value: "stocks" }],
       },
       {
         title: "Orders",
-        measures: ["Stocks"],
-        dimensions: ["Name", "Address", "Stocks"],
-        segments: ["Stocks"],
+        measures: [{ label: "Stocks", value: "stocks" }],
+        dimensions: [
+          { label: "Name", value: "name" },
+          { label: "Address", value: "adress" },
+          { label: "Stocks", value: "stocks" },
+        ],
+        segments: [{ label: "Stocks", value: "stocks" }],
       },
     ],
   },

@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Typography, Space, Input, Checkbox } from "antd";
 
-import type { DataAccessOption } from "@/types/access";
+import type {
+  DataAccessFormOption,
+  DataAccessConfigOption,
+  Option,
+} from "@/types/access";
 
 import FilterIcon from "@/assets/filter.svg";
 
@@ -12,9 +16,9 @@ import type { ChangeEvent, FC } from "react";
 const { Text } = Typography;
 
 interface DataAccessSelectionProps {
-  options: DataAccessOption;
-  value?: DataAccessOption;
-  onChange?: (value: DataAccessOption) => void;
+  options: DataAccessConfigOption;
+  value?: DataAccessFormOption;
+  onChange?: (value: DataAccessFormOption) => void;
 }
 
 const DataAccessSelection: FC<DataAccessSelectionProps> = ({
@@ -25,14 +29,16 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
   const { t } = useTranslation(["common"]);
 
   const [searchValue, setSearchValue] = useState<string>("");
-  const filterOptions = (option?: string[]) => {
-    const res = option?.filter((m) => m.toLowerCase().includes(searchValue));
+  const filterOptions = (option?: Option[]) => {
+    const res = option?.filter((m) =>
+      m.label.toLowerCase().includes(searchValue)
+    );
     return res && res.length > 0 ? res : undefined;
   };
 
-  const measures = filterOptions(options.measures),
-    dimensions = filterOptions(options.dimensions),
-    segments = filterOptions(options.segments);
+  const measures = filterOptions(options.measures) || [],
+    dimensions = filterOptions(options.dimensions) || [],
+    segments = filterOptions(options.segments) || [];
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) =>
     setSearchValue(e.target.value.trim().toLowerCase());
@@ -40,8 +46,8 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
   const isAllSelected = () => {
     if (!value) return false;
     return Object.keys(options).every((k) => {
-      const key = k as keyof DataAccessOption;
-      return options[key]?.every((o) => value[key]?.includes(o));
+      const key = k as keyof DataAccessConfigOption;
+      return options[key]?.every((o) => value[key]?.includes(o.value));
     });
   };
 
@@ -49,11 +55,15 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
     if (isAllSelected()) {
       onChange?.({ measures: [], dimensions: [], segments: [] });
     } else {
-      onChange?.({ measures, dimensions, segments });
+      onChange?.({
+        measures: measures.map((m) => m.value),
+        dimensions: dimensions.map((d) => d.value),
+        segments: segments.map((s) => s.value),
+      });
     }
   };
 
-  const onSelect = (newValue: string[], key: keyof DataAccessOption) => {
+  const onSelect = (newValue: string[], key: keyof DataAccessConfigOption) => {
     if (!value) return onChange?.({ [key]: newValue });
 
     if (!newValue.length && searchValue) {
@@ -94,7 +104,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
         </Checkbox>
 
         <Space size={8} direction="vertical">
-          {measures && (
+          {!!measures.length && (
             <>
               <Text className={styles.groupTitle}>
                 {t("common:words.measures")}
@@ -108,7 +118,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
             </>
           )}
 
-          {dimensions && (
+          {!!dimensions.length && (
             <>
               <Text className={styles.groupTitle}>
                 {t("common:words.dimensions")}
@@ -122,7 +132,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
             </>
           )}
 
-          {segments && (
+          {!!segments.length && (
             <>
               <Text className={styles.groupTitle}>
                 {t("common:words.segments")}

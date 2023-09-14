@@ -32,8 +32,12 @@ export const Default = Template.bind({});
 
 Default.args = {
   options: {
-    measures: ["Stocks"],
-    dimensions: ["Name", "Address", "Stocks"],
-    segments: ["Stocks"],
+    measures: [{ label: "Stocks", value: "stocks" }],
+    dimensions: [
+      { label: "Name", value: "name" },
+      { label: "Address", value: "address" },
+      { label: "Stocks", value: "stocks" },
+    ],
+    segments: [{ label: "Stocks", value: "stocks" }],
   },
 };

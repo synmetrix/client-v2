@@ -134,7 +134,7 @@ const DataSourcesWrapper = ({
   dataSources: DataSourceInfo[];
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { currentUser } = CurrentUserStore();
+  const { currentUser, currentTeamId } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { id: curId } = location.query;
   const {
@@ -177,6 +177,10 @@ const DataSourcesWrapper = ({
         ...data,
         db_type: dataSource?.value?.toUpperCase(),
       } as Datasources_Set_Input;
+
+      if (currentTeamId) {
+        newData.team_id = currentTeamId;
+      }
 
       const result = await execCreateMutation({
         object: newData,

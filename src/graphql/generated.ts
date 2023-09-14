@@ -11168,7 +11168,6 @@ export type SubAccessListsSubscription = {
     id: any;
     name: string;
     config: any;
-    team_id: any;
     created_at: any;
     updated_at: any;
   }[];
@@ -11207,11 +11206,11 @@ export type DeleteAccessListMutation = {
   delete_access_lists_by_pk?: { __typename?: "access_lists"; id: any } | null;
 };
 
-export type CreteAccessListMutationVariables = Exact<{
+export type CreateAccessListMutationVariables = Exact<{
   object: Access_Lists_Insert_Input;
 }>;
 
-export type CreteAccessListMutation = {
+export type CreateAccessListMutation = {
   __typename?: "mutation_root";
   insert_access_lists_one?: { __typename?: "access_lists"; id: any } | null;
 };
@@ -11769,7 +11768,6 @@ export const SubAccessListsDocument = gql`
       id
       name
       config
-      team_id
       created_at
       updated_at
     }
@@ -11840,19 +11838,19 @@ export function useDeleteAccessListMutation() {
     DeleteAccessListMutationVariables
   >(DeleteAccessListDocument);
 }
-export const CreteAccessListDocument = gql`
-  mutation CreteAccessList($object: access_lists_insert_input!) {
+export const CreateAccessListDocument = gql`
+  mutation CreateAccessList($object: access_lists_insert_input!) {
     insert_access_lists_one(object: $object) {
       id
     }
   }
 `;
 
-export function useCreteAccessListMutation() {
+export function useCreateAccessListMutation() {
   return Urql.useMutation<
-    CreteAccessListMutation,
-    CreteAccessListMutationVariables
-  >(CreteAccessListDocument);
+    CreateAccessListMutation,
+    CreateAccessListMutationVariables
+  >(CreateAccessListDocument);
 }
 export const CurrentUserDocument = gql`
   query CurrentUser($id: uuid!) {
@@ -12538,7 +12536,7 @@ export const namedOperations = {
   Mutation: {
     UpdateAccessList: "UpdateAccessList",
     DeleteAccessList: "DeleteAccessList",
-    CreteAccessList: "CreteAccessList",
+    CreateAccessList: "CreateAccessList",
     CreateDataSource: "CreateDataSource",
     ValidateDataSource: "ValidateDataSource",
     UpdateDataSource: "UpdateDataSource",

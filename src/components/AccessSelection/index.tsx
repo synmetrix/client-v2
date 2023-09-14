@@ -5,7 +5,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 
 import AccessCard from "@/components/AccessCard";
-import type { DataSourceAccess } from "@/types/access";
+import type { DataSourceAccess, Permission } from "@/types/access";
 
 import styles from "./index.module.less";
 
@@ -16,11 +16,13 @@ type AccessId = string;
 interface AccessSelectionProps {
   items: DataSourceAccess[];
   onSelect: (access: DataSourceAccess) => void;
+  permissions?: Permission;
   active?: AccessId;
 }
 
 const AccessSelection: FC<AccessSelectionProps> = ({
   items,
+  permissions,
   onSelect,
   active,
 }) => {
@@ -36,7 +38,12 @@ const AccessSelection: FC<AccessSelectionProps> = ({
     >
       {items.map((i) => (
         <SwiperSlide key={i.id} className={styles.sliderItem}>
-          <AccessCard {...i} onClick={onSelect} active={i.id === active} />
+          <AccessCard
+            {...i}
+            permissions={permissions?.[i.id]}
+            onClick={onSelect}
+            active={i.id === active}
+          />
         </SwiperSlide>
       ))}
     </Swiper>

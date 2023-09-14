@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { set, getOr } from "unchanged";
 import cn from "classnames";
-import { Tooltip, message } from "antd";
+import { Alert, Tooltip, message } from "antd";
 import { useTable, useSortBy, UseSortByOptions } from "react-table";
 import copy from "copy-to-clipboard";
 import {
@@ -112,7 +112,7 @@ interface VirtualTableProps {
     desc: boolean;
   }[];
   messages?: {
-    type: string;
+    type: "success" | "info" | "warning" | "error";
     text: string;
   }[];
   onSortUpdate?: (nextSortBy: SortBySet[]) => void;
@@ -201,9 +201,9 @@ const VirtualTable: FC<VirtualTableProps> = ({
   const tableWidth = flatHeaders.length * COL_WIDTH;
 
   useEffect(() => {
-    setState((prev?: NonNullable<unchanged.Unchangeable | undefined>) =>
-      set("sortBy", sortBy, prev)
-    );
+    // setState((prev?: NonNullable<unchanged.Unchangeable | undefined>) =>
+    //   set("sortBy", sortBy, prev)
+    // );
   }, [sortBy, setState]);
 
   const headerRenderer: TableHeaderRenderer = ({ label, columnData }) => {
@@ -342,7 +342,13 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
   if (loading) return <BouncingDotsLoader />;
 
-  return <>VirtualTable</>;
+  return (
+    <>
+      {messages.map((msg) => (
+        <Alert key={msg.text} type={msg.type} message={msg.text} />
+      ))}
+    </>
+  );
 };
 
 export default VirtualTable;

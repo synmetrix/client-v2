@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { set, getOr } from "unchanged";
 import cn from "classnames";
-import { message } from "antd";
+import { Tooltip, message } from "antd";
 import { useTable, useSortBy, UseSortByOptions } from "react-table";
 import copy from "copy-to-clipboard";
 import {
@@ -215,13 +215,12 @@ const VirtualTable: FC<VirtualTableProps> = ({
     }
 
     const children = [
-      <span
-        className={"headerColumn"}
+      <Tooltip
         key="label"
-        title={typeof humanLabel === "string" ? humanLabel : undefined}
+        title={typeof humanLabel === "string" ? humanLabel : null}
       >
-        {humanLabel}
-      </span>,
+        <span className={"headerColumn"}>{humanLabel}</span>,
+      </Tooltip>,
     ];
 
     let icon = <MoreOutlined />;
@@ -335,9 +334,9 @@ const VirtualTable: FC<VirtualTableProps> = ({
     };
 
     return (
-      <span title={cellData?.toString()} onDoubleClick={onDoubleClick}>
-        {defaultCellRenderer(args)}
-      </span>
+      <Tooltip title={cellData?.toString()}>
+        <span onDoubleClick={onDoubleClick}>{defaultCellRenderer(args)}</span>
+      </Tooltip>
     );
   };
 

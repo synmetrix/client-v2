@@ -101,7 +101,6 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
         <RoleForm
           initialValues={initialValues}
           dataSourceAccess={dataSourceAccess}
-          // resources={resources}
           onSubmit={onFormFinish}
         />
       </Modal>

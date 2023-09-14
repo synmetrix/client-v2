@@ -133,8 +133,8 @@ interface VirtualTableProps {
   sortDisabled?: boolean;
   scrollToIndex?: number;
   cellRenderer?: TableCellRenderer;
-  onScroll?: Requireable<(params: ScrollEventData) => void>;
-  tableId?: string | null;
+  onScroll?: (params: { rowHeight: number } & ScrollEventData) => void;
+  tableId?: string;
   className?: string;
   settings?: {
     hideIndexColumn: boolean;
@@ -154,7 +154,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
   messages = [],
   sortDisabled = false,
   scrollToIndex = 0,
-  tableId = null,
+  tableId,
   cellRenderer: defaultCellRenderer = defaultTableCellRenderer,
   settings: { hideIndexColumn } = {
     hideIndexColumn: false,
@@ -179,7 +179,6 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
   const columns: any = userColumns || defaultColumns;
 
-  // Use the state and functions returned from useTable to build your UI
   const { rows, flatHeaders } = useTable(
     {
       columns,
@@ -329,6 +328,64 @@ const VirtualTable: FC<VirtualTableProps> = ({
       {messages.map((msg) => (
         <Alert key={msg.text} type={msg.type} message={msg.text} />
       ))}
+      <div className={className} style={{ width, height, overflow: "auto" }}>
+        <Table
+          id={tableId}
+          className={cn(styles.table, tableId && styles.minWidth)}
+          width={tableWidth}
+          height={height}
+          headerHeight={headerHeight}
+          rowHeight={rowHeight}
+          rowCount={rows.length}
+          rowGetter={({ index }) => rows[index]}
+          noRowsRenderer={noRowsRenderer}
+          overscanRowCount={3}
+          onScroll={(values) => onScroll?.({ ...values, rowHeight })}
+          scrollToAlignment="start"
+          scrollToIndex={scrollToIndex}
+        >
+          {!hideIndexColumn && (
+            <Column
+              label="Index"
+              cellDataGetter={({ rowData }) => rowData.index + 1}
+              dataKey="index"
+              width={60}
+            />
+          )}
+          {flatHeaders.map((col) => {
+            const [cube, field, granularity] = col.id.split(".");
+            const columnMemberId = `${cube}.${field}`;
+
+            const value = col.render("Header");
+
+            const colSortConfig = sortBy.find(
+              (sortItem) => sortItem.id === columnMemberId
+            );
+            const sortDirection =
+              !!colSortConfig &&
+              ((colSortConfig.desc && SortDirection.DESC) || SortDirection.ASC);
+
+            return (
+              <Column
+                key={col.id}
+                label={value}
+                dataKey={col.id}
+                width={COL_WIDTH}
+                headerRenderer={headerRenderer}
+                cellDataGetter={cellDataGetter}
+                cellRenderer={internalCellRenderer}
+                columnData={{
+                  columnId: columnMemberId,
+                  onSortChange,
+                  sortDirection,
+                  granularity,
+                }}
+              />
+            );
+          })}
+        </Table>
+      </div>
+      {footer?.(rows)}
     </>
   );
 };

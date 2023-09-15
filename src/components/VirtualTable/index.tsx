@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import {
   MoreOutlined,
   SortAscendingOutlined,
@@ -7,7 +7,7 @@ import {
 import { set, getOr } from "unchanged";
 import cn from "classnames";
 import { Alert, Empty, Tooltip, message } from "antd";
-import { useTable, useSortBy, UseSortByOptions } from "react-table";
+import { useTable, useSortBy } from "react-table";
 import copy from "copy-to-clipboard";
 import {
   Column,
@@ -15,6 +15,7 @@ import {
   SortDirection,
   defaultTableCellRenderer,
 } from "react-virtualized";
+import "react-virtualized/styles.css";
 
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import PopoverButton from "@/components/PopoverButton";
@@ -118,7 +119,7 @@ interface VirtualTableProps {
   onSortUpdate?: (nextSortBy: SortBySet[]) => void;
   data?: object[];
   columns?: object[];
-  width?: number;
+  width?: number | string;
   height?: number;
   headerHeight?: number;
   rowHeight?: number;
@@ -330,10 +331,13 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
   return (
     <>
-      {messages.map((msg) => (
+      {/* {messages.map((msg) => (
         <Alert key={msg.text} type={msg.type} message={msg.text} />
-      ))}
-      <div className={className} style={{ width, height, overflow: "auto" }}>
+      ))} */}
+      <div
+        className={cn(className)}
+        style={{ width, height, overflow: "auto" }}
+      >
         <Table
           id={tableId}
           className={cn(styles.table, tableId && styles.minWidth)}

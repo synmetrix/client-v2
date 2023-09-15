@@ -82,13 +82,7 @@ const PopoverButton: FC<PopoverButtonProps> = ({
 
   if (popoverType === "dropdown") {
     return (
-      <Dropdown
-        open={visibleState}
-        onOpenChange={onVisChange}
-        {...(restProps as DropdownProps)}
-      >
-        {actionButton}
-      </Dropdown>
+      <Dropdown {...(restProps as DropdownProps)}>{actionButton}</Dropdown>
     );
   }
 

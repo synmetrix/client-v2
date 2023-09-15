@@ -47,6 +47,7 @@ export const Dropdown = Template.bind({});
 Dropdown.args = {
   popoverType: "dropdown",
   actionText: "test",
+  trigger: ["click"],
   menu: {
     items: [
       {

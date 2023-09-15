@@ -172,15 +172,18 @@ const VirtualTable: FC<VirtualTableProps> = ({
         Header: colId,
         accessor: (row: any) => row[colId],
         id: colId,
-        sortType: orderByFn,
-        sortBy,
       })),
-    [data, orderByFn, sortBy]
+    [data]
   );
 
   const columns: any = userColumns || defaultColumns;
 
-  const { rows, flatHeaders } = useTable(
+  const {
+    rows,
+    flatHeaders,
+    //@ts-ignore
+    setSortBy,
+  } = useTable(
     {
       columns,
       data,
@@ -203,7 +206,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
         key="label"
         title={typeof humanLabel === "string" ? humanLabel : null}
       >
-        <span className={"headerColumn"}>{humanLabel}</span>,
+        <span className={"headerColumn"}>{humanLabel}</span>
       </Tooltip>,
     ];
 
@@ -219,24 +222,23 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
     const onClickSort = (sortDir: string | null) => {
       onSortChange(sortDir, columnId);
-      return false;
     };
 
     const routes: MenuProps["items"] = [
       {
         key: "1",
         onClick: () => onClickSort(SortDirection.ASC),
-        title: "Sort ASC",
+        label: "Sort ASC",
       },
       {
         key: "2",
         onClick: () => onClickSort(SortDirection.DESC),
-        title: "Sort DESC",
+        label: "Sort DESC",
       },
       {
         key: "3",
         onClick: () => onClickSort(null),
-        title: "Don't sort",
+        label: "Don't sort",
       },
     ];
 
@@ -293,7 +295,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
     const nextSortBy = [...sortBySet];
     onSortUpdate(nextSortBy);
 
-    return set("sortBy", nextSortBy);
+    return setSortBy(nextSortBy);
   };
 
   const noRowsRenderer = () => {
@@ -331,9 +333,9 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
   return (
     <>
-      {/* {messages.map((msg) => (
+      {messages.map((msg) => (
         <Alert key={msg.text} type={msg.type} message={msg.text} />
-      ))} */}
+      ))}
       <div
         className={cn(className)}
         style={{ width, height, overflow: "auto" }}
@@ -368,8 +370,9 @@ const VirtualTable: FC<VirtualTableProps> = ({
             const value = col.render("Header");
 
             const colSortConfig = sortBy.find(
-              (sortItem) => sortItem.id === columnMemberId
+              (sortItem) => sortItem.id === col.id
             );
+
             const sortDirection =
               !!colSortConfig &&
               ((colSortConfig.desc && SortDirection.DESC) || SortDirection.ASC);

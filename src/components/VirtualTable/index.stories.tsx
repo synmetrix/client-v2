@@ -9,17 +9,20 @@ export default {
   component: VirtualTable,
 } as Meta<typeof VirtualTable>;
 
-const Template: StoryFn<typeof VirtualTable> = (args) => (
-  <RootLayout>
-    <VirtualTable {...args} />
-  </RootLayout>
-);
+const Template: StoryFn<typeof VirtualTable> = (args) => {
+  const [sort, setSort] = useState<any>();
+
+  return (
+    <RootLayout>
+      <VirtualTable {...args} sortBy={sort} onSortUpdate={setSort} />
+    </RootLayout>
+  );
+};
 
 export const Default = Template.bind({});
 
 Default.args = {
   width: "100%",
-  // rowHeight: 300,
   messages: [
     {
       type: "error",
@@ -29,17 +32,17 @@ Default.args = {
   data: [
     {
       name: "name1",
-      age: "age1",
+      age: "1",
       date: "date1",
     },
     {
       name: "name2",
-      age: "age2",
+      age: "3",
       date: "date2",
     },
     {
       name: "name3",
-      age: "age3",
+      age: "2",
       date: "date3",
     },
   ],

@@ -30,7 +30,7 @@ import type {
   TableCellRenderer,
   TableHeaderRenderer,
 } from "react-virtualized";
-import type { FC, Requireable } from "react";
+import type { FC } from "react";
 import type { MenuProps } from "antd";
 
 const COL_WIDTH = 200;

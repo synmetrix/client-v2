@@ -9,7 +9,11 @@ import type { FC } from "react";
 
 const { Title } = Typography;
 
-const LogoutSessions: FC = () => {
+export type LogoutSessionProps = {
+  onSubmit?: () => void;
+};
+
+const LogoutSessions: FC<LogoutSessionProps> = ({ onSubmit = () => {} }) => {
   const { t } = useTranslation(["settings"]);
   return (
     <div>
@@ -17,7 +21,12 @@ const LogoutSessions: FC = () => {
         {t("personal_info.logout_sessions.title")}
       </Title>
 
-      <Button className={styles.btn} type="text" size="large">
+      <Button
+        className={styles.btn}
+        type="text"
+        size="large"
+        onClick={onSubmit}
+      >
         {t("personal_info.logout_sessions.logout")}
       </Button>
     </div>

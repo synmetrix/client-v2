@@ -110,7 +110,7 @@ export const items: SidebarItem[] = [
       {
         key: "personal-info",
         label: "Personal Info",
-        href: "/settings/personal_info",
+        href: "/settings/info",
         icon: <PersonalInfoIcon />,
       },
     ],

@@ -11,7 +11,7 @@ import type { FC } from "react";
 
 const { Title } = Typography;
 
-interface Security {
+export interface Security {
   oldPassword: string;
   newPassword: string;
 }

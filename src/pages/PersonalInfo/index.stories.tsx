@@ -1,6 +1,6 @@
 import RootLayout from "@/layouts/RootLayout";
 
-import PersonalInfo from ".";
+import { PersonalInfo } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 

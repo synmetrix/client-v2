@@ -11359,6 +11359,21 @@ export type SubCurrentUserSubscription = {
   } | null;
 };
 
+export type UpdateUserInfoMutationVariables = Exact<{
+  user_id: Scalars["uuid"];
+  display_name?: InputMaybe<Scalars["String"]>;
+  email?: InputMaybe<Scalars["citext"]>;
+}>;
+
+export type UpdateUserInfoMutation = {
+  __typename?: "mutation_root";
+  update_users_by_pk?: { __typename?: "users"; id: any } | null;
+  update_auth_accounts?: {
+    __typename?: "auth_accounts_mutation_response";
+    affected_rows: number;
+  } | null;
+};
+
 export type CreateDataSourceMutationVariables = Exact<{
   object: Datasources_Insert_Input;
 }>;
@@ -12005,6 +12020,33 @@ export function useSubCurrentUserSubscription<
     SubCurrentUserSubscriptionVariables
   >({ query: SubCurrentUserDocument, ...options }, handler);
 }
+export const UpdateUserInfoDocument = gql`
+  mutation UpdateUserInfo(
+    $user_id: uuid!
+    $display_name: String
+    $email: citext
+  ) {
+    update_users_by_pk(
+      pk_columns: { id: $user_id }
+      _set: { display_name: $display_name }
+    ) {
+      id
+    }
+    update_auth_accounts(
+      where: { user_id: { _eq: $user_id } }
+      _set: { email: $email }
+    ) {
+      affected_rows
+    }
+  }
+`;
+
+export function useUpdateUserInfoMutation() {
+  return Urql.useMutation<
+    UpdateUserInfoMutation,
+    UpdateUserInfoMutationVariables
+  >(UpdateUserInfoDocument);
+}
 export const CreateDataSourceDocument = gql`
   mutation CreateDataSource($object: datasources_insert_input!) {
     insert_datasources_one(object: $object) {
@@ -12537,6 +12579,7 @@ export const namedOperations = {
     UpdateAccessList: "UpdateAccessList",
     DeleteAccessList: "DeleteAccessList",
     CreateAccessList: "CreateAccessList",
+    UpdateUserInfo: "UpdateUserInfo",
     CreateDataSource: "CreateDataSource",
     ValidateDataSource: "ValidateDataSource",
     UpdateDataSource: "UpdateDataSource",

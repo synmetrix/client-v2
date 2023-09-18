@@ -6,11 +6,17 @@ const VITE_GRAPHQL_PLUS_SERVER_URL = import.meta.env
   .VITE_GRAPHQL_PLUS_SERVER_URL;
 
 type Response = {
+  statusCode?: number;
+  error?: string;
+  message?: string;
+};
+
+type AuthResponse = {
   jwt_token: string;
   refresh_token: string;
-  statusCode: number;
-  error: string;
-  message: string;
+  statusCode?: number;
+  error?: string;
+  message?: string;
 };
 
 export const validateResponse = async (response: any) => {
@@ -45,7 +51,7 @@ export const fetchRefreshToken = async (refreshToken: string) => {
 };
 
 export default () => {
-  const { setAuthData } = AuthTokensStore();
+  const { refreshToken, accessToken, setAuthData } = AuthTokensStore();
 
   const login = async (values: SignInFormType) => {
     const response = await fetch(`${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/login`, {
@@ -59,7 +65,7 @@ export default () => {
       }),
     });
 
-    const res = <Response>await validateResponse(response);
+    const res = <AuthResponse>await validateResponse(response);
 
     if (res.error) {
       return {
@@ -89,7 +95,7 @@ export default () => {
       }
     );
 
-    const res = <Response>await validateResponse(response);
+    const res = <AuthResponse>await validateResponse(response);
 
     if (res.error) {
       return {
@@ -104,8 +110,62 @@ export default () => {
     });
   };
 
+  const logout = async () => {
+    const response = await fetch(
+      `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/logout?refresh_token=${refreshToken}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          all: true,
+        }),
+      }
+    );
+
+    const res = <Response>await validateResponse(response);
+
+    if (res.error) {
+      return {
+        error: res.error,
+        message: res.message,
+      };
+    }
+
+    return res;
+  };
+
+  const changePass = async (values: any) => {
+    const response = await fetch(
+      `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/change-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(values),
+      }
+    );
+
+    const res = <Response>await validateResponse(response);
+
+    if (res.error) {
+      return {
+        error: res.error,
+        message: res.message,
+      };
+    }
+
+    return res;
+  };
+
   return {
     login,
     register,
+    logout,
+    changePass,
   };
 };

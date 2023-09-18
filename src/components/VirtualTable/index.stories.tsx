@@ -22,6 +22,10 @@ const Template: StoryFn<typeof VirtualTable> = (args) => {
 export const Default = Template.bind({});
 
 Default.args = {
+  orderByFn: (...args) => {
+    console.log(args);
+    return 1;
+  },
   width: "100%",
   messages: [
     {

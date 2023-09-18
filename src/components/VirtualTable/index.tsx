@@ -181,6 +181,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
   const {
     rows,
     flatHeaders,
+    state,
     //@ts-ignore
     setSortBy,
   } = useTable(
@@ -275,7 +276,8 @@ const VirtualTable: FC<VirtualTableProps> = ({
   };
 
   const onSortChange = (direction: string, columnId: string) => {
-    const sortBySet = new SortBySet(sortBy);
+    //@ts-ignore
+    const sortBySet = new SortBySet(state.sortBy);
 
     if (direction) {
       sortBySet.add({
@@ -387,7 +389,8 @@ const VirtualTable: FC<VirtualTableProps> = ({
                 cellDataGetter={cellDataGetter}
                 cellRenderer={internalCellRenderer}
                 columnData={{
-                  columnId: columnMemberId,
+                  memberId: columnMemberId,
+                  columnId: col.id,
                   onSortChange,
                   sortDirection,
                   granularity,

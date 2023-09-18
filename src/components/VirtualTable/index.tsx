@@ -172,8 +172,9 @@ const VirtualTable: FC<VirtualTableProps> = ({
         Header: colId,
         accessor: (row: any) => row[colId],
         id: colId,
+        sortType: orderByFn,
       })),
-    [data]
+    [data, orderByFn]
   );
 
   const columns: any = userColumns || defaultColumns;

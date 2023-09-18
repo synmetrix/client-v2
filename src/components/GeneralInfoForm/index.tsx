@@ -10,7 +10,7 @@ import type { FC } from "react";
 
 export interface GeneralInfo {
   displayName: string;
-  email?: string;
+  email: string;
 }
 
 interface GeneralInfoFormProps {

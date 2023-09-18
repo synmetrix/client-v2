@@ -51,6 +51,7 @@ export const PersonalInfo: React.FC<PersonalInfoProps> = ({
 };
 
 const PersonalInfoWrapper = () => {
+  const { t } = useTranslation(["settings", "pages"]);
   const { logout, changePass } = useAuth();
 
   const [, setLocation] = useLocation();
@@ -61,7 +62,7 @@ const PersonalInfoWrapper = () => {
   const [updateMutation, execUpdateMutation] = useUpdateUserInfoMutation();
 
   useCheckResponse(updateMutation, () => {}, {
-    successMessage: "User updated.",
+    successMessage: t("settings:personal_info.user_updated"),
   });
 
   const onInfoSubmit = (data: GeneralInfo) => {
@@ -85,14 +86,14 @@ const PersonalInfoWrapper = () => {
 
     if (res.statusCode === 204) {
       setError(null);
-      message.success("Password updated.");
+      message.success(t("settings:personal_info.password_updated"));
     }
   };
 
   const onLogout = async () => {
     await logout();
     cleanTokens();
-    setLocation("/signup");
+    setLocation("/signin");
   };
 
   const initialValue = {

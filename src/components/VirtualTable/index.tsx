@@ -168,12 +168,16 @@ const VirtualTable: FC<VirtualTableProps> = ({
 }) => {
   const defaultColumns = useMemo(
     () =>
-      Object.keys(getOr({}, 0, data)).map((colId) => ({
-        Header: colId,
-        accessor: (row: any) => row[colId],
-        id: colId,
-        sortType: orderByFn,
-      })),
+      Object.keys(getOr({}, 0, data)).map((colId) => {
+        const col: any = {
+          Header: colId,
+          accessor: (row: any) => row[colId],
+          id: colId,
+        };
+
+        if (orderByFn) col.sortType = orderByFn;
+        return col;
+      }),
     [data, orderByFn]
   );
 
@@ -252,6 +256,10 @@ const VirtualTable: FC<VirtualTableProps> = ({
       <PopoverButton
         key="dropdown"
         popoverType="dropdown"
+        buttonProps={{
+          type: "link",
+          className: styles.dropdownBtn,
+        }}
         icon={icon}
         trigger={["click"]}
         menu={{ items: routes }}
@@ -337,7 +345,12 @@ const VirtualTable: FC<VirtualTableProps> = ({
   return (
     <>
       {messages.map((msg) => (
-        <Alert key={msg.text} type={msg.type} message={msg.text} />
+        <Alert
+          className={styles.alert}
+          key={msg.text}
+          type={msg.type}
+          message={msg.text}
+        />
       ))}
       <div
         className={cn(className)}
@@ -360,6 +373,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
         >
           {!hideIndexColumn && (
             <Column
+              className={styles.indexColumn}
               label="Index"
               cellDataGetter={({ rowData }) => rowData.index + 1}
               dataKey="index"

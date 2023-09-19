@@ -1,14 +1,36 @@
-import { Space } from "antd";
+import { Space, Alert, message } from "antd";
 import { useTranslation } from "react-i18next";
 
 import BasicLayout from "@/layouts/BasicLayout";
 import GeneralInfoForm from "@/components/GeneralInfoForm";
 import SecurityForm from "@/components/SecurityForm";
 import LogoutSessions from "@/components/LogoutSessions";
+import useAuth from "@/hooks/useAuth";
+import useCheckResponse from "@/hooks/useCheckResponse";
+import CurrentUserStore from "@/stores/CurrentUserStore";
+import { useUpdateUserInfoMutation } from "@/graphql/generated";
+import AuthTokensStore from "@/stores/AuthTokensStore";
+import useLocation from "@/hooks/useLocation";
+import type { GeneralInfo } from "@/components/GeneralInfoForm";
+import type { Security } from "@/components/SecurityForm";
 
 import styles from "./index.module.less";
 
-const PersonalInfo: React.FC = () => {
+export type PersonalInfoProps = {
+  initialValue?: GeneralInfo;
+  error?: string | null;
+  onInfoSubmit?: (data: GeneralInfo) => void;
+  onUpdatePassword?: (data: Security) => void;
+  onLogout?: () => void;
+};
+
+export const PersonalInfo: React.FC<PersonalInfoProps> = ({
+  initialValue,
+  error,
+  onInfoSubmit = () => {},
+  onUpdatePassword = () => {},
+  onLogout = () => {},
+}) => {
   const { t } = useTranslation(["settings", "pages"]);
 
   return (
@@ -19,12 +41,75 @@ const PersonalInfo: React.FC = () => {
       headerProps={{ title: t("pages:settings.personal_info") }}
     >
       <Space className={styles.wrapper} direction="vertical" size={25}>
-        <GeneralInfoForm onSubmit={console.log} />
-        <SecurityForm onSubmit={console.log} />
-        <LogoutSessions />
+        {error && <Alert type="error" message={error} />}
+        <GeneralInfoForm initialValue={initialValue} onSubmit={onInfoSubmit} />
+        <SecurityForm onSubmit={onUpdatePassword} />
+        <LogoutSessions onSubmit={onLogout} />
       </Space>
     </BasicLayout>
   );
 };
 
-export default PersonalInfo;
+const PersonalInfoWrapper = () => {
+  const { t } = useTranslation(["settings", "pages"]);
+  const { logout, changePass } = useAuth();
+
+  const [, setLocation] = useLocation();
+  const { currentUser } = CurrentUserStore();
+  const { cleanTokens } = AuthTokensStore();
+  const [error, setError] = useState<string | null>(null);
+
+  const [updateMutation, execUpdateMutation] = useUpdateUserInfoMutation();
+
+  useCheckResponse(updateMutation, () => {}, {
+    successMessage: t("settings:personal_info.user_updated"),
+  });
+
+  const onInfoSubmit = (data: GeneralInfo) => {
+    execUpdateMutation({
+      user_id: currentUser.id,
+      email: data.email,
+      display_name: data.displayName,
+    });
+  };
+
+  const onUpdatePassword = async (data: Security) => {
+    const values = {
+      old_password: data.oldPassword,
+      new_password: data.newPassword,
+    };
+
+    const res = await changePass(values);
+    if (res?.message) {
+      setError(res.message);
+    }
+
+    if (res.statusCode === 204) {
+      setError(null);
+      message.success(t("settings:personal_info.password_updated"));
+    }
+  };
+
+  const onLogout = async () => {
+    await logout();
+    cleanTokens();
+    setLocation("/signin");
+  };
+
+  const initialValue = {
+    displayName: currentUser?.displayName || "",
+    email: currentUser?.email || "",
+  };
+
+  return (
+    <PersonalInfo
+      error={error}
+      initialValue={initialValue}
+      onInfoSubmit={onInfoSubmit}
+      onUpdatePassword={onUpdatePassword}
+      onLogout={onLogout}
+    />
+  );
+};
+
+export default PersonalInfoWrapper;

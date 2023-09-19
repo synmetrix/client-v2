@@ -10,6 +10,8 @@
   },
   "personal_info": {
     "title": "General Information",
+    "user_updated": "User updated.",
+    "password_updated": "Password updated.",
     "general_info": {
       "title": "General Information",
       "update": "Update"

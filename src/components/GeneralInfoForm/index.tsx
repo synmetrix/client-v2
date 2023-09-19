@@ -8,7 +8,7 @@ import validate from "@/utils/validations";
 
 import type { FC } from "react";
 
-interface GeneralInfo {
+export interface GeneralInfo {
   displayName: string;
   email: string;
 }
@@ -29,6 +29,7 @@ const GeneralInfoForm: FC<GeneralInfoFormProps> = ({
   const { control, handleSubmit } = useForm<GeneralInfo>({
     values: initialValue,
   });
+
   return (
     <Form layout="vertical">
       <Title level={5}>{t("personal_info.general_info.title")}</Title>

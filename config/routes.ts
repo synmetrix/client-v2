@@ -42,6 +42,10 @@ export default [
                     component: "./pages/RolesAndAccess",
                   },
                   {
+                    path: "/settings/info",
+                    component: "./pages/PersonalInfo",
+                  },
+                  {
                     component: "./pages/404",
                   },
                 ],

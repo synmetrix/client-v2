@@ -198,4 +198,11 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
   );
 };
 
+// interface Props {
+//   onMemberSelect: (value: object) => void;
+//   availableQueryMembers: object;
+//   selectedQueryMembers: object;
+//   dataSchemaValidation: object;
+// }
+
 export default ExploreSidebar;

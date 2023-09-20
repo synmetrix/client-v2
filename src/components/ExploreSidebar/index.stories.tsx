@@ -9,44 +9,17 @@ export default {
   component: ExploreSidebar,
 } as Meta<typeof ExploreSidebar>;
 
-const Template: StoryFn<typeof ExploreSidebar> = (args) => {
-  const [selected, setSelected] = useState<string>("gh-api.clickhouse.tech");
-  return (
-    <RootLayout>
-      <ExploreSidebar
-        {...args}
-        selected={selected}
-        onDataBaseChange={setSelected}
-      />
-    </RootLayout>
-  );
-};
+const Template: StoryFn<typeof ExploreSidebar> = (args) => (
+  <RootLayout>
+    <ExploreSidebar {...args} />
+  </RootLayout>
+);
 
 export const Default = Template.bind({});
 
 Default.args = {
-  dataBases: [
-    {
-      name: "gh-api.clickhouse.tech",
-      tables: {
-        stocks: {
-          deminsions: ["Stocks"],
-          measures: ["Stocks"],
-        },
-        stocks2: {
-          deminsions: ["Stocks"],
-          measures: ["Stocks"],
-        },
-      },
-    },
-    {
-      name: "gh-api.clickhouse2.tech",
-      tables: {
-        stocks: {
-          deminsions: ["Stocks"],
-          measures: ["Stocks"],
-        },
-      },
-    },
-  ],
+  availableQueryMembers: {
+    test: "test",
+  },
+  selectedQueryMembers: ["test"],
 };

@@ -54,9 +54,9 @@ const memberMap = (memberArray: any[]) =>
 class Meta {
   cubesMap: any;
   name: string = "";
-  measures: { type: string; name: string }[] | undefined;
-  dimensions: { type: string; name: string }[] | undefined;
-  segments: { type: string; name: string }[] | undefined;
+  measures?: { type: string; name: string }[];
+  dimensions?: { type: string; name: string }[];
+  segments?: { type: string; name: string }[];
 
   constructor(cubesMap: any) {
     this.cubesMap = cubesMap || {};

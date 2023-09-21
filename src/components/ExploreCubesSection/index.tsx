@@ -1,308 +1,328 @@
-// import { useState } from "react";
-// import { set, getOr, get } from "unchanged";
-// import { useTranslation } from "react-i18next";
-// import { Typography } from "antd";
+import { useState } from "react";
+import { set, getOr, get } from "unchanged";
+import { useTranslation } from "react-i18next";
+import { Typography } from "antd";
 
-// import { SHOWN_CATEGORIES } from "@/components/ExploreSidebar";
-// import ExploreCubesSubSection from "@/components/ExploreCubesSubSection";
-// import ExploreCubesCategoryItem from "@/components/ExploreCubesCategoryItem";
-// import useKeyPress from "@/hooks/useKeyPress";
-// import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
-// import { granularities } from "@/hooks/useDataSourceMeta";
-// import clearSelection from "@/utils/helpers/clearSelection";
+import { SHOWN_CATEGORIES } from "@/components/ExploreSidebar";
+import ExploreCubesSubSection from "@/components/ExploreCubesSubSection";
+import ExploreCubesCategoryItem from "@/components/ExploreCubesCategoryItem";
+import useKeyPress from "@/hooks/useKeyPress";
+import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
+import { granularities } from "@/hooks/useDataSourceMeta";
+import clearSelection from "@/utils/helpers/clearSelection";
+import type {
+  CubeMember,
+  CubeMemberMeta,
+  SubSection,
+} from "@/types/cubeMember";
 
-// import s from "./index.module.less";
+import s from "./index.module.less";
 
-// const { Text } = Typography;
+import type { ReactNode } from "react";
 
-// const toFilter = (member) => ({
-//   dimension: member.dimension.name,
-//   operator: member.operator,
-//   values: member.values,
-// });
+const { Text } = Typography;
 
-// const granulateMember = (member) => {
-//   const newMembers = [];
+const toFilter = (member: CubeMember) => ({
+  dimension: member.dimension.name,
+  operator: member.operator,
+  values: member.values,
+});
 
-//   granularities.forEach((granularity) => {
-//     let newName = member.name;
-//     let newTitle = member.title;
-//     let newShortTitle = member.shortTitle;
-//     let granularityName = null;
+const granulateMember = (member: CubeMember): CubeMember[] => {
+  const newMembers: CubeMember[] = [];
 
-//     if (granularity.name) {
-//       granularityName = granularity.name;
-//       newName += `+${granularity.name}`;
-//       newTitle = `by ${granularity.title}`;
-//       newShortTitle = `by ${granularity.name}`;
-//     } else {
-//       newTitle = "Raw";
-//       newShortTitle = "Raw";
-//     }
+  granularities.forEach((granularity) => {
+    let newName = member.name;
+    let newTitle = member.title;
+    let newShortTitle = member.shortTitle;
+    let granularityName = null;
 
-//     const newMember = {
-//       ...member,
-//       name: newName,
-//       title: newTitle,
-//       shortTitle: newShortTitle,
-//       granularity: granularityName,
-//       meta: {
-//         subSection: member.shortTitle,
-//         subSectionType: member.type,
-//       },
-//     };
+    if (granularity.name) {
+      granularityName = granularity.name;
+      newName += `+${granularity.name}`;
+      newTitle = `by ${granularity.title}`;
+      newShortTitle = `by ${granularity.name}`;
+    } else {
+      newTitle = "Raw";
+      newShortTitle = "Raw";
+    }
 
-//     newMembers.push(newMember);
-//   });
+    const newMember: CubeMember = {
+      ...member,
+      name: newName,
+      title: newTitle,
+      shortTitle: newShortTitle,
+      granularity: granularityName as string,
+      meta: {
+        subSection: member.shortTitle,
+        subSectionType: member.type,
+      },
+    };
 
-//   return newMembers;
-// };
+    newMembers.push(newMember);
+  });
 
-// const getSubSections = (catMembers, membersIndex) => {
-//   const subSections = {};
-//   const freeMembers = [];
+  return newMembers;
+};
 
-//   catMembers.forEach((member) => {
-//     const subSection = getOr(false, "meta.subSection", member);
-//     const subSectionType = getOr("string", "meta.subSectionType", member);
+const getSubSections = (catMembers: CubeMember[], membersIndex: number) => {
+  const subSections: Record<string, SubSection> = {};
+  const freeMembers: CubeMember[] = [];
 
-//     if (!subSection) {
-//       freeMembers.push(member);
-//       return;
-//     }
+  catMembers.forEach((member: CubeMember) => {
+    const subSection = getOr(false, "meta.subSection", member);
+    const subSectionType = getOr("string", "meta.subSectionType", member);
 
-//     if (!subSections[subSection]) {
-//       subSections[subSection] = {
-//         members: [],
-//         haveSelected: false,
-//         subSectionType,
-//       };
-//     }
+    if (!subSection) {
+      freeMembers.push(member);
+      return;
+    }
 
-//     subSections[subSection].members.push(member);
-//   });
+    if (!subSections[subSection]) {
+      subSections[subSection] = {
+        members: [],
+        haveSelected: false,
+        subSectionType,
+      };
+    }
 
-//   Object.keys(subSections).forEach((subSection) => {
-//     const foundSelected = subSections[subSection].members.find((subMember) =>
-//       get([subMember.name], membersIndex)
-//     );
+    subSections[subSection].members.push(member);
+  });
 
-//     if (foundSelected) {
-//       subSections[subSection].haveSelected = true;
-//     }
-//   });
+  Object.keys(subSections).forEach((subSection) => {
+    const foundSelected = subSections[subSection].members.find(
+      (subMember: CubeMember) => get([subMember.name], membersIndex)
+    );
 
-//   return {
-//     subSections,
-//     freeMembers,
-//   };
-// };
+    if (foundSelected) {
+      subSections[subSection].haveSelected = true;
+    }
+  });
 
-// const Cube = ({ members, selectedMembers, onMemberSelect }) => {
-//   const { t } = useTranslation();
-//   const {
-//     baseMembers: { index: membersIndex },
-//   } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });
+  return {
+    subSections,
+    freeMembers,
+  };
+};
 
-//   const shiftPress = useKeyPress("Shift");
+const Cube = ({
+  members,
+  selectedMembers,
+  onMemberSelect,
+}: CubeProps): ReactNode | ReactNode[] => {
+  const { t } = useTranslation();
+  const {
+    baseMembers: { index: membersIndex },
+  } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });
 
-//   const [state, setState] = useState({
-//     lastClickedMember: {},
-//     hovered: {},
-//   });
+  const shiftPress = useKeyPress("Shift");
 
-//   const getMemberId = (member) => member.name.replace(".", "_");
-//   const getMembersCategory = (category) =>
-//     Object.values(members[category] || {});
-//   const getSelectedCategoryMembers = (category) =>
-//     Object.values(selectedMembers[category] || {}).map((m) => m.name);
+  const [state, setState] = useState<CubeMemberMeta>({
+    lastClickedMember: {},
+    hovered: {},
+  });
 
-//   const onAction = (type = "over", member, memberMeta = {}) => {
-//     if (!member) {
-//       return;
-//     }
+  const getMemberId = (member: CubeMember) => member.name.replace(".", "_");
+  const getMembersCategory = (category?: string): CubeMember[] =>
+    Object.values(category ? members[category] : {});
+  const getSelectedCategoryMembers = (category?: string): string[] =>
+    Object.values(category ? selectedMembers[category] : {}).map(
+      (m: any) => m.name
+    );
 
-//     const name = getMemberId(member);
+  const onAction = (
+    type = "over",
+    member: CubeMember,
+    memberMeta: CubeMemberMeta = {}
+  ) => {
+    if (!member) {
+      return;
+    }
 
-//     if (type === "click") {
-//       const {
-//         category: nextCategory,
-//         index: nextIndex,
-//         selectedIndex,
-//       } = memberMeta;
+    const name = getMemberId(member);
 
-//       setState((prev) => set(["lastClickedMember"], memberMeta, prev));
+    if (type === "click") {
+      const {
+        category: nextCategory,
+        index: nextIndex,
+        selectedIndex,
+      } = memberMeta;
 
-//       // select more than one members if shift pressed
-//       if (shiftPress) {
-//         const { category: prevCategory, index: prevIndex } =
-//           state.lastClickedMember;
+      setState((prev) => set(["lastClickedMember"], memberMeta, prev));
 
-//         // don't fire if not the same category
-//         if (prevCategory !== nextCategory) {
-//           return;
-//         }
+      // select more than one members if shift pressed
+      if (shiftPress) {
+        const { category: prevCategory, index: prevIndex } =
+          state.lastClickedMember;
 
-//         let catFilter = () => {};
+        // don't fire if not the same category
+        if (prevCategory !== nextCategory) {
+          return;
+        }
 
-//         if (nextIndex > prevIndex) {
-//           catFilter = (_, index) => index <= nextIndex && index > prevIndex;
-//         } else {
-//           catFilter = (_, index) => index >= nextIndex && index < prevIndex;
-//         }
+        let catFilter: (_: unknown, index: number) => any = () => {};
 
-//         const selectMembers =
-//           getMembersCategory(nextCategory).filter(catFilter);
-//         const categorySelectedMembers =
-//           getSelectedCategoryMembers(nextCategory);
+        if (nextIndex && nextIndex > prevIndex) {
+          catFilter = (_: unknown, index: number) =>
+            index <= nextIndex && index > prevIndex;
+        } else {
+          catFilter = (_: unknown, index: number) =>
+            nextIndex && index >= nextIndex && index < prevIndex;
+        }
 
-//         // need buffer because selectedMembers update is not immediately
-//         const categorySelectedMembersBuffer = categorySelectedMembers;
-//         selectMembers.forEach((catMember) => {
-//           const catSelectedIndex = categorySelectedMembersBuffer.indexOf(
-//             catMember.name
-//           );
+        const selectMembers =
+          getMembersCategory(nextCategory).filter(catFilter);
+        const categorySelectedMembers =
+          getSelectedCategoryMembers(nextCategory);
 
-//           if (catSelectedIndex === -1) {
-//             onMemberSelect(nextCategory).add(catMember);
-//           } else {
-//             onMemberSelect(nextCategory).remove({
-//               ...catMember,
-//               index: catSelectedIndex,
-//             });
-//             categorySelectedMembersBuffer.splice(catSelectedIndex, 1);
-//           }
-//         });
+        // need buffer because selectedMembers update is not immediately
+        const categorySelectedMembersBuffer = categorySelectedMembers;
+        selectMembers.forEach((catMember) => {
+          const catSelectedIndex = categorySelectedMembersBuffer.findIndex(
+            (m: any) => m.name === catMember.name
+          );
 
-//         clearSelection();
-//         return;
-//       }
+          if (catSelectedIndex === -1) {
+            onMemberSelect(nextCategory).add(catMember);
+          } else {
+            onMemberSelect(nextCategory).remove({
+              ...catMember,
+              index: catSelectedIndex,
+            });
+            categorySelectedMembersBuffer.splice(catSelectedIndex, 1);
+          }
+        });
 
-//       if (selectedIndex === -1) {
-//         onMemberSelect(nextCategory).add(member);
-//       } else {
-//         onMemberSelect(nextCategory).remove({
-//           ...member,
-//           index: selectedIndex,
-//         });
-//       }
+        clearSelection();
+        return;
+      }
 
-//       return;
-//     }
+      if (selectedIndex === -1) {
+        onMemberSelect(nextCategory).add(member);
+      } else {
+        onMemberSelect(nextCategory).remove({
+          ...member,
+          index: selectedIndex,
+        });
+      }
 
-//     if (type === "over") {
-//       setState((prev) => set(["hovered", name], "over", prev));
-//       return;
-//     }
+      return;
+    }
 
-//     if (type === "focus") {
-//       setState((prev) => set(["hovered", name], "focus", prev));
-//       return;
-//     }
+    if (type === "over") {
+      setState((prev) => set(["hovered", name], "over", prev));
+      return;
+    }
 
-//     setState((prev) => set(["hovered", name], false, prev));
-//   };
+    if (type === "focus") {
+      setState((prev) => set(["hovered", name], "focus", prev));
+      return;
+    }
 
-//   const getItem = (
-//     category,
-//     member,
-//     index,
-//     categorySelectedMembers,
-//     selectedFilters
-//   ) => {
-//     const selectedIndex = categorySelectedMembers.indexOf(member.name);
-//     const selectedFilterIndex = selectedFilters.indexOf(member.name);
+    setState((prev) => set(["hovered", name], false, prev));
+  };
 
-//     return (
-//       <ExploreCubesCategoryItem
-//         key={member.name}
-//         member={member}
-//         category={category}
-//         onAction={(...args) =>
-//           onAction(...args, { index, category, selectedIndex })
-//         }
-//         selectedIndex={selectedIndex}
-//         selectedFilterIndex={selectedFilterIndex}
-//         onFilterUpdate={onMemberSelect("filters", toFilter)}
-//         hoverState={state.hovered[getMemberId(member)]}
-//       />
-//     );
-//   };
+  const getItem = (
+    category: string,
+    member: CubeMember,
+    index: number,
+    categorySelectedMembers: string[],
+    selectedFilters: string[]
+  ): ReactNode => {
+    const selectedIndex = categorySelectedMembers.indexOf(member.name);
+    const selectedFilterIndex = selectedFilters.indexOf(member.name);
 
-//   const getCategory = (category) => {
-//     let catMembers = getMembersCategory(category);
+    return (
+      <ExploreCubesCategoryItem
+        key={member.name}
+        member={member}
+        category={category}
+        onAction={(...args) =>
+          onAction(...args, { index, category, selectedIndex })
+        }
+        selectedIndex={selectedIndex}
+        selectedFilterIndex={selectedFilterIndex}
+        onFilterUpdate={onMemberSelect("filters", toFilter)}
+        hoverState={state.hovered[getMemberId(member)]}
+      />
+    );
+  };
 
-//     if (!catMembers.length) {
-//       return null;
-//     }
+  const getCategory = (category: string): ReactNode => {
+    let catMembers = getMembersCategory(category);
 
-//     catMembers = catMembers.reduce((acc, member) => {
-//       let newMembers = acc;
+    if (!catMembers.length) {
+      return null;
+    }
 
-//       if (member.type === "time") {
-//         const granMembers = granulateMember(member);
-//         newMembers = newMembers.concat(granMembers);
-//       } else {
-//         newMembers.push(member);
-//       }
+    catMembers = catMembers.reduce((acc: CubeMember[], member: CubeMember) => {
+      let newMembers = acc;
 
-//       return newMembers;
-//     }, []);
+      if (member.type === "time") {
+        const granMembers = granulateMember(member);
+        newMembers = newMembers.concat(granMembers);
+      } else {
+        newMembers.push(member);
+      }
 
-//     const { subSections, freeMembers } = getSubSections(
-//       catMembers,
-//       membersIndex
-//     );
+      return newMembers;
+    }, []);
 
-//     const categorySelectedMembers = getSelectedCategoryMembers(category);
-//     const selectedFilters = Object.values(selectedMembers.filters || {}).map(
-//       (m) => m.dimension.name
-//     );
+    const { subSections, freeMembers } = getSubSections(
+      catMembers,
+      membersIndex
+    );
 
-//     return (
-//       <div key={category} className={s.categorySection}>
-//         <Text className={s.categoryTitle}>{t(category)}</Text>
-//         <div className={s.freeMembers}>
-//           {freeMembers.map((member, index) =>
-//             getItem(
-//               category,
-//               member,
-//               index,
-//               categorySelectedMembers,
-//               selectedFilters
-//             )
-//           )}
-//         </div>
-//         {Object.keys(subSections).map((subSectionKey) => (
-//           // eslint-disable-next-line react/jsx-key
-//           <ExploreCubesSubSection
-//             name={subSectionKey}
-//             subSection={subSections[subSectionKey]}
-//             onFilterUpdate={onMemberSelect("filters", toFilter)}
-//             selectedFilters={selectedFilters}
-//           >
-//             {subSections[subSectionKey].members.map((member, index) =>
-//               getItem(
-//                 category,
-//                 member,
-//                 index,
-//                 categorySelectedMembers,
-//                 selectedFilters
-//               )
-//             )}
-//           </ExploreCubesSubSection>
-//         ))}
-//       </div>
-//     );
-//   };
+    const categorySelectedMembers = getSelectedCategoryMembers(category);
+    const selectedFilters: any[] = Object.values(
+      selectedMembers.filters || {}
+    ).map((m: any) => m.dimension.name);
 
-//   return SHOWN_CATEGORIES.map(getCategory);
-// };
+    return (
+      <div key={category} className={s.categorySection}>
+        <Text className={s.categoryTitle}>{t(category)}</Text>
+        <div className={s.freeMembers}>
+          {freeMembers.map((member, index) =>
+            getItem(
+              category,
+              member,
+              index,
+              categorySelectedMembers,
+              selectedFilters
+            )
+          )}
+        </div>
+        {Object.keys(subSections).map((subSectionKey) => (
+          <ExploreCubesSubSection
+            key={subSectionKey}
+            name={subSectionKey}
+            subSection={subSections[subSectionKey]}
+            onFilterUpdate={onMemberSelect("filters", toFilter)}
+            selectedFilters={selectedFilters}
+          >
+            {subSections[subSectionKey].members.map(
+              (member: CubeMember, index: number) =>
+                getItem(
+                  category,
+                  member,
+                  index,
+                  categorySelectedMembers,
+                  selectedFilters
+                )
+            )}
+          </ExploreCubesSubSection>
+        ))}
+      </div>
+    );
+  };
 
-// interface CubeProps {
-//   members: object;
-//   onMemberSelect: (value: any) => void;
-//   selectedMembers: object;
-// }
+  return SHOWN_CATEGORIES.map(getCategory);
+};
 
-// export default Cube;
+interface CubeProps {
+  members: any;
+  onMemberSelect: any;
+  selectedMembers: any;
+}
+
+export default Cube;

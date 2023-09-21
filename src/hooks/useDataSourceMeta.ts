@@ -72,7 +72,7 @@ class Meta {
     return this.cubesMap[cube][memberType] || {};
   }
 
-  resolveMember(memberName: string, memberType: string | string[]) {
+  resolveMember(memberName: any, memberType: string | string[]) {
     const [cube] = memberName.split(".");
 
     if (!this.cubesMap[cube]) {
@@ -99,7 +99,7 @@ class Meta {
     return member;
   }
 
-  filterOperatorsForMember(memberName: string, memberType: string[]) {
+  filterOperatorsForMember(memberName: any, memberType: string[]) {
     const member: CubeMember = this.resolveMember(memberName, memberType);
     return operators[member.type as keyof typeof operators] || operators.string;
   }

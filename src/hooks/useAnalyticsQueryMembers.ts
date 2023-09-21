@@ -1,14 +1,12 @@
 import { useMemo } from "react";
 
+import type { CubeMember } from "@/types/cubeMember";
+
 import { getTitle } from "./usePlayground";
 
 interface Props {
-  selectedQueryMembers: {
-    measures: { name: string; shortTitle: string; title: string }[];
-    dimensions: { name: string; shortTitle: string; title: string }[];
-    timeDimensions: { name: string; shortTitle: string; title: string }[];
-  };
-  settings: { hideCubeNames?: boolean };
+  selectedQueryMembers: CubeMember;
+  settings?: { hideCubeNames?: boolean };
 }
 
 const useAnalyticsQueryMembers = ({
@@ -24,24 +22,26 @@ const useAnalyticsQueryMembers = ({
     const members = dimensions.concat(measures);
 
     // selectedQueryMembers contains arrays in sections, but we use Object.values just because safer
-    const measuresValues = Object.values(measures).map((obj) => ({
+    const measuresValues = Object.values(measures).map<any>((obj: any) => ({
       [getTitle(settings, obj)]: obj.name,
     }));
 
-    const dimensionsValues = Object.values(dimensions).map((obj) => ({
+    const dimensionsValues = Object.values(dimensions).map((obj: any) => ({
       [getTitle(settings, obj)]: obj.name,
     }));
 
-    const timeDimensionsValues = Object.values(timeDimensions).map((obj) => ({
-      [getTitle(settings, obj)]: obj.name,
-    }));
+    const timeDimensionsValues = Object.values(timeDimensions).map(
+      (obj: any) => ({
+        [getTitle(settings, obj)]: obj.name,
+      })
+    );
 
     const allMembers = measuresValues
       .concat(dimensionsValues)
       .concat(timeDimensionsValues);
 
     const index = members.reduce(
-      (acc, curr) => ({
+      (acc: any, curr: any) => ({
         ...acc,
         [curr.name]: curr,
       }),

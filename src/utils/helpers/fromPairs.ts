@@ -1,4 +1,4 @@
-export default (pairs: [string, any][]) => {
+export default <T>(pairs: [string, T][]) => {
   const result: any = {};
   let idx = 0;
 

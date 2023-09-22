@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 // import Select from "@/components/Select";
 // import { capitalize } from "@/utils/helpers/capitalize";
 import useCubesList from "@/hooks/useCubesList";
+import type { Cube } from "@/types/cube";
 
 import styles from "./index.module.less";
 
@@ -28,9 +29,9 @@ interface DataBase {
 // }
 
 interface ExploreSidebarProps {
-  onMemberSelect: (value: object) => void;
-  availableQueryMembers: object;
-  selectedQueryMembers: object;
+  onMemberSelect: (value: Cube) => void;
+  availableQueryMembers: Cube[];
+  selectedQueryMembers: Cube[];
   dataSchemaValidation: {
     code: string;
     message: string;
@@ -77,20 +78,23 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
               (m.name || "").split(".")[0].toLowerCase() === cube.toLowerCase()
           );
 
-        const cubeSelectedCount = cubeSelectedItems.reduce((acc, item) => {
-          const isMemberExists = !!acc.find(
-            (accItem: { dimension: any; granularity: any }) =>
-              accItem.dimension === item.dimension &&
-              accItem.granularity == item.granularity
-          );
+        const cubeSelectedCount = cubeSelectedItems.reduce(
+          (acc: Cube[], item: Cube) => {
+            const isMemberExists = !!acc.find(
+              (accItem: Cube) =>
+                accItem.dimension === item.dimension &&
+                accItem.granularity == item.granularity
+            );
 
-          if (isMemberExists) {
+            if (isMemberExists) {
+              return acc;
+            }
+
+            acc.push(item);
             return acc;
-          }
-
-          acc.push(item);
-          return acc;
-        }, []).length;
+          },
+          []
+        ).length;
 
         console.log(selectedQueryMembers);
 

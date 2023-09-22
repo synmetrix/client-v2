@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { getOr } from "unchanged";
 
 import fromPairs from "@/utils/helpers/fromPairs";
-import type { CubeMember } from "@/types/cube";
+import type { Cube } from "@/types/cube";
 
 type PlaygroundState = Record<string, any>;
 
@@ -72,7 +72,7 @@ class Meta {
     return this.cubesMap[cube][memberType] || {};
   }
 
-  resolveMember(memberName: any, memberType: string | string[]) {
+  resolveMember(memberName: string, memberType: string | string[]) {
     const [cube] = memberName.split(".");
 
     if (!this.cubesMap[cube]) {
@@ -100,7 +100,7 @@ class Meta {
   }
 
   filterOperatorsForMember(memberName: any, memberType: string[]) {
-    const member: CubeMember = this.resolveMember(memberName, memberType);
+    const member: Cube = this.resolveMember(memberName, memberType);
     return operators[member.type as keyof typeof operators] || operators.string;
   }
 }
@@ -116,18 +116,18 @@ const enrichPlaygroundMembers = (
     }));
 
   const timeDimensions = getOr([], "timeDimensions", playgroundState).map(
-    (m: CubeMember, index: number) => ({
+    (m: Cube, index: number) => ({
       ...m,
-      ...cubesMetaCls.resolveMember(m.dimension, "dimensions"),
+      ...cubesMetaCls.resolveMember(m.dimension.name, "dimensions"),
       name: m.granularity ? `${m.dimension}+${m.granularity}` : m.dimension,
       index,
     })
   );
 
   const filters = getOr([], "filters", playgroundState).map(
-    (m: CubeMember, index: number) => ({
+    (m: Cube, index: number) => ({
       ...m,
-      dimension: cubesMetaCls.resolveMember(m.dimension, [
+      dimension: cubesMetaCls.resolveMember(m.dimension.name, [
         "dimensions",
         "measures",
       ]),
@@ -143,8 +143,7 @@ const enrichPlaygroundMembers = (
     measures: resolveWithIndex("measures"),
     dimensions: resolveWithIndex("dimensions")
       .filter(
-        (m: CubeMember) =>
-          m.type !== "time" || (m.type === "time" && !m.granularity)
+        (m: Cube) => m.type !== "time" || (m.type === "time" && !m.granularity)
       )
       .concat(timeDimensions),
     segments: resolveWithIndex("segments"),
@@ -164,24 +163,22 @@ const updatePlaygroundState = (
   const updatedPlaygroundState = Object.keys(playgroundState).reduce(
     (acc, curKey) => {
       if (keys.find((key) => key === curKey)) {
-        const filteredArray = playgroundState[curKey].filter(
-          (m: CubeMember) => {
-            let resolved: any = false;
+        const filteredArray = playgroundState[curKey].filter((m: Cube) => {
+          let resolved: any = false;
 
-            if (curKey === "filters") {
-              resolved = cubesMeta.resolveMember(m.dimension, [
-                "dimensions",
-                "measures",
-              ]);
-            } else {
-              resolved = cubesMeta.resolveMember(m.name, curKey);
-            }
-
-            if (!resolved.error) {
-              return true;
-            }
+          if (curKey === "filters") {
+            resolved = cubesMeta.resolveMember(m.dimension.name, [
+              "dimensions",
+              "measures",
+            ]);
+          } else {
+            resolved = cubesMeta.resolveMember(m.name, curKey);
           }
-        );
+
+          if (!resolved.error) {
+            return true;
+          }
+        });
 
         return {
           ...acc,

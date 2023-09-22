@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { getOr } from "unchanged";
 
 import fromPairs from "@/utils/helpers/fromPairs";
-import type { CubeMember } from "@/types/cubeMember";
+import type { CubeMember } from "@/types/cube";
 
 type PlaygroundState = Record<string, any>;
 

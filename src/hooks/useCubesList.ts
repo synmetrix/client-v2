@@ -6,7 +6,7 @@ import type { Cube } from "@/types/cube";
 
 interface Props {
   query: string;
-  availableQueryMembers: Record<string, Cube[] | Record<string, Cube[]>>;
+  availableQueryMembers: Record<string, Cube>;
   categories: string[];
   openedCubes: string[];
 }
@@ -14,7 +14,7 @@ interface Props {
 interface State {
   radioValue: string;
   query: string;
-  members: Record<string, Cube[] | Record<string, Cube[]>>;
+  members: Record<string, Cube | Cube[] | Record<string, Cube[]>>;
   categories: string[];
   openedCubes: string[];
 }
@@ -37,14 +37,16 @@ export default ({
     () => {
       // let's go through all keys and filter necessary
       const reducer = (
-        acc: Record<string, Cube[]> | Record<string, Cube[]>,
-        curr: [string, Record<string, Cube[]>]
+        acc: Record<string, Cube | Cube[] | Record<string, Cube[]>>,
+        curr: [string, Cube | Record<string, Cube | Cube[]>]
       ) => {
         const [cube, allMembers] = curr;
 
         const values = state.categories.reduce(
           (catAcc: Record<string, Cube[]>, cat: string) => {
-            let categoryMembers = Object.entries(allMembers[cat] || {});
+            let categoryMembers = Object.entries(
+              allMembers[cat as keyof typeof allMembers] || {}
+            );
 
             if (state.query) {
               categoryMembers = categoryMembers.filter((member) => {
@@ -70,8 +72,14 @@ export default ({
         };
       };
 
-      //@ts-ignore
-      const newMembers = Object.entries(availableQueryMembers).reduce(reducer);
+      const entires = Object.entries(availableQueryMembers);
+
+      let newMembers: Record<string, Cube | Cube[] | Record<string, Cube[]>> =
+        {};
+
+      for (const entry of entires) {
+        newMembers = reducer(newMembers, entry);
+      }
 
       return newMembers;
     },
@@ -82,7 +90,7 @@ export default ({
   useEffect(() => {
     const newMembers = filter();
 
-    setState((prev: any) => ({
+    setState((prev) => ({
       ...prev,
       members: newMembers,
     }));

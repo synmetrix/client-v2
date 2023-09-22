@@ -30,7 +30,7 @@ interface DataBase {
 
 interface ExploreSidebarProps {
   onMemberSelect: (value: Cube) => void;
-  availableQueryMembers: Cube[];
+  availableQueryMembers: Record<string, Cube>;
   selectedQueryMembers: Cube[];
   dataSchemaValidation: {
     code: string;
@@ -105,8 +105,7 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
             className={styles.panel}
             extra={<Badge count={cubeSelectedCount} />}
           >
-            {selectedQueryMembers}
-            {members}
+            test
           </Panel>
         );
       }),

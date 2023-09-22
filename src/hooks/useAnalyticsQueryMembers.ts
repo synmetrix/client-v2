@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import type { CubeMember } from "@/types/cubeMember";
+import type { CubeMember } from "@/types/cube";
 
 import { getTitle } from "./usePlayground";
 

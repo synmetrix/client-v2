@@ -10,11 +10,7 @@ import useKeyPress from "@/hooks/useKeyPress";
 import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
 import { granularities } from "@/hooks/useDataSourceMeta";
 import clearSelection from "@/utils/helpers/clearSelection";
-import type {
-  CubeMember,
-  CubeMemberMeta,
-  SubSection,
-} from "@/types/cubeMember";
+import type { CubeMember, CubeMemberMeta, SubSection } from "@/types/cube";
 
 import s from "./index.module.less";
 

@@ -14,7 +14,6 @@ export interface Cube {
     subSection: string;
     subSectionType: string;
   };
-
   measures: Measure[];
   dimensions: Dimension[];
   segments: Segemnt[];
@@ -55,7 +54,7 @@ export interface Dimension {
   type: string;
 }
 
-export interface CubeMemberMeta {
+export interface CubeMeta {
   category?: string;
   index?: number;
   selectedIndex?: number;

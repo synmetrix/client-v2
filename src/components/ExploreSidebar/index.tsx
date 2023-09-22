@@ -31,7 +31,10 @@ interface ExploreSidebarProps {
   onMemberSelect: (value: object) => void;
   availableQueryMembers: object;
   selectedQueryMembers: object;
-  dataSchemaValidation: object;
+  dataSchemaValidation: {
+    code: string;
+    message: string;
+  };
 }
 
 const { TabPane } = Tabs;

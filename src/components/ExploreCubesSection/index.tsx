@@ -10,7 +10,7 @@ import useKeyPress from "@/hooks/useKeyPress";
 import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
 import { granularities } from "@/hooks/useDataSourceMeta";
 import clearSelection from "@/utils/helpers/clearSelection";
-import type { CubeMember, CubeMemberMeta, SubSection } from "@/types/cube";
+import type { Cube as CubeType, CubeMeta, SubSection } from "@/types/cube";
 
 import s from "./index.module.less";
 
@@ -18,14 +18,14 @@ import type { ReactNode } from "react";
 
 const { Text } = Typography;
 
-const toFilter = (member: CubeMember) => ({
+const toFilter = (member: CubeType) => ({
   dimension: member.dimension.name,
   operator: member.operator,
   values: member.values,
 });
 
-const granulateMember = (member: CubeMember): CubeMember[] => {
-  const newMembers: CubeMember[] = [];
+const granulateMember = (member: CubeType): CubeType[] => {
+  const newMembers: CubeType[] = [];
 
   granularities.forEach((granularity) => {
     let newName = member.name;
@@ -43,7 +43,7 @@ const granulateMember = (member: CubeMember): CubeMember[] => {
       newShortTitle = "Raw";
     }
 
-    const newMember: CubeMember = {
+    const newMember: CubeType = {
       ...member,
       name: newName,
       title: newTitle,
@@ -61,11 +61,11 @@ const granulateMember = (member: CubeMember): CubeMember[] => {
   return newMembers;
 };
 
-const getSubSections = (catMembers: CubeMember[], membersIndex: number) => {
+const getSubSections = (catMembers: CubeType[], membersIndex: number) => {
   const subSections: Record<string, SubSection> = {};
-  const freeMembers: CubeMember[] = [];
+  const freeMembers: CubeType[] = [];
 
-  catMembers.forEach((member: CubeMember) => {
+  catMembers.forEach((member: CubeType) => {
     const subSection = getOr(false, "meta.subSection", member);
     const subSectionType = getOr("string", "meta.subSectionType", member);
 
@@ -87,7 +87,7 @@ const getSubSections = (catMembers: CubeMember[], membersIndex: number) => {
 
   Object.keys(subSections).forEach((subSection) => {
     const foundSelected = subSections[subSection].members.find(
-      (subMember: CubeMember) => get([subMember.name], membersIndex)
+      (subMember: CubeType) => get([subMember.name], membersIndex)
     );
 
     if (foundSelected) {
@@ -113,13 +113,13 @@ const Cube = ({
 
   const shiftPress = useKeyPress("Shift");
 
-  const [state, setState] = useState<CubeMemberMeta>({
+  const [state, setState] = useState<CubeMeta>({
     lastClickedMember: {},
     hovered: {},
   });
 
-  const getMemberId = (member: CubeMember) => member.name.replace(".", "_");
-  const getMembersCategory = (category?: string): CubeMember[] =>
+  const getMemberId = (member: CubeType) => member.name.replace(".", "_");
+  const getMembersCategory = (category?: string): CubeType[] =>
     Object.values(category ? members[category] : {});
   const getSelectedCategoryMembers = (category?: string): string[] =>
     Object.values(category ? selectedMembers[category] : {}).map(
@@ -128,8 +128,8 @@ const Cube = ({
 
   const onAction = (
     type = "over",
-    member: CubeMember,
-    memberMeta: CubeMemberMeta = {}
+    member: CubeType,
+    memberMeta: CubeMeta = {}
   ) => {
     if (!member) {
       return;
@@ -220,7 +220,7 @@ const Cube = ({
 
   const getItem = (
     category: string,
-    member: CubeMember,
+    member: CubeType,
     index: number,
     categorySelectedMembers: string[],
     selectedFilters: string[]
@@ -251,7 +251,7 @@ const Cube = ({
       return null;
     }
 
-    catMembers = catMembers.reduce((acc: CubeMember[], member: CubeMember) => {
+    catMembers = catMembers.reduce((acc: CubeType[], member: CubeType) => {
       let newMembers = acc;
 
       if (member.type === "time") {
@@ -297,7 +297,7 @@ const Cube = ({
             selectedFilters={selectedFilters}
           >
             {subSections[subSectionKey].members.map(
-              (member: CubeMember, index: number) =>
+              (member: CubeType, index: number) =>
                 getItem(
                   category,
                   member,

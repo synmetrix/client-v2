@@ -4,6 +4,7 @@ import { Collapse } from "antd";
 import { CaretRightOutlined } from "@ant-design/icons";
 
 import CategoryItemFilter from "@/components/ExploreCubesCategoryItemFilter";
+import type { SubSection } from "@/types/cube";
 
 import s from "./index.module.less";
 
@@ -29,7 +30,7 @@ const ExploreCubesSubSection: FC<ExploreCubesSubSectionProps> = ({
   let extra = haveSelected ? defaultExtra : null;
 
   if (subSectionType === "time") {
-    const member = subSection.members.find((item: any) => !item.granularity);
+    const member = subSection.members.find((item) => !item.granularity);
     const selectedFilterIndex = selectedFilters.indexOf(member!.name);
 
     extra = (
@@ -70,16 +71,7 @@ const ExploreCubesSubSection: FC<ExploreCubesSubSectionProps> = ({
 
 interface ExploreCubesSubSectionProps {
   name: string;
-  subSection: {
-    haveSelected: boolean;
-    subSectionType: string;
-    members: {
-      name: string;
-      type: string;
-      shortTitle: string;
-      granularity: string;
-    }[];
-  };
+  subSection: SubSection;
   onFilterUpdate: {
     add: (value: any) => void;
     remove: (value: any) => void;

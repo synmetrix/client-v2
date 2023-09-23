@@ -2,7 +2,7 @@ import cn from "classnames";
 import { Row, Col, Typography } from "antd";
 
 import CategoryItemFilter from "@/components/ExploreCubesCategoryItemFilter";
-import type { CubeMember } from "@/types/cube";
+import type { Cube } from "@/types/cube";
 
 import s from "./index.module.less";
 
@@ -58,7 +58,7 @@ const CategoryItem: FC<CategoryItemProps> = ({
 };
 
 interface CategoryItemProps {
-  member: CubeMember;
+  member: Cube;
   category: string;
   selectedIndex: number;
   selectedFilterIndex: number;
@@ -66,7 +66,7 @@ interface CategoryItemProps {
     add: (value: any) => void;
     remove: (value: any) => void;
   };
-  onAction: (actions: string, member: CubeMember) => void;
+  onAction: (actions: string, member: Cube) => void;
   hoverState: "over" | "focus" | false;
 }
 

@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 
-import type { CubeMember } from "@/types/cube";
+import type { Cube, Metric } from "@/types/cube";
 
 import { getTitle } from "./usePlayground";
 
 interface Props {
-  selectedQueryMembers: CubeMember;
+  selectedQueryMembers: Cube;
   settings?: { hideCubeNames?: boolean };
 }
 
@@ -22,11 +22,11 @@ const useAnalyticsQueryMembers = ({
     const members = dimensions.concat(measures);
 
     // selectedQueryMembers contains arrays in sections, but we use Object.values just because safer
-    const measuresValues = Object.values(measures).map<any>((obj: any) => ({
+    const measuresValues = Object.values(measures).map<any>((obj: Metric) => ({
       [getTitle(settings, obj)]: obj.name,
     }));
 
-    const dimensionsValues = Object.values(dimensions).map((obj: any) => ({
+    const dimensionsValues = Object.values(dimensions).map((obj: Metric) => ({
       [getTitle(settings, obj)]: obj.name,
     }));
 
@@ -41,7 +41,7 @@ const useAnalyticsQueryMembers = ({
       .concat(timeDimensionsValues);
 
     const index = members.reduce(
-      (acc: any, curr: any) => ({
+      (acc: Record<string, Metric>, curr: Metric) => ({
         ...acc,
         [curr.name]: curr,
       }),

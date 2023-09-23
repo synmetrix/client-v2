@@ -14,25 +14,13 @@ export interface Cube {
     subSection: string;
     subSectionType: string;
   };
-  measures: Measure[];
-  dimensions: Dimension[];
-  segments: Segemnt[];
-  timeDimensions: TimeDimension[];
+  measures: Metric[];
+  dimensions: Metric[];
+  segments?: Metric[];
+  timeDimensions?: Metric[];
 }
 
-export interface Segemnt {
-  name: string;
-  shortTitle: string;
-  title: string;
-}
-
-export interface TimeDimension {
-  name: string;
-  shortTitle: string;
-  title: string;
-}
-
-export interface Measure {
+export interface Metric {
   name: string;
   title: string;
   shortTitle: string;
@@ -42,8 +30,8 @@ export interface Measure {
   cumulativeTotal: boolean;
   drillMembers: [];
   drillMembersGrouped: {
-    dimensions: Dimension[];
-    measures: Measure[];
+    dimensions: Metric[];
+    measures: Metric[];
   };
 }
 

@@ -19,7 +19,45 @@ export const Default = Template.bind({});
 
 Default.args = {
   availableQueryMembers: {
-    test: "test",
+    test: {
+      connectedComponent: 1,
+      title: "test",
+      name: "string",
+      type: "string",
+      operator: "string",
+      values: 1,
+      shortTitle: "string",
+      granularity: "string",
+      dimension: {
+        name: "string",
+      },
+      meta: {
+        subSection: " string",
+        subSectionType: "string",
+      },
+      measures: [],
+      dimensions: [],
+    },
   },
-  selectedQueryMembers: ["test"],
+  selectedQueryMembers: [
+    {
+      connectedComponent: 1,
+      title: "test",
+      name: "string",
+      type: "string",
+      operator: "string",
+      values: 1,
+      shortTitle: "string",
+      granularity: "string",
+      dimension: {
+        name: "string",
+      },
+      meta: {
+        subSection: " string",
+        subSectionType: "string",
+      },
+      measures: [],
+      dimensions: [],
+    },
+  ],
 };

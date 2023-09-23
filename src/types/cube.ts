@@ -55,3 +55,8 @@ export interface SubSection {
   haveSelected: boolean;
   subSectionType: string;
 }
+
+export interface FilterMember {
+  dimension: Cube;
+  index?: number;
+}

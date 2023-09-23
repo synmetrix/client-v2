@@ -2,6 +2,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import cn from "classnames";
 import { Button } from "antd";
 
+import { Cube, FilterMember } from "@/types/cube";
+
 import s from "./index.module.less";
 
 import type { FC, MouseEventHandler } from "react";
@@ -70,15 +72,10 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
 interface CategoryItemFilterProps {
   isVisible: boolean;
   onFilterUpdate: {
-    add: (value: any) => void;
-    remove: (value: any) => void;
+    add: (value: FilterMember) => void;
+    remove: (value: FilterMember) => void;
   };
-  member: {
-    name: string;
-    type: string;
-    shortTitle: string;
-    granularity: string;
-  };
+  member: Cube;
   selectedFilterIndex: number;
 }
 

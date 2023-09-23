@@ -5,7 +5,7 @@ import type { Cube, Metric } from "@/types/cube";
 import { getTitle } from "./usePlayground";
 
 interface Props {
-  selectedQueryMembers: Cube;
+  selectedQueryMembers?: Cube;
   settings?: { hideCubeNames?: boolean };
 }
 
@@ -22,7 +22,7 @@ const useAnalyticsQueryMembers = ({
     const members = dimensions.concat(measures);
 
     // selectedQueryMembers contains arrays in sections, but we use Object.values just because safer
-    const measuresValues = Object.values(measures).map<any>((obj: Metric) => ({
+    const measuresValues = Object.values(measures).map((obj: Metric) => ({
       [getTitle(settings, obj)]: obj.name,
     }));
 
@@ -31,7 +31,7 @@ const useAnalyticsQueryMembers = ({
     }));
 
     const timeDimensionsValues = Object.values(timeDimensions).map(
-      (obj: any) => ({
+      (obj: Metric) => ({
         [getTitle(settings, obj)]: obj.name,
       })
     );

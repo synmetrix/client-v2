@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 // import Select from "@/components/Select";
 // import { capitalize } from "@/utils/helpers/capitalize";
 import useCubesList from "@/hooks/useCubesList";
+import ExploreCubesSection from "@/components//ExploreCubesSection";
 import type { Cube } from "@/types/cube";
 
 import styles from "./index.module.less";
@@ -31,7 +32,7 @@ interface DataBase {
 interface ExploreSidebarProps {
   onMemberSelect: (value: Cube) => void;
   availableQueryMembers: Record<string, Cube>;
-  selectedQueryMembers: Cube[];
+  selectedQueryMembers: Record<string, Cube>;
   dataSchemaValidation: {
     code: string;
     message: string;
@@ -64,7 +65,7 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
         const members = state.members[cube];
 
         const hasMembers = Object.values(members).some(
-          (category: any) => !!Object.values(category).length
+          (category: Cube) => !!Object.values(category).length
         );
 
         if (!members || !hasMembers) {
@@ -96,8 +97,6 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
           []
         ).length;
 
-        console.log(selectedQueryMembers);
-
         return (
           <Panel
             key={cube}
@@ -105,11 +104,15 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
             className={styles.panel}
             extra={<Badge count={cubeSelectedCount} />}
           >
-            test
+            <ExploreCubesSection
+              selectedMembers={selectedQueryMembers}
+              members={members}
+              onMemberSelect={onMemberSelect}
+            />
           </Panel>
         );
       }),
-    [selectedQueryMembers, state.members]
+    [onMemberSelect, selectedQueryMembers, state.members]
   );
 
   return <>{options}</>;

@@ -1,79 +1,90 @@
-.wrapper {
-  width: 100%;
-  max-width: 282px;
-}
-
-.dataBaseSelect {
-  width: 100%;
-  * {
-    border-color: transparent !important;
-  }
-}
-
-.space {
-  width: 100%;
-}
-
-.collapse {
+.root {
   width: 100%;
 }
 
 .panel {
   width: 100%;
-  * {
-    background: transparent !important;
-  }
-  :global(.ant-collapse-content) {
-    padding: 14px 0;
-    background: var(--color-white) !important;
-  }
-  :global(.ant-collapse-content-box) {
-    padding-bottom: 0 !important;
-  }
-
-  :global(.ant-collapse-header) {
-    background: #470d691a !important;
-    border-radius: 6px !important;
-  }
-}
-
-.panelHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.badge {
-  * {
-    min-width: 25px;
-    color: var(--color-black);
-    background: var(--color-white) !important;
-  }
-}
-
-.collapseTitle {
-  margin-bottom: 4px;
-  color: rgba(0, 0, 0, 0.5);
-  font-weight: 700;
+  margin-bottom: 1px;
+  color: dimgray;
+  font-weight: 400;
   font-size: 12px;
+  line-height: 1;
+  background: #f6f6f7;
+  /* padding: 2px 7px; */
+  border: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.panel :global(.ant-collapse-header) {
+  height: 24px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 35px !important;
+  background-color: #dde0e3;
+}
+
+.panel :global(.anticon) {
+  left: 13px !important;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.panel :global(.ant-collapse-item) {
+  border: 0 !important;
+}
+
+.panel :global(.ant-collapse-content-box) {
+  padding-top: 5px !important;
+  padding-bottom: 0 !important;
+}
+
+.categorySection {
+  background: #f6f6f7;
+}
+
+.categoryTitle {
+  display: block;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: dimgray;
+  font-weight: 700;
+  font-size: 9px;
   text-transform: uppercase;
 }
 
-.collapseBody {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  li {
-    margin: 4px 0;
-    padding: 0;
-    font-weight: 600;
-  }
+.memberSection {
+  margin-bottom: 0.3em !important;
+  padding-top: 2px;
+  padding-bottom: 3px;
+  overflow: hidden;
 }
 
-.collapseIcon {
-  transition: transform 0.1s ease;
+.filterControls {
+  padding: 20px !important;
+  padding-top: 5px;
+  padding-bottom: 2px;
 }
 
-.collapseOpen {
-  transform: rotate(90deg);
+.searchInput {
+  margin: 0 !important;
+  margin-bottom: 10px !important;
+}
+
+.buttonGroup {
+  display: flex !important;
+  width: 100%;
+  margin: 0 !important;
+  text-align: center;
+}
+
+.buttonGroup :global(.ant-radio-button-wrapper) {
+  flex: 1;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.freeMembers {
+  margin-top: 2px;
 }

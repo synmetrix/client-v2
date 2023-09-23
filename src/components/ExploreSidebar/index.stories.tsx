@@ -35,8 +35,38 @@ Default.args = {
         subSection: " string",
         subSectionType: "string",
       },
-      measures: [],
-      dimensions: [],
+      measures: [
+        {
+          name: "test measure",
+          title: "string",
+          shortTitle: "string",
+          isVisible: true,
+          aggType: "string",
+          cumulative: true,
+          cumulativeTotal: true,
+          drillMembers: [],
+          drillMembersGrouped: {
+            dimensions: [],
+            measures: [],
+          },
+        },
+      ],
+      dimensions: [
+        {
+          name: "test measure",
+          title: "string",
+          shortTitle: "string",
+          isVisible: true,
+          aggType: "string",
+          cumulative: true,
+          cumulativeTotal: true,
+          drillMembers: [],
+          drillMembersGrouped: {
+            dimensions: [],
+            measures: [],
+          },
+        },
+      ],
     },
   },
   selectedQueryMembers: [
@@ -56,8 +86,38 @@ Default.args = {
         subSection: " string",
         subSectionType: "string",
       },
-      measures: [],
-      dimensions: [],
+      measures: [
+        {
+          name: "test measure",
+          title: "string",
+          shortTitle: "string",
+          isVisible: true,
+          aggType: "string",
+          cumulative: true,
+          cumulativeTotal: true,
+          drillMembers: [],
+          drillMembersGrouped: {
+            dimensions: [],
+            measures: [],
+          },
+        },
+      ],
+      dimensions: [
+        {
+          name: "test measure",
+          title: "string",
+          shortTitle: "string",
+          isVisible: true,
+          aggType: "string",
+          cumulative: true,
+          cumulativeTotal: true,
+          drillMembers: [],
+          drillMembersGrouped: {
+            dimensions: [],
+            measures: [],
+          },
+        },
+      ],
     },
   ],
 };

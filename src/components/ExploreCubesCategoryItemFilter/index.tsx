@@ -2,7 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import cn from "classnames";
 import { Button } from "antd";
 
-import { Cube, FilterMember } from "@/types/cube";
+import type { Cube, FilterMember } from "@/types/cube";
 
 import s from "./index.module.less";
 

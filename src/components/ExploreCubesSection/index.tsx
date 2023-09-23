@@ -10,7 +10,12 @@ import useKeyPress from "@/hooks/useKeyPress";
 import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
 import { granularities } from "@/hooks/useDataSourceMeta";
 import clearSelection from "@/utils/helpers/clearSelection";
-import type { Cube as CubeType, CubeMeta, SubSection } from "@/types/cube";
+import type {
+  Cube as CubeType,
+  CubeMeta,
+  SubSection,
+  Metric,
+} from "@/types/cube";
 
 import s from "./index.module.less";
 
@@ -61,7 +66,10 @@ const granulateMember = (member: CubeType): CubeType[] => {
   return newMembers;
 };
 
-const getSubSections = (catMembers: CubeType[], membersIndex: number) => {
+const getSubSections = (
+  catMembers: CubeType[],
+  membersIndex: Record<string, Metric>
+) => {
   const subSections: Record<string, SubSection> = {};
   const freeMembers: CubeType[] = [];
 

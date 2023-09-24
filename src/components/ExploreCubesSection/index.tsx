@@ -30,8 +30,8 @@ const toFilter = (member: CubeType) => ({
   values: member.values,
 });
 
-const granulateMember = (member: CubeType): CubeType[] => {
-  const newMembers: CubeType[] = [];
+const granulateMember = (member: Metric): Metric[] => {
+  const newMembers: Metric[] = [];
 
   granularities.forEach((granularity) => {
     let newName = member.name;
@@ -49,7 +49,7 @@ const granulateMember = (member: CubeType): CubeType[] => {
       newShortTitle = "Raw";
     }
 
-    const newMember: CubeType = {
+    const newMember: Metric = {
       ...member,
       name: newName,
       title: newTitle,
@@ -68,13 +68,13 @@ const granulateMember = (member: CubeType): CubeType[] => {
 };
 
 const getSubSections = (
-  catMembers: CubeType[],
+  catMembers: Metric[],
   membersIndex: Record<string, Metric>
 ) => {
   const subSections: Record<string, SubSection> = {};
-  const freeMembers: CubeType[] = [];
+  const freeMembers: Metric[] = [];
 
-  catMembers.forEach((member: CubeType) => {
+  catMembers.forEach((member: Metric) => {
     const subSection = getOr(false, "meta.subSection", member);
     const subSectionType = getOr("string", "meta.subSectionType", member);
 
@@ -96,7 +96,7 @@ const getSubSections = (
 
   Object.keys(subSections).forEach((subSection) => {
     const foundSelected = subSections[subSection].members.find(
-      (subMember: CubeType) => get([subMember.name], membersIndex)
+      (subMember: Metric) => get([subMember.name], membersIndex)
     );
 
     if (foundSelected) {
@@ -116,10 +116,27 @@ const Cube = ({
   onMemberSelect,
 }: CubeProps): JSX.Element => {
   const { t } = useTranslation();
-  const {
-    baseMembers: { index: membersIndex },
-  } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });
+  // TODO look after useplayground hook
+  // const {
+  //   baseMembers: { index: membersIndex },
+  // } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });
 
+  const membersIndex: Record<string, Metric> = {
+    testMember0: {
+      name: "testMember0",
+      title: "",
+      shortTitle: "",
+      isVisible: false,
+      aggType: "",
+      cumulative: false,
+      cumulativeTotal: false,
+      drillMembers: [],
+      drillMembersGrouped: {
+        dimensions: [],
+        measures: [],
+      },
+    },
+  };
   const shiftPress = useKeyPress("Shift");
 
   const [state, setState] = useState<CubeMeta>({
@@ -127,17 +144,19 @@ const Cube = ({
     hovered: {},
   });
 
-  const getMemberId = (member: CubeType) => member.name.replace(".", "_");
-  const getMembersCategory = (category?: string): CubeType[] =>
-    Object.values(category ? members[category] : {});
-  const getSelectedCategoryMembers = (category?: string): string[] =>
-    Object.values(
-      category ? selectedMembers[category as keyof CubeType] : {}
-    ).map((m: any) => m.name);
+  const getMemberId = (member: Metric) => member.name.replace(".", "_");
+  const getMembersCategory = (category?: string): Metric[] => {
+    return Object.values(members[category as keyof CubeType] || {});
+  };
+  const getSelectedCategoryMembers = (category?: string): string[] => {
+    return Object.values(
+      category ? selectedMembers[category as keyof CubeType] || {} : {}
+    ).map((m: Metric) => m.name);
+  };
 
   const onAction = (
     type = "over",
-    member: CubeType,
+    member: Metric,
     memberMeta: CubeMeta = {}
   ) => {
     if (!member) {
@@ -229,14 +248,13 @@ const Cube = ({
 
   const getItem = (
     category: string,
-    member: CubeType,
+    member: Metric,
     index: number,
     categorySelectedMembers: string[],
     selectedFilters: string[]
   ): ReactNode => {
     const selectedIndex = categorySelectedMembers.indexOf(member.name);
     const selectedFilterIndex = selectedFilters.indexOf(member.name);
-
     return (
       <ExploreCubesCategoryItem
         key={member.name}
@@ -255,12 +273,11 @@ const Cube = ({
 
   const getCategory = (category: string): ReactNode => {
     let catMembers = getMembersCategory(category);
-
     if (!catMembers.length) {
       return null;
     }
 
-    catMembers = catMembers.reduce((acc: CubeType[], member: CubeType) => {
+    catMembers = catMembers.reduce((acc: Metric[], member: Metric) => {
       let newMembers = acc;
 
       if (member.type === "time") {
@@ -269,7 +286,6 @@ const Cube = ({
       } else {
         newMembers.push(member);
       }
-
       return newMembers;
     }, []);
 
@@ -297,7 +313,7 @@ const Cube = ({
             )
           )}
         </div>
-        {Object.keys(subSections).map((subSectionKey) => (
+        {Object.keys(subSections || {}).map((subSectionKey) => (
           <ExploreCubesSubSection
             key={subSectionKey}
             name={subSectionKey}
@@ -306,7 +322,7 @@ const Cube = ({
             selectedFilters={selectedFilters}
           >
             {subSections[subSectionKey].members.map(
-              (member: CubeType, index: number) =>
+              (member: Metric, index: number) =>
                 getItem(
                   category,
                   member,
@@ -325,7 +341,7 @@ const Cube = ({
 };
 
 interface CubeProps {
-  members: any;
+  members: CubeType;
   onMemberSelect: any;
   selectedMembers: Record<string, CubeType> & { filters?: FilterMember[] };
 }

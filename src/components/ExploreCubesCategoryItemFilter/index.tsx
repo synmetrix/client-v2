@@ -2,7 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import cn from "classnames";
 import { Button } from "antd";
 
-import type { Cube, FilterMember } from "@/types/cube";
+import type { Cube, FilterMember, Metric } from "@/types/cube";
 
 import s from "./index.module.less";
 
@@ -75,7 +75,7 @@ interface CategoryItemFilterProps {
     add: (value: FilterMember) => void;
     remove: (value: FilterMember) => void;
   };
-  member: Cube;
+  member: Metric;
   selectedFilterIndex: number;
 }
 

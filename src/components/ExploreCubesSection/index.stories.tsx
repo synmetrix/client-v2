@@ -24,7 +24,6 @@ Default.args = {
     name: "string",
     type: "string",
     operator: "string",
-    values: 1,
     shortTitle: "string",
     granularity: "string",
     dimension: {

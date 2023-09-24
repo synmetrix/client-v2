@@ -4,7 +4,6 @@ export interface Cube {
   name: string;
   type: string;
   operator: string;
-  values: any;
   shortTitle: string;
   granularity: string;
   dimension: {
@@ -58,10 +57,11 @@ export interface SubSection {
 export interface FilterMember {
   dimension: Metric;
   index?: number;
-  operators?: {
+  operator?: {
     name: string;
     title: string;
   }[];
+  values?: any;
 }
 
 export interface CubeMeta {

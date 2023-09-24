@@ -62,10 +62,7 @@ interface CategoryItemProps {
   category: string;
   selectedIndex: number;
   selectedFilterIndex: number;
-  onFilterUpdate: {
-    add: (value: FilterMember) => void;
-    remove: (value: FilterMember) => void;
-  };
+  onFilterUpdate: any;
   onAction: (actions: string, member: Metric) => void;
   hoverState: "over" | "focus" | false;
 }

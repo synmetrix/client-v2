@@ -16,6 +16,7 @@ import type {
   SubSection,
   Metric,
   SelectedMembers,
+  FilterMember,
 } from "@/types/cube";
 
 import s from "./index.module.less";
@@ -24,7 +25,7 @@ import type { ReactNode } from "react";
 
 const { Text } = Typography;
 
-const toFilter = (member: CubeType) => ({
+const toFilter = (member: FilterMember) => ({
   dimension: member.dimension.name,
   operator: member.operator,
   values: member.values,
@@ -326,7 +327,13 @@ const Cube = ({
 
 interface CubeProps {
   members: CubeType;
-  onMemberSelect: any;
+  onMemberSelect: (
+    memberType?: string,
+    cb?: (metric: FilterMember) => any
+  ) => {
+    add: (metric: Metric & { index?: number }) => void;
+    remove: (metric: Metric & { index?: number }) => void;
+  };
   selectedMembers: SelectedMembers;
 }
 

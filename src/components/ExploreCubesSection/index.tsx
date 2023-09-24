@@ -15,7 +15,7 @@ import type {
   CubeMeta,
   SubSection,
   Metric,
-  FilterMember,
+  SelectedMembers,
 } from "@/types/cube";
 
 import s from "./index.module.less";
@@ -117,26 +117,10 @@ const Cube = ({
 }: CubeProps): JSX.Element => {
   const { t } = useTranslation();
   // TODO look after useplayground hook
-  // const {
-  //   baseMembers: { index: membersIndex },
-  // } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });
+  const {
+    baseMembers: { index: membersIndex },
+  } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });
 
-  const membersIndex: Record<string, Metric> = {
-    testMember0: {
-      name: "testMember0",
-      title: "",
-      shortTitle: "",
-      isVisible: false,
-      aggType: "",
-      cumulative: false,
-      cumulativeTotal: false,
-      drillMembers: [],
-      drillMembersGrouped: {
-        dimensions: [],
-        measures: [],
-      },
-    },
-  };
   const shiftPress = useKeyPress("Shift");
 
   const [state, setState] = useState<CubeMeta>({
@@ -150,7 +134,7 @@ const Cube = ({
   };
   const getSelectedCategoryMembers = (category?: string): string[] => {
     return Object.values(
-      category ? selectedMembers[category as keyof CubeType] || {} : {}
+      category ? selectedMembers[category as keyof SelectedMembers] || {} : {}
     ).map((m: Metric) => m.name);
   };
 
@@ -343,7 +327,7 @@ const Cube = ({
 interface CubeProps {
   members: CubeType;
   onMemberSelect: any;
-  selectedMembers: Record<string, CubeType> & { filters?: FilterMember[] };
+  selectedMembers: SelectedMembers;
 }
 
 export default Cube;

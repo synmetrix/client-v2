@@ -76,3 +76,10 @@ export interface CubeMeta {
   lastClickedMember?: any;
   hovered?: any;
 }
+
+export interface SelectedMembers {
+  timeDimensions?: Metric[];
+  dimensions?: Metric[];
+  measures?: Metric[];
+  filters?: FilterMember;
+}

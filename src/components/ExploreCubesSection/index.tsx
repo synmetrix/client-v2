@@ -329,7 +329,7 @@ interface CubeProps {
   members: CubeType;
   onMemberSelect: (
     memberType?: string,
-    cb?: (metric: FilterMember) => any
+    cb?: (filter: FilterMember) => any
   ) => {
     add: (metric: Metric & { index?: number }) => void;
     remove: (metric: Metric & { index?: number }) => void;

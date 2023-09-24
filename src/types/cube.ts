@@ -33,6 +33,13 @@ export interface Metric {
     dimensions: Metric[];
     measures: Metric[];
   };
+  dimension?: {
+    name: string;
+    type: string;
+  };
+  granularity?: string;
+  type?: string;
+  meta?: any;
 }
 
 export interface Dimension {
@@ -42,21 +49,30 @@ export interface Dimension {
   type: string;
 }
 
-export interface CubeMeta {
-  category?: string;
-  index?: number;
-  selectedIndex?: number;
-  lastClickedMember?: any;
-  hovered?: any;
-}
-
 export interface SubSection {
-  members: Cube[];
+  members: Metric[];
   haveSelected: boolean;
   subSectionType: string;
 }
 
 export interface FilterMember {
-  dimension: Cube;
+  dimension: Metric;
   index?: number;
+  operators?: {
+    name: string;
+    title: string;
+  }[];
+}
+
+export interface CubeMeta {
+  cubesMap?: Record<string, Cube>;
+  name?: string;
+  measures?: { type: string; name: string }[];
+  dimensions?: { type: string; name: string }[];
+  segments?: { type: string; name: string }[];
+  category?: string;
+  index?: number;
+  selectedIndex?: number;
+  lastClickedMember?: any;
+  hovered?: any;
 }

@@ -19,20 +19,6 @@ export const Default = Template.bind({});
 
 Default.args = {
   members: {
-    connectedComponent: 1,
-    title: "test",
-    name: "string",
-    type: "string",
-    operator: "string",
-    shortTitle: "string",
-    granularity: "string",
-    dimension: {
-      name: "string",
-    },
-    meta: {
-      subSection: " string",
-      subSectionType: "string",
-    },
     measures: [
       {
         name: "test measure",

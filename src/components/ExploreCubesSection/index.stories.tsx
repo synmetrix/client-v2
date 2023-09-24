@@ -52,6 +52,24 @@ Default.args = {
     ],
     dimensions: [
       {
+        name: "test dimension",
+        title: "string1",
+        shortTitle: "string1",
+        isVisible: true,
+        aggType: "string1",
+        cumulative: true,
+        cumulativeTotal: true,
+        drillMembers: [],
+        drillMembersGrouped: {
+          dimensions: [],
+          measures: [],
+        },
+      },
+    ],
+  },
+  selectedMembers: {
+    measures: [
+      {
         name: "test measure",
         title: "string",
         shortTitle: "string",
@@ -66,57 +84,22 @@ Default.args = {
         },
       },
     ],
-  },
-  selectedMembers: {
-    dimensions: {
-      connectedComponent: 1,
-      title: "test",
-      name: "string",
-      type: "string",
-      operator: "string",
-      values: 1,
-      shortTitle: "string",
-      granularity: "string",
-      dimension: {
-        name: "string",
-      },
-      meta: {
-        subSection: " string",
-        subSectionType: "string",
-      },
-      measures: [
-        {
-          name: "test measure",
-          title: "string",
-          shortTitle: "string",
-          isVisible: true,
-          aggType: "string",
-          cumulative: true,
-          cumulativeTotal: true,
-          drillMembers: [],
-          drillMembersGrouped: {
-            dimensions: [],
-            measures: [],
-          },
+    dimensions: [
+      {
+        name: "test dimension",
+        title: "string1",
+        shortTitle: "string1",
+        isVisible: true,
+        aggType: "string1",
+        cumulative: true,
+        cumulativeTotal: true,
+        drillMembers: [],
+        drillMembersGrouped: {
+          dimensions: [],
+          measures: [],
         },
-      ],
-      dimensions: [
-        {
-          name: "test measure",
-          title: "string",
-          shortTitle: "string",
-          isVisible: true,
-          aggType: "string",
-          cumulative: true,
-          cumulativeTotal: true,
-          drillMembers: [],
-          drillMembersGrouped: {
-            dimensions: [],
-            measures: [],
-          },
-        },
-      ],
-    },
+      },
+    ],
   },
   onMemberSelect: () => ({
     add: () => {},

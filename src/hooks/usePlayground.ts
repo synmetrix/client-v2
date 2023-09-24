@@ -280,7 +280,7 @@ import useAnalyticsQuery, {
   initialState,
 } from "@/hooks/useAnalyticsQuery";
 import useDeepCompareEffect from "@/hooks/useDeepCompareEffect";
-import equals from "@/utils/helpers/equals";
+// import equals from "@/utils/helpers/equals";
 
 const queryStateKeys = Object.keys(queryState);
 
@@ -327,171 +327,171 @@ export const getColumns = (selectedQueryMembers, settings = {}) =>
     type: c.type,
   }));
 
-export default ({ dataSourceId, meta = [], editId, rowsLimit, offset }) => {
-  const [, setLocation] = useLocation();
-  const { withAuthPrefix } = useAppSettings();
-  const [settings, dispatchSettings] = useReducer(reducer, initialSettings);
+// export default ({ dataSourceId, meta = [], editId, rowsLimit, offset }) => {
+//   const [, setLocation] = useLocation();
+//   const { withAuthPrefix } = useAppSettings();
+//   const [settings, dispatchSettings] = useReducer(reducer, initialSettings);
 
-  const {
-    current,
-    currentProgress,
-    queries: { currentData, execQueryCurrent },
-    mutations: {
-      createMutation,
-      execCreateMutation,
-      genSqlMutation,
-      execGenSqlMutation,
-    },
-  } = useExplorations({
-    params: {
-      editId,
-      rowsLimit,
-      offset,
-    },
-    pauseQueryAll: true,
-  });
+//   const {
+//     current,
+//     currentProgress,
+//     queries: { currentData, execQueryCurrent },
+//     mutations: {
+//       createMutation,
+//       execCreateMutation,
+//       genSqlMutation,
+//       execGenSqlMutation,
+//     },
+//   } = useExplorations({
+//     params: {
+//       editId,
+//       rowsLimit,
+//       offset,
+//     },
+//     pauseQueryAll: true,
+//   });
 
-  useEffect(() => {
-    if (editId) {
-      execGenSqlMutation({ exploration_id: editId });
-    }
-  }, [editId, execGenSqlMutation]);
+//   useEffect(() => {
+//     if (editId) {
+//       execGenSqlMutation({ exploration_id: editId });
+//     }
+//   }, [editId, execGenSqlMutation]);
 
-  const playgroundSettings = useMemo(
-    () => current.playground_settings || {},
-    [current]
-  );
+//   const playgroundSettings = useMemo(
+//     () => current.playground_settings || {},
+//     [current]
+//   );
 
-  useDeepCompareEffect(() => {
-    dispatchSettings({ type: "update", value: playgroundSettings });
-  }, [playgroundSettings]);
+//   useDeepCompareEffect(() => {
+//     dispatchSettings({ type: "update", value: playgroundSettings });
+//   }, [playgroundSettings]);
 
-  const {
-    state: currPlaygroundState,
-    dispatch,
-    updateMember,
-    setLimit,
-    setOffset,
-    setPage,
-    setOrderBy,
-    doReset,
-  } = useAnalyticsQuery();
+//   const {
+//     state: currPlaygroundState,
+//     dispatch,
+//     updateMember,
+//     setLimit,
+//     setOffset,
+//     setPage,
+//     setOrderBy,
+//     doReset,
+//   } = useAnalyticsQuery();
 
-  const { selectedQueryMembers, availableQueryMembers } = useDataSourceMeta({
-    meta,
-    playgroundState: currPlaygroundState,
-  });
+//   const { selectedQueryMembers, availableQueryMembers } = useDataSourceMeta({
+//     meta,
+//     playgroundState: currPlaygroundState,
+//   });
 
-  const { rows, hitLimit, skippedMembers } = useExplorationData({
-    explorationResult: currentData.data?.fetch_dataset,
-  });
+//   const { rows, hitLimit, skippedMembers } = useExplorationData({
+//     explorationResult: currentData.data?.fetch_dataset,
+//   });
 
-  const columns = useMemo(() => {
-    if (!selectedQueryMembers) {
-      return [];
-    }
+//   const columns = useMemo(() => {
+//     if (!selectedQueryMembers) {
+//       return [];
+//     }
 
-    return getColumns(selectedQueryMembers, settings);
-  }, [selectedQueryMembers, settings]);
+//     return getColumns(selectedQueryMembers, settings);
+//   }, [selectedQueryMembers, settings]);
 
-  const explorationState = useMemo(
-    () => ({
-      loading: currentData.fetching,
-      progress: currentProgress,
-      hitLimit,
-      columns,
-      rows,
-      ...currPlaygroundState,
-      rawSql: genSqlMutation.data?.gen_sql?.result,
-      skippedMembers,
-      settings,
-    }),
-    [
-      currentData.fetching,
-      genSqlMutation.data,
-      currentProgress,
-      hitLimit,
-      columns,
-      rows,
-      currPlaygroundState,
-      skippedMembers,
-      settings,
-    ]
-  );
+//   const explorationState = useMemo(
+//     () => ({
+//       loading: currentData.fetching,
+//       progress: currentProgress,
+//       hitLimit,
+//       columns,
+//       rows,
+//       ...currPlaygroundState,
+//       rawSql: genSqlMutation.data?.gen_sql?.result,
+//       skippedMembers,
+//       settings,
+//     }),
+//     [
+//       currentData.fetching,
+//       genSqlMutation.data,
+//       currentProgress,
+//       hitLimit,
+//       columns,
+//       rows,
+//       currPlaygroundState,
+//       skippedMembers,
+//       settings,
+//     ]
+//   );
 
-  const [isQueryChanged, setChangedStatus] = useState(false);
+//   const [isQueryChanged, setChangedStatus] = useState(false);
 
-  useEffect(() => {
-    const { playground_state: playgroundState = queryState } = current;
+//   useEffect(() => {
+//     const { playground_state: playgroundState = queryState } = current;
 
-    const isChanged = !equals(
-      pickKeys(queryStateKeys, playgroundState),
-      pickKeys(queryStateKeys, currPlaygroundState)
-    );
+//     const isChanged = !equals(
+//       pickKeys(queryStateKeys, playgroundState),
+//       pickKeys(queryStateKeys, currPlaygroundState)
+//     );
 
-    if (isQueryChanged !== isChanged) {
-      setChangedStatus(isChanged);
-    }
-  }, [isQueryChanged, currPlaygroundState, current]);
+//     if (isQueryChanged !== isChanged) {
+//       setChangedStatus(isChanged);
+//     }
+//   }, [isQueryChanged, currPlaygroundState, current]);
 
-  useEffect(() => {
-    const newState = current.playground_state;
+//   useEffect(() => {
+//     const newState = current.playground_state;
 
-    if (newState) {
-      doReset(newState);
-    }
-  }, [current.playground_state, doReset]);
+//     if (newState) {
+//       doReset(newState);
+//     }
+//   }, [current.playground_state, doReset]);
 
-  useEffect(() => {
-    if (!editId) {
-      doReset(initialState);
-    }
-  }, [editId, doReset]);
+//   useEffect(() => {
+//     if (!editId) {
+//       doReset(initialState);
+//     }
+//   }, [editId, doReset]);
 
-  const runQuery = useCallback(() => {
-    trackEvent("Run Query");
+//   const runQuery = useCallback(() => {
+//     trackEvent("Run Query");
 
-    const explorationQueryState = pickKeys(queryStateKeys, currPlaygroundState);
-    const newExplorationObj = {
-      datasource_id: dataSourceId,
-      playground_state: explorationQueryState,
-      playground_settings: settings,
-    };
+//     const explorationQueryState = pickKeys(queryStateKeys, currPlaygroundState);
+//     const newExplorationObj = {
+//       datasource_id: dataSourceId,
+//       playground_state: explorationQueryState,
+//       playground_settings: settings,
+//     };
 
-    return execCreateMutation({ object: newExplorationObj });
-  }, [currPlaygroundState, dataSourceId, execCreateMutation, settings]);
+//     return execCreateMutation({ object: newExplorationObj });
+//   }, [currPlaygroundState, dataSourceId, execCreateMutation, settings]);
 
-  const reset = useCallback(
-    (explorationId) =>
-      setLocation(withAuthPrefix(`/explore/${dataSourceId}/${explorationId}`)),
-    [dataSourceId, setLocation, withAuthPrefix]
-  );
+//   const reset = useCallback(
+//     (explorationId) =>
+//       setLocation(withAuthPrefix(`/explore/${dataSourceId}/${explorationId}`)),
+//     [dataSourceId, setLocation, withAuthPrefix]
+//   );
 
-  useEffect(() => {
-    if (createMutation.data) {
-      reset(createMutation.data?.insert_explorations_one?.id);
-      createMutation.data = null;
-    }
-  }, [createMutation.data, reset]);
+//   useEffect(() => {
+//     if (createMutation.data) {
+//       reset(createMutation.data?.insert_explorations_one?.id);
+//       createMutation.data = null;
+//     }
+//   }, [createMutation.data, reset]);
 
-  return {
-    state: explorationState,
-    exploration: current,
-    explorationLoading: currentData.fetching,
-    loadExploration: execQueryCurrent,
-    selectedQueryMembers,
-    availableQueryMembers,
-    analyticsQuery: {
-      state: currPlaygroundState,
-      dispatch,
-      updateMember,
-      isQueryChanged,
-      runQuery,
-      setLimit,
-      setOffset,
-      setPage,
-      setOrderBy,
-    },
-    dispatchSettings,
-  };
-};
+//   return {
+//     state: explorationState,
+//     exploration: current,
+//     explorationLoading: currentData.fetching,
+//     loadExploration: execQueryCurrent,
+//     selectedQueryMembers,
+//     availableQueryMembers,
+//     analyticsQuery: {
+//       state: currPlaygroundState,
+//       dispatch,
+//       updateMember,
+//       isQueryChanged,
+//       runQuery,
+//       setLimit,
+//       setOffset,
+//       setPage,
+//       setOrderBy,
+//     },
+//     dispatchSettings,
+//   };
+// };

@@ -11,11 +11,10 @@ import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
 import { granularities } from "@/hooks/useDataSourceMeta";
 import clearSelection from "@/utils/helpers/clearSelection";
 import type {
-  Cube as CubeType,
   CubeMeta,
   SubSection,
   Metric,
-  SelectedMembers,
+  CubeMembers,
   FilterMember,
 } from "@/types/cube";
 
@@ -131,11 +130,11 @@ const Cube = ({
 
   const getMemberId = (member: Metric) => member.name.replace(".", "_");
   const getMembersCategory = (category?: string): Metric[] => {
-    return Object.values(members[category as keyof CubeType] || {});
+    return Object.values(members[category as keyof CubeMembers] || {});
   };
   const getSelectedCategoryMembers = (category?: string): string[] => {
     return Object.values(
-      category ? selectedMembers[category as keyof SelectedMembers] || {} : {}
+      category ? selectedMembers[category as keyof CubeMembers] || {} : {}
     ).map((m: Metric) => m.name);
   };
 
@@ -181,13 +180,12 @@ const Cube = ({
 
         const selectMembers =
           getMembersCategory(nextCategory).filter(catFilter);
-        const categorySelectedMembers =
-          getSelectedCategoryMembers(nextCategory);
+        const categoryCubeMembers = getSelectedCategoryMembers(nextCategory);
 
         // need buffer because selectedMembers update is not immediately
-        const categorySelectedMembersBuffer = categorySelectedMembers;
+        const categoryCubeMembersBuffer = categoryCubeMembers;
         selectMembers.forEach((catMember) => {
-          const catSelectedIndex = categorySelectedMembersBuffer.findIndex(
+          const catSelectedIndex = categoryCubeMembersBuffer.findIndex(
             (m: any) => m.name === catMember.name
           );
 
@@ -198,7 +196,7 @@ const Cube = ({
               ...catMember,
               index: catSelectedIndex,
             });
-            categorySelectedMembersBuffer.splice(catSelectedIndex, 1);
+            categoryCubeMembersBuffer.splice(catSelectedIndex, 1);
           }
         });
 
@@ -235,10 +233,10 @@ const Cube = ({
     category: string,
     member: Metric,
     index: number,
-    categorySelectedMembers: string[],
+    categoryCubeMembers: string[],
     selectedFilters: string[]
   ): ReactNode => {
-    const selectedIndex = categorySelectedMembers.indexOf(member.name);
+    const selectedIndex = categoryCubeMembers.indexOf(member.name);
     const selectedFilterIndex = selectedFilters.indexOf(member.name);
     return (
       <ExploreCubesCategoryItem
@@ -279,7 +277,7 @@ const Cube = ({
       membersIndex
     );
 
-    const categorySelectedMembers = getSelectedCategoryMembers(category);
+    const categoryCubeMembers = getSelectedCategoryMembers(category);
     const selectedFilters: string[] = Object.values(
       selectedMembers.filters || {}
     ).map((m) => m.dimension.name);
@@ -293,7 +291,7 @@ const Cube = ({
               category,
               member,
               index,
-              categorySelectedMembers,
+              categoryCubeMembers,
               selectedFilters
             )
           )}
@@ -312,7 +310,7 @@ const Cube = ({
                   category,
                   member,
                   index,
-                  categorySelectedMembers,
+                  categoryCubeMembers,
                   selectedFilters
                 )
             )}
@@ -326,7 +324,7 @@ const Cube = ({
 };
 
 interface CubeProps {
-  members: CubeType;
+  members: CubeMembers;
   onMemberSelect: (
     memberType?: string,
     cb?: (filter: FilterMember) => any
@@ -334,7 +332,7 @@ interface CubeProps {
     add: (metric: Metric & { index?: number }) => void;
     remove: (metric: Metric & { index?: number }) => void;
   };
-  selectedMembers: SelectedMembers;
+  selectedMembers: CubeMembers;
 }
 
 export default Cube;

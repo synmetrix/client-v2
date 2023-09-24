@@ -77,7 +77,7 @@ export interface CubeMeta {
   hovered?: any;
 }
 
-export interface SelectedMembers {
+export interface CubeMembers {
   timeDimensions?: Metric[];
   dimensions?: Metric[];
   measures?: Metric[];

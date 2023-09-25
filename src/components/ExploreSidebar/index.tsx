@@ -1,6 +1,6 @@
-import { Collapse, Badge } from "antd";
+import { Collapse, Badge, Radio, Input, Alert } from "antd";
 // import { UpOutlined } from "@ant-design/icons";
-// import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 // import cn from "classnames";
 
 // import Select from "@/components/Select";
@@ -9,9 +9,12 @@ import useCubesList from "@/hooks/useCubesList";
 import ExploreCubesSection from "@/components//ExploreCubesSection";
 import type { Cube, Metric } from "@/types/cube";
 
+import SearchIcon from "@/assets/search.svg";
+
 import styles from "./index.module.less";
 
-import type { FC } from "react";
+import type { ChangeEventHandler, FC } from "react";
+import type { RadioChangeEvent, AlertProps } from "antd";
 
 interface ExploreSidebarProps {
   onMemberSelect: any;
@@ -20,6 +23,9 @@ interface ExploreSidebarProps {
   dataSchemaValidation: {
     code: string;
     message: string;
+    error?: {
+      message: string;
+    };
   };
 }
 
@@ -32,11 +38,11 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
   onMemberSelect,
   availableQueryMembers,
   selectedQueryMembers,
-  // dataSchemaValidation,
+  dataSchemaValidation,
 }) => {
-  // const { t } = useTranslation(["explore", "common"]);
+  const { t } = useTranslation(["explore", "common"]);
 
-  const { state } = useCubesList({
+  const { state, setState } = useCubesList({
     query: "",
     availableQueryMembers,
     categories: SHOWN_CATEGORIES,
@@ -107,10 +113,92 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
     [onMemberSelect, selectedQueryMembers, state.members]
   );
 
+  const onSearch = (query: string, categories: string[]) => {
+    let openedCubes: string[] = [];
+
+    // if query or specific category then open cubes
+    if (query || categories.length === 1) {
+      openedCubes = Object.keys(state.members);
+    }
+
+    setState((prev) => ({
+      ...prev,
+      query,
+      categories,
+      openedCubes,
+    }));
+  };
+
+  let timer: any;
+  const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const { value } = e.target;
+
+    clearTimeout(timer);
+    timer = setTimeout(() => onSearch(value, state.categories), 300);
+  };
+
+  const onFilterChange = (e: RadioChangeEvent) => {
+    const { value } = e.target;
+
+    setState((prev) => ({ ...prev, radioValue: value }));
+
+    const onButtonClick = {
+      all: () => onSearch(state.query, SHOWN_CATEGORIES),
+      dimensions: () => onSearch(state.query, ["dimensions"]),
+      measures: () => onSearch(state.query, ["measures"]),
+    };
+
+    onButtonClick[value as keyof typeof onButtonClick]();
+  };
+
+  const onCollapse = (activeKey: string | string[]) => {
+    setState((prev) => ({
+      ...prev,
+      openedCubes: Array.isArray(activeKey) ? activeKey : [activeKey],
+    }));
+  };
+
+  const dataSchemaError: AlertProps = { type: "error", message: "" };
+  if (dataSchemaValidation?.error) {
+    dataSchemaError.message = `${t("Bad Data Schema")}.\n${
+      dataSchemaValidation.error.message
+    }`;
+  }
+
   return (
-    <Collapse className={styles.collapse} bordered={false}>
-      {options}
-    </Collapse>
+    <div>
+      <Radio.Group
+        value={state.radioValue}
+        size="small"
+        onChange={onFilterChange}
+        className={styles.buttonGroup}
+      >
+        <Radio.Button value="all">{t("All")}</Radio.Button>
+        <Radio.Button value="dimensions">{t("Dimensions")}</Radio.Button>
+        <Radio.Button value="measures">{t("Measures")}</Radio.Button>
+      </Radio.Group>
+
+      <Input
+        className={styles.searchInput}
+        prefix={<SearchIcon />}
+        placeholder="Find..."
+        size="small"
+        onChange={onChange}
+        allowClear
+      />
+      <div>
+        {dataSchemaValidation?.error && <Alert {...dataSchemaError} />}
+        <Collapse
+          className={styles.collapse}
+          bordered={false}
+          activeKey={state.openedCubes}
+          defaultActiveKey={state.openedCubes}
+          onChange={onCollapse}
+        >
+          {options}
+        </Collapse>
+      </div>
+    </div>
   );
 
   // const selectedDataBase = dataBases.find((d) => d.name === selected);

@@ -56,7 +56,7 @@ export default ({
                 // member[1] – value, from (categoryKey, categoryObject)
                 // 1.title – it's a title of category object
                 const lowerTitle = getOr("", "1.title", member).toLowerCase();
-
+                console.log(lowerTitle);
                 return lowerTitle.indexOf(state.query.toLowerCase()) > -1;
               });
             }

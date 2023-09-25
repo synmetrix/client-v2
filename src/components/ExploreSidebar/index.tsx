@@ -173,19 +173,34 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
         onChange={onFilterChange}
         className={styles.buttonGroup}
       >
-        <Radio.Button value="all">{t("All")}</Radio.Button>
-        <Radio.Button value="dimensions">{t("Dimensions")}</Radio.Button>
-        <Radio.Button value="measures">{t("Measures")}</Radio.Button>
+        <Radio.Button className={styles.radioButton} type="text" value="all">
+          {t("All")}
+        </Radio.Button>
+        <Radio.Button
+          className={styles.radioButton}
+          type="text"
+          value="dimensions"
+        >
+          {t("Dimensions")}
+        </Radio.Button>
+        <Radio.Button
+          className={styles.radioButton}
+          type="text"
+          value="measures"
+        >
+          {t("Measures")}
+        </Radio.Button>
       </Radio.Group>
 
       <Input
         className={styles.searchInput}
+        bordered={false}
         prefix={<SearchIcon />}
         placeholder="Find..."
-        size="small"
         onChange={onChange}
         allowClear
       />
+
       <div>
         {dataSchemaValidation?.error && <Alert {...dataSchemaError} />}
         <Collapse

@@ -19,10 +19,10 @@ export const Default = Template.bind({});
 
 Default.args = {
   availableQueryMembers: {
-    dsadsasd: {
+    Tripdata: {
       connectedComponent: 1,
-      title: "test",
-      name: "string",
+      title: "Tripdata",
+      name: "Tripdata",
       type: "string",
       operator: "string",
       shortTitle: "string",
@@ -36,9 +36,9 @@ Default.args = {
       },
       measures: [
         {
-          name: "dsadsasd.testmeasure",
-          title: "string",
-          shortTitle: "string",
+          name: "Tripdata.testmeasure",
+          title: "Tripdatatestmeasure",
+          shortTitle: "Tripdatatestmeasure",
           isVisible: true,
           aggType: "string",
           cumulative: true,
@@ -52,9 +52,9 @@ Default.args = {
       ],
       dimensions: [
         {
-          name: "dsadsasd.testdimensions",
-          title: "string",
-          shortTitle: "string",
+          name: "Tripdata.testdimensions",
+          title: "Tripdatatestdimensions",
+          shortTitle: "Tripdatatestdimensions",
           isVisible: true,
           aggType: "string",
           cumulative: true,
@@ -67,10 +67,10 @@ Default.args = {
         },
       ],
     },
-    dsasa231313d: {
+    Airports: {
       connectedComponent: 1,
-      title: "test",
-      name: "string",
+      title: "Airports",
+      name: "Airports",
       type: "string",
       operator: "string",
       shortTitle: "string",
@@ -84,9 +84,9 @@ Default.args = {
       },
       measures: [
         {
-          name: "dsasa231313d.testmeasure",
-          title: "string",
-          shortTitle: "string",
+          name: "Airports.testmeasure",
+          title: "Airportstestmeasure",
+          shortTitle: "Airportstestmeasure",
           isVisible: true,
           aggType: "string",
           cumulative: true,
@@ -100,9 +100,9 @@ Default.args = {
       ],
       dimensions: [
         {
-          name: "dsasa231313d.testdimension",
-          title: "string1",
-          shortTitle: "string",
+          name: "Airports.testdimension",
+          title: "Airportstestdimension",
+          shortTitle: "Airportstestdimension",
           isVisible: true,
           aggType: "string",
           cumulative: true,
@@ -117,61 +117,61 @@ Default.args = {
     },
   },
   selectedQueryMembers: {
-    "dsasa231313d.testmeasure": {
-      name: "dsasa231313d.testmeasure1",
-      title: "string",
-      shortTitle: "string",
+    "Airports.testmeasure": {
+      name: "Airports.testmeasure",
+      title: "Airportstestmeasure",
+      shortTitle: "Airportstestmeasure",
       isVisible: true,
       aggType: "string",
       cumulative: true,
       cumulativeTotal: true,
       drillMembers: [],
-      granularity: "dsasa231313d.testmeasure1.granularity",
+      granularity: "Airports.testmeasure1.granularity",
       drillMembersGrouped: {
         dimensions: [],
         measures: [],
       },
     },
-    "dsasa231313d.testdimension": {
-      name: "dsasa231313d.testdimension1",
-      title: "string1",
-      shortTitle: "string",
+    "Airports.testdimension": {
+      name: "Airports.testdimension",
+      title: "Airportstestdimension",
+      shortTitle: "Airportstestdimension",
       isVisible: true,
       aggType: "string",
       cumulative: true,
       cumulativeTotal: true,
       drillMembers: [],
-      granularity: "dsasa231313d.testdimension1.granularity",
+      granularity: "Airports.testdimension1.granularity",
       drillMembersGrouped: {
         dimensions: [],
         measures: [],
       },
     },
-    "dsadsasd.testmeasure": {
-      name: "dsadsasd.testmeasure2",
-      title: "string",
-      shortTitle: "string",
+    "Tripdata.testmeasure": {
+      name: "Tripdata.testmeasure",
+      title: "Tripdatatestmeasure",
+      shortTitle: "Tripdatatestmeasure",
       isVisible: true,
       aggType: "string",
       cumulative: true,
       cumulativeTotal: true,
       drillMembers: [],
-      granularity: "dsadsasd.testmeasure2.granularity",
+      granularity: "Tripdata.testmeasure2.granularity",
       drillMembersGrouped: {
         dimensions: [],
         measures: [],
       },
     },
-    "dsadsasd.testdimension": {
-      name: "dsadsasd.testdimension2",
-      title: "string1",
-      shortTitle: "string",
+    "Tripdata.testdimension": {
+      name: "Tripdata.testdimension",
+      title: "Tripdatatestdimension",
+      shortTitle: "Tripdatatestdimension",
       isVisible: true,
       aggType: "string",
       cumulative: true,
       cumulativeTotal: true,
       drillMembers: [],
-      granularity: "dsadsasd.testdimension2.granularity",
+      granularity: "Tripdata.testdimension2.granularity",
       drillMembersGrouped: {
         dimensions: [],
         measures: [],

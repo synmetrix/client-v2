@@ -8,7 +8,6 @@ export default [
         routes: [
           {
             path: "/",
-            component: "./layouts/BasicLayout",
             routes: [
               {
                 path: "/signup",

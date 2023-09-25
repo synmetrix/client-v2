@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Col, Row, Space, Spin } from "antd";
 
 import PageHeader from "@/components/PageHeader";
-import BasicLayout from "@/layouts/BasicLayout";
 import DataSourceCard from "@/components/DataSourceCard";
 import Modal from "@/components/Modal";
 import DataSourceForm from "@/components/DataSourceForm";
@@ -31,6 +30,7 @@ import type {
   Datasources_Pk_Columns_Input,
   Datasources_Set_Input,
 } from "@/graphql/generated";
+import AppLayout from "@/layouts/AppLayout";
 
 import styles from "./index.module.less";
 
@@ -79,12 +79,7 @@ export const DataSources = ({
   }, [editId, setIsOpen]);
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:settings.data_sources") }}
-    >
+    <AppLayout divider title={t("pages:settings.data_sources")}>
       <Spin spinning={loading}>
         {dataSources.length === 0 && <NoDataSource onConnect={onOpen} />}
         {dataSources.length > 0 && (
@@ -124,7 +119,7 @@ export const DataSources = ({
           shadow={false}
         />
       </Modal>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

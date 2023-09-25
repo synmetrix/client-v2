@@ -1,10 +1,10 @@
 import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import PageHeader from "@/components/PageHeader";
 import QueryLogsTable from "@/components/QueryLogsTable";
 import type { QueryLog } from "@/types/logs";
+import AppLayout from "@/layouts/AppLayout";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -17,12 +17,7 @@ interface QueryLogsProps {
 const QueryLogs: React.FC<QueryLogsProps> = ({ logs }) => {
   const { t } = useTranslation(["logs", "pages"]);
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:logs.query") }}
-    >
+    <AppLayout divider title={t("pages:logs.query")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("query.title")}
@@ -42,7 +37,7 @@ const QueryLogs: React.FC<QueryLogsProps> = ({ logs }) => {
           <QueryLogsTable logs={logs} />
         </div>
       </Space>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

@@ -10,6 +10,7 @@ import AlertTypeSelection from "@/components/AlertTypeSelection";
 import { alertTypes } from "@/mocks/alertTypes";
 import type { Alert, AlertFormType, AlertType } from "@/types/alert";
 import type { QueryPreview } from "@/types/queryPreview";
+import AppLayout from "@/layouts/AppLayout";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -46,12 +47,7 @@ const Alerts: React.FC<AlertsProps> = ({ alerts, query }) => {
   };
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:alerts") }}
-    >
+    <AppLayout divider title={t("pages:alerts")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("list_and_manage_your_alerts")}
@@ -96,7 +92,7 @@ const Alerts: React.FC<AlertsProps> = ({ alerts, query }) => {
           />
         )}
       </Modal>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

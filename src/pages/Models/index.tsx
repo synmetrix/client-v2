@@ -73,39 +73,40 @@ const Models: React.FC<ModelsProps> = ({
   };
 
   return (
-    <BasicLayout
-      loggedIn
-      headerProps={{
-        title: "gh-api.clickhouse.tech",
-      }}
-      withSideMenu
-      sidebar={{
-        header: (
-          <Space size={7} align="center">
-            <ModelsActiveIcon />
-            <Title className={styles.sidebarTitle} level={4}>
-              Models
-            </Title>
-          </Space>
-        ),
-        children: (
-          <Suspense>
-            <ModelsSidebar
-              version={currentVersion.checksum}
-              branches={branches}
-              docs={docs}
-              files={files.map((f) => f.name)}
-              onCreateFile={onFileCreate}
-              onSelectFile={onSelectFile}
-              onSetDefaultVersion={console.log}
-            />
-          </Suspense>
-        ),
-        trigger: "models",
-      }}
-    >
-      <CodeEditor files={selectedFiles} onRemove={onFileRemove} />
-    </BasicLayout>
+    <div>fix me</div>
+    // <BasicLayout
+    //   loggedIn
+    //   headerProps={{
+    //     title: "gh-api.clickhouse.tech",
+    //   }}
+    //   withSideMenu
+    //   sidebar={{
+    //     header: (
+    //       <Space size={7} align="center">
+    //         <ModelsActiveIcon />
+    //         <Title className={styles.sidebarTitle} level={4}>
+    //           Models
+    //         </Title>
+    //       </Space>
+    //     ),
+    //     children: (
+    //       <Suspense>
+    //         <ModelsSidebar
+    //           version={currentVersion.checksum}
+    //           branches={branches}
+    //           docs={docs}
+    //           files={files.map((f) => f.name)}
+    //           onCreateFile={onFileCreate}
+    //           onSelectFile={onSelectFile}
+    //           onSetDefaultVersion={console.log}
+    //         />
+    //       </Suspense>
+    //     ),
+    //     trigger: "models",
+    //   }}
+    // >
+    //   <CodeEditor files={selectedFiles} onRemove={onFileRemove} />
+    // </BasicLayout>
   );
 };
 

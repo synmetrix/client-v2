@@ -6,6 +6,7 @@ import SignUpForm from "@/components/SignUpForm";
 import type { SignUpFormType } from "@/components/SignUpForm";
 import useAuth from "@/hooks/useAuth";
 import useLocation from "@/hooks/useLocation";
+import AuthLinks from "@/components/AuthLinks";
 
 import styles from "./index.module.less";
 
@@ -27,7 +28,7 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <BasicLayout headerProps={{ withLogo: true }} page="signup">
+    <BasicLayout header={<AuthLinks currentPage="signup" />}>
       <Row className={styles.container} justify="center" align="middle">
         <Col>
           <SignUpForm onSubmit={onSubmit} />

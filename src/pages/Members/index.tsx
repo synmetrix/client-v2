@@ -1,7 +1,6 @@
 import { Space, message } from "antd";
 import { useTranslation } from "react-i18next";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import PageHeader from "@/components/PageHeader";
 import MembersTable from "@/components/MembersTable";
 import Modal from "@/components/Modal";
@@ -28,6 +27,7 @@ import type {
   AllAccessListsQuery,
 } from "@/graphql/generated";
 import type { Invite } from "@/components/MembersForm";
+import AppLayout from "@/layouts/AppLayout";
 
 import styles from "./index.module.less";
 
@@ -61,12 +61,7 @@ export const Members: React.FC<MembersProps> = ({
   const onRemove = (member: Member) => onDeleteMember(member.id);
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:settings.members") }}
-    >
+    <AppLayout divider title={t("pages:settings.members")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("settings:members.title")}
@@ -86,7 +81,7 @@ export const Members: React.FC<MembersProps> = ({
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
         <MembersForm onSubmit={onSubmit} />
       </Modal>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

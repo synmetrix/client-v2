@@ -6,6 +6,7 @@ import useAuth from "@/hooks/useAuth";
 import useLocation from "@/hooks/useLocation";
 import type { SignInFormType } from "@/components/SignInForm";
 import type { HasuraPlusError } from "@/types/error";
+import AuthLinks from "@/components/AuthLinks";
 
 import styles from "./index.module.less";
 
@@ -26,7 +27,7 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <BasicLayout headerProps={{ withLogo: true }} page="signin">
+    <BasicLayout header={<AuthLinks currentPage="signin" />}>
       <Row className={styles.container} justify="center" align="middle">
         <Col>
           <SignInForm onSubmit={onSubmit} />

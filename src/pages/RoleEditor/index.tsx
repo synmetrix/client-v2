@@ -7,8 +7,8 @@ import type {
   RoleForm as RoleFormType,
 } from "@/types/access";
 import RoleForm from "@/components/RoleForm";
-import BasicLayout from "@/layouts/BasicLayout";
 import PageHeader from "@/components/PageHeader";
+import AppLayout from "@/layouts/AppLayout";
 
 import styles from "./index.module.less";
 
@@ -23,12 +23,7 @@ const RoleEditor: React.FC<RoleEditorProps> = ({ accessItems, resources }) => {
   const onSubmit = (data: RoleFormType) => console.log(data);
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:settings.roles_and_access") }}
-    >
+    <AppLayout divider title={t("pages:settings.roles_and_access")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader title={t("settings:roles_and_access.create_role")} />
         <div className={styles.inner}>
@@ -39,7 +34,7 @@ const RoleEditor: React.FC<RoleEditorProps> = ({ accessItems, resources }) => {
           />
         </div>
       </Space>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

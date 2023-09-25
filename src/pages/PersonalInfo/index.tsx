@@ -1,7 +1,6 @@
 import { Space, Alert, message } from "antd";
 import { useTranslation } from "react-i18next";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import GeneralInfoForm from "@/components/GeneralInfoForm";
 import SecurityForm from "@/components/SecurityForm";
 import LogoutSessions from "@/components/LogoutSessions";
@@ -13,6 +12,7 @@ import AuthTokensStore from "@/stores/AuthTokensStore";
 import useLocation from "@/hooks/useLocation";
 import type { GeneralInfo } from "@/components/GeneralInfoForm";
 import type { Security } from "@/components/SecurityForm";
+import AppLayout from "@/layouts/AppLayout";
 
 import styles from "./index.module.less";
 
@@ -34,19 +34,14 @@ export const PersonalInfo: React.FC<PersonalInfoProps> = ({
   const { t } = useTranslation(["settings", "pages"]);
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:settings.personal_info") }}
-    >
+    <AppLayout divider title={t("pages:settings.personal_info")}>
       <Space className={styles.wrapper} direction="vertical" size={25}>
         {error && <Alert type="error" message={error} />}
         <GeneralInfoForm initialValue={initialValue} onSubmit={onInfoSubmit} />
         <SecurityForm onSubmit={onUpdatePassword} />
         <LogoutSessions onSubmit={onLogout} />
       </Space>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

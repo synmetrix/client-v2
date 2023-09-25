@@ -1,7 +1,6 @@
 import { Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import TeamsTable from "@/components/TeamsTable";
 import Modal from "@/components/Modal";
 import TeamSettings from "@/components/TeamSettings";
@@ -14,6 +13,7 @@ import {
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import type { Team, TeamSettingsForm } from "@/types/team";
+import AppLayout from "@/layouts/AppLayout";
 
 import styles from "./index.module.less";
 
@@ -57,12 +57,7 @@ export const Teams: React.FC<TeamsProps> = ({
   };
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:teams") }}
-    >
+    <AppLayout divider title={t("pages:teams")}>
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
@@ -82,7 +77,7 @@ export const Teams: React.FC<TeamsProps> = ({
       <Modal open={isOpen} closable onClose={onClose}>
         <TeamSettings initialValue={selectedTeam} onSubmit={onSubmit} />
       </Modal>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

@@ -1,7 +1,6 @@
 import { Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import AccessTable from "@/components/AccessTable";
 import PageHeader from "@/components/PageHeader";
 import Modal from "@/components/Modal";
@@ -25,6 +24,7 @@ import type {
 } from "@/types/access";
 import type { Datasources, AllAccessListsQuery } from "@/graphql/generated";
 import type { Cube, DataSourceInfo } from "@/types/dataSource";
+import AppLayout from "@/layouts/AppLayout";
 
 import styles from "./index.module.less";
 interface RolesAndAccessProps {
@@ -70,12 +70,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   }, [initialValues, setIsOpen]);
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:settings.roles_and_access") }}
-    >
+    <AppLayout divider title={t("pages:settings.roles_and_access")}>
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
@@ -104,7 +99,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
           onSubmit={onFormFinish}
         />
       </Modal>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

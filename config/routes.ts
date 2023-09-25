@@ -4,55 +4,44 @@ export default [
     component: "./layouts/RootLayout",
     routes: [
       {
+        path: "/auth",
+        routes: [
+          {
+            path: "/auth/signup",
+            component: "./pages/SignUp",
+          },
+          {
+            path: "/auth/signin",
+            component: "./pages/SignIn",
+          },
+        ],
+      },
+      {
         path: "/",
         routes: [
           {
-            path: "/",
-            routes: [
-              {
-                path: "/signup",
-                component: "./pages/SignUp",
-              },
-              {
-                path: "/signin",
-                component: "./pages/SignIn",
-              },
-              {
-                path: "/teams",
-                component: "./pages/Teams",
-              },
-              {
-                path: "/settings",
-                routes: [
-                  {
-                    path: "/settings/sources",
-                    component: "./pages/DataSources",
-                  },
-                  {
-                    path: "/settings/members",
-                    component: "./pages/Members",
-                  },
-                  {
-                    path: "/settings/sql-api",
-                    component: "./pages/SqlApi",
-                  },
-                  {
-                    path: "/settings/access",
-                    component: "./pages/RolesAndAccess",
-                  },
-                  {
-                    path: "/settings/info",
-                    component: "./pages/PersonalInfo",
-                  },
-                  {
-                    component: "./pages/404",
-                  },
-                ],
-              },
-              {
-                component: "./pages/404",
-              },
-            ],
+            path: "/teams",
+            component: "./pages/Teams",
+          },
+          {
+            path: "/settings/sources",
+            component: "./pages/DataSources",
+          },
+          {
+            path: "/settings/members",
+            component: "./pages/Members",
+          },
+          {
+            path: "/settings/sql-api",
+            component: "./pages/SqlApi",
+          },
+          {
+            path: "/settings/access",
+            component: "./pages/RolesAndAccess",
+          },
+          {
+            path: "/settings/info",
+            component: "./pages/PersonalInfo",
           },
           {
             component: "./pages/404",

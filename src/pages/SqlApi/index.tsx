@@ -2,7 +2,6 @@ import { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Spin, Space, message } from "antd";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import PageHeader from "@/components/PageHeader";
 import NoCredentials from "@/components/NoCredentials";
 import type { DataSourceCredentials } from "@/components/CredentialsTable";
@@ -28,6 +27,7 @@ import genName from "@/utils/helpers/genName";
 import formatTime from "@/utils/helpers/formatTime";
 import type { ApiSetupForm, DataSourceInfo } from "@/types/dataSource";
 import type { Member } from "@/types/team";
+import AppLayout from "@/layouts/AppLayout";
 
 import styles from "./index.module.less";
 
@@ -83,12 +83,7 @@ export const SqlApi = ({
     editPermission && credentials.length ? t("settings:sql_api.action") : null;
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:settings.sql_api") }}
-    >
+    <AppLayout divider title={t("pages:settings.sql_api")}>
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
@@ -128,7 +123,7 @@ export const SqlApi = ({
           onSubmit={onFinishForm}
         />
       </Modal>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

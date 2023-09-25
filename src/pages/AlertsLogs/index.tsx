@@ -6,6 +6,7 @@ import BasicLayout from "@/layouts/BasicLayout";
 import LogsTable from "@/components/LogsTable";
 import StatusCard from "@/components/StatusCard";
 import type { Log } from "@/types/logs";
+import AppLayout from "@/layouts/AppLayout";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -18,12 +19,7 @@ interface AlertLogsProps {
 const AlertsLogs: React.FC<AlertLogsProps> = ({ logs }) => {
   const { t } = useTranslation(["logs", "common"]);
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:logs.alerts") }}
-    >
+    <AppLayout divider title={t("pages:logs.alerts")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("alerts.title")}
@@ -62,7 +58,7 @@ const AlertsLogs: React.FC<AlertLogsProps> = ({ logs }) => {
           <LogsTable logs={logs} />
         </Space>
       </Space>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

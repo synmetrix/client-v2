@@ -5,8 +5,8 @@ mutation CreateTeam($name: String!) {
   }
 }
 
-mutation EditTeam (
-  $pk_columns: teams_pk_columns_input!,
+mutation EditTeam(
+  $pk_columns: teams_pk_columns_input!
   $_set: teams_set_input!
 ) {
   update_teams_by_pk(pk_columns: $pk_columns, _set: $_set) {
@@ -15,13 +15,13 @@ mutation EditTeam (
   }
 }
 
-mutation DeleteTeam ($id: uuid!) {
+mutation DeleteTeam($id: uuid!) {
   delete_teams_by_pk(id: $id) {
     id
   }
 }
 
-query CurrentTeam ($id: uuid!) {
+query CurrentTeam($id: uuid!) {
   teams_by_pk(id: $id) {
     id
     created_at

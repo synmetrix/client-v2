@@ -5,6 +5,7 @@ import cn from "classnames";
 import Sidebar from "@/components/Sidebar";
 import Button from "@/components/Button";
 import { items } from "@/mocks/sideMenu";
+import useLocation from "@/hooks/useLocation";
 
 import styles from "./index.module.less";
 
@@ -23,6 +24,7 @@ interface SideMenuProps {
 }
 
 const SideMenu: FC<SideMenuProps> = ({ pageSidebar }) => {
+  const [location, setLocation] = useLocation();
   const windowSize = useResponsive();
   const isMobile = windowSize.sm === false;
 
@@ -36,10 +38,28 @@ const SideMenu: FC<SideMenuProps> = ({ pageSidebar }) => {
     }
   };
 
+  const goToSection = (e: any) => {
+    const href = e.target.getAttribute("href");
+
+    console.log(href);
+    if (href) {
+      setLocation(href);
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   const content =
     selected !== null
       ? items[selected].items?.map((i) => (
-          <Button className={styles.link} href={i.href} key={i.key} type="text">
+          <Button
+            onClick={goToSection}
+            className={styles.link}
+            href={i.href}
+            key={i.key}
+            type="text"
+          >
             <Space>
               {i.icon} {i.label}
             </Space>

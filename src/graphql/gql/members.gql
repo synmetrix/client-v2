@@ -1,5 +1,10 @@
-query Members ($offset: Int, $limit: Int, $where: members_bool_exp, $order_by: [members_order_by!]) {
-  members (offset: $offset, limit: $limit, where: $where, order_by: $order_by) {
+query Members(
+  $offset: Int
+  $limit: Int
+  $where: members_bool_exp
+  $order_by: [members_order_by!]
+) {
+  members(offset: $offset, limit: $limit, where: $where, order_by: $order_by) {
     id
     user {
       id
@@ -19,8 +24,8 @@ query Members ($offset: Int, $limit: Int, $where: members_bool_exp, $order_by: [
   }
 }
 
-mutation UpdateMember (
-  $pk_columns: members_pk_columns_input!,
+mutation UpdateMember(
+  $pk_columns: members_pk_columns_input!
   $_set: members_set_input!
 ) {
   update_members_by_pk(pk_columns: $pk_columns, _set: $_set) {
@@ -28,8 +33,8 @@ mutation UpdateMember (
   }
 }
 
-mutation UpdateMemberRole (
-  $pk_columns: member_roles_pk_columns_input!,
+mutation UpdateMemberRole(
+  $pk_columns: member_roles_pk_columns_input!
   $_set: member_roles_set_input!
 ) {
   update_member_roles_by_pk(pk_columns: $pk_columns, _set: $_set) {
@@ -37,13 +42,13 @@ mutation UpdateMemberRole (
   }
 }
 
-mutation DeleteMember ($id: uuid!) {
+mutation DeleteMember($id: uuid!) {
   delete_members_by_pk(id: $id) {
     id
   }
 }
 
-mutation InviteMember ($email: String!, $teamId: uuid!, $role: String) {
+mutation InviteMember($email: String!, $teamId: uuid!, $role: String) {
   invite_team_member(email: $email, teamId: $teamId, role: $role) {
     memberId
   }

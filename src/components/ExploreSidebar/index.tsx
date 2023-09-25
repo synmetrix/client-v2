@@ -1,45 +1,29 @@
-import { Tabs, Collapse, Badge } from "antd";
+import { Collapse, Badge } from "antd";
 // import { UpOutlined } from "@ant-design/icons";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 // import cn from "classnames";
 
 // import Select from "@/components/Select";
 // import { capitalize } from "@/utils/helpers/capitalize";
 import useCubesList from "@/hooks/useCubesList";
 import ExploreCubesSection from "@/components//ExploreCubesSection";
-import type { Cube } from "@/types/cube";
+import type { Cube, Metric } from "@/types/cube";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-type Table = {
-  deminsions: string[];
-  measures: string[];
-};
-
-interface DataBase {
-  name: string;
-  tables: Record<string, Table>;
-}
-
-// interface ExploreSidebarProps {
-//   dataBases: DataBase[];
-//   selected: string;
-//   onDataBaseChange: (dataBase: string) => void;
-// }
-
 interface ExploreSidebarProps {
-  onMemberSelect: (value: Cube) => void;
+  onMemberSelect: any;
   availableQueryMembers: Record<string, Cube>;
-  selectedQueryMembers: Record<string, Cube>;
+  selectedQueryMembers: Record<string, Metric>;
   dataSchemaValidation: {
     code: string;
     message: string;
   };
 }
 
-const { TabPane } = Tabs;
+// const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
 export const SHOWN_CATEGORIES = ["dimensions", "measures", "segments"];
@@ -48,11 +32,11 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
   onMemberSelect,
   availableQueryMembers,
   selectedQueryMembers,
-  dataSchemaValidation,
+  // dataSchemaValidation,
 }) => {
-  const { t } = useTranslation(["explore", "common"]);
+  // const { t } = useTranslation(["explore", "common"]);
 
-  const { state, setState } = useCubesList({
+  const { state } = useCubesList({
     query: "",
     availableQueryMembers,
     categories: SHOWN_CATEGORIES,
@@ -78,11 +62,10 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
             (m) =>
               (m.name || "").split(".")[0].toLowerCase() === cube.toLowerCase()
           );
-
         const cubeSelectedCount = cubeSelectedItems.reduce(
-          (acc: Cube[], item: Cube) => {
+          (acc: Metric[], item: Metric) => {
             const isMemberExists = !!acc.find(
-              (accItem: Cube) =>
+              (accItem: Metric) =>
                 accItem.dimension === item.dimension &&
                 accItem.granularity == item.granularity
             );
@@ -102,7 +85,16 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
             key={cube}
             header={cube}
             className={styles.panel}
-            extra={<Badge count={cubeSelectedCount} />}
+            extra={
+              <Badge
+                count={cubeSelectedCount}
+                style={{
+                  backgroundColor: "#fff",
+                  color: "#000",
+                  padding: "0 10px",
+                }}
+              />
+            }
           >
             <ExploreCubesSection
               selectedMembers={selectedQueryMembers}
@@ -115,7 +107,11 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
     [onMemberSelect, selectedQueryMembers, state.members]
   );
 
-  return <>{options}</>;
+  return (
+    <Collapse className={styles.collapse} bordered={false}>
+      {options}
+    </Collapse>
+  );
 
   // const selectedDataBase = dataBases.find((d) => d.name === selected);
 

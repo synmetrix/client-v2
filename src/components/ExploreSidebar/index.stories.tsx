@@ -19,25 +19,24 @@ export const Default = Template.bind({});
 
 Default.args = {
   availableQueryMembers: {
-    test: {
+    dsadsasd: {
       connectedComponent: 1,
       title: "test",
       name: "string",
       type: "string",
       operator: "string",
-      values: 1,
       shortTitle: "string",
       granularity: "string",
       dimension: {
         name: "string",
       },
       meta: {
-        subSection: " string",
+        subSection: "string",
         subSectionType: "string",
       },
       measures: [
         {
-          name: "test measure",
+          name: "dsadsasd.testmeasure",
           title: "string",
           shortTitle: "string",
           isVisible: true,
@@ -53,8 +52,56 @@ Default.args = {
       ],
       dimensions: [
         {
-          name: "test measure",
+          name: "dsadsasd.testdimensions",
           title: "string",
+          shortTitle: "string",
+          isVisible: true,
+          aggType: "string",
+          cumulative: true,
+          cumulativeTotal: true,
+          drillMembers: [],
+          drillMembersGrouped: {
+            dimensions: [],
+            measures: [],
+          },
+        },
+      ],
+    },
+    dsasa231313d: {
+      connectedComponent: 1,
+      title: "test",
+      name: "string",
+      type: "string",
+      operator: "string",
+      shortTitle: "string",
+      granularity: "string",
+      dimension: {
+        name: "string",
+      },
+      meta: {
+        subSection: " string",
+        subSectionType: "string",
+      },
+      measures: [
+        {
+          name: "dsasa231313d.testmeasure",
+          title: "string",
+          shortTitle: "string",
+          isVisible: true,
+          aggType: "string",
+          cumulative: true,
+          cumulativeTotal: true,
+          drillMembers: [],
+          drillMembersGrouped: {
+            dimensions: [],
+            measures: [],
+          },
+        },
+      ],
+      dimensions: [
+        {
+          name: "dsasa231313d.testdimension",
+          title: "string1",
           shortTitle: "string",
           isVisible: true,
           aggType: "string",
@@ -70,54 +117,65 @@ Default.args = {
     },
   },
   selectedQueryMembers: {
-    test: {
-      connectedComponent: 1,
-      title: "test",
-      name: "string",
-      type: "string",
-      operator: "string",
-      values: 1,
+    "dsasa231313d.testmeasure": {
+      name: "dsasa231313d.testmeasure1",
+      title: "string",
       shortTitle: "string",
-      granularity: "string",
-      dimension: {
-        name: "string",
+      isVisible: true,
+      aggType: "string",
+      cumulative: true,
+      cumulativeTotal: true,
+      drillMembers: [],
+      granularity: "dsasa231313d.testmeasure1.granularity",
+      drillMembersGrouped: {
+        dimensions: [],
+        measures: [],
       },
-      meta: {
-        subSection: " string",
-        subSectionType: "string",
+    },
+    "dsasa231313d.testdimension": {
+      name: "dsasa231313d.testdimension1",
+      title: "string1",
+      shortTitle: "string",
+      isVisible: true,
+      aggType: "string",
+      cumulative: true,
+      cumulativeTotal: true,
+      drillMembers: [],
+      granularity: "dsasa231313d.testdimension1.granularity",
+      drillMembersGrouped: {
+        dimensions: [],
+        measures: [],
       },
-      measures: [
-        {
-          name: "test measure",
-          title: "string",
-          shortTitle: "string",
-          isVisible: true,
-          aggType: "string",
-          cumulative: true,
-          cumulativeTotal: true,
-          drillMembers: [],
-          drillMembersGrouped: {
-            dimensions: [],
-            measures: [],
-          },
-        },
-      ],
-      dimensions: [
-        {
-          name: "test measure",
-          title: "string",
-          shortTitle: "string",
-          isVisible: true,
-          aggType: "string",
-          cumulative: true,
-          cumulativeTotal: true,
-          drillMembers: [],
-          drillMembersGrouped: {
-            dimensions: [],
-            measures: [],
-          },
-        },
-      ],
+    },
+    "dsadsasd.testmeasure": {
+      name: "dsadsasd.testmeasure2",
+      title: "string",
+      shortTitle: "string",
+      isVisible: true,
+      aggType: "string",
+      cumulative: true,
+      cumulativeTotal: true,
+      drillMembers: [],
+      granularity: "dsadsasd.testmeasure2.granularity",
+      drillMembersGrouped: {
+        dimensions: [],
+        measures: [],
+      },
+    },
+    "dsadsasd.testdimension": {
+      name: "dsadsasd.testdimension2",
+      title: "string1",
+      shortTitle: "string",
+      isVisible: true,
+      aggType: "string",
+      cumulative: true,
+      cumulativeTotal: true,
+      drillMembers: [],
+      granularity: "dsadsasd.testdimension2.granularity",
+      drillMembersGrouped: {
+        dimensions: [],
+        measures: [],
+      },
     },
   },
 };

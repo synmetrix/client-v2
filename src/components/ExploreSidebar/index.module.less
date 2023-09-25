@@ -2,31 +2,24 @@
   width: 100%;
 }
 
+.collapse {
+  background: transparent;
+}
+
 .panel {
   width: 100%;
-  margin-bottom: 1px;
-  color: dimgray;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 1;
-  background: #f6f6f7;
-  /* padding: 2px 7px; */
-  border: 0;
-  -webkit-font-smoothing: antialiased;
+  margin-bottom: 4px;
+  border: 0 !important;
 }
 
 .panel :global(.ant-collapse-header) {
-  height: 24px;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  padding-left: 35px !important;
-  background-color: #dde0e3;
-}
-
-.panel :global(.anticon) {
-  left: 13px !important;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  background: linear-gradient(
+      0deg,
+      rgba(71, 13, 105, 0.1) 0%,
+      rgba(71, 13, 105, 0.1) 100%
+    ),
+    #fff;
+  border-radius: 6px !important;
 }
 
 .panel :global(.ant-collapse-item) {

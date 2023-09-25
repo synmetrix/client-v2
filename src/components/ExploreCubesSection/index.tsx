@@ -116,7 +116,6 @@ const Cube = ({
   onMemberSelect,
 }: CubeProps): JSX.Element => {
   const { t } = useTranslation();
-  // TODO look after useplayground hook
   const {
     baseMembers: { index: membersIndex },
   } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });

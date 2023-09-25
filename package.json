@@ -114,7 +114,7 @@
     "storybook": "^7.4.5",
     "typescript": "^5.0.4",
     "unplugin-auto-import": "^0.15.3",
-    "vite": "^4.3.1",
+    "vite": "^4.4.9",
     "vite-plugin-imp": "^2.4.0",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-svg-loader": "^1.0.0",

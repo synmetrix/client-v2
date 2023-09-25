@@ -2,7 +2,9 @@ import { PlusOutlined } from "@ant-design/icons";
 import cn from "classnames";
 import { Button } from "antd";
 
-import type { Cube, FilterMember, Metric } from "@/types/cube";
+import type { FilterMember, Metric } from "@/types/cube";
+
+import FilterIcon from "@/assets/explore-filter.svg";
 
 import s from "./index.module.less";
 
@@ -48,11 +50,12 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
     <div style={{ textAlign: "right" }}>
       <Button
         size="small"
+        type="text"
         className={cn(s.filter, { active: selectedFilterIndex > -1 })}
         onClick={toggleFilter}
         onMouseDown={(e) => e.preventDefault()}
       >
-        Filter
+        <FilterIcon className={s.filterIcon} />
       </Button>
       {selectedFilterIndex > -1 && (
         <Button

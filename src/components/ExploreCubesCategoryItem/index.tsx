@@ -2,7 +2,7 @@ import cn from "classnames";
 import { Row, Col, Typography } from "antd";
 
 import CategoryItemFilter from "@/components/ExploreCubesCategoryItemFilter";
-import type { Cube, FilterMember, Metric } from "@/types/cube";
+import type { Metric } from "@/types/cube";
 
 import s from "./index.module.less";
 

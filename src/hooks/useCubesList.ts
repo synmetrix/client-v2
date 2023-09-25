@@ -2,11 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import { getOr } from "unchanged";
 
 import fromPairs from "@/utils/helpers/fromPairs";
-import type { Cube } from "@/types/cube";
+import type { CubeMembers, Metric } from "@/types/cube";
 
 interface Props {
   query: string;
-  availableQueryMembers: Record<string, Cube>;
+  availableQueryMembers: Record<string, CubeMembers>;
   categories: string[];
   openedCubes: string[];
 }
@@ -14,7 +14,7 @@ interface Props {
 interface State {
   radioValue: string;
   query: string;
-  members: Record<string, Cube | Cube[] | Record<string, Cube[]>>;
+  members: Record<string, CubeMembers>;
   categories: string[];
   openedCubes: string[];
 }
@@ -37,13 +37,16 @@ export default ({
     () => {
       // let's go through all keys and filter necessary
       const reducer = (
-        acc: Record<string, Cube | Cube[] | Record<string, Cube[]>>,
-        curr: [string, Cube | Record<string, Cube | Cube[]>]
-      ) => {
+        acc: Record<string, CubeMembers>,
+        curr: [string, CubeMembers]
+      ): Record<string, CubeMembers> => {
         const [cube, allMembers] = curr;
 
         const values = state.categories.reduce(
-          (catAcc: Record<string, Cube[]>, cat: string) => {
+          (
+            catAcc: Record<string, Metric[]>,
+            cat: string
+          ): Record<string, Metric[]> => {
             let categoryMembers = Object.entries(
               allMembers[cat as keyof typeof allMembers] || {}
             );
@@ -74,8 +77,7 @@ export default ({
 
       const entires = Object.entries(availableQueryMembers);
 
-      let newMembers: Record<string, Cube | Cube[] | Record<string, Cube[]>> =
-        {};
+      let newMembers: Record<string, CubeMembers> = {};
 
       for (const entry of entires) {
         newMembers = reducer(newMembers, entry);

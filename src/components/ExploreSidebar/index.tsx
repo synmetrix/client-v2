@@ -1,5 +1,5 @@
 import { Collapse, Badge, Radio, Input, Alert } from "antd";
-// import { UpOutlined } from "@ant-design/icons";
+import { RightOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 // import cn from "classnames";
 
@@ -209,6 +209,9 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
           activeKey={state.openedCubes}
           defaultActiveKey={state.openedCubes}
           onChange={onCollapse}
+          expandIcon={({ isActive }) => (
+            <RightOutlined rotate={isActive ? -90 : 0} />
+          )}
         >
           {options}
         </Collapse>

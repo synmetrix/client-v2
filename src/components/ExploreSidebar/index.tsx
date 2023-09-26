@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 // import { capitalize } from "@/utils/helpers/capitalize";
 import useCubesList from "@/hooks/useCubesList";
 import ExploreCubesSection from "@/components//ExploreCubesSection";
-import type { Cube, Metric } from "@/types/cube";
+import type { Cube, CubeMember } from "@/types/cube";
 
 import SearchIcon from "@/assets/search.svg";
 
@@ -19,7 +19,7 @@ import type { RadioChangeEvent, AlertProps } from "antd";
 interface ExploreSidebarProps {
   onMemberSelect: any;
   availableQueryMembers: Record<string, Cube>;
-  selectedQueryMembers: Record<string, Metric>;
+  selectedQueryMembers: Record<string, CubeMember>;
   dataSchemaValidation: {
     code: string;
     message: string;
@@ -69,9 +69,9 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
               (m.name || "").split(".")[0].toLowerCase() === cube.toLowerCase()
           );
         const cubeSelectedCount = cubeSelectedItems.reduce(
-          (acc: Metric[], item: Metric) => {
+          (acc: CubeMember[], item: CubeMember) => {
             const isMemberExists = !!acc.find(
-              (accItem: Metric) =>
+              (accItem: CubeMember) =>
                 accItem.dimension === item.dimension &&
                 accItem.granularity == item.granularity
             );

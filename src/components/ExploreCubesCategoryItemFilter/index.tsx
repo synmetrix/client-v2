@@ -2,7 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import cn from "classnames";
 import { Button } from "antd";
 
-import type { FilterMember, Metric } from "@/types/cube";
+import type { FilterMember, CubeMember } from "@/types/cube";
 
 import FilterIcon from "@/assets/explore-filter.svg";
 
@@ -75,10 +75,10 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
 interface CategoryItemFilterProps {
   isVisible: boolean;
   onFilterUpdate: {
-    add: (value: FilterMember) => void;
-    remove: (value: FilterMember) => void;
+    add: (member: FilterMember) => void;
+    remove: (member: FilterMember) => void;
   };
-  member: Metric;
+  member: CubeMember;
   selectedFilterIndex: number;
 }
 

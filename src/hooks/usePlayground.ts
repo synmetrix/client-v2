@@ -14,7 +14,7 @@
 // import trackEvent from "@/utils/helpers/trackEvent";
 // import pickKeys from "@/utils/helpers/pickKeys";
 // import equals from "@/utils/helpers/equals";
-// import { Cube, FilterMember, Metric } from "@/types/cube";
+// import { Cube, FilterMember, CubeMember } from "@/types/cube";
 
 // const queryStateKeys = Object.keys(queryState);
 
@@ -63,7 +63,7 @@
 //     measures: any;
 //     dimensions: any;
 //     segments: any;
-//     timeDimensions: Metric[];
+//     timeDimensions: CubeMember[];
 //     filters: FilterMember;
 //   },
 //   settings = {}

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { getOr } from "unchanged";
 
 import fromPairs from "@/utils/helpers/fromPairs";
-import type { CubeMembers, Metric } from "@/types/cube";
+import type { CubeMembers, CubeMember } from "@/types/cube";
 
 interface Props {
   query: string;
@@ -44,9 +44,9 @@ export default ({
 
         const values = state.categories.reduce(
           (
-            catAcc: Record<string, Metric[]>,
+            catAcc: Record<string, CubeMember[]>,
             cat: string
-          ): Record<string, Metric[]> => {
+          ): Record<string, CubeMember[]> => {
             let categoryMembers = Object.entries(
               allMembers[cat as keyof typeof allMembers] || {}
             );

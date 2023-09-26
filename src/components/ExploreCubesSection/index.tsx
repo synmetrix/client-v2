@@ -13,7 +13,7 @@ import clearSelection from "@/utils/helpers/clearSelection";
 import type {
   CubeMeta,
   SubSection,
-  Metric,
+  CubeMember,
   CubeMembers,
   FilterMember,
 } from "@/types/cube";
@@ -25,13 +25,13 @@ import type { ReactNode } from "react";
 const { Text } = Typography;
 
 const toFilter = (member: FilterMember) => ({
-  dimension: member.dimension.name,
+  dimension: member.dimension?.name,
   operator: member.operator,
   values: member.values,
 });
 
-const granulateMember = (member: Metric): Metric[] => {
-  const newMembers: Metric[] = [];
+const granulateMember = (member: CubeMember): CubeMember[] => {
+  const newMembers: CubeMember[] = [];
 
   granularities.forEach((granularity) => {
     let newName = member.name;
@@ -49,7 +49,7 @@ const granulateMember = (member: Metric): Metric[] => {
       newShortTitle = "Raw";
     }
 
-    const newMember: Metric = {
+    const newMember: CubeMember = {
       ...member,
       name: newName,
       title: newTitle,
@@ -68,13 +68,13 @@ const granulateMember = (member: Metric): Metric[] => {
 };
 
 const getSubSections = (
-  catMembers: Metric[],
-  membersIndex: Record<string, Metric>
+  catMembers: CubeMember[],
+  membersIndex: Record<string, CubeMember>
 ) => {
   const subSections: Record<string, SubSection> = {};
-  const freeMembers: Metric[] = [];
+  const freeMembers: CubeMember[] = [];
 
-  catMembers.forEach((member: Metric) => {
+  catMembers.forEach((member: CubeMember) => {
     const subSection = getOr(false, "meta.subSection", member);
     const subSectionType = getOr("string", "meta.subSectionType", member);
 
@@ -96,7 +96,7 @@ const getSubSections = (
 
   Object.keys(subSections).forEach((subSection) => {
     const foundSelected = subSections[subSection].members.find(
-      (subMember: Metric) => get([subMember.name], membersIndex)
+      (subMember: CubeMember) => get([subMember.name], membersIndex)
     );
 
     if (foundSelected) {
@@ -127,19 +127,19 @@ const Cube = ({
     hovered: {},
   });
 
-  const getMemberId = (member: Metric) => member.name.replace(".", "_");
-  const getMembersCategory = (category?: string): Metric[] => {
+  const getMemberId = (member: CubeMember) => member.name.replace(".", "_");
+  const getMembersCategory = (category?: string): CubeMember[] => {
     return Object.values(members[category as keyof CubeMembers] || {});
   };
   const getSelectedCategoryMembers = (category?: string): string[] => {
     return Object.values(
       category ? selectedMembers[category as keyof CubeMembers] || {} : {}
-    ).map((m: Metric) => m.name);
+    ).map((m: CubeMember) => m.name);
   };
 
   const onAction = (
     type = "over",
-    member: Metric,
+    member: CubeMember,
     memberMeta: CubeMeta = {}
   ) => {
     if (!member) {
@@ -184,8 +184,8 @@ const Cube = ({
         // need buffer because selectedMembers update is not immediately
         const categoryCubeMembersBuffer = categoryCubeMembers;
         selectMembers.forEach((catMember) => {
-          const catSelectedIndex = categoryCubeMembersBuffer.findIndex(
-            (m: any) => m.name === catMember.name
+          const catSelectedIndex = categoryCubeMembersBuffer.indexOf(
+            catMember.name
           );
 
           if (catSelectedIndex === -1) {
@@ -230,7 +230,7 @@ const Cube = ({
 
   const getItem = (
     category: string,
-    member: Metric,
+    member: CubeMember,
     index: number,
     categoryCubeMembers: string[],
     selectedFilters: string[]
@@ -259,7 +259,7 @@ const Cube = ({
       return null;
     }
 
-    catMembers = catMembers.reduce((acc: Metric[], member: Metric) => {
+    catMembers = catMembers.reduce((acc: CubeMember[], member: CubeMember) => {
       let newMembers = acc;
 
       if (member.type === "time") {
@@ -304,7 +304,7 @@ const Cube = ({
             selectedFilters={selectedFilters}
           >
             {subSections[subSectionKey].members.map(
-              (member: Metric, index: number) =>
+              (member: CubeMember, index: number) =>
                 getItem(
                   category,
                   member,
@@ -326,10 +326,10 @@ interface CubeProps {
   members: CubeMembers;
   onMemberSelect: (
     memberType?: string,
-    cb?: (filter: FilterMember) => any
+    cb?: (member: FilterMember) => any
   ) => {
-    add: (metric: Metric & { index?: number }) => void;
-    remove: (metric: Metric & { index?: number }) => void;
+    add: (member: CubeMembers & { index?: number }) => void;
+    remove: (member: CubeMembers & { index?: number }) => void;
   };
   selectedMembers: CubeMembers;
 }

@@ -19,52 +19,17 @@ export const Default = Template.bind({});
 
 Default.args = {
   member: {
-    connectedComponent: 1,
-    title: "test",
-    name: "string",
-    type: "string",
-    operator: "string",
-    values: 1,
+    name: "test measure",
+    title: "string",
     shortTitle: "string",
-    granularity: "string",
-    dimension: {
-      name: "string",
+    isVisible: true,
+    aggType: "string",
+    cumulative: true,
+    cumulativeTotal: true,
+    drillMembers: [],
+    drillMembersGrouped: {
+      dimensions: [],
+      measures: [],
     },
-    meta: {
-      subSection: " string",
-      subSectionType: "string",
-    },
-    measures: [
-      {
-        name: "test measure",
-        title: "string",
-        shortTitle: "string",
-        isVisible: true,
-        aggType: "string",
-        cumulative: true,
-        cumulativeTotal: true,
-        drillMembers: [],
-        drillMembersGrouped: {
-          dimensions: [],
-          measures: [],
-        },
-      },
-    ],
-    dimensions: [
-      {
-        name: "test measure",
-        title: "string",
-        shortTitle: "string",
-        isVisible: true,
-        aggType: "string",
-        cumulative: true,
-        cumulativeTotal: true,
-        drillMembers: [],
-        drillMembersGrouped: {
-          dimensions: [],
-          measures: [],
-        },
-      },
-    ],
   },
 };

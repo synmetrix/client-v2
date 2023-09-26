@@ -13,13 +13,13 @@ export interface Cube {
     subSection: string;
     subSectionType: string;
   };
-  measures: Metric[];
-  dimensions: Metric[];
-  segments?: Metric[];
-  timeDimensions?: Metric[];
+  measures: CubeMember[];
+  dimensions: CubeMember[];
+  segments?: CubeMember[];
+  timeDimensions?: CubeMember[];
 }
 
-export interface Metric {
+export interface CubeMember {
   name: string;
   title: string;
   shortTitle: string;
@@ -29,8 +29,8 @@ export interface Metric {
   cumulativeTotal: boolean;
   drillMembers: [];
   drillMembersGrouped: {
-    dimensions: Metric[];
-    measures: Metric[];
+    dimensions: CubeMember[];
+    measures: CubeMember[];
   };
   dimension?: {
     name: string;
@@ -39,6 +39,7 @@ export interface Metric {
   granularity?: string;
   type?: string;
   meta?: any;
+  index?: number;
 }
 
 export interface Dimension {
@@ -49,13 +50,13 @@ export interface Dimension {
 }
 
 export interface SubSection {
-  members: Metric[];
+  members: CubeMember[];
   haveSelected: boolean;
   subSectionType: string;
 }
 
 export interface FilterMember {
-  dimension: Metric;
+  dimension: CubeMember;
   index?: number;
   operator?: {
     name: string;
@@ -78,8 +79,8 @@ export interface CubeMeta {
 }
 
 export interface CubeMembers {
-  timeDimensions?: Metric[];
-  dimensions?: Metric[];
-  measures?: Metric[];
+  timeDimensions?: CubeMember[];
+  dimensions?: CubeMember[];
+  measures?: CubeMember[];
   filters?: FilterMember;
 }

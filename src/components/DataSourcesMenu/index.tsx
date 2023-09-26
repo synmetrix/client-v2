@@ -1,4 +1,3 @@
-import { Menu } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
 import PopoverButton from "@/components/PopoverButton";

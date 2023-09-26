@@ -3,7 +3,7 @@ import { set, getOr, get } from "unchanged";
 import { useTranslation } from "react-i18next";
 import { Typography } from "antd";
 
-import { SHOWN_CATEGORIES } from "@/components/ExploreSidebar";
+import { SHOWN_CATEGORIES } from "@/components/ExploreCubes";
 import ExploreCubesSubSection from "@/components/ExploreCubesSubSection";
 import ExploreCubesCategoryItem from "@/components/ExploreCubesCategoryItem";
 import useKeyPress from "@/hooks/useKeyPress";

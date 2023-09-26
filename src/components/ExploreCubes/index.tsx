@@ -16,7 +16,7 @@ import styles from "./index.module.less";
 import type { ChangeEventHandler, FC } from "react";
 import type { RadioChangeEvent, AlertProps } from "antd";
 
-interface ExploreSidebarProps {
+interface ExploreCubesProps {
   onMemberSelect: any;
   availableQueryMembers: Record<string, Cube>;
   selectedQueryMembers: Record<string, CubeMember>;
@@ -34,7 +34,7 @@ const { Panel } = Collapse;
 
 export const SHOWN_CATEGORIES = ["dimensions", "measures", "segments"];
 
-const ExploreSidebar: FC<ExploreSidebarProps> = ({
+const ExploreCubes: FC<ExploreCubesProps> = ({
   onMemberSelect,
   availableQueryMembers,
   selectedQueryMembers,
@@ -220,4 +220,4 @@ const ExploreSidebar: FC<ExploreSidebarProps> = ({
   );
 };
 
-export default ExploreSidebar;
+export default ExploreCubes;

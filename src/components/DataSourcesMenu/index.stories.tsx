@@ -5,7 +5,7 @@ import DataSourcesMenu from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/DataSourcesMenu",
+  title: "Components/Explore/DataSourcesMenu",
   component: DataSourcesMenu,
 } as Meta<typeof DataSourcesMenu>;
 

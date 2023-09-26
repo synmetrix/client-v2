@@ -11,7 +11,7 @@ export default {
 
 const Template: StoryFn<typeof ExploreCubesSubSection> = (args) => (
   <RootLayout>
-    <ExploreCubesSubSection {...args}>dsadsad</ExploreCubesSubSection>
+    <ExploreCubesSubSection {...args}>Cube subsection</ExploreCubesSubSection>
   </RootLayout>
 );
 

@@ -1,17 +1,17 @@
 import RootLayout from "@/layouts/RootLayout";
 
-import ExploreSidebar from ".";
+import ExploreCubes from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Explore/ExploreSidebar",
-  component: ExploreSidebar,
-} as Meta<typeof ExploreSidebar>;
+  title: "Components/Explore/ExploreCubes",
+  component: ExploreCubes,
+} as Meta<typeof ExploreCubes>;
 
-const Template: StoryFn<typeof ExploreSidebar> = (args) => (
+const Template: StoryFn<typeof ExploreCubes> = (args) => (
   <RootLayout>
-    <ExploreSidebar {...args} />
+    <ExploreCubes {...args} />
   </RootLayout>
 );
 

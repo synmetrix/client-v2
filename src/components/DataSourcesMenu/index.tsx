@@ -33,18 +33,17 @@ const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
     items.splice(selectedIdx, 1);
   }
 
-  const overlay = entities.length > 1 && (
-    <Menu onClick={({ key }) => onChange?.(key)} items={items} />
-  );
-
   return (
     <div className={s.wrapper}>
       <span>{entities[selectedIdx]?.name || "Select datasource"}</span>
       <PopoverButton
         icon={<DownOutlined />}
         popoverType="dropdown"
-        overlay={overlay}
         trigger={["hover"]}
+        menu={{
+          items,
+          onClick: ({ key }) => onChange?.(key),
+        }}
         buttonProps={{
           type: "text",
         }}

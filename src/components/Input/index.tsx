@@ -39,7 +39,7 @@ type ParentProps = BasicCheckboxProps &
   PasswordProps &
   SelectProps;
 
-interface InputProps<T extends FieldValues> extends ParentProps {
+export interface InputProps<T extends FieldValues> extends ParentProps {
   control: Control<T>;
   name: Path<T>;
   defaultValue?: PathValue<T, Path<T>>;

@@ -13,7 +13,7 @@ import SearchIcon from "@/assets/search.svg";
 
 import styles from "./index.module.less";
 
-import type { ChangeEventHandler, FC } from "react";
+import type { ChangeEventHandler, FC, ReactNode } from "react";
 import type { RadioChangeEvent, AlertProps } from "antd";
 
 interface ExploreCubesProps {
@@ -27,6 +27,7 @@ interface ExploreCubesProps {
       message: string;
     };
   };
+  header?: ReactNode;
 }
 
 // const { TabPane } = Tabs;
@@ -39,6 +40,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
   availableQueryMembers,
   selectedQueryMembers,
   dataSchemaValidation,
+  header,
 }) => {
   const { t } = useTranslation(["explore", "common"]);
 
@@ -167,6 +169,8 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
 
   return (
     <div>
+      {header && <div className={styles.header}>{header}</div>}
+
       <Radio.Group
         value={state.radioValue}
         size="small"

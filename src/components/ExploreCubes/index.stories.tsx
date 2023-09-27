@@ -18,6 +18,7 @@ const Template: StoryFn<typeof ExploreCubes> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
+  header: "test header",
   availableQueryMembers: {
     Tripdata: {
       connectedComponent: 1,

@@ -30,7 +30,8 @@ const SimpleForm: (props: SimpleFormProps) => JSX.Element = (props) => {
     config,
     layout,
     submitText = "",
-    submitIcon = <ReloadOutlined />,
+    submitIcon = null,
+    submitSize,
     autoSubmit = false,
     disabled = false,
     itemClassName,
@@ -129,18 +130,22 @@ const SimpleForm: (props: SimpleFormProps) => JSX.Element = (props) => {
           const sectionFormItems: [string, FormItem][] = Object.entries(
             getOr({}, "[0][1]", subSections)
           );
-          res = sectionFormItems.map(([itemKey, item]) => (
-            <Input
-              className={cls}
-              key={itemKey}
-              control={control}
-              name={item.name}
-              label={item.label}
-              defaultValue={item.defaultValue}
-              fieldType={item.type}
-              size={item.size}
-            />
-          ));
+          res = (
+            <div className={s.subSection}>
+              {sectionFormItems.map(([itemKey, item]) => (
+                <Input
+                  className={cx(cls, s.subSectionInput)}
+                  key={itemKey}
+                  control={control}
+                  name={item.name}
+                  label={item.label}
+                  defaultValue={item.defaultValue}
+                  fieldType={item.type}
+                  size={item.size}
+                />
+              ))}
+            </div>
+          );
         }
 
         const onTabClose = get(`${key}.onTabClose`, tabsConfig) || noop;
@@ -199,18 +204,9 @@ const SimpleForm: (props: SimpleFormProps) => JSX.Element = (props) => {
   return (
     <Row gutter={24} className={s.root}>
       <Form {...restProps} layout={layout} className={s.form}>
-        {formContent}
+        <div className={s.content}>{formContent}</div>
         {submitText && (
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              paddingLeft: 12,
-              paddingRight: 12,
-              paddingTop: 5,
-              paddingBottom: 5,
-            }}
-          >
+          <div>
             <Button
               onClick={handleSubmit(onSubmit)}
               loading={loading}
@@ -218,6 +214,7 @@ const SimpleForm: (props: SimpleFormProps) => JSX.Element = (props) => {
               type="primary"
               ghost
               htmlType="submit"
+              size={submitSize}
             >
               {submitIcon}
               {submitText}

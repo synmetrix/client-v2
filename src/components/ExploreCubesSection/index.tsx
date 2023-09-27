@@ -235,7 +235,6 @@ const Cube = ({
     categoryCubeMembers: string[],
     selectedFilters: string[]
   ): ReactNode => {
-    console.log(selectedFilters);
     const selectedIndex = categoryCubeMembers.indexOf(member.name);
     const selectedFilterIndex = selectedFilters.indexOf(member.name);
     return (

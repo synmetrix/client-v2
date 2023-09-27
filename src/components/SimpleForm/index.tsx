@@ -136,7 +136,7 @@ const SimpleForm: (props: SimpleFormProps) => JSX.Element = (props) => {
                   className={cx(cls, s.subSectionInput)}
                   key={itemKey}
                   control={control}
-                  name={item.name}
+                  name={itemKey}
                   label={item.label}
                   defaultValue={item.defaultValue}
                   fieldType={item.type}
@@ -227,7 +227,6 @@ const SimpleForm: (props: SimpleFormProps) => JSX.Element = (props) => {
 
 interface FormItem {
   section: string;
-  name: string;
   label: string;
   subSection?: string;
   defaultValue?: any;

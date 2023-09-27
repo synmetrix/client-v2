@@ -20,6 +20,10 @@ export default [
         path: "/",
         routes: [
           {
+            path: "/",
+            component: "./pages/Home",
+          },
+          {
             path: "/teams",
             component: "./pages/Teams",
           },

@@ -1,5 +1,4 @@
-import React, { useMemo } from "react";
-import { ReloadOutlined } from "@ant-design/icons";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { get, getOr, set } from "unchanged";
 import { useTranslation } from "react-i18next";

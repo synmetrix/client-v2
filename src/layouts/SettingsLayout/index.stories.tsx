@@ -2,18 +2,18 @@ import { Row, Col } from "antd";
 
 import RootLayout from "@/layouts/RootLayout";
 
-import AppLayout from ".";
+import SidebarLayout from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Layouts/AppLayout",
-  component: AppLayout,
-} as Meta<typeof AppLayout>;
+  title: "Layouts/SidebarLayout",
+  component: SidebarLayout,
+} as Meta<typeof SidebarLayout>;
 
-const Template: StoryFn<typeof AppLayout> = (args) => (
+const Template: StoryFn<typeof SidebarLayout> = (args) => (
   <RootLayout>
-    <AppLayout {...args} />
+    <SidebarLayout {...args} />
   </RootLayout>
 );
 

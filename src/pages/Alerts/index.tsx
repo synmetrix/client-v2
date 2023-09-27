@@ -1,7 +1,6 @@
 import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import PageHeader from "@/components/PageHeader";
 import AlertsTable from "@/components/AlertsTable";
 import Modal from "@/components/Modal";

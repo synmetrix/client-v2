@@ -16,6 +16,7 @@ import type { ReactNode } from "react";
 const { Content } = Layout;
 
 export type AppLayoutProps = {
+  sidebar?: ReactNode;
   children: ReactNode;
   title?: string;
   divider?: boolean;
@@ -24,6 +25,7 @@ export type AppLayoutProps = {
 const AppLayout: React.FC<AppLayoutProps> = ({
   title = "App",
   divider = false,
+  sidebar = null,
   children,
 }) => {
   const responsive = useResponsive();
@@ -44,6 +46,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   return (
     <Layout className={styles.root}>
       <SideMenu />
+      {sidebar}
       <Layout>
         <Header
           title={title}

@@ -9,22 +9,16 @@ import useLocation from "@/hooks/useLocation";
 
 import styles from "./index.module.less";
 
-import type { FC, ReactNode } from "react";
+import type { FC } from "react";
 
 const { Sider } = Layout;
 
 const { Title } = Typography;
 
-interface SideMenuProps {
-  pageSidebar?: {
-    header: ReactNode;
-    children: ReactNode;
-    trigger: string;
-  };
-}
+interface SideMenuProps {}
 
-const SideMenu: FC<SideMenuProps> = ({ pageSidebar }) => {
-  const [location, setLocation] = useLocation();
+const SideMenu: FC<SideMenuProps> = () => {
+  const [_, setLocation] = useLocation();
   const windowSize = useResponsive();
   const isMobile = windowSize.sm === false;
 
@@ -64,21 +58,19 @@ const SideMenu: FC<SideMenuProps> = ({ pageSidebar }) => {
               {i.icon} {i.label}
             </Space>
           </Button>
-        )) || pageSidebar?.children
+        ))
       : null;
 
   const header =
     selected !== null ? (
       <Space className={styles.header} size={7} align="center">
-        {items[selected].items ? (
+        {items[selected].items && (
           <>
             {items[selected].activeIcon || items[selected].icon}
             <Title className={styles.title} level={4}>
               {items[selected].label}
             </Title>
           </>
-        ) : (
-          pageSidebar?.header
         )}
       </Space>
     ) : null;
@@ -103,7 +95,7 @@ const SideMenu: FC<SideMenuProps> = ({ pageSidebar }) => {
               type="text"
               href={i.href}
               onClick={(e) => {
-                if (i.key === pageSidebar?.trigger) e.preventDefault();
+                e.preventDefault();
                 onClick(idx);
               }}
             >

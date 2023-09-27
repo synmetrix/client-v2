@@ -12,7 +12,7 @@ import type { ReactNode } from "react";
 const { Content } = Layout;
 
 export type BasicLayoutProps = {
-  header: ReactNode;
+  header?: ReactNode;
   children: ReactNode;
 };
 

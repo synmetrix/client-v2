@@ -5,11 +5,6 @@ import AlertsIcon from "@/assets/alerts.svg";
 import LogsIcon from "@/assets/logs.svg";
 import SettingsIcon from "@/assets/settings.svg";
 import SettingsActiveIcon from "@/assets/settings-active.svg";
-import DataSourceIcon from "@/assets/data-source.svg";
-import SQLAPIIcon from "@/assets/sql-api.svg";
-import MembersIcon from "@/assets/members.svg";
-import RolesAndAccessIcon from "@/assets/roles-and-access.svg";
-import PersonalInfoIcon from "@/assets/personal-info.svg";
 import LogsActiveIcon from "@/assets/logs-active.svg";
 import AlertLogsIcon from "@/assets/alert-logs.svg";
 import ReportLogsIcon from "@/assets/report-logs.svg";
@@ -82,37 +77,5 @@ export const items: SidebarItem[] = [
     label: "Settings",
     icon: <SettingsIcon />,
     activeIcon: <SettingsActiveIcon />,
-    items: [
-      {
-        key: "data-sources",
-        label: "Data Sources",
-        href: "/settings/sources",
-        icon: <DataSourceIcon />,
-      },
-      {
-        key: "sql-api",
-        label: "SQL API",
-        href: "/settings/sql-api",
-        icon: <SQLAPIIcon />,
-      },
-      {
-        key: "members",
-        label: "Members",
-        href: "/settings/members",
-        icon: <MembersIcon />,
-      },
-      {
-        key: "access",
-        label: "Roles and Access",
-        href: "/settings/access",
-        icon: <RolesAndAccessIcon />,
-      },
-      {
-        key: "personal-info",
-        label: "Personal Info",
-        href: "/settings/info",
-        icon: <PersonalInfoIcon />,
-      },
-    ],
   },
 ];

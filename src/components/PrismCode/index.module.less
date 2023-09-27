@@ -1,0 +1,123 @@
+.container {
+  position: relative;
+  padding: 5px;
+  overflow: auto;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  line-height: 1.7;
+  white-space: pre;
+  text-align: left;
+  word-wrap: normal;
+  word-break: normal;
+  word-spacing: normal;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  background-color: #fdfdfd;
+
+  background-image: linear-gradient(transparent 50%, #f6f8fa 50%);
+  background-size: 3em 3em;
+  background-origin: content-box;
+  background-attachment: local;
+  border: 1px solid #ccd8e4;
+}
+
+.container :global(pre) {
+  margin: 0;
+}
+
+.container :global(.ant-typography code) {
+  background: none;
+  border: none;
+}
+
+@media print {
+  .container {
+    text-shadow: none;
+  }
+}
+
+.container :global(.token.comment),
+.container :global(.token.prolog),
+.container :global(.token.doctype),
+.container :global(.token.cdata) {
+  color: slategray;
+}
+
+.container :global(.token.punctuation) {
+  color: #999;
+}
+
+.container :global(.namespace) {
+  opacity: 0.7;
+}
+
+.container :global(.token.property),
+.container :global(.token.boolean),
+.container :global(.token.number),
+.container :global(.token.constant),
+.container :global(.token.symbol),
+.container :global(.token.deleted),
+.container :global(.token.tag) {
+  color: #905;
+}
+
+.container :global(.token.selector),
+.container :global(.token.attr-name),
+.container :global(.token.string),
+.container :global(.token.char),
+.container :global(.token.builtin),
+.container :global(.token.inserted) {
+  color: #690;
+}
+
+.container :global(.token.operator),
+.container :global(.token.entity),
+.container :global(.token.url),
+.container :global(.language-css .token.string),
+.container :global(.style .token.string) {
+  color: #9a6e3a;
+  background: hsla(0, 0%, 100%, 0.5);
+}
+
+.container :global(.token.atrule),
+.container :global(.token.attr-value),
+.container :global(.token.keyword) {
+  color: #07a;
+}
+
+.container :global(.token.function),
+.container :global(.token.class-name) {
+  color: #dd4a68;
+}
+
+.container :global(.token.regex),
+.container :global(.token.important),
+.token.variable {
+  color: #e90;
+}
+
+.container :global(.token.important),
+.container :global(.token.bold) {
+  font-weight: bold;
+}
+.container :global(.token.italic) {
+  font-style: italic;
+}
+
+.container :global(.token.entity) {
+  cursor: help;
+}
+
+.code {
+  width: 100%;
+  height: 100vh;
+  * {
+    font-family: monospace;
+  }
+}

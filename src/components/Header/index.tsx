@@ -12,7 +12,7 @@ interface HeaderProps {
   content: React.ReactNode;
   withLogo?: boolean;
   bordered?: boolean;
-  title?: string;
+  title?: React.ReactNode | string;
 }
 
 const { Title } = Typography;
@@ -35,23 +35,25 @@ const Header: React.FC<HeaderProps> = ({
       )}
     >
       <Row className={styles.root} justify="space-between">
-        <Col span={16} md={12} className={cx(styles.col)}>
-          {withLogo && (
-            <a className={styles.logo} href="/">
-              <img className={styles.logoText} alt="" src={logo} />
-            </a>
-          )}
-          {title && (
-            <Title
-              className={cx(isMobile && styles.title)}
-              level={isMobile ? 5 : 4}
-            >
-              {title}
-            </Title>
-          )}
+        <Col span={16} md={12}>
+          <div className={styles.col}>
+            {withLogo && (
+              <a className={styles.logo} href="/">
+                <img className={styles.logoText} alt="" src={logo} />
+              </a>
+            )}
+            {title && (
+              <Title
+                className={cx(isMobile && styles.title)}
+                level={isMobile ? 5 : 4}
+              >
+                {title}
+              </Title>
+            )}
+          </div>
         </Col>
-        <Col span={8} md={12} className={cx(styles.col, styles.colRight)}>
-          {content}
+        <Col span={8} md={12}>
+          <div className={cx(styles.col, styles.colRight)}>{content}</div>
         </Col>
       </Row>
     </BasicHeader>

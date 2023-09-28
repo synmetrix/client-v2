@@ -44,8 +44,17 @@ const Navbar: FC<NavbarProps> = ({
     setTeamsOpen(false);
   };
 
+  const onClick = ({ item, key, keyPath, domEvent }) => {
+    console.log(item, key, keyPath, domEvent);
+  };
+
   return (
-    <Space size={20} direction={direction} align="start">
+    <Space
+      size={20}
+      direction={direction}
+      align="start"
+      style={{ maxHeight: "60px" }}
+    >
       <Button className={styles.docs} href="/">
         <Space size={10} align="start">
           <span className={styles.docsIcon}>
@@ -82,7 +91,7 @@ const Navbar: FC<NavbarProps> = ({
 
       <Dropdown
         onOpenChange={setAccountOpen}
-        menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })) }}
+        menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })), onClick }}
       >
         <Space className={styles.dropdownHeader} align="center">
           <Avatar username={username} img={userAvatar} />

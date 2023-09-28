@@ -6,12 +6,14 @@ import cn from "classnames";
 import Avatar from "@/components/Avatar";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { Team } from "@/types/team";
+import useLocation from "@/hooks/useLocation";
 
 import TeamIcon from "@/assets/team.svg";
 import DocsIcon from "@/assets/docs.svg";
 
 import styles from "./index.module.less";
 
+import type { MenuItemProps } from "antd";
 import type { FC } from "react";
 
 interface MenuItem {
@@ -27,6 +29,14 @@ interface NavbarProps {
   teams?: Team[];
 }
 
+interface ClickMenuItem {
+  href: string;
+}
+
+interface ClickItem {
+  props: ClickMenuItem;
+}
+
 const Navbar: FC<NavbarProps> = ({
   direction,
   teams,
@@ -34,6 +44,7 @@ const Navbar: FC<NavbarProps> = ({
   username,
   userAvatar,
 }) => {
+  const [_, setLocation] = useLocation();
   const { currentTeam, setCurrentTeamId } = CurrentUserStore();
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
@@ -44,8 +55,11 @@ const Navbar: FC<NavbarProps> = ({
     setTeamsOpen(false);
   };
 
-  const onClick = ({ item, key, keyPath, domEvent }) => {
-    console.log(item, key, keyPath, domEvent);
+  const onClick = ({ item }) => {
+    const {
+      props: { href },
+    } = item;
+    setLocation(href);
   };
 
   return (

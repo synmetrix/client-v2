@@ -20,17 +20,14 @@ export const Default = Template.bind({});
 Default.args = {
   config: {
     input1: {
-      name: "input1",
       label: "input1",
       section: "section",
     },
     input2: {
-      name: "input2",
       label: "input2",
       section: "section2",
     },
     input3: {
-      name: "input3",
       label: "input3",
       section: "section",
       subSection: "subsection",

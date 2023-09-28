@@ -10,7 +10,7 @@ import type { FC } from "react";
 interface PrismCodeProps {
   code: string;
   lang: string;
-  style: object;
+  style?: object;
 }
 
 const { Text } = Typography;

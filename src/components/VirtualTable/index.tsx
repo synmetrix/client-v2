@@ -19,6 +19,7 @@ import "react-virtualized/styles.css";
 
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import PopoverButton from "@/components/PopoverButton";
+import type { ErrorMessage } from "@/types/errorMessage";
 
 import styles from "./index.module.less";
 
@@ -112,10 +113,7 @@ interface VirtualTableProps {
     id: string;
     desc: boolean;
   }[];
-  messages?: {
-    type: "success" | "info" | "warning" | "error";
-    text: string;
-  }[];
+  messages?: ErrorMessage[];
   onSortUpdate?: (nextSortBy: SortBySet[]) => void;
   data?: object[];
   columns?: object[];
@@ -130,7 +128,7 @@ interface VirtualTableProps {
   };
   emptyDesc?: string;
   orderByFn?: OrderByFn<object>;
-  footer?: (rows: object) => void;
+  footer?: (rows: object[]) => void;
   sortDisabled?: boolean;
   scrollToIndex?: number;
   cellRenderer?: TableCellRenderer;

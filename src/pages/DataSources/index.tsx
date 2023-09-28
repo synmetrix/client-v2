@@ -30,7 +30,7 @@ import type {
   Datasources_Pk_Columns_Input,
   Datasources_Set_Input,
 } from "@/graphql/generated";
-import AppLayout from "@/layouts/AppLayout";
+import SidebarLayout from "@/layouts/SidebarLayout";
 
 import styles from "./index.module.less";
 
@@ -79,7 +79,10 @@ export const DataSources = ({
   }, [editId, setIsOpen]);
 
   return (
-    <AppLayout divider title={t("pages:settings.data_sources")}>
+    <SidebarLayout
+      title={t("pages:settings.data_sources")}
+      items={<div>sadasd</div>}
+    >
       <Spin spinning={loading}>
         {dataSources.length === 0 && <NoDataSource onConnect={onOpen} />}
         {dataSources.length > 0 && (
@@ -119,7 +122,7 @@ export const DataSources = ({
           shadow={false}
         />
       </Modal>
-    </AppLayout>
+    </SidebarLayout>
   );
 };
 

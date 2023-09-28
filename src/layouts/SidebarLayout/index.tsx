@@ -4,18 +4,23 @@ import Sidebar from "@/components/Sidebar";
 import type { ReactNode } from "react";
 
 export type SidebarLayoutProps = {
-  title: ReactNode;
-  items?: ReactNode[];
+  title: ReactNode | string;
+  items?: ReactNode[] | ReactNode;
   children: ReactNode;
+  divider?: boolean;
 };
 
 const SidebarLayout: React.FC<SidebarLayoutProps> = ({
   title = "Settings",
   items = [],
   children,
+  divider = true,
 }) => {
   return (
-    <AppLayout sidebar={<Sidebar title={title}>{items}</Sidebar>}>
+    <AppLayout
+      divider={divider}
+      sidebar={<Sidebar title={title}>{items}</Sidebar>}
+    >
       {children}
     </AppLayout>
   );

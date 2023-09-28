@@ -20,7 +20,7 @@ const CategoryItem: FC<CategoryItemProps> = ({
   hoverState,
 }) => {
   const isFilterVisible = member.type !== "time" && category !== "segments";
-
+  console.log(selectedIndex, member.name);
   return (
     <div
       key={member.name}

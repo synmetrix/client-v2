@@ -1,10 +1,7 @@
 import { Collapse, Badge, Radio, Input, Alert } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-// import cn from "classnames";
 
-// import Select from "@/components/Select";
-// import { capitalize } from "@/utils/helpers/capitalize";
 import useCubesList from "@/hooks/useCubesList";
 import ExploreCubesSection from "@/components//ExploreCubesSection";
 import type { Cube, CubeMember } from "@/types/cube";
@@ -19,7 +16,7 @@ import type { RadioChangeEvent, AlertProps } from "antd";
 interface ExploreCubesProps {
   onMemberSelect: any;
   availableQueryMembers: Record<string, Cube>;
-  selectedQueryMembers: Record<string, CubeMember>;
+  selectedQueryMembers: Record<string, CubeMember[]>;
   dataSchemaValidation: {
     code: string;
     message: string;

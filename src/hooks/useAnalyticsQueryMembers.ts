@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 
+import { getTitle } from "@/utils/helpers/getTitles";
 import type { CubeMember, CubeMembers } from "@/types/cube";
-
-import { getTitle } from "./usePlayground";
 
 interface Props {
   selectedQueryMembers?: CubeMembers;

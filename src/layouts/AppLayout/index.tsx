@@ -18,7 +18,7 @@ const { Content } = Layout;
 export type AppLayoutProps = {
   sidebar?: ReactNode;
   children: ReactNode;
-  title?: string;
+  title?: ReactNode | string;
   divider?: boolean;
 };
 

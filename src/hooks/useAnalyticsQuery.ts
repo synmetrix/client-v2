@@ -1,14 +1,14 @@
 import { useReducer, useCallback } from "react";
 import { set, remove, getOr } from "unchanged";
 
-import type { FilterMember, Metric } from "@/types/cube";
+import type { FilterMember, CubeMember } from "@/types/cube";
 
 interface State {
-  measure: Metric[];
-  dimensions: Metric[];
+  measure: CubeMember[];
+  dimensions: CubeMember[];
   filters: FilterMember[];
-  timeDimensions: Metric[];
-  segments: Metric[];
+  timeDimensions: CubeMember[];
+  segments: CubeMember[];
   order: [];
   timezone: string;
   limit: number;
@@ -48,7 +48,7 @@ const reducer = (state: State, action: any) => {
         };
       }
 
-      const slice = state[memberType as keyof State] as Metric[];
+      const slice = state[memberType as keyof State] as CubeMember[];
 
       const isMemberExists = !!slice.find(
         (member) =>
@@ -110,7 +110,7 @@ const reducer = (state: State, action: any) => {
 
       if (granularity) {
         memberType = "timeDimensions";
-        const slice = state[memberType as keyof State] as Metric[];
+        const slice = state[memberType as keyof State] as CubeMember[];
 
         index = slice.findIndex(
           (member) =>
@@ -153,28 +153,29 @@ export const initialState = {
 
 const getName = (member: { name?: string }) => member.name;
 
-const getOperatorType = (member: Metric) => getOr("", "dimension.type", member);
+const getOperatorType = (member: CubeMember) =>
+  getOr("", "dimension.type", member);
 
 const useAnalyticsQuery = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const updateMember = useCallback(
     (memberType: string, toQuery = getName) => ({
-      add: (member: Metric) =>
+      add: (member: CubeMember) =>
         dispatch({
           type: "add",
           memberType,
           value: toQuery(member),
           operatorType: getOperatorType(member),
         }),
-      remove: (member: Metric | FilterMember) =>
+      remove: (member: CubeMember | FilterMember) =>
         dispatch({
           type: "remove",
           memberType,
-          value: toQuery(member as Metric),
+          value: toQuery(member as CubeMember),
           index: (member as FilterMember).index,
         }),
-      update: (member: Metric | FilterMember, newValue: any) =>
+      update: (member: CubeMember | FilterMember, newValue: any) =>
         dispatch({
           type: "update",
           memberType,

@@ -8,7 +8,7 @@ import ExploreCubesSubSection from "@/components/ExploreCubesSubSection";
 import ExploreCubesCategoryItem from "@/components/ExploreCubesCategoryItem";
 import useKeyPress from "@/hooks/useKeyPress";
 import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
-import { granularities } from "@/hooks/useDataSourceMeta";
+import { granularities } from "@/utils/constants/granularities";
 import clearSelection from "@/utils/helpers/clearSelection";
 import type {
   CubeMeta,

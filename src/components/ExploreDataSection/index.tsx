@@ -34,9 +34,17 @@ interface ExploreDataSectionProps extends CollapsePanelProps {
   onToggleSection: (section: string) => void;
   onSectionChange: (radioEvent: RadioChangeEvent) => void;
   onExec: any;
-  onQueryChange: (query: string) => (nextSortBy: SortBySet[]) => void;
+  onQueryChange: (
+    query: string,
+    args?: any
+  ) => (nextSortBy: SortBySet[]) => void;
   disabled: boolean;
-  state: { dataSection: string };
+  state: {
+    dataSection: string;
+    experimentsCount: number;
+    filtersCount: number;
+    modelingSection: string;
+  };
   queryState: {
     rows: object[];
     columns: object[];
@@ -49,7 +57,13 @@ interface ExploreDataSectionProps extends CollapsePanelProps {
     hitLimit?: boolean;
     limit?: number;
     order?: SortBy[];
-    rawSql?: { sql: string };
+    rawSql?: { params: []; preAggregations: []; sql: string };
+    dimensions: string[];
+    measures: string[];
+    segments: string[];
+    timeDimensions: string[];
+    page: number;
+    timezone: string;
   };
   explorationRowId: string;
   selectedQueryMembers: Record<string, CubeMember[]>;
@@ -153,6 +167,21 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     },
   };
 
+  const {
+    order,
+    hitLimit,
+    limit,
+    error,
+    rows,
+    columns,
+    loading,
+    progress,
+    settings,
+    skippedMembers = [],
+    offset = 0,
+    settings: { hideCubeNames, hideIndexColumn },
+  } = queryState;
+
   const onRadioClick = (e: RadioChangeEvent) => {
     const { target } = e;
 
@@ -182,93 +211,104 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const tableEmptyDesc =
     emptyDesc || t("Select dimensions & measures from left menu and run query");
 
-  // const Table = useMemo(() => {
-  //   const {
-  //     order,
-  //     hitLimit,
-  //     limit,
-  //     error,
-  //     rows,
-  //     columns,
-  //     loading,
-  //     progress,
-  //     settings,
-  //     skippedMembers = [],
-  //     offset = 0,
-  //   } = queryState;
+  const Table = useMemo(() => {
+    const messages: ErrorMessage[] = [];
 
-  //   const messages: ErrorMessage[] = [];
+    if (hitLimit && !querySettingsFallback) {
+      messages.push({
+        type: "warning",
+        text: `You hit the limit. Your dataset is more than ${limit} rows. Try to adjust your query.`,
+      });
+    }
 
-  //   if (hitLimit && !querySettingsFallback) {
-  //     messages.push({
-  //       type: "warning",
-  //       text: `You hit the limit. Your dataset is more than ${limit} rows. Try to adjust your query.`,
-  //     });
-  //   }
+    if (skippedMembers.length) {
+      messages.push({
+        type: "warning",
+        text: `Skipped ${skippedMembers.join(", ")}`,
+      });
+    }
 
-  //   if (skippedMembers.length) {
-  //     messages.push({
-  //       type: "warning",
-  //       text: `Skipped ${skippedMembers.join(", ")}`,
-  //     });
-  //   }
+    if (progress?.error) {
+      messages.push({
+        type: "error",
+        text: progress.error,
+      });
+    }
 
-  //   if (progress?.error) {
-  //     messages.push({
-  //       type: "error",
-  //       text: progress.error,
-  //     });
-  //   }
+    if (error) {
+      messages.push({
+        type: "warning",
+        text: "error",
+      });
+    }
 
-  //   if (error) {
-  //     messages.push({
-  //       type: "warning",
-  //       text: "error",
-  //     });
-  //   }
+    return (
+      <VirtualTable
+        tableId={screenshotMode ? "explorationTable" : undefined}
+        messages={messages}
+        loading={screenshotMode ? false : loading}
+        loadingProgress={progress}
+        width={width}
+        height={height}
+        columns={columns}
+        data={rows}
+        sortBy={order}
+        cellRenderer={(args) => cellRenderer(args, membersIndex)}
+        onSortUpdate={onQueryChange("order")}
+        emptyDesc={tableEmptyDesc}
+        settings={settings}
+        rowHeight={rowHeight}
+        footer={(tableRows) => (
+          <div>
+            {t("Shown")}: {tableRows.length} / {limit}, {t("Offset")}: {offset},{" "}
+            {t("Columns")}: {columns.length}
+          </div>
+        )}
+      />
+    );
+  }, [
+    hitLimit,
+    querySettingsFallback,
+    skippedMembers,
+    progress,
+    error,
+    screenshotMode,
+    loading,
+    width,
+    height,
+    columns,
+    rows,
+    order,
+    onQueryChange,
+    tableEmptyDesc,
+    settings,
+    rowHeight,
+    limit,
+    membersIndex,
+    t,
+    offset,
+  ]);
 
-  //   return (
-  //     <VirtualTable
-  //       tableId={screenshotMode ? "explorationTable" : undefined}
-  //       messages={messages}
-  //       loading={screenshotMode ? false : loading}
-  //       loadingProgress={progress}
-  //       width={width}
-  //       height={height}
-  //       columns={columns}
-  //       data={rows}
-  //       sortBy={order}
-  //       cellRenderer={(args) => cellRenderer(args, membersIndex)}
-  //       onSortUpdate={onQueryChange("order")}
-  //       emptyDesc={tableEmptyDesc}
-  //       settings={settings}
-  //       rowHeight={rowHeight}
-  //       footer={(tableRows) => (
-  //         <div>
-  //           {t("Shown")}: {tableRows.length} / {limit}, {t("Offset")}: {offset},{" "}
-  //           {t("Columns")}: {columns.length}
-  //         </div>
-  //       )}
-  //     />
-  //   );
-  // }, [
-  //   queryState,
-  //   querySettingsFallback,
-  //   width,
-  //   height,
-  //   onQueryChange,
-  //   tableEmptyDesc,
-  //   rowHeight,
-  //   membersIndex,
-  //   t,
-  //   screenshotMode,
-  // ]);
+  const Sql = useMemo(() => {
+    const { rawSql = { sql: "" } } = queryState;
 
-  // const Sql = useMemo(() => {
-  //   const { rawSql = { sql: "" } } = queryState;
+    return <PrismCode lang="sql" code={rawSql.sql} />;
+  }, [queryState]);
 
-  //   return <PrismCode lang="sql" code={rawSql.sql} />;
-  // }, [queryState]);
+  const onSubmit = (values: any) => {
+    if (values.rows !== limit) {
+      onQueryChange("limit", values.rows);
+    }
+    if (values.offset !== offset) {
+      onQueryChange("offset", values.offset);
+    }
+    if (values.hideCubeNames !== hideCubeNames) {
+      onQueryChange("hideCubeNames", values.hideCubeNames);
+    }
+    if (values.hideIndexColumn !== hideIndexColumn) {
+      onQueryChange("hideIndexColumn", values.hideIndexColumn);
+    }
+  };
 
   return (
     <Collapse
@@ -345,15 +385,11 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         }
         key="dataSec"
       >
-        body
-      </Panel>
-
-      {/* <div>
         <ComponentSwitcher
           activeItemIndex={currState.section === "sql" ? 1 : 0}
           items={[Table, Sql]}
         />
-      </div> */}
+      </Panel>
     </Collapse>
   );
 };

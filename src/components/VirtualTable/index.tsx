@@ -4,7 +4,7 @@ import {
   SortAscendingOutlined,
   SortDescendingOutlined,
 } from "@ant-design/icons";
-import { set, getOr } from "unchanged";
+import { getOr } from "unchanged";
 import cn from "classnames";
 import { Alert, Empty, Tooltip, message } from "antd";
 import { useTable, useSortBy } from "react-table";
@@ -19,6 +19,10 @@ import "react-virtualized/styles.css";
 
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import PopoverButton from "@/components/PopoverButton";
+import type { ErrorMessage } from "@/types/errorMessage";
+import type { SortBy } from "@/types/sort";
+import type { LoadingProgress } from "@/types/loading";
+import type { QuerySettings } from "@/types/querySettings";
 
 import styles from "./index.module.less";
 
@@ -30,13 +34,13 @@ import type {
   TableCellRenderer,
   TableHeaderRenderer,
 } from "react-virtualized";
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 import type { MenuProps } from "antd";
 
 const COL_WIDTH = 200;
 
 // set with unique ids inside https://stackoverflow.com/a/49821454
-class SortBySet extends Set {
+export class SortBySet extends Set {
   reverseUniq(byKey: string) {
     const presentKeys: string[] = [];
 
@@ -108,38 +112,27 @@ export const cellRenderer = (args: TableCellProps, membersIndex: any) => {
 };
 
 interface VirtualTableProps {
-  sortBy?: {
-    id: string;
-    desc: boolean;
-  }[];
-  messages?: {
-    type: "success" | "info" | "warning" | "error";
-    text: string;
-  }[];
+  sortBy?: SortBy[];
+  messages?: ErrorMessage[];
   onSortUpdate?: (nextSortBy: SortBySet[]) => void;
   data?: object[];
   columns?: object[];
-  width?: number | string;
+  width?: number;
   height?: number;
   headerHeight?: number;
   rowHeight?: number;
   loading: boolean;
-  loadingProgress: {
-    stage: string;
-    timeElapsed: number;
-  };
-  emptyDesc?: string;
+  loadingProgress: LoadingProgress;
+  emptyDesc?: ReactNode;
   orderByFn?: OrderByFn<object>;
-  footer?: (rows: object) => void;
+  footer?: (rows: object[]) => void;
   sortDisabled?: boolean;
   scrollToIndex?: number;
   cellRenderer?: TableCellRenderer;
   onScroll?: (params: { rowHeight: number } & ScrollEventData) => void;
   tableId?: string;
   className?: string;
-  settings?: {
-    hideIndexColumn: boolean;
-  };
+  settings?: QuerySettings;
 }
 
 const VirtualTable: FC<VirtualTableProps> = ({

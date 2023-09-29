@@ -1,0 +1,27 @@
+{
+  "data_section": {
+    "create_alert": "Create new alert",
+    "how_to_create_alert": "How to create Alerts?",
+    "create_report": "Create new report",
+    "how_to_create_report": "How to create Reports?",
+    "query": "Query",
+    "rows_limit": "Rows Limit",
+    "additional_offset": "Additional Offset",
+    "settings": "Settings",
+    "hide_cube_names": "Hide Cube Names",
+    "hide_index_column": "Hide Index Column",
+    "epty_desc": "Select dimensions & measures from left menu and run query",
+    "limit_error_1": "You hit the limit. Your dataset is more than",
+    "limit_error_2": "rows. Try to adjust your query.",
+    "skipped": "Skipped",
+    "shown": "Shown",
+    "offset": "Offset",
+    "columns": "Columns",
+    "data": "Data",
+    "sql": "SQL",
+    "run_query": "Run Query",
+    "export": "Export",
+    "new": "New",
+    "results": "Results"
+  }
+}

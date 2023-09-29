@@ -87,7 +87,7 @@ const PopoverButton: FC<PopoverButtonProps> = ({
   }
 
   return (
-    <div onClick={stopPropagation}>
+    <div style={{ display: "inline-block" }} onClick={stopPropagation}>
       <Popover
         popupVisible={visibleState}
         onOpenChange={onVisChange}

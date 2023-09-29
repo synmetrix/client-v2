@@ -24,11 +24,12 @@ export interface CubeMember {
   title: string;
   shortTitle: string;
   isVisible: boolean;
-  aggType: string;
-  cumulative: boolean;
-  cumulativeTotal: boolean;
-  drillMembers: [];
-  drillMembersGrouped: {
+  aggType?: string;
+  cumulative?: boolean;
+  cumulativeTotal?: boolean;
+  drillMembers?: [];
+  suggestFilterValues?: boolean;
+  drillMembersGrouped?: {
     dimensions: CubeMember[];
     measures: CubeMember[];
   };

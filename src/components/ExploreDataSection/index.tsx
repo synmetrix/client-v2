@@ -101,7 +101,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     ...restProps
   } = props;
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(["explore", "common"]);
 
   const [currState, updateState] = useSetState({
     section: workspaceState?.dataSection || "sql",
@@ -115,10 +115,10 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
           <AlertIcon />
           <div>
             <Button className={s.popoverLink} type="link">
-              Create new report
+              {t("data_section.create_alert")}
             </Button>
             <Button className={cn(s.popoverLink, s.guideLink)} type="link">
-              How to create Alerts?
+              {t("data_section.how_to_create_alert")}
             </Button>
           </div>
         </Space>
@@ -131,10 +131,10 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
           <ReportIcon />
           <div className={s.popoverBtns}>
             <Button className={s.popoverLink} type="link">
-              Create new report
+              {t("data_section.create_report")}
             </Button>
             <Button className={cn(s.popoverLink, s.guideLink)} type="link">
-              How to create Reports?
+              {t("data_section.how_to_create_report")}
             </Button>
           </div>
         </Space>
@@ -144,25 +144,25 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
 
   const formConfig = {
     rows: {
-      section: t("Query"),
-      label: t("Rows Limit"),
+      section: t("data_section.query"),
+      label: t("data_section.rows_limit"),
       type: "number",
       defaultValue: 0,
     },
     offset: {
-      section: t("Query"),
-      label: t("Additional Offset"),
+      section: t("data_section.query"),
+      label: t("data_section.additional_offset"),
       type: "number",
       defaultValue: 0,
     },
     hideCubeNames: {
-      section: t("Settings"),
-      label: t("Hide Cube Names"),
+      section: t("data_section.settings"),
+      label: t("data_section.hide_cube_names"),
       type: "checkbox",
     },
     hideIndexColumn: {
-      section: t("Settings"),
-      label: t("Hide Index Column"),
+      section: t("data_section.settings"),
+      label: t("data_section.hide_index_column"),
       type: "checkbox",
     },
   };
@@ -208,8 +208,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     settings: queryState?.settings,
   });
 
-  const tableEmptyDesc =
-    emptyDesc || t("Select dimensions & measures from left menu and run query");
+  const tableEmptyDesc = emptyDesc || t("empty_desc");
 
   const Table = useMemo(() => {
     const messages: ErrorMessage[] = [];
@@ -217,14 +216,16 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     if (hitLimit && !querySettingsFallback) {
       messages.push({
         type: "warning",
-        text: `You hit the limit. Your dataset is more than ${limit} rows. Try to adjust your query.`,
+        text: `${t("data_section.limit_error_1")} ${limit} ${t(
+          "data_section.limit_error_2"
+        )}`,
       });
     }
 
     if (skippedMembers.length) {
       messages.push({
         type: "warning",
-        text: `Skipped ${skippedMembers.join(", ")}`,
+        text: `${t("data_section.skipped")} ${skippedMembers.join(", ")}`,
       });
     }
 
@@ -260,8 +261,9 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         rowHeight={rowHeight}
         footer={(tableRows) => (
           <div>
-            {t("Shown")}: {tableRows.length} / {limit}, {t("Offset")}: {offset},{" "}
-            {t("Columns")}: {columns.length}
+            {t("data_section.shown")}: {tableRows.length} / {limit},{" "}
+            {t("data_section.offset")}: {offset}, {t("data_section.columns")}:{" "}
+            {columns.length}
           </div>
         )}
       />
@@ -328,7 +330,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 type="dashed"
                 onClick={() => onToggleSection("dataSec")}
               >
-                {t("Data")}
+                {t("data_section.data")}
               </Button>
 
               <Radio.Group
@@ -338,11 +340,11 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 className={s.buttonGroup}
               >
                 <Radio.Button value="results">{t("Results")}</Radio.Button>
-                <Radio.Button value="sql">{t("SQL")}</Radio.Button>
+                <Radio.Button value="sql">{t("data_section.sql")}</Radio.Button>
               </Radio.Group>
 
               <Button className={s.run} type="primary" onClick={onExec}>
-                Run Query
+                {t("data_section.run_query")}
                 <RightOutlined />
               </Button>
 
@@ -376,14 +378,16 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
             <div>
               <CSVLink data={rows} filename={`exploration-${genName(5)}.csv`}>
                 <Button className={s.csvBtn}>
-                  <div className={s.csvText}>Export .CSV</div>{" "}
+                  <div className={s.csvText}>
+                    {t("data_section.export")} .CSV
+                  </div>{" "}
                   <CSVIcon className={s.csvIcon} />
                 </Button>
               </CSVLink>
 
               <PopoverButton
                 popoverType="dropdown"
-                actionText={"+ New"}
+                actionText={`+ ${t("data_section.new")}`}
                 buttonProps={{ type: "primary", size: "middle" }}
                 menu={{ items: popoverItems }}
               />

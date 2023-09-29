@@ -13,7 +13,6 @@ import DocsIcon from "@/assets/docs.svg";
 
 import styles from "./index.module.less";
 
-import type { MenuItemProps } from "antd";
 import type { FC } from "react";
 
 interface MenuItem {
@@ -27,14 +26,6 @@ interface NavbarProps {
   userAvatar?: string | null;
   direction?: "horizontal" | "vertical";
   teams?: Team[];
-}
-
-interface ClickMenuItem {
-  href: string;
-}
-
-interface ClickItem {
-  props: ClickMenuItem;
 }
 
 const Navbar: FC<NavbarProps> = ({

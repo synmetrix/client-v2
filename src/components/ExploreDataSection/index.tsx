@@ -30,16 +30,15 @@ import s from "./index.module.less";
 import type { FC, ReactNode } from "react";
 import type { CollapsePanelProps, RadioChangeEvent } from "antd";
 
+type SortUpdateCrator = (nextSortBy: SortBySet[]) => void;
+
 interface ExploreDataSectionProps extends CollapsePanelProps {
   width: number;
   height: number;
   onToggleSection: (section: string) => void;
   onSectionChange: (radioEvent: RadioChangeEvent) => void;
   onExec: any;
-  onQueryChange: (
-    query: string,
-    args?: any
-  ) => (nextSortBy: SortBySet[]) => void;
+  onQueryChange: (query: string, args?: any) => void | SortUpdateCrator;
   disabled: boolean;
   state: {
     dataSection: string;
@@ -84,10 +83,10 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const {
     width,
     height,
-    onToggleSection,
-    onSectionChange,
-    onExec,
-    onQueryChange,
+    onToggleSection = () => {},
+    onSectionChange = () => {},
+    onExec = () => {},
+    onQueryChange = () => {},
     state: workspaceState,
     queryState,
     isActive,
@@ -255,7 +254,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         data={rows}
         sortBy={order}
         cellRenderer={(args) => cellRenderer(args, membersIndex)}
-        onSortUpdate={onQueryChange("order")}
+        onSortUpdate={onQueryChange("order") as SortUpdateCrator}
         emptyDesc={tableEmptyDesc}
         settings={settings}
         rowHeight={rowHeight}

@@ -86,10 +86,8 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     onSectionChange,
     onExec,
     onQueryChange,
-    disabled,
     state: workspaceState,
     queryState,
-    explorationRowId,
     isActive,
     selectedQueryMembers,
     disableSectionChange,
@@ -346,29 +344,31 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 <RightOutlined />
               </Button>
 
-              <PopoverButton
-                icon={<SettingOutlined />}
-                style={{
-                  borderColor: "transparent",
-                  boxShadow: "none",
-                  color: "rgba(0, 0, 0, 0.25)",
-                }}
-                placement="bottom"
-                buttonProps={{
-                  size: "middle",
-                }}
-                content={
-                  <div className={s.popoverInner}>
-                    <SimpleForm
-                      layout="vertical"
-                      config={formConfig}
-                      onSubmit={onSubmit}
-                      autoSubmit
-                    />
-                  </div>
-                }
-                trigger="click"
-              />
+              {!disableSettings && (
+                <PopoverButton
+                  icon={<SettingOutlined />}
+                  style={{
+                    borderColor: "transparent",
+                    boxShadow: "none",
+                    color: "rgba(0, 0, 0, 0.25)",
+                  }}
+                  placement="bottom"
+                  buttonProps={{
+                    size: "middle",
+                  }}
+                  content={
+                    <div className={s.popoverInner}>
+                      <SimpleForm
+                        layout="vertical"
+                        config={formConfig}
+                        onSubmit={onSubmit}
+                        autoSubmit
+                      />
+                    </div>
+                  }
+                  trigger="click"
+                />
+              )}
             </div>
 
             <div>

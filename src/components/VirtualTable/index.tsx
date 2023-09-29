@@ -4,7 +4,7 @@ import {
   SortAscendingOutlined,
   SortDescendingOutlined,
 } from "@ant-design/icons";
-import { set, getOr } from "unchanged";
+import { getOr } from "unchanged";
 import cn from "classnames";
 import { Alert, Empty, Tooltip, message } from "antd";
 import { useTable, useSortBy } from "react-table";

@@ -341,31 +341,34 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 <Radio.Button value="sql">{t("SQL")}</Radio.Button>
               </Radio.Group>
 
-              <div style={{ display: "inline-block", marginLeft: 10 }}>
-                <PopoverButton
-                  icon={<SettingOutlined />}
-                  style={{
-                    borderColor: "transparent",
-                    boxShadow: "none",
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                  placement="bottom"
-                  buttonProps={{
-                    size: "middle",
-                  }}
-                  content={
-                    <div className={s.popoverInner}>
-                      <SimpleForm
-                        layout="vertical"
-                        config={formConfig}
-                        onSubmit={console.log}
-                        autoSubmit
-                      />
-                    </div>
-                  }
-                  trigger="click"
-                />
-              </div>
+              <Button className={s.run} type="primary" onClick={onExec}>
+                Run Query
+                <RightOutlined />
+              </Button>
+
+              <PopoverButton
+                icon={<SettingOutlined />}
+                style={{
+                  borderColor: "transparent",
+                  boxShadow: "none",
+                  color: "rgba(0, 0, 0, 0.25)",
+                }}
+                placement="bottom"
+                buttonProps={{
+                  size: "middle",
+                }}
+                content={
+                  <div className={s.popoverInner}>
+                    <SimpleForm
+                      layout="vertical"
+                      config={formConfig}
+                      onSubmit={onSubmit}
+                      autoSubmit
+                    />
+                  </div>
+                }
+                trigger="click"
+              />
             </div>
 
             <div>

@@ -339,7 +339,9 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 disabled={disableSectionChange}
                 className={s.buttonGroup}
               >
-                <Radio.Button value="results">{t("Results")}</Radio.Button>
+                <Radio.Button value="results">
+                  {t("data_section.results")}
+                </Radio.Button>
                 <Radio.Button value="sql">{t("data_section.sql")}</Radio.Button>
               </Radio.Group>
 

@@ -9,10 +9,17 @@ export default {
   component: ExploreDataSection,
 } as Meta<typeof ExploreDataSection>;
 
-const Template: StoryFn<typeof ExploreDataSection> = (args) => (
-  <RootLayout>
-    <ExploreDataSection {...args} />
-  </RootLayout>
-);
+const Template: StoryFn<typeof ExploreDataSection> = (args) => {
+  const [isActive, setIsActive] = useState(false);
+  return (
+    <RootLayout>
+      <ExploreDataSection
+        {...args}
+        isActive={isActive}
+        onToggleSection={() => setIsActive((prev) => !prev)}
+      />
+    </RootLayout>
+  );
+};
 
 export const Default = Template.bind({});

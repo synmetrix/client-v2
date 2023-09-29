@@ -2,9 +2,6 @@
   display: flex;
   justify-content: space-between;
   padding: 8px 20px;
-  background: #f9f9f9;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .dataBtn {
@@ -48,4 +45,32 @@
 
 .guideLink {
   color: rgba(0, 0, 0, 0.5);
+}
+
+.collapse {
+  border-right: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-radius: 0 !important;
+}
+
+.collapse :global(.ant-collapse-content) {
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.collapse :global(.ant-collapse-item) {
+  border: none !important;
+}
+
+.collapse :global(.ant-collapse-header) {
+  padding: 0 !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0 !important;
+}
+
+.arrow {
+  position: relative;
+  top: 14px;
+  left: 20px;
 }

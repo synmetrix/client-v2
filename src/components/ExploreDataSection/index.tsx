@@ -1,5 +1,5 @@
-import { Radio, Space } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import { Collapse, Radio, Space } from "antd";
+import { RightOutlined, SettingOutlined } from "@ant-design/icons";
 import { useSetState } from "ahooks";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
@@ -26,9 +26,9 @@ import ReportIcon from "@/assets/report.svg";
 import s from "./index.module.less";
 
 import type { FC, ReactNode } from "react";
-import type { RadioChangeEvent } from "antd";
+import type { CollapsePanelProps, RadioChangeEvent } from "antd";
 
-interface ExploreDataSectionProps {
+interface ExploreDataSectionProps extends CollapsePanelProps {
   width: number;
   height: number;
   onToggleSection: (section: string) => void;
@@ -61,6 +61,8 @@ interface ExploreDataSectionProps {
   emptyDesc?: ReactNode;
   className?: string;
 }
+
+const { Panel } = Collapse;
 
 const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const {
@@ -269,68 +271,82 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   // }, [queryState]);
 
   return (
-    <>
-      <div className={s.header}>
-        <div>
-          <Button
-            className={s.dataBtn}
-            type="dashed"
-            onClick={() => onToggleSection("dataSec")}
-          >
-            {t("Data")}
-          </Button>
+    <Collapse
+      expandIcon={({ isActive: isPanelActive }) => (
+        <RightOutlined className={s.arrow} rotate={isPanelActive ? 90 : 0} />
+      )}
+      {...restProps}
+      className={cn(s.collapse, className)}
+      activeKey={isActive ? "dataSec" : []}
+    >
+      <Panel
+        header={
+          <div className={s.header}>
+            <div>
+              <Button
+                className={s.dataBtn}
+                type="dashed"
+                onClick={() => onToggleSection("dataSec")}
+              >
+                {t("Data")}
+              </Button>
 
-          <Radio.Group
-            value={currState.section}
-            onChange={onRadioClick}
-            disabled={disableSectionChange}
-            className={s.buttonGroup}
-          >
-            <Radio.Button value="results">{t("Results")}</Radio.Button>
-            <Radio.Button value="sql">{t("SQL")}</Radio.Button>
-          </Radio.Group>
+              <Radio.Group
+                value={currState.section}
+                onChange={onRadioClick}
+                disabled={disableSectionChange}
+                className={s.buttonGroup}
+              >
+                <Radio.Button value="results">{t("Results")}</Radio.Button>
+                <Radio.Button value="sql">{t("SQL")}</Radio.Button>
+              </Radio.Group>
 
-          <div style={{ display: "inline-block", marginLeft: 10 }}>
-            <PopoverButton
-              icon={<SettingOutlined />}
-              style={{
-                borderColor: "transparent",
-                boxShadow: "none",
-                color: "rgba(0, 0, 0, 0.25)",
-              }}
-              placement="bottom"
-              buttonProps={{
-                size: "middle",
-              }}
-              content={
-                <div className={s.popoverInner}>
-                  <SimpleForm
-                    layout="vertical"
-                    config={formConfig}
-                    onSubmit={console.log}
-                    autoSubmit
-                  />
-                </div>
-              }
-              trigger="click"
-            />
+              <div style={{ display: "inline-block", marginLeft: 10 }}>
+                <PopoverButton
+                  icon={<SettingOutlined />}
+                  style={{
+                    borderColor: "transparent",
+                    boxShadow: "none",
+                    color: "rgba(0, 0, 0, 0.25)",
+                  }}
+                  placement="bottom"
+                  buttonProps={{
+                    size: "middle",
+                  }}
+                  content={
+                    <div className={s.popoverInner}>
+                      <SimpleForm
+                        layout="vertical"
+                        config={formConfig}
+                        onSubmit={console.log}
+                        autoSubmit
+                      />
+                    </div>
+                  }
+                  trigger="click"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Button className={s.csvBtn}>
+                <div className={s.csvText}>Export .CSV</div>{" "}
+                <CSVIcon className={s.csvIcon} />
+              </Button>
+
+              <PopoverButton
+                popoverType="dropdown"
+                actionText={"+ New"}
+                buttonProps={{ type: "primary", size: "middle" }}
+                menu={{ items: popoverItems }}
+              />
+            </div>
           </div>
-        </div>
-
-        <div>
-          <Button className={s.csvBtn}>
-            <div className={s.csvText}>Export .CSV</div>{" "}
-            <CSVIcon className={s.csvIcon} />
-          </Button>
-
-          <PopoverButton
-            popoverType="dropdown"
-            actionText={"+ New"}
-            buttonProps={{ type: "primary", size: "middle" }}
-            menu={{ items: popoverItems }}
-          />
-        </div>
-      </div>
+        }
+        key="dataSec"
+      >
+        body
+      </Panel>
 
       {/* <div>
         <ComponentSwitcher
@@ -338,7 +354,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
           items={[Table, Sql]}
         />
       </div> */}
-    </>
+    </Collapse>
   );
 };
 

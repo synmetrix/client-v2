@@ -1,5 +1,6 @@
 import { Collapse, Radio, Space } from "antd";
 import { RightOutlined, SettingOutlined } from "@ant-design/icons";
+import { CSVLink } from "react-csv";
 import { useSetState } from "ahooks";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
@@ -12,6 +13,7 @@ import SimpleForm from "@/components/SimpleForm";
 import VirtualTable, { cellRenderer } from "@/components/VirtualTable";
 import PrismCode from "@/components/PrismCode";
 import ComponentSwitcher from "@/components/ComponentSwitcher";
+import genName from "@/utils/helpers/genName";
 import type { SortBySet } from "@/components/VirtualTable";
 import type { ErrorMessage } from "@/types/errorMessage";
 import type { CubeMember } from "@/types/cube";
@@ -372,10 +374,12 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
             </div>
 
             <div>
-              <Button className={s.csvBtn}>
-                <div className={s.csvText}>Export .CSV</div>{" "}
-                <CSVIcon className={s.csvIcon} />
-              </Button>
+              <CSVLink data={rows} filename={`exploration-${genName(5)}.csv`}>
+                <Button className={s.csvBtn}>
+                  <div className={s.csvText}>Export .CSV</div>{" "}
+                  <CSVIcon className={s.csvIcon} />
+                </Button>
+              </CSVLink>
 
               <PopoverButton
                 popoverType="dropdown"

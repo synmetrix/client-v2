@@ -11,16 +11,55 @@ import SimpleForm from "@/components/SimpleForm";
 import VirtualTable, { cellRenderer } from "@/components/VirtualTable";
 import PrismCode from "@/components/PrismCode";
 import ComponentSwitcher from "@/components/ComponentSwitcher";
+import type { SortBySet } from "@/components/VirtualTable";
 import type { ErrorMessage } from "@/types/errorMessage";
+import type { CubeMember } from "@/types/cube";
+import type { SortBy } from "@/types/sort";
+import type { LoadingProgress } from "@/types/loading";
+import type { QuerySettings } from "@/types/querySettings";
 
 import CSVIcon from "@/assets/csv.svg";
 
 import s from "./index.module.less";
 
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 import type { RadioChangeEvent } from "antd";
 
-const ExploreDataSection: FC<any> = (props) => {
+interface ExploreDataSectionProps {
+  width: number;
+  height: number;
+  onToggleSection: (section: string) => void;
+  onSectionChange: (radioEvent: RadioChangeEvent) => void;
+  onExec: any;
+  onQueryChange: (query: string) => (nextSortBy: SortBySet[]) => void;
+  disabled: boolean;
+  state: { dataSection: string };
+  queryState: {
+    rows: object[];
+    columns: object[];
+    settings: QuerySettings;
+    loading: boolean;
+    progress: LoadingProgress;
+    skippedMembers?: string[];
+    error?: boolean;
+    offset?: number;
+    hitLimit?: boolean;
+    limit?: number;
+    order?: SortBy[];
+    rawSql?: { sql: string };
+  };
+  explorationRowId: string;
+  selectedQueryMembers: Record<string, CubeMember[]>;
+  isActive: boolean;
+  disableSectionChange?: boolean;
+  disableSettings?: boolean;
+  rowHeight?: number;
+  screenshotMode?: boolean;
+  emptyDesc?: ReactNode;
+  className?: string;
+}
+
+const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const {
     width,
     height,
@@ -108,14 +147,14 @@ const ExploreDataSection: FC<any> = (props) => {
       order,
       hitLimit,
       limit,
-      offset = 0,
       error,
       rows,
       columns,
       loading,
       progress,
-      skippedMembers,
       settings,
+      skippedMembers = [],
+      offset = 0,
     } = queryState;
 
     const messages: ErrorMessage[] = [];
@@ -150,7 +189,7 @@ const ExploreDataSection: FC<any> = (props) => {
 
     return (
       <VirtualTable
-        tableId={screenshotMode && "explorationTable"}
+        tableId={screenshotMode ? "explorationTable" : undefined}
         messages={messages}
         loading={screenshotMode ? false : loading}
         loadingProgress={progress}
@@ -186,9 +225,9 @@ const ExploreDataSection: FC<any> = (props) => {
   ]);
 
   const Sql = useMemo(() => {
-    const { rawSql = {} } = queryState;
+    const { rawSql = { sql: "" } } = queryState;
 
-    return <PrismCode lang="sql" code={rawSql.sql || ""} />;
+    return <PrismCode lang="sql" code={rawSql.sql} />;
   }, [queryState]);
 
   return (

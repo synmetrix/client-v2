@@ -2,10 +2,11 @@ import { useMemo } from "react";
 
 import { getTitle } from "@/utils/helpers/getTitles";
 import type { CubeMember, CubeMembers } from "@/types/cube";
+import type { QuerySettings } from "@/types/querySettings";
 
 interface Props {
   selectedQueryMembers?: CubeMembers;
-  settings?: { hideCubeNames?: boolean };
+  settings?: QuerySettings;
 }
 
 const useAnalyticsQueryMembers = ({

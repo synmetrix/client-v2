@@ -1,7 +1,8 @@
-import { Radio } from "antd";
+import { Radio, Space } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useSetState } from "ahooks";
 import { useTranslation } from "react-i18next";
+import cn from "classnames";
 
 import usePermissions from "@/hooks/usePermissions";
 import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
@@ -19,6 +20,8 @@ import type { LoadingProgress } from "@/types/loading";
 import type { QuerySettings } from "@/types/querySettings";
 
 import CSVIcon from "@/assets/csv.svg";
+import AlertIcon from "@/assets/alert.svg";
+import ReportIcon from "@/assets/report.svg";
 
 import s from "./index.module.less";
 
@@ -85,8 +88,43 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const { t } = useTranslation();
 
   const [currState, updateState] = useSetState({
-    section: workspaceState.dataSection,
+    section: workspaceState?.dataSection || "sql",
   });
+
+  const popoverItems = [
+    {
+      key: "alert",
+      label: (
+        <Space className={s.popoverItem} align="center">
+          <AlertIcon />
+          <div>
+            <Button className={s.popoverLink} type="link">
+              Create new report
+            </Button>
+            <Button className={cn(s.popoverLink, s.guideLink)} type="link">
+              How to create Alerts?
+            </Button>
+          </div>
+        </Space>
+      ),
+    },
+    {
+      key: "report",
+      label: (
+        <Space className={s.popoverItem} align="center">
+          <ReportIcon />
+          <div className={s.popoverBtns}>
+            <Button className={s.popoverLink} type="link">
+              Create new report
+            </Button>
+            <Button className={cn(s.popoverLink, s.guideLink)} type="link">
+              How to create Reports?
+            </Button>
+          </div>
+        </Space>
+      ),
+    },
+  ];
 
   const formConfig = {
     rows: {
@@ -125,9 +163,9 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
 
   useEffect(() => {
     updateState({
-      section: workspaceState.dataSection,
+      section: workspaceState?.dataSection,
     });
-  }, [updateState, workspaceState.dataSection]);
+  }, [updateState, workspaceState?.dataSection]);
 
   const { fallback: querySettingsFallback } = usePermissions({
     scope: "explore/workspace/querySettings",
@@ -142,93 +180,93 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const tableEmptyDesc =
     emptyDesc || t("Select dimensions & measures from left menu and run query");
 
-  const Table = useMemo(() => {
-    const {
-      order,
-      hitLimit,
-      limit,
-      error,
-      rows,
-      columns,
-      loading,
-      progress,
-      settings,
-      skippedMembers = [],
-      offset = 0,
-    } = queryState;
+  // const Table = useMemo(() => {
+  //   const {
+  //     order,
+  //     hitLimit,
+  //     limit,
+  //     error,
+  //     rows,
+  //     columns,
+  //     loading,
+  //     progress,
+  //     settings,
+  //     skippedMembers = [],
+  //     offset = 0,
+  //   } = queryState;
 
-    const messages: ErrorMessage[] = [];
+  //   const messages: ErrorMessage[] = [];
 
-    if (hitLimit && !querySettingsFallback) {
-      messages.push({
-        type: "warning",
-        text: `You hit the limit. Your dataset is more than ${limit} rows. Try to adjust your query.`,
-      });
-    }
+  //   if (hitLimit && !querySettingsFallback) {
+  //     messages.push({
+  //       type: "warning",
+  //       text: `You hit the limit. Your dataset is more than ${limit} rows. Try to adjust your query.`,
+  //     });
+  //   }
 
-    if (skippedMembers.length) {
-      messages.push({
-        type: "warning",
-        text: `Skipped ${skippedMembers.join(", ")}`,
-      });
-    }
+  //   if (skippedMembers.length) {
+  //     messages.push({
+  //       type: "warning",
+  //       text: `Skipped ${skippedMembers.join(", ")}`,
+  //     });
+  //   }
 
-    if (progress?.error) {
-      messages.push({
-        type: "error",
-        text: progress.error,
-      });
-    }
+  //   if (progress?.error) {
+  //     messages.push({
+  //       type: "error",
+  //       text: progress.error,
+  //     });
+  //   }
 
-    if (error) {
-      messages.push({
-        type: "warning",
-        text: "error",
-      });
-    }
+  //   if (error) {
+  //     messages.push({
+  //       type: "warning",
+  //       text: "error",
+  //     });
+  //   }
 
-    return (
-      <VirtualTable
-        tableId={screenshotMode ? "explorationTable" : undefined}
-        messages={messages}
-        loading={screenshotMode ? false : loading}
-        loadingProgress={progress}
-        width={width}
-        height={height}
-        columns={columns}
-        data={rows}
-        sortBy={order}
-        cellRenderer={(args) => cellRenderer(args, membersIndex)}
-        onSortUpdate={onQueryChange("order")}
-        emptyDesc={tableEmptyDesc}
-        settings={settings}
-        rowHeight={rowHeight}
-        footer={(tableRows) => (
-          <div>
-            {t("Shown")}: {tableRows.length} / {limit}, {t("Offset")}: {offset},{" "}
-            {t("Columns")}: {columns.length}
-          </div>
-        )}
-      />
-    );
-  }, [
-    queryState,
-    querySettingsFallback,
-    width,
-    height,
-    onQueryChange,
-    tableEmptyDesc,
-    rowHeight,
-    membersIndex,
-    t,
-    screenshotMode,
-  ]);
+  //   return (
+  //     <VirtualTable
+  //       tableId={screenshotMode ? "explorationTable" : undefined}
+  //       messages={messages}
+  //       loading={screenshotMode ? false : loading}
+  //       loadingProgress={progress}
+  //       width={width}
+  //       height={height}
+  //       columns={columns}
+  //       data={rows}
+  //       sortBy={order}
+  //       cellRenderer={(args) => cellRenderer(args, membersIndex)}
+  //       onSortUpdate={onQueryChange("order")}
+  //       emptyDesc={tableEmptyDesc}
+  //       settings={settings}
+  //       rowHeight={rowHeight}
+  //       footer={(tableRows) => (
+  //         <div>
+  //           {t("Shown")}: {tableRows.length} / {limit}, {t("Offset")}: {offset},{" "}
+  //           {t("Columns")}: {columns.length}
+  //         </div>
+  //       )}
+  //     />
+  //   );
+  // }, [
+  //   queryState,
+  //   querySettingsFallback,
+  //   width,
+  //   height,
+  //   onQueryChange,
+  //   tableEmptyDesc,
+  //   rowHeight,
+  //   membersIndex,
+  //   t,
+  //   screenshotMode,
+  // ]);
 
-  const Sql = useMemo(() => {
-    const { rawSql = { sql: "" } } = queryState;
+  // const Sql = useMemo(() => {
+  //   const { rawSql = { sql: "" } } = queryState;
 
-    return <PrismCode lang="sql" code={rawSql.sql} />;
-  }, [queryState]);
+  //   return <PrismCode lang="sql" code={rawSql.sql} />;
+  // }, [queryState]);
 
   return (
     <>
@@ -285,16 +323,21 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
             <CSVIcon className={s.csvIcon} />
           </Button>
 
-          <Button type="primary">+ New</Button>
+          <PopoverButton
+            popoverType="dropdown"
+            actionText={"+ New"}
+            buttonProps={{ type: "primary", size: "middle" }}
+            menu={{ items: popoverItems }}
+          />
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <ComponentSwitcher
           activeItemIndex={currState.section === "sql" ? 1 : 0}
           items={[Table, Sql]}
         />
-      </div>
+      </div> */}
     </>
   );
 };

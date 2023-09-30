@@ -1,5 +1,4 @@
 import { Select as BasicSelect, Space } from "antd";
-import { DownOutlined } from "@ant-design/icons";
 
 import type { SelectProps } from "antd";
 import type { FC, ReactNode } from "react";
@@ -19,7 +18,6 @@ const Select: FC<IconSelectProps> = ({ prefixIcon, options, ...props }) => {
     <BasicSelect
       {...props}
       optionLabelProp="valueLabel"
-      suffixIcon={<DownOutlined />}
       options={options?.map((o) => ({
         ...o,
         valueLabel: prefixIcon ? <ValueLabel label={o.label} /> : o.label,

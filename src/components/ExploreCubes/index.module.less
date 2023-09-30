@@ -1,0 +1,149 @@
+.root {
+  width: 100%;
+  background: #f9f9f9;
+}
+
+.header {
+  padding: 19px 16px;
+  border-bottom: 1px solid var(--color-dimgray-200);
+}
+
+.collapse {
+  background: transparent;
+}
+
+.panel {
+  width: 100%;
+  margin-bottom: 4px;
+  border: 0 !important;
+}
+
+.panel :global(.ant-collapse-header) {
+  background: linear-gradient(
+      0deg,
+      rgba(71, 13, 105, 0.1) 0%,
+      rgba(71, 13, 105, 0.1) 100%
+    ),
+    #fff;
+  border-radius: 6px !important;
+}
+
+.panel :global(.ant-collapse-item) {
+  border: 0 !important;
+}
+
+.panel :global(.ant-collapse-content-box) {
+  padding-top: 5px !important;
+  padding-bottom: 0 !important;
+}
+
+.categorySection {
+  background: #f6f6f7;
+}
+
+.categoryTitle {
+  display: block;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: dimgray;
+  font-weight: 700;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.memberSection {
+  margin-bottom: 0.3em !important;
+  padding-top: 2px;
+  padding-bottom: 3px;
+  overflow: hidden;
+}
+
+.filterControls {
+  padding: 20px !important;
+  padding-top: 5px;
+  padding-bottom: 2px;
+}
+
+.searchInput {
+  width: 100%;
+  margin-bottom: 16px;
+  padding-left: 0;
+  border-bottom: 1px solid var(--color-dimgray-200);
+  border-radius: 0;
+
+  &:hover {
+    border-bottom: 1px solid var(--color-primary);
+  }
+}
+
+.inputIcon {
+  margin-right: 10px;
+}
+
+.buttonGroup {
+  display: flex !important;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 10px 0;
+  text-align: center;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  span {
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 700;
+  }
+}
+
+.buttonGroup :global(.ant-radio-button-wrapper) {
+  flex: 1;
+}
+
+.buttonGroup :global(.ant-radio-button-wrapper-checked) {
+  &::before {
+    display: none;
+  }
+
+  span {
+    color: #a31bcb !important;
+    font-weight: 700;
+  }
+
+  & > span:nth-child(2) {
+    position: relative;
+    display: inline-block;
+    padding: 0 12px;
+
+    &::after {
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #a31bcb;
+      content: "";
+    }
+  }
+}
+
+.buttonGroup :global(.ant-radio-button-wrapper) {
+  &::before {
+    display: none;
+  }
+}
+
+.radioButton {
+  border: none !important;
+
+  &:checked {
+    background: #000;
+  }
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.freeMembers {
+  margin-top: 2px;
+}

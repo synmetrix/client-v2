@@ -1,0 +1,102 @@
+.alert {
+  margin-bottom: 20px;
+}
+
+.dropdownBtn:hover {
+  color: var(--color-primary) !important;
+}
+
+.noRows {
+  padding: 2px 4px;
+  text-align: center;
+  background: var(--color-white);
+}
+
+.table {
+  width: 100%;
+  max-height: 100%;
+  margin: 0;
+
+  padding: 0;
+  overflow: auto;
+  font-weight: 400;
+
+  font-size: 11px;
+  border: 0;
+}
+
+.table :global(.ReactVirtualized__Grid__innerScrollContainer:focus) {
+  outline: none;
+}
+
+.table :global(.ReactVirtualized__Table__headerRow) {
+  width: 100%;
+  height: auto !important;
+  padding: 13px 18px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  background: #f5f3f5;
+  border-radius: 10px;
+}
+
+.table :global(.ReactVirtualized__Table__headerColumn) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+  text-overflow: ellipsis;
+}
+
+.table :global(.ReactVirtualized__Table__row) {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.table :global(.ReactVirtualized__Table__rowColumn) {
+  padding: 13px 18px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.indexColumn {
+  color: var(--color-black);
+}
+
+// .table :global(.ReactVirtualized__Table__row:nth-child(even)) {
+//   background-color: #fff;
+// }
+
+// .table :global(.ReactVirtualized__Table__row:nth-child(odd)) {
+//   background-color: #f6f8fa;
+// }
+
+// .table :global(.ReactVirtualized__Table__row:nth-child(even):hover),
+// .table :global(.ReactVirtualized__Table__row:nth-child(odd):hover) {
+//   background-color: #e6e6e6;
+// }
+
+.minWidth {
+  width: min-content;
+}
+
+.noImage :global(.ant-empty-image) {
+  display: none;
+}
+
+.small :global(.ant-table-body) {
+  margin: 0 !important;
+}
+
+.small :global(.ant-table-small) {
+  border: 0 !important;
+}
+
+.small :global(.ant-table-thead > tr > th) {
+  // /* background-color: #fafafa !important; */
+  padding: 8px !important;
+}

@@ -1,10 +1,11 @@
 import { Form, Typography } from "antd";
-import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import cn from "classnames";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import useLocation from "@/hooks/useLocation";
 import validate from "@/utils/validations";
 
 import styles from "./index.module.less";
@@ -24,6 +25,8 @@ interface SignUpProps {
 }
 
 const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
+  const [_, setLocation] = useLocation();
+
   const { t } = useTranslation(["sign", "common"]);
   const {
     control,
@@ -104,7 +107,11 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
 
         <Text className={styles.text}>
           {t("sign_up.bottom_text")}{" "}
-          <Button className={styles.link} type="link">
+          <Button
+            className={styles.link}
+            type="link"
+            onClick={() => setLocation("/auth/signin")}
+          >
             {t("sign_up.sign_in_link")}
           </Button>
         </Text>

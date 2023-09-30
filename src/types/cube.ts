@@ -83,5 +83,5 @@ export interface CubeMembers {
   timeDimensions?: CubeMember[];
   dimensions?: CubeMember[];
   measures?: CubeMember[];
-  filters?: FilterMember;
+  filters?: FilterMember[];
 }

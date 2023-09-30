@@ -1,36 +1,37 @@
-import { useMemo, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { Col, Row, Space, Spin } from "antd";
+import { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
-import PageHeader from "@/components/PageHeader";
 import DataSourceCard from "@/components/DataSourceCard";
-import Modal from "@/components/Modal";
 import DataSourceForm from "@/components/DataSourceForm";
+import Modal from "@/components/Modal";
 import NoDataSource from "@/components/NoDataSource";
-import CurrentUserStore from "@/stores/CurrentUserStore";
-import useLocation from "@/hooks/useLocation";
-import useCheckResponse from "@/hooks/useCheckResponse";
-import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
-import { prepareInitValues } from "@/pages/SqlApi";
+import PageHeader from "@/components/PageHeader";
+import SettingsMenu from "@/components/SettingsMenu";
+import type {
+  Datasources_Pk_Columns_Input,
+  Datasources_Set_Input,
+} from "@/graphql/generated";
 import {
+  useCheckConnectionMutation,
+  useCreateDataSourceMutation,
+  useDeleteDataSourceMutation,
   useFetchTablesQuery,
   useGenDataSchemasMutation,
-  useCreateDataSourceMutation,
-  useUpdateDataSourceMutation,
-  useCheckConnectionMutation,
-  useDeleteDataSourceMutation,
   useInsertSqlCredentialsMutation,
+  useUpdateDataSourceMutation,
 } from "@/graphql/generated";
+import useCheckResponse from "@/hooks/useCheckResponse";
+import useLocation from "@/hooks/useLocation";
+import SidebarLayout from "@/layouts/SidebarLayout";
+import { prepareInitValues } from "@/pages/SqlApi";
+import CurrentUserStore from "@/stores/CurrentUserStore";
+import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
 import type {
   DataSourceInfo,
   DataSourceSetupForm,
   DynamicForm,
 } from "@/types/dataSource";
-import type {
-  Datasources_Pk_Columns_Input,
-  Datasources_Set_Input,
-} from "@/graphql/generated";
-import SidebarLayout from "@/layouts/SidebarLayout";
 
 import styles from "./index.module.less";
 
@@ -81,7 +82,7 @@ export const DataSources = ({
   return (
     <SidebarLayout
       title={t("pages:settings.data_sources")}
-      items={<div>sadasd</div>}
+      items={<SettingsMenu />}
     >
       <Spin spinning={loading}>
         {dataSources.length === 0 && <NoDataSource onConnect={onOpen} />}

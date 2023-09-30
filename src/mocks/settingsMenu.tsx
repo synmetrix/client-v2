@@ -6,7 +6,7 @@ import PersonalInfoIcon from "@/assets/personal-info.svg";
 
 import type { ReactNode } from "react";
 
-interface SettingsMenuItem {
+export interface SettingsMenuItem {
   key: string;
   label: string;
   icon: ReactNode;

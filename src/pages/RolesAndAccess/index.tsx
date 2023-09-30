@@ -2,13 +2,11 @@ import { Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 
 import AccessTable from "@/components/AccessTable";
-import PageHeader from "@/components/PageHeader";
 import Modal from "@/components/Modal";
+import PageHeader from "@/components/PageHeader";
 import RoleForm from "@/components/RoleForm";
-import CurrentUserStore from "@/stores/CurrentUserStore";
-import useLocation from "@/hooks/useLocation";
-import useCheckResponse from "@/hooks/useCheckResponse";
-import { prepareDataSourceData } from "@/hooks/useUserData";
+import SettingsMenu from "@/components/SettingsMenu";
+import type { AllAccessListsQuery, Datasources } from "@/graphql/generated";
 import {
   useAllAccessListsQuery,
   useCreateAccessListMutation,
@@ -17,14 +15,17 @@ import {
   useSubAccessListsSubscription,
   useUpdateAccessListMutation,
 } from "@/graphql/generated";
+import useCheckResponse from "@/hooks/useCheckResponse";
+import useLocation from "@/hooks/useLocation";
+import { prepareDataSourceData } from "@/hooks/useUserData";
+import SidebarLayout from "@/layouts/SidebarLayout";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
-  DataSourceAccess,
   AccessList,
+  DataSourceAccess,
   RoleForm as RoleFormType,
 } from "@/types/access";
-import type { Datasources, AllAccessListsQuery } from "@/graphql/generated";
 import type { Cube, DataSourceInfo } from "@/types/dataSource";
-import AppLayout from "@/layouts/AppLayout";
 
 import styles from "./index.module.less";
 interface RolesAndAccessProps {
@@ -70,7 +71,10 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   }, [initialValues, setIsOpen]);
 
   return (
-    <AppLayout divider title={t("pages:settings.roles_and_access")}>
+    <SidebarLayout
+      title={t("pages:settings.roles_and_access")}
+      items={<SettingsMenu />}
+    >
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
@@ -99,7 +103,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
           onSubmit={onFormFinish}
         />
       </Modal>
-    </AppLayout>
+    </SidebarLayout>
   );
 };
 

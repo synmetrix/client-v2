@@ -1,18 +1,19 @@
-import { Space, Alert, message } from "antd";
+import { Alert, Space, message } from "antd";
 import { useTranslation } from "react-i18next";
 
+import type { GeneralInfo } from "@/components/GeneralInfoForm";
 import GeneralInfoForm from "@/components/GeneralInfoForm";
-import SecurityForm from "@/components/SecurityForm";
 import LogoutSessions from "@/components/LogoutSessions";
+import type { Security } from "@/components/SecurityForm";
+import SecurityForm from "@/components/SecurityForm";
+import SettingsMenu from "@/components/SettingsMenu";
+import { useUpdateUserInfoMutation } from "@/graphql/generated";
 import useAuth from "@/hooks/useAuth";
 import useCheckResponse from "@/hooks/useCheckResponse";
-import CurrentUserStore from "@/stores/CurrentUserStore";
-import { useUpdateUserInfoMutation } from "@/graphql/generated";
-import AuthTokensStore from "@/stores/AuthTokensStore";
 import useLocation from "@/hooks/useLocation";
-import type { GeneralInfo } from "@/components/GeneralInfoForm";
-import type { Security } from "@/components/SecurityForm";
-import AppLayout from "@/layouts/AppLayout";
+import SidebarLayout from "@/layouts/SidebarLayout";
+import AuthTokensStore from "@/stores/AuthTokensStore";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 
 import styles from "./index.module.less";
 
@@ -34,14 +35,17 @@ export const PersonalInfo: React.FC<PersonalInfoProps> = ({
   const { t } = useTranslation(["settings", "pages"]);
 
   return (
-    <AppLayout divider title={t("pages:settings.personal_info")}>
+    <SidebarLayout
+      title={t("pages:settings.personal_info")}
+      items={<SettingsMenu />}
+    >
       <Space className={styles.wrapper} direction="vertical" size={25}>
         {error && <Alert type="error" message={error} />}
         <GeneralInfoForm initialValue={initialValue} onSubmit={onInfoSubmit} />
         <SecurityForm onSubmit={onUpdatePassword} />
         <LogoutSessions onSubmit={onLogout} />
       </Space>
-    </AppLayout>
+    </SidebarLayout>
   );
 };
 

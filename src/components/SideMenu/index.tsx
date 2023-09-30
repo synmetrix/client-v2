@@ -22,7 +22,7 @@ const SideMenu: FC<SideMenuProps> = () => {
 
   const onClick = (menuItem: SidebarItem) => {
     const href = menuItem.href;
-    console.log(href);
+
     if (href) {
       setLocation(href);
     }

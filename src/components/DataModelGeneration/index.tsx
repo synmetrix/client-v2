@@ -89,25 +89,29 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                   s.includes(searchValue) ||
                   Object.keys(schema[s]).some((tb) => tb.includes(searchValue))
               )
-              .map((s) => (
-                <Panel
-                  className={styles.collapse}
-                  header={
-                    <span className={styles.collapseHeader}>
-                      {s} ({getCount(watch(), s)})
-                    </span>
-                  }
-                  key={s}
-                >
-                  <TableSelection
-                    control={control}
-                    type={watch("type")}
-                    schema={schema}
-                    path={s}
-                    initialValue={initialValue}
-                  />
-                </Panel>
-              ))}
+              .map((s) => {
+                const count = getCount(watch(), s);
+
+                return (
+                  <Panel
+                    className={styles.collapse}
+                    header={
+                      <span className={styles.collapseHeader}>
+                        {s} {count > 0 && <span>({count})</span>}
+                      </span>
+                    }
+                    key={s}
+                  >
+                    <TableSelection
+                      control={control}
+                      type={watch("type")}
+                      schema={schema}
+                      path={s}
+                      initialValue={initialValue}
+                    />
+                  </Panel>
+                );
+              })}
           </Collapse>
 
           <Title level={5}>{t("choose_markup")}</Title>

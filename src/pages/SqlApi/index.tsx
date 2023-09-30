@@ -1,33 +1,34 @@
-import { useMemo, useEffect } from "react";
+import { Space, Spin, message } from "antd";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Spin, Space, message } from "antd";
 
-import BasicLayout from "@/layouts/BasicLayout";
-import PageHeader from "@/components/PageHeader";
-import NoCredentials from "@/components/NoCredentials";
-import type { DataSourceCredentials } from "@/components/CredentialsTable";
-import CredentialsTable from "@/components/CredentialsTable";
-import Modal from "@/components/Modal";
 import ApiSetup, {
   CONNECTION_DEFAULT,
   connectionUrls,
 } from "@/components/ApiSetup";
-import CurrentUserStore from "@/stores/CurrentUserStore";
-import useLocation from "@/hooks/useLocation";
-import useCheckResponse from "@/hooks/useCheckResponse";
-import { prepareDataSourceData } from "@/hooks/useUserData";
+import type { DataSourceCredentials } from "@/components/CredentialsTable";
+import CredentialsTable from "@/components/CredentialsTable";
+import Modal from "@/components/Modal";
+import NoCredentials from "@/components/NoCredentials";
+import PageHeader from "@/components/PageHeader";
+import SettingsMenu from "@/components/SettingsMenu";
+import type { Datasources, Sql_Credentials } from "@/graphql/generated";
 import {
-  useDatasourcesQuery,
   useCredentialsQuery,
+  useDatasourcesQuery,
+  useDeleteCredentialsMutation,
   useInsertSqlCredentialsMutation,
   useSubCredentialsSubscription,
-  useDeleteCredentialsMutation,
 } from "@/graphql/generated";
-import type { Datasources, Sql_Credentials } from "@/graphql/generated";
-import genName from "@/utils/helpers/genName";
-import formatTime from "@/utils/helpers/formatTime";
+import useCheckResponse from "@/hooks/useCheckResponse";
+import useLocation from "@/hooks/useLocation";
+import { prepareDataSourceData } from "@/hooks/useUserData";
+import SidebarLayout from "@/layouts/SidebarLayout";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { ApiSetupForm, DataSourceInfo } from "@/types/dataSource";
 import type { Member } from "@/types/team";
+import formatTime from "@/utils/helpers/formatTime";
+import genName from "@/utils/helpers/genName";
 
 import styles from "./index.module.less";
 
@@ -83,12 +84,7 @@ export const SqlApi = ({
     editPermission && credentials.length ? t("settings:sql_api.action") : null;
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:settings.sql_api") }}
-    >
+    <SidebarLayout title={t("pages:settings.sql_api")} items={<SettingsMenu />}>
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
@@ -128,7 +124,7 @@ export const SqlApi = ({
           onSubmit={onFinishForm}
         />
       </Modal>
-    </BasicLayout>
+    </SidebarLayout>
   );
 };
 

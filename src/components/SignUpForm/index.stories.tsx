@@ -5,7 +5,7 @@ import SignUpForm from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/SignUpForm",
+  title: "Components/Auth/SignUpForm",
   component: SignUpForm,
 } as Meta<typeof SignUpForm>;
 

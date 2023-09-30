@@ -1,7 +1,6 @@
 import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import PageHeader from "@/components/PageHeader";
 import AlertsTable from "@/components/AlertsTable";
 import Modal from "@/components/Modal";
@@ -11,6 +10,7 @@ import { alertTypes } from "@/mocks/alertTypes";
 import type { Alert, AlertType } from "@/types/alert";
 import type { Report, ReportFormType } from "@/types/report";
 import type { QueryPreview } from "@/types/queryPreview";
+import AppLayout from "@/layouts/AppLayout";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -47,12 +47,7 @@ const Reports: React.FC<ReportsProps> = ({ alerts, query }) => {
   };
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:reports") }}
-    >
+    <AppLayout divider title={t("pages:reports")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("list_and_manage_your_reports")}
@@ -97,7 +92,7 @@ const Reports: React.FC<ReportsProps> = ({ alerts, query }) => {
           />
         )}
       </Modal>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

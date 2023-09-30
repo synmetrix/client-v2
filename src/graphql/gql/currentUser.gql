@@ -1,4 +1,4 @@
-query CurrentUser ($id: uuid!) {
+query CurrentUser($id: uuid!) {
   users_by_pk(id: $id) {
     id
     display_name
@@ -26,9 +26,7 @@ query CurrentUser ($id: uuid!) {
       }
     }
 
-    members(
-      order_by: { created_at: desc }
-    ) {
+    members(order_by: { created_at: desc }) {
       member_roles {
         id
         team_role
@@ -65,7 +63,7 @@ query CurrentUser ($id: uuid!) {
   }
 }
 
-subscription SubCurrentUser ($id: uuid!) {
+subscription SubCurrentUser($id: uuid!) {
   users_by_pk(id: $id) {
     id
     display_name
@@ -93,9 +91,7 @@ subscription SubCurrentUser ($id: uuid!) {
       }
     }
 
-    members(
-      order_by: { created_at: desc }
-    ) {
+    members(order_by: { created_at: desc }) {
       member_roles {
         id
         team_role
@@ -132,11 +128,21 @@ subscription SubCurrentUser ($id: uuid!) {
   }
 }
 
-mutation UpdateUserInfo ($user_id: uuid!, $display_name: String, $email: citext) {
-  update_users_by_pk(pk_columns: {id: $user_id}, _set: {display_name: $display_name}) {
+mutation UpdateUserInfo(
+  $user_id: uuid!
+  $display_name: String
+  $email: citext
+) {
+  update_users_by_pk(
+    pk_columns: { id: $user_id }
+    _set: { display_name: $display_name }
+  ) {
     id
   }
-  update_auth_accounts(where: {user_id: {_eq: $user_id}}, _set: {email: $email}) {
+  update_auth_accounts(
+    where: { user_id: { _eq: $user_id } }
+    _set: { email: $email }
+  ) {
     affected_rows
   }
 }

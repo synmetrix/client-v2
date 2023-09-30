@@ -2,10 +2,10 @@ import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
-import BasicLayout from "@/layouts/BasicLayout";
 import LogsTable from "@/components/LogsTable";
 import StatusCard from "@/components/StatusCard";
 import type { Log } from "@/types/logs";
+import AppLayout from "@/layouts/AppLayout";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -18,12 +18,7 @@ interface ReportsLogsProps {
 const ReportsLogs: React.FC<ReportsLogsProps> = ({ logs }) => {
   const { t } = useTranslation(["logs", "common"]);
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:logs.reports") }}
-    >
+    <AppLayout divider title={t("pages:logs.reports")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("reports.title")}
@@ -62,7 +57,7 @@ const ReportsLogs: React.FC<ReportsLogsProps> = ({ logs }) => {
           <LogsTable logs={logs} />
         </Space>
       </Space>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

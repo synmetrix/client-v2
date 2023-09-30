@@ -9,31 +9,31 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface AuthLinksProps {
-  page?: string;
+  currentPage?: string;
 }
 
-const AuthLinks: FC<AuthLinksProps> = ({ page }) => {
+const AuthLinks: FC<AuthLinksProps> = ({ currentPage }) => {
   const { t } = useTranslation(["common"]);
   const [, setLocation] = useLocation();
 
   return (
     <Space>
-      {page !== "signin" && (
+      {currentPage !== "signin" && (
         <Button
           className={styles.btn}
-          type={page === "signup" ? "primary" : "link"}
-          onClick={() => setLocation("/signin")}
+          type={currentPage === "signup" ? "primary" : "link"}
+          onClick={() => setLocation("/auth/signin")}
         >
-          {page === "signup"
+          {currentPage === "signup"
             ? t("common:words.login")
             : t("common:words.sign_in")}
         </Button>
       )}
-      {page !== "signup" && (
+      {currentPage !== "signup" && (
         <Button
           className={styles.btn}
           type="primary"
-          onClick={() => setLocation("/signup")}
+          onClick={() => setLocation("/auth/signup")}
         >
           {t("common:words.sign_up")}
         </Button>

@@ -1,12 +1,22 @@
-mutation CreateDataSource ($object: datasources_insert_input!) {
+mutation CreateDataSource($object: datasources_insert_input!) {
   insert_datasources_one(object: $object) {
     id
     name
   }
 }
 
-query Datasources ($offset: Int, $limit: Int, $where: datasources_bool_exp, $order_by: [datasources_order_by!]) {
-  datasources (offset: $offset, limit: $limit, where: $where, order_by: $order_by) {
+query Datasources(
+  $offset: Int
+  $limit: Int
+  $where: datasources_bool_exp
+  $order_by: [datasources_order_by!]
+) {
+  datasources(
+    offset: $offset
+    limit: $limit
+    where: $where
+    order_by: $order_by
+  ) {
     id
     name
     db_params
@@ -24,15 +34,25 @@ query Datasources ($offset: Int, $limit: Int, $where: datasources_bool_exp, $ord
       }
     }
   }
-  datasources_aggregate (where: $where) {
+  datasources_aggregate(where: $where) {
     aggregate {
       count
     }
   }
 }
 
-subscription AllDatasources ($offset: Int, $limit: Int, $where: datasources_bool_exp, $order_by: [datasources_order_by!]) {
-  datasources (offset: $offset, limit: $limit, where: $where, order_by: $order_by) {
+subscription AllDatasources(
+  $offset: Int
+  $limit: Int
+  $where: datasources_bool_exp
+  $order_by: [datasources_order_by!]
+) {
+  datasources(
+    offset: $offset
+    limit: $limit
+    where: $where
+    order_by: $order_by
+  ) {
     id
     name
     db_params
@@ -52,26 +72,26 @@ subscription AllDatasources ($offset: Int, $limit: Int, $where: datasources_bool
   }
 }
 
-mutation ValidateDataSource ($id: uuid!) {
+mutation ValidateDataSource($id: uuid!) {
   validate_datasource(id: $id) {
     code
     message
   }
 }
 
-query FetchTables ($id: uuid!) {
+query FetchTables($id: uuid!) {
   fetch_tables(datasource_id: $id) {
     schema
   }
 }
 
-query FetchMeta ($datasource_id: uuid!) {
+query FetchMeta($datasource_id: uuid!) {
   fetch_meta(datasource_id: $datasource_id) {
     cubes
   }
 }
 
-query CurrentDataSource ($id: uuid!) {
+query CurrentDataSource($id: uuid!) {
   datasources_by_pk(id: $id) {
     id
     name
@@ -82,8 +102,8 @@ query CurrentDataSource ($id: uuid!) {
   }
 }
 
-mutation UpdateDataSource (
-  $pk_columns: datasources_pk_columns_input!,
+mutation UpdateDataSource(
+  $pk_columns: datasources_pk_columns_input!
   $_set: datasources_set_input!
 ) {
   update_datasources_by_pk(pk_columns: $pk_columns, _set: $_set) {
@@ -91,23 +111,34 @@ mutation UpdateDataSource (
   }
 }
 
-mutation CheckConnection ($id: uuid!) {
+mutation CheckConnection($id: uuid!) {
   check_connection(datasource_id: $id) {
     message
     code
   }
 }
 
-mutation DeleteDataSource ($id: uuid!) {
+mutation DeleteDataSource($id: uuid!) {
   delete_datasources_by_pk(id: $id) {
     id
   }
 }
 
-mutation GenDataSchemas ($datasource_id: uuid!, $branch_id: uuid!, $tables: [SourceTable!]!, $overwrite: Boolean, $format: String) {
-  gen_dataschemas(datasource_id: $datasource_id, branch_id: $branch_id, tables: $tables, overwrite: $overwrite, format: $format) {
+mutation GenDataSchemas(
+  $datasource_id: uuid!
+  $branch_id: uuid!
+  $tables: [SourceTable!]!
+  $overwrite: Boolean
+  $format: String
+) {
+  gen_dataschemas(
+    datasource_id: $datasource_id
+    branch_id: $branch_id
+    tables: $tables
+    overwrite: $overwrite
+    format: $format
+  ) {
     code
     message
   }
 }
-

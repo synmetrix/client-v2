@@ -1,5 +1,15 @@
-query AllAccessLists ($offset: Int, $limit: Int, $where: access_lists_bool_exp, $order_by: [access_lists_order_by!]) {
-  access_lists (offset: $offset, limit: $limit, where: $where, order_by: $order_by) {
+query AllAccessLists(
+  $offset: Int
+  $limit: Int
+  $where: access_lists_bool_exp
+  $order_by: [access_lists_order_by!]
+) {
+  access_lists(
+    offset: $offset
+    limit: $limit
+    where: $where
+    order_by: $order_by
+  ) {
     id
     name
     config
@@ -9,8 +19,18 @@ query AllAccessLists ($offset: Int, $limit: Int, $where: access_lists_bool_exp, 
   }
 }
 
-subscription SubAccessLists ($offset: Int, $limit: Int, $where: access_lists_bool_exp, $order_by: [access_lists_order_by!]) {
-  access_lists (offset: $offset, limit: $limit, where: $where, order_by: $order_by) {
+subscription SubAccessLists(
+  $offset: Int
+  $limit: Int
+  $where: access_lists_bool_exp
+  $order_by: [access_lists_order_by!]
+) {
+  access_lists(
+    offset: $offset
+    limit: $limit
+    where: $where
+    order_by: $order_by
+  ) {
     id
     name
     config
@@ -19,7 +39,7 @@ subscription SubAccessLists ($offset: Int, $limit: Int, $where: access_lists_boo
   }
 }
 
-query AccessList ($id: uuid!) {
+query AccessList($id: uuid!) {
   access_lists_by_pk(id: $id) {
     name
     config
@@ -27,8 +47,8 @@ query AccessList ($id: uuid!) {
   }
 }
 
-mutation UpdateAccessList (
-  $pk_columns: access_lists_pk_columns_input!,
+mutation UpdateAccessList(
+  $pk_columns: access_lists_pk_columns_input!
   $_set: access_lists_set_input!
 ) {
   update_access_lists_by_pk(pk_columns: $pk_columns, _set: $_set) {
@@ -36,13 +56,13 @@ mutation UpdateAccessList (
   }
 }
 
-mutation DeleteAccessList ($id: uuid!) {
+mutation DeleteAccessList($id: uuid!) {
   delete_access_lists_by_pk(id: $id) {
     id
   }
 }
 
-mutation CreateAccessList ($object: access_lists_insert_input!) {
+mutation CreateAccessList($object: access_lists_insert_input!) {
   insert_access_lists_one(object: $object) {
     id
   }

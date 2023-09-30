@@ -1,33 +1,34 @@
 import { Space, message } from "antd";
 import { useTranslation } from "react-i18next";
 
-import BasicLayout from "@/layouts/BasicLayout";
-import PageHeader from "@/components/PageHeader";
+import type { Invite } from "@/components/MembersForm";
+import MembersForm from "@/components/MembersForm";
 import MembersTable from "@/components/MembersTable";
 import Modal from "@/components/Modal";
-import MembersForm from "@/components/MembersForm";
-import CurrentUserStore from "@/stores/CurrentUserStore";
-import useCheckResponse from "@/hooks/useCheckResponse";
+import PageHeader from "@/components/PageHeader";
+import SettingsMenu from "@/components/SettingsMenu";
 import type {
-  Member,
-  TeamRole,
-  AccessList,
-  Roles,
-  ChangableRoles,
-} from "@/types/team";
+  AllAccessListsQuery,
+  Members as MembersType,
+  Team_Roles_Enum,
+} from "@/graphql/generated";
 import {
-  useMembersQuery,
+  useAllAccessListsQuery,
   useDeleteMemberMutation,
   useInviteMemberMutation,
+  useMembersQuery,
   useUpdateMemberRoleMutation,
-  useAllAccessListsQuery,
 } from "@/graphql/generated";
+import useCheckResponse from "@/hooks/useCheckResponse";
+import SidebarLayout from "@/layouts/SidebarLayout";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
-  Team_Roles_Enum,
-  Members as MembersType,
-  AllAccessListsQuery,
-} from "@/graphql/generated";
-import type { Invite } from "@/components/MembersForm";
+  AccessList,
+  ChangableRoles,
+  Member,
+  Roles,
+  TeamRole,
+} from "@/types/team";
 
 import styles from "./index.module.less";
 
@@ -61,12 +62,7 @@ export const Members: React.FC<MembersProps> = ({
   const onRemove = (member: Member) => onDeleteMember(member.id);
 
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:settings.members") }}
-    >
+    <SidebarLayout title={t("pages:settings.members")} items={<SettingsMenu />}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("settings:members.title")}
@@ -86,7 +82,7 @@ export const Members: React.FC<MembersProps> = ({
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
         <MembersForm onSubmit={onSubmit} />
       </Modal>
-    </BasicLayout>
+    </SidebarLayout>
   );
 };
 

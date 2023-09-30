@@ -6,6 +6,7 @@ import cn from "classnames";
 import Avatar from "@/components/Avatar";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { Team } from "@/types/team";
+import useLocation from "@/hooks/useLocation";
 
 import TeamIcon from "@/assets/team.svg";
 import DocsIcon from "@/assets/docs.svg";
@@ -34,6 +35,7 @@ const Navbar: FC<NavbarProps> = ({
   username,
   userAvatar,
 }) => {
+  const [_, setLocation] = useLocation();
   const { currentTeam, setCurrentTeamId } = CurrentUserStore();
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
@@ -44,8 +46,20 @@ const Navbar: FC<NavbarProps> = ({
     setTeamsOpen(false);
   };
 
+  const onClick = ({ item }) => {
+    const {
+      props: { href },
+    } = item;
+    setLocation(href);
+  };
+
   return (
-    <Space size={20} direction={direction} align="start">
+    <Space
+      size={20}
+      direction={direction}
+      align="start"
+      style={{ maxHeight: "60px" }}
+    >
       <Button className={styles.docs} href="/">
         <Space size={10} align="start">
           <span className={styles.docsIcon}>
@@ -82,7 +96,7 @@ const Navbar: FC<NavbarProps> = ({
 
       <Dropdown
         onOpenChange={setAccountOpen}
-        menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })) }}
+        menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })), onClick }}
       >
         <Space className={styles.dropdownHeader} align="center">
           <Avatar username={username} img={userAvatar} />

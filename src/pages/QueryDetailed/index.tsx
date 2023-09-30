@@ -1,13 +1,13 @@
 import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import PageHeader from "@/components/PageHeader";
 import RequestInfo from "@/components/RequestInfo";
 import QueryDetails from "@/components/QueryDetails";
 import type { Request } from "@/types/request";
 import type { QueryPreview } from "@/types/queryPreview";
 import type { Event } from "@/types/event";
+import AppLayout from "@/layouts/AppLayout";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -28,12 +28,7 @@ const QueryDetailed: React.FC<QueryDetailedProps> = ({
 }) => {
   const { t } = useTranslation(["logs", "pages", "common"]);
   return (
-    <BasicLayout
-      loggedIn
-      divider
-      withSideMenu
-      headerProps={{ title: t("pages:logs.query") }}
-    >
+    <AppLayout divider title={t("pages:logs.query")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={`${t("query.request")}: ${request.id}`}
@@ -55,7 +50,7 @@ const QueryDetailed: React.FC<QueryDetailedProps> = ({
           <QueryDetails query={query} SQLString={SQLString} events={events} />
         </Space>
       </Space>
-    </BasicLayout>
+    </AppLayout>
   );
 };
 

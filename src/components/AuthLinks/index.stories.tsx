@@ -5,7 +5,7 @@ import AuthLinks from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/AuthLinks",
+  title: "Components/Auth/AuthLinks",
   component: AuthLinks,
 } as Meta<typeof AuthLinks>;
 

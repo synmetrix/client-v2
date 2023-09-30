@@ -23,5 +23,8 @@
     "export": "Export",
     "new": "New",
     "results": "Results"
+  },
+  "filters": {
+    "filter_name": "Filter name"
   }
 }

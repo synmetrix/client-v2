@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { CloseOutlined } from "@ant-design/icons";
 
 import PlaygroundFilterSelect from "@/components/PlaygroundFilterSelect";
+import FilterInput from "@/components/PlaygroundFilterInput";
 import trackEvent from "@/utils/helpers/trackEvent";
 import type { CubeMember, FilterMember } from "@/types/cube";
 
@@ -12,15 +13,13 @@ import s from "./index.module.less";
 
 import type { FC } from "react";
 
-// import FilterInput from 'components/PlaygroundFilterInput';
-
 const FilterGroup: FC<FilterGroupProps> = ({
   members,
   availableMembers,
   addMemberName,
   updateMethods,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common"]);
 
   return (
     <>
@@ -45,7 +44,7 @@ const FilterGroup: FC<FilterGroupProps> = ({
             }}
           />
           <Select
-            value={t(m.operator)}
+            value={t(`common:operators.${m.operator}`, m.operator)}
             onChange={(operator) => updateMethods.update(m, { ...m, operator })}
             className={s.select}
             size="large"
@@ -57,7 +56,12 @@ const FilterGroup: FC<FilterGroupProps> = ({
               </Select.Option>
             ))}
           </Select>
-          {/* <FilterInput member={m} key="filterInput" updateMethods={updateMethods} addMemberName={addMemberName} /> */}
+          <FilterInput
+            member={m}
+            key="filterInput"
+            updateMethods={updateMethods}
+            addMemberName={addMemberName}
+          />
         </Space>
       ))}
     </>

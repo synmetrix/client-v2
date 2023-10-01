@@ -38,7 +38,7 @@ export interface CubeMember {
     type: string;
   };
   granularity?: string;
-  type?: string;
+  type: string;
   meta?: any;
   index?: number;
 }

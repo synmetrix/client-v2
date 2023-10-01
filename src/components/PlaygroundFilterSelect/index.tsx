@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import type { CubeMember } from "@/types/cube";
 
+import ArrowBottom from "@/assets/select.svg";
+
 import type { FC } from "react";
 
 interface PlaygroundFilterSelectProps {
@@ -47,6 +49,8 @@ const PlaygroundFilterSelect: FC<PlaygroundFilterSelectProps> = ({
       style={{ width: 263 }}
       onChange={(val) => onChange(data.find((d) => d.name === val))}
       placeholder={t("filters.filter_name")}
+      size="large"
+      suffixIcon={<ArrowBottom />}
     >
       {data.map((d) => (
         <Option key={d.title} value={d.name}>

@@ -57,12 +57,14 @@ export interface SubSection {
 }
 
 export interface FilterMember {
+  name?: string;
   dimension: CubeMember;
   index?: number;
-  operator?: {
+  operators: {
     name: string;
     title: string;
   }[];
+  operator: string;
   values?: any;
 }
 

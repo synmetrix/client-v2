@@ -168,18 +168,18 @@ const useAnalyticsQuery = () => {
           value: toQuery(member),
           operatorType: getOperatorType(member),
         }),
-      remove: (member: CubeMember | FilterMember) =>
+      remove: (member: FilterMember) =>
         dispatch({
           type: "remove",
           memberType,
-          value: toQuery(member as CubeMember),
-          index: (member as FilterMember).index,
+          value: toQuery(member),
+          index: member.index,
         }),
-      update: (member: CubeMember | FilterMember, newValue: any) =>
+      update: (member: FilterMember, newValue: any) =>
         dispatch({
           type: "update",
           memberType,
-          index: (member as FilterMember).index,
+          index: member.index,
           newValue: toQuery(newValue),
         }),
     }),

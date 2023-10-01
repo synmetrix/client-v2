@@ -123,5 +123,17 @@
       "email": "Enter a valid e-mail",
       "password": "Minimum 8 characters, at least 1 letter and 1 number"
     }
+  },
+  "operators": {
+    "set": "is set",
+    "notSet": "is not set",
+    "notContains": "does not contains",
+    "notEquals": "does not equals",
+    "is set": "is set",
+    "is not set": "is not set",
+    "contains": "contains",
+    "does not contain": "does not contain",
+    "equals": "equals",
+    "does not equals": "does not equals"
   }
 }

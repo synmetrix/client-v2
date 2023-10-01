@@ -46,6 +46,7 @@
     "copy-to-clipboard": "^3.3.3",
     "cron-validate": "^1.4.5",
     "cronstrue": "^2.31.0",
+    "dayjs": "^1.11.10",
     "dequal": "^2.0.3",
     "graphql": "^16.6.0",
     "graphql-ws": "^5.14.0",

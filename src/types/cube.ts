@@ -6,17 +6,14 @@ export interface Cube {
   operator: string;
   shortTitle: string;
   granularity: string;
-  dimension: {
-    name: string;
-  };
   meta: {
     subSection: string;
     subSectionType: string;
   };
   measures: CubeMember[];
   dimensions: CubeMember[];
-  segments?: CubeMember[];
-  timeDimensions?: CubeMember[];
+  segments: CubeMember[];
+  timeDimensions: CubeMember[];
 }
 
 export interface CubeMember {

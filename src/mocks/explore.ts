@@ -1,0 +1,228 @@
+export const exploreMock = {
+  cubes: [
+    {
+      connectedComponent: 1,
+      dimensions: [
+        {
+          isVisible: true,
+          name: "Orders.status",
+          shortTitle: "Status",
+          suggestFilterValues: true,
+          title: "Orders Status",
+          type: "string",
+        },
+        {
+          isVisible: true,
+          name: "Orders.createdAt",
+          shortTitle: "Created at",
+          suggestFilterValues: true,
+          title: "Orders Created at",
+          type: "time",
+        },
+        {
+          isVisible: true,
+          name: "Orders.completedAt",
+          shortTitle: "Completed at",
+          suggestFilterValues: true,
+          title: "Orders Completed at",
+          type: "time",
+        },
+      ],
+      measures: [
+        {
+          aggType: "count",
+          cumulative: false,
+          cumulativeTotal: false,
+          drillMembers: [],
+          drillMembersGrouped: { dimensions: [], measures: [] },
+          isVisible: true,
+          name: "Orders.count",
+          shortTitle: "Count",
+          title: "Orders Count",
+          type: "number",
+        },
+        {
+          aggType: "sum",
+          cumulative: false,
+          cumulativeTotal: false,
+          drillMembers: [],
+          drillMembersGrouped: { dimensions: [], measures: [] },
+          isVisible: true,
+          name: "Orders.number",
+          shortTitle: "Number",
+          title: "Orders Number",
+          type: "number",
+        },
+      ],
+      segments: [],
+      name: "Orders",
+      public: true,
+      title: "Orders",
+      type: "cube",
+    },
+    {
+      connectedComponent: 1,
+      dimensions: [
+        {
+          isVisible: true,
+          name: "Products.description",
+          shortTitle: "Description",
+          suggestFilterValues: true,
+          title: "Products Description",
+          type: "string",
+        },
+        {
+          isVisible: true,
+          name: "Products.name",
+          shortTitle: "Name",
+          suggestFilterValues: true,
+          title: "Products Name",
+          type: "string",
+        },
+        {
+          isVisible: true,
+          name: "Products.createdAt",
+          shortTitle: "Created at",
+          suggestFilterValues: true,
+          title: "Products Created at",
+          type: "time",
+        },
+      ],
+      measures: [
+        {
+          aggType: "count",
+          cumulative: false,
+          cumulativeTotal: false,
+          drillMembers: [],
+          drillMembersGrouped: { dimensions: [], measures: [] },
+          isVisible: true,
+          name: "Products.count",
+          shortTitle: "Count",
+          title: "Products Count",
+          type: "number",
+        },
+      ],
+      name: "Products",
+      public: true,
+      segments: [],
+      title: "Products",
+      type: "cube",
+    },
+  ],
+  exploration: {
+    data: {
+      explorations_by_pk: {
+        created_at: "2023-10-03T13:29:39.523737+00:00",
+        datasource_id: "7d7eea55-ad47-4456-8a1b-badef7cf7270",
+        id: "d3852e66-888b-4fa6-a21d-5799452f78db",
+        playground_settings: {},
+        playground_state: {
+          dimensions: ["Orders.createdAt"],
+          filters: [],
+          limit: 1000,
+          measures: ["Orders.count"],
+          offset: 0,
+          order: [],
+          page: 0,
+          segments: [],
+          timeDimensions: [
+            { dimension: "Orders.createdAt", granularity: "second" },
+          ],
+          timezone: "UTC",
+        },
+        updated_at: "2023-10-03T13:29:39.523737+00:00",
+      },
+      fetch_dataset: {
+        annotation: {
+          dimensions: {
+            "Orders.createdAt": {
+              shortTitle: "Created at",
+              title: "Orders Created at",
+              type: "time",
+            },
+          },
+          measures: {
+            "Orders.count": {
+              drillMembers: [],
+              drillMembersGrouped: { dimensions: [], measures: [] },
+              shortTitle: "Count",
+              title: "Orders Count",
+              type: "number",
+            },
+          },
+          segments: {},
+          skippedMembers: [],
+          timeDimensions: {
+            "Orders.createdAt.second": {
+              shortTitle: "Created at",
+              title: "Orders Created at",
+              type: "time",
+            },
+          },
+        },
+        data: [
+          {
+            "Orders.count": "9",
+            "Orders.createdAt": "2022-07-23T00:00:00.000",
+            "Orders.createdAt.second": "2022-07-23T00:00:00.000",
+          },
+          {
+            "Orders.count": "6",
+            "Orders.createdAt": "2021-04-29T00:00:00.000",
+            "Orders.createdAt.second": "2021-04-29T00:00:00.000",
+          },
+          {
+            "Orders.count": "2",
+            "Orders.createdAt": "2022-02-20T00:00:00.000",
+            "Orders.createdAt.second": "2022-02-20T00:00:00.000",
+          },
+          {
+            "Orders.count": "9",
+            "Orders.createdAt": "2022-03-18T00:00:00.000",
+            "Orders.createdAt.second": "2022-03-18T00:00:00.000",
+          },
+          {
+            "Orders.count": "8",
+            "Orders.createdAt": "2019-11-22T00:00:00.000",
+            "Orders.createdAt.second": "2019-11-22T00:00:00.000",
+          },
+          {
+            "Orders.count": "18",
+            "Orders.createdAt": "2019-11-27T00:00:00.000",
+            "Orders.createdAt.second": "2019-11-27T00:00:00.000",
+          },
+          {
+            "Orders.count": "33",
+            "Orders.createdAt": "2020-09-29T00:00:00.000",
+            "Orders.createdAt.second": "2020-09-29T00:00:00.000",
+          },
+        ],
+        hitLimit: true,
+        query: {
+          dimensions: ["Orders.createdAt"],
+          filters: [],
+          limit: 1000,
+          measures: ["Orders.count"],
+          offset: 0,
+          order: [{ desc: false, id: "emptyCube.emptyKey" }],
+          renewQuery: true,
+          rowLimit: 1000,
+          segments: [],
+          timeDimensions: [
+            { dimension: "Orders.createdAt", granularity: "second" },
+          ],
+          timezone: "UTC",
+        },
+      },
+    },
+  },
+  sql: {
+    data: {
+      gen_sql: {
+        params: [],
+        preAggregations: [],
+        sql: 'SELECT\n      "orders".created_at "orders__created_at", date_trunc(\'second\', ("orders".created_at::timestamptz AT TIME ZONE \'UTC\')) "orders__created_at_second", count("orders".id) "orders__count"\n    FROM\n      public.orders AS "orders"  GROUP BY 1, 2 LIMIT 1000',
+      },
+    },
+  },
+};

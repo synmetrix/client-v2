@@ -30,7 +30,7 @@ import s from "./index.module.less";
 import type { FC, ReactNode } from "react";
 import type { CollapsePanelProps, RadioChangeEvent } from "antd";
 
-type SortUpdateCrator = (nextSortBy: SortBySet[]) => void;
+type SortUpdater = (nextSortBy: SortBySet[]) => void;
 
 interface ExploreDataSectionProps extends CollapsePanelProps {
   width: number;
@@ -38,7 +38,7 @@ interface ExploreDataSectionProps extends CollapsePanelProps {
   onToggleSection: (section: string) => void;
   onSectionChange: (radioEvent: RadioChangeEvent) => void;
   onExec: any;
-  onQueryChange: (query: string, args?: any) => void | SortUpdateCrator;
+  onQueryChange: (query: string, args?: any) => void | SortUpdater | null;
   disabled: boolean;
   state: {
     dataSection: string;
@@ -58,7 +58,7 @@ interface ExploreDataSectionProps extends CollapsePanelProps {
     hitLimit?: boolean;
     limit?: number;
     order?: SortBy[];
-    rawSql?: { params: []; preAggregations: []; sql: string };
+    rawSql?: { params: any[]; preAggregations: any[]; sql: string };
     dimensions: string[];
     measures: string[];
     segments: string[];
@@ -254,7 +254,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         data={rows}
         sortBy={order}
         cellRenderer={(args) => cellRenderer(args, membersIndex)}
-        onSortUpdate={onQueryChange("order") as SortUpdateCrator}
+        onSortUpdate={onQueryChange("order") as SortUpdater}
         emptyDesc={tableEmptyDesc}
         settings={settings}
         rowHeight={rowHeight}

@@ -347,7 +347,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
       ))}
       <div
         className={cn(className)}
-        style={{ width, height, overflow: "auto" }}
+        style={{ width, height: height + 20, overflow: "auto" }}
       >
         <Table
           id={tableId}

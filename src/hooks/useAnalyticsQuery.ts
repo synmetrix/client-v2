@@ -147,7 +147,7 @@ export const queryState = {
   page: 0,
 };
 
-export const initialState = {
+export const initialState: any = {
   ...queryState,
 };
 

@@ -18,7 +18,20 @@ const defaultFilterValues = {
   },
 };
 
-const reducer = (state: PlaygroundState, action: any) => {
+interface Action {
+  type:
+    | "add"
+    | "update"
+    | "update"
+    | "setLimit"
+    | "setOffset"
+    | "setPage"
+    | "setOrder"
+    | "remove"
+    | "reset";
+  [key: string]: any;
+}
+const reducer = (state: PlaygroundState, action: Action) => {
   let { memberType } = action;
 
   if (action.type === "add") {
@@ -129,7 +142,7 @@ const queryBaseMembers = {
   segments: [],
 };
 
-export const queryState = {
+export const queryState: PlaygroundState = {
   ...queryBaseMembers,
   order: [],
   timezone: "UTC",
@@ -138,7 +151,7 @@ export const queryState = {
   page: 0,
 };
 
-export const initialState: any = {
+export const initialState: PlaygroundState = {
   ...queryState,
 };
 

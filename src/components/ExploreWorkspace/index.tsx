@@ -1,10 +1,11 @@
+import SidebarLayout from "@/layouts/SidebarLayout";
 import ExploreDataSection from "@/components/ExploreDataSection";
 import ErrorFound from "@/components/ErrorFound";
+import ExploreCubes from "@/components/ExploreCubes";
 import usePlayground from "@/hooks/usePlayground";
 import usePermissions from "@/hooks/usePermissions";
 import useExploreWorkspace from "@/hooks/useExploreWorkspace";
 import useDimensions from "@/hooks/useDimensions";
-import { dataSectionProps } from "@/mocks/explore";
 
 import type { FC } from "react";
 
@@ -47,12 +48,21 @@ const ExploreWorkSpace: FC<any> = (props) => {
   } = usePlayground({
     dataSourceId: dataSource.id as string,
     editId: explorationId as string,
+    meta,
   });
-
   const explorationRowId = useMemo(() => exploration?.id, [exploration]);
 
   const { collapseState, state, onDataSectionChange, onToggleSection } =
     useExploreWorkspace({ selectedQueryMembers });
+
+  // const {
+  //   mutations: { validateMutation, execValidateMutation },
+  // } = useSources({
+  //   pauseQueryAll: true,
+  // });
+
+  // TODO use graphQL API
+  const validateMutation: any = () => {};
 
   const tableHeight = useMemo(
     () => DEFAULT_ROW_HEIGHT * explorationState.rows.length + 30,
@@ -128,7 +138,7 @@ const ExploreWorkSpace: FC<any> = (props) => {
     return <ErrorFound status={500} />;
   }
 
-  return (
+  const dataSection = (
     <ExploreDataSection
       key="dataSec"
       width={width}
@@ -147,6 +157,20 @@ const ExploreWorkSpace: FC<any> = (props) => {
       isActive={collapseState.activePanelKey.includes("dataSec")}
     />
   );
+
+  const sidebar = (
+    <>
+      {header}
+      <ExploreCubes
+        availableQueryMembers={availableQueryMembers}
+        selectedQueryMembers={selectedQueryMembers}
+        onMemberSelect={updateMember}
+        dataSchemaValidation={validateMutation}
+      />
+    </>
+  );
+
+  return <SidebarLayout items={sidebar}>{dataSection}</SidebarLayout>;
 };
 
 export default ExploreWorkSpace;

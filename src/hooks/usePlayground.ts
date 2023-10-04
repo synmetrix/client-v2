@@ -14,15 +14,38 @@ import pickKeys from "@/utils/helpers/pickKeys";
 import equals from "@/utils/helpers/equals";
 import type { CubeMembers } from "@/types/cube";
 import { exploreMock } from "@/mocks/explore";
+import { getTitle } from "@/utils/helpers/getTitles";
+
+import type { Reducer } from "react";
 
 const queryStateKeys = Object.keys(queryState);
 
-const initialSettings = {
+const initialSettings: PlaygroundSettings = {
   hideCubeNames: false,
   hideIndexColumn: false,
 };
 
-const reducer = (state: any, action: any) => {
+interface UpdateAction {
+  type: "update";
+  value: PlaygroundSettings;
+}
+
+interface HideCubeNamesAction {
+  type: "hideCubeNames";
+  value: boolean;
+}
+
+interface HideIndexAction {
+  type: "hideIndexColumn";
+  value: boolean;
+}
+
+type Action = UpdateAction | HideCubeNamesAction | HideIndexAction;
+
+const reducer: Reducer<PlaygroundSettings, Action> = (
+  state,
+  action
+): PlaygroundSettings => {
   if (action.type === "hideCubeNames") {
     return {
       ...state,
@@ -39,11 +62,8 @@ const reducer = (state: any, action: any) => {
     return action.value;
   }
 
-  throw new Error(`Unknown action ${action.type}.`);
+  return state;
 };
-
-export const getTitle = (settings: any, column: any) =>
-  settings.hideCubeNames ? column.shortTitle : column.title;
 
 export const getColumns = (selectedQueryMembers: CubeMembers, settings = {}) =>
   [
@@ -62,32 +82,37 @@ export const getColumns = (selectedQueryMembers: CubeMembers, settings = {}) =>
 
 interface Props {
   dataSourceId: string;
-  meta: [];
   editId: string;
-  rowsLimit: number;
-  offset: number;
+  meta?: [];
+  rowsLimit?: number;
+  offset?: number;
 }
 
-interface State {
-  dimensions: string[];
-  filters: string[];
-  limit: number;
-  measures: string[];
-  offset: number;
-  order: [];
-  page: number;
-  segments: string[];
-  timeDimensions: { dimension: string; granularity: string }[];
-  timezone: string;
+export interface PlaygroundSettings {
+  hideCubeNames: boolean;
+  hideIndexColumn: boolean;
+}
+
+export interface PlaygroundState {
+  dimensions?: string[];
+  filters?: string[];
+  limit?: number;
+  measures?: string[];
+  offset?: number;
+  order?: [];
+  page?: number;
+  segments?: string[];
+  timeDimensions?: { dimension: string; granularity: string }[];
+  timezone?: string;
 }
 
 export default ({
   dataSourceId,
   meta = [],
   editId,
-  rowsLimit,
-  offset,
-}: Props) => {
+}: // rowsLimit,
+// offset,
+Props) => {
   const [, setLocation] = useLocation();
   const { withAuthPrefix } = useAppSettings();
   const [settings, dispatchSettings] = useReducer(reducer, initialSettings);
@@ -115,6 +140,38 @@ export default ({
   const currentData = exploreMock.exploration;
   const genSqlMutation = exploreMock.sql;
   const createMutation = exploreMock.exploration;
+  //TODO use mutation
+  const execQueryCurrent = (arg: any) => {};
+  const execCreateMutation = (arg: any) => {};
+  const execGenSqlMutation = (arg: any) => {};
+
+  useEffect(() => {
+    if (editId) {
+      execGenSqlMutation({ exploration_id: editId });
+    }
+  }, [editId, execGenSqlMutation]);
+
+  // const {
+  //   current,
+  //   currentProgress,
+  //   queries: {
+  //     currentData,
+  //     execQueryCurrent,
+  //   },
+  //   mutations: {
+  //     createMutation,
+  //     execCreateMutation,
+  //     genSqlMutation,
+  //     execGenSqlMutation,
+  //   }
+  // } = useExplorations({
+  //   params: {
+  //     editId,
+  //     rowsLimit,
+  //     offset,
+  //   },
+  //   pauseQueryAll: true,
+  // });
 
   // useEffect(() => {
   //   if (editId) {
@@ -128,7 +185,10 @@ export default ({
   );
 
   useDeepCompareEffect(() => {
-    dispatchSettings({ type: "update", value: playgroundSettings });
+    dispatchSettings({
+      type: "update",
+      value: playgroundSettings as PlaygroundSettings,
+    });
   }, [playgroundSettings]);
 
   const {
@@ -167,7 +227,7 @@ export default ({
       columns,
       rows,
       ...currPlaygroundState,
-      rawSql: genSqlMutation.data?.gen_sql?.sql,
+      rawSql: genSqlMutation.data.gen_sql.result,
       skippedMembers,
       settings,
     }),
@@ -201,7 +261,7 @@ export default ({
     const newState = current.playground_state;
 
     if (newState) {
-      doReset(newState);
+      doReset(newState as unknown as PlaygroundState);
     }
   }, [current.playground_state, doReset]);
 
@@ -221,7 +281,7 @@ export default ({
       playground_settings: settings,
     };
 
-    // return execCreateMutation({ object: newExplorationObj });
+    return execCreateMutation({ object: newExplorationObj });
   }, [currPlaygroundState, dataSourceId, settings]);
 
   const reset = useCallback(
@@ -233,15 +293,15 @@ export default ({
   useEffect(() => {
     if (createMutation.data) {
       reset(createMutation.data?.insert_explorations_one?.id);
-      createMutation.data = null;
+      // createMutation.data = null as any;
     }
-  }, [reset]);
+  }, [createMutation, reset]);
 
   return {
     state: explorationState,
     exploration: current,
-    // explorationLoading: currentData.fetching,
-    // loadExploration: execQueryCurrent,
+    explorationLoading: currentData.fetching,
+    loadExploration: execQueryCurrent,
     selectedQueryMembers,
     availableQueryMembers,
     analyticsQuery: {

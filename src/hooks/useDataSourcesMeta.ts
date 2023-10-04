@@ -3,6 +3,7 @@ import { getOr } from "unchanged";
 
 import fromPairs from "@/utils/helpers/fromPairs";
 import type { Cube, CubeMember, CubeMembers } from "@/types/cube";
+import type { PlaygroundState } from "@/hooks/usePlayground";
 
 const operators = {
   string: [
@@ -193,10 +194,15 @@ const updatePlaygroundState = (playgroundState: any, cubesMeta: Meta) => {
 
 interface Props {
   meta: Cube[];
-  playgroundState: any;
+  playgroundState: PlaygroundState;
 }
 
-export default ({ meta = [], playgroundState }: Props) => {
+interface Result {
+  selectedQueryMembers?: Record<string, CubeMember[]>;
+  availableQueryMembers?: Record<string, Cube>;
+}
+
+export default ({ meta = [], playgroundState }: Props): Result => {
   const result = useMemo(() => {
     if (!meta) {
       return {};

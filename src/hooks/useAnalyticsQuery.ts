@@ -2,19 +2,8 @@ import { useReducer, useCallback } from "react";
 import { set, remove, getOr } from "unchanged";
 
 import type { FilterMember, CubeMember } from "@/types/cube";
-
-interface State {
-  measure: CubeMember[];
-  dimensions: CubeMember[];
-  filters: FilterMember[];
-  timeDimensions: CubeMember[];
-  segments: CubeMember[];
-  order: [];
-  timezone: string;
-  limit: number;
-  offset: number;
-  page: number;
-}
+import type { PlaygroundState } from "@/hooks/usePlayground";
+import type { SortBySet } from "@/components/VirtualTable";
 
 const defaultFilterValues = {
   time: {
@@ -29,7 +18,7 @@ const defaultFilterValues = {
   },
 };
 
-const reducer = (state: State, action: any) => {
+const reducer = (state: PlaygroundState, action: any) => {
   let { memberType } = action;
 
   if (action.type === "add") {
@@ -48,7 +37,7 @@ const reducer = (state: State, action: any) => {
         };
       }
 
-      const slice = state[memberType as keyof State] as CubeMember[];
+      const slice = state[memberType as keyof PlaygroundState] as CubeMember[];
 
       const isMemberExists = !!slice.find(
         (member) =>
@@ -110,7 +99,9 @@ const reducer = (state: State, action: any) => {
 
       if (granularity) {
         memberType = "timeDimensions";
-        const slice = state[memberType as keyof State] as CubeMember[];
+        const slice = state[
+          memberType as keyof PlaygroundState
+        ] as CubeMember[];
 
         index = slice.findIndex(
           (member) =>
@@ -199,11 +190,11 @@ const useAnalyticsQuery = () => {
     [dispatch]
   );
   const setOrderBy = useCallback(
-    (value: string) => dispatch({ type: "setOrder", value }),
+    (value: SortBySet[]) => dispatch({ type: "setOrder", value }),
     [dispatch]
   );
   const doReset = useCallback(
-    (newState: State) => dispatch({ type: "reset", newState }),
+    (newState: PlaygroundState) => dispatch({ type: "reset", newState }),
     [dispatch]
   );
 

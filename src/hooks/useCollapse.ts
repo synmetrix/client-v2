@@ -2,6 +2,8 @@ import { useEffect, useCallback } from "react";
 import { add, remove } from "unchanged";
 import { useSetState } from "ahooks";
 
+import type { RadioChangeEvent } from "antd";
+
 export default (activePanelKey: string[] = []) => {
   const [state, updateState] = useSetState({
     activePanelKey,
@@ -27,7 +29,7 @@ export default (activePanelKey: string[] = []) => {
   );
 
   const onToggleSection = useCallback(
-    (key: string) => {
+    (key: string | RadioChangeEvent) => {
       let keys: any = [];
 
       const strKey = key.toString();

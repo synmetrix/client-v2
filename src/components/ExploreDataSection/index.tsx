@@ -32,13 +32,13 @@ import type { CollapsePanelProps, RadioChangeEvent } from "antd";
 
 type SortUpdater = (nextSortBy: SortBySet[]) => void;
 
-interface ExploreDataSectionProps extends CollapsePanelProps {
-  width: number;
-  height: number;
+interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
+  width?: number;
+  height?: number;
   onToggleSection: (section: string) => void;
   onSectionChange: (radioEvent: RadioChangeEvent) => void;
   onExec: any;
-  onQueryChange: (query: string, args?: any) => void | SortUpdater | null;
+  onQueryChange: (query: string, ...args: any) => void | SortUpdater;
   disabled: boolean;
   state: {
     dataSection: string;
@@ -207,7 +207,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     settings: queryState?.settings,
   });
 
-  const tableEmptyDesc = emptyDesc || t("empty_desc");
+  const tableEmptyDesc = emptyDesc || t("data_section.empty_desc");
 
   const Table = useMemo(() => {
     const messages: ErrorMessage[] = [];

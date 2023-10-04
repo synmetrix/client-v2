@@ -15,7 +15,7 @@ const ENRICHMENT_SEC = "enrichmentSec";
 const defaultSections = [FILTERS_SEC, DATA_SEC, MODEL_SEC];
 
 interface Props {
-  selectedQueryMembers: Record<string, CubeMember>;
+  selectedQueryMembers: Record<string, CubeMember[]>;
 }
 
 export default ({ selectedQueryMembers }: Props) => {

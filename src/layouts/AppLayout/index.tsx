@@ -44,16 +44,16 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   );
 
   return (
-    <Layout className={styles.root}>
+    <Layout>
       <SideMenu />
       {sidebar}
-      <Layout>
+      <Layout className={styles.root}>
         <Header
           title={title}
           bordered={divider}
           content={isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
         />
-        <div>{children}</div>
+        <div className={styles.main}>{children}</div>
         <Footer />
       </Layout>
     </Layout>

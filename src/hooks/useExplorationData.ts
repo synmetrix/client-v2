@@ -1,7 +1,13 @@
 import { useMemo } from "react";
 import { getOr } from "unchanged";
 
-export default ({ explorationResult }: any) => {
+export default ({
+  explorationResult,
+}: any): {
+  rows: object[];
+  hitLimit: number;
+  skippedMembers: string[];
+} => {
   return useMemo(() => {
     const rows = getOr([], "data", explorationResult);
     const hitLimit = getOr(false, "hitLimit", explorationResult);

@@ -5,6 +5,8 @@ import type { FilterMember, CubeMember } from "@/types/cube";
 import type { PlaygroundState } from "@/hooks/usePlayground";
 import type { SortBySet } from "@/components/VirtualTable";
 
+import type { Reducer } from "react";
+
 const defaultFilterValues = {
   time: {
     operator: "onTheDate",
@@ -31,7 +33,10 @@ interface Action {
     | "reset";
   [key: string]: any;
 }
-const reducer = (state: PlaygroundState, action: Action) => {
+const reducer: Reducer<PlaygroundState, Action> = (
+  state: PlaygroundState,
+  action: Action
+) => {
   let { memberType } = action;
 
   if (action.type === "add") {
@@ -50,7 +55,9 @@ const reducer = (state: PlaygroundState, action: Action) => {
         };
       }
 
-      const slice = state[memberType as keyof PlaygroundState] as CubeMember[];
+      const slice = state[
+        memberType as keyof PlaygroundState
+      ] as unknown as CubeMember[];
 
       const isMemberExists = !!slice.find(
         (member) =>
@@ -117,7 +124,7 @@ const reducer = (state: PlaygroundState, action: Action) => {
         ] as CubeMember[];
 
         index = slice.findIndex(
-          (member) =>
+          (member: CubeMember) =>
             member.dimension === memberName &&
             member.granularity === granularity
         );

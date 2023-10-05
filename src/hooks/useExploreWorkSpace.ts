@@ -18,6 +18,13 @@ interface Props {
   selectedQueryMembers: Record<string, CubeMember[]>;
 }
 
+export interface ExploreWorkspaceState {
+  modelingSection: string;
+  dataSection: string;
+  filtersCount: number;
+  experimentsCount: number;
+}
+
 export default ({ selectedQueryMembers }: Props) => {
   const {
     state: collapseState,

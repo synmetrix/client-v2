@@ -12,22 +12,25 @@ import useExplorationData from "@/hooks/useExplorationData";
 import trackEvent from "@/utils/helpers/trackEvent";
 import pickKeys from "@/utils/helpers/pickKeys";
 import equals from "@/utils/helpers/equals";
-import type { CubeMembers } from "@/types/cube";
+import type { CubeMember, CubeMembers } from "@/types/cube";
 import { exploreMock } from "@/mocks/explore";
 import { getTitle } from "@/utils/helpers/getTitles";
+import type { SortBy } from "@/types/sort";
+import type { LoadingProgress } from "@/types/loading";
+import type { QuerySettings } from "@/types/querySettings";
 
 import type { Reducer } from "react";
 
 const queryStateKeys = Object.keys(queryState);
 
-const initialSettings: PlaygroundSettings = {
+const initialSettings: QuerySettings = {
   hideCubeNames: false,
   hideIndexColumn: false,
 };
 
 interface UpdateAction {
   type: "update";
-  value: PlaygroundSettings;
+  value: QuerySettings;
 }
 
 interface HideCubeNamesAction {
@@ -42,10 +45,10 @@ interface HideIndexAction {
 
 type Action = UpdateAction | HideCubeNamesAction | HideIndexAction;
 
-const reducer: Reducer<PlaygroundSettings, Action> = (
+const reducer: Reducer<QuerySettings, Action> = (
   state,
   action
-): PlaygroundSettings => {
+): QuerySettings => {
   if (action.type === "hideCubeNames") {
     return {
       ...state,
@@ -88,22 +91,30 @@ interface Props {
   offset?: number;
 }
 
-export interface PlaygroundSettings {
-  hideCubeNames: boolean;
-  hideIndexColumn: boolean;
-}
-
 export interface PlaygroundState {
-  dimensions?: string[];
+  dimensions?: CubeMember[];
   filters?: string[];
   limit?: number;
-  measures?: string[];
+  measures?: CubeMember[];
   offset?: number;
-  order?: [];
+  order?: SortBy[];
   page?: number;
-  segments?: string[];
+  segments?: CubeMember[];
   timeDimensions?: { dimension: string; granularity: string }[];
   timezone?: string;
+}
+
+export interface ExplorationState extends PlaygroundState {
+  rows: object[];
+  columns: object[];
+  settings: QuerySettings;
+  loading: boolean;
+  progress: LoadingProgress;
+  skippedMembers?: string[];
+  error?: boolean;
+  hitLimit?: number;
+  limit?: number;
+  rawSql?: { params: any[]; preAggregations: any[]; sql: string };
 }
 
 export default ({
@@ -187,7 +198,7 @@ Props) => {
   useDeepCompareEffect(() => {
     dispatchSettings({
       type: "update",
-      value: playgroundSettings as PlaygroundSettings,
+      value: playgroundSettings as QuerySettings,
     });
   }, [playgroundSettings]);
 
@@ -211,7 +222,7 @@ Props) => {
     explorationResult: currentData.data?.fetch_dataset,
   });
 
-  const columns = useMemo(() => {
+  const columns: object[] = useMemo(() => {
     if (!selectedQueryMembers) {
       return [];
     }
@@ -219,7 +230,7 @@ Props) => {
     return getColumns(selectedQueryMembers, settings);
   }, [selectedQueryMembers, settings]);
 
-  const explorationState = useMemo(
+  const explorationState: ExplorationState = useMemo(
     () => ({
       loading: false,
       progress: {},

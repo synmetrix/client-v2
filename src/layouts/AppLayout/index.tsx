@@ -53,7 +53,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           bordered={divider}
           content={isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
         />
-        <Content>{children}</Content>
+        <div>{children}</div>
         <Footer />
       </Layout>
     </Layout>

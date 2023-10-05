@@ -1,3 +1,6 @@
+import { Space, Typography } from "antd";
+import { useTranslation } from "react-i18next";
+
 import SidebarLayout from "@/layouts/SidebarLayout";
 import ExploreDataSection from "@/components/ExploreDataSection";
 import ErrorFound from "@/components/ErrorFound";
@@ -6,6 +9,7 @@ import usePlayground from "@/hooks/usePlayground";
 import usePermissions from "@/hooks/usePermissions";
 import useExploreWorkspace from "@/hooks/useExploreWorkspace";
 import useDimensions from "@/hooks/useDimensions";
+import AppLayout from "@/layouts/AppLayout";
 
 import type { FC } from "react";
 
@@ -15,13 +19,17 @@ const DEFAULT_ROW_HEIGHT = 20;
 
 interface ExploreWorkSpaceProps {}
 
+const { Title } = Typography;
+
 const ExploreWorkSpace: FC<any> = (props) => {
   const {
-    header,
+    header = <span style={{ fontSize: 20, fontWeight: 600 }}>Explore</span>,
     source: dataSource,
     meta,
     params: { explorationId, tabId, chartId, screenshotMode },
   } = props;
+
+  const { t } = useTranslation(["pages"]);
 
   const selector = screenshotMode
     ? document.querySelector(".ant-layout-content")
@@ -158,19 +166,31 @@ const ExploreWorkSpace: FC<any> = (props) => {
     />
   );
 
+  if (screenshotMode) {
+    return dataSection;
+  }
+
   const sidebar = (
-    <>
-      {header}
-      <ExploreCubes
-        availableQueryMembers={availableQueryMembers}
-        selectedQueryMembers={selectedQueryMembers}
-        onMemberSelect={updateMember}
-        dataSchemaValidation={validateMutation}
-      />
-    </>
+    <ExploreCubes
+      availableQueryMembers={availableQueryMembers}
+      selectedQueryMembers={selectedQueryMembers}
+      onMemberSelect={updateMember}
+      dataSchemaValidation={validateMutation}
+    />
   );
 
-  return <SidebarLayout items={sidebar}>{dataSection}</SidebarLayout>;
+  const Layout = cubesFallback ? AppLayout : SidebarLayout;
+
+  return (
+    <Layout
+      title={t("pages:explore")}
+      divider={false}
+      subTitle={header}
+      items={sidebar}
+    >
+      <div id="data-view">{dataSection}</div>
+    </Layout>
+  );
 };
 
 export default ExploreWorkSpace;

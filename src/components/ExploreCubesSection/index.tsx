@@ -319,7 +319,7 @@ const Cube = ({
     );
   };
 
-  return <>{SHOWN_CATEGORIES.map(getCategory)}</>;
+  return <div className={s.root}>{SHOWN_CATEGORIES.map(getCategory)}</div>;
 };
 
 interface CubeProps {

@@ -9,6 +9,7 @@ import usePlayground from "@/hooks/usePlayground";
 import usePermissions from "@/hooks/usePermissions";
 import useExploreWorkspace from "@/hooks/useExploreWorkspace";
 import useDimensions from "@/hooks/useDimensions";
+import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
 
 import type { FC } from "react";
@@ -179,6 +180,18 @@ const ExploreWorkSpace: FC<any> = (props) => {
     />
   );
 
+  const filtersSection = !filtersFallback ? (
+    <ExploreFiltersSection
+      key="filtersSec"
+      availableQueryMembers={availableQueryMembers}
+      selectedQueryMembers={selectedQueryMembers}
+      onToggleSection={onToggleSection}
+      onMemberChange={updateMember}
+      state={state}
+      isActive={collapseState.activePanelKey.includes("filtersSec")}
+    />
+  ) : null;
+
   const Layout = cubesFallback ? AppLayout : SidebarLayout;
 
   return (
@@ -188,7 +201,9 @@ const ExploreWorkSpace: FC<any> = (props) => {
       subTitle={header}
       items={sidebar}
     >
-      <div id="data-view">{dataSection}</div>
+      <div id="data-view">
+        {dataSection} {filtersSection}
+      </div>
     </Layout>
   );
 };

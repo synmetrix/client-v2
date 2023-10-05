@@ -15,7 +15,10 @@ import type { RadioChangeEvent, AlertProps } from "antd";
 
 interface ExploreCubesProps {
   onMemberSelect: any;
-  availableQueryMembers: Record<string, Cube>;
+  availableQueryMembers: Record<
+    string,
+    Record<string, Record<string, CubeMember>>
+  >;
   selectedQueryMembers: Record<string, CubeMember[]>;
   dataSchemaValidation: {
     code: string;

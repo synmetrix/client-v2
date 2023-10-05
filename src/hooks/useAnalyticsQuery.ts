@@ -1,7 +1,7 @@
 import { useReducer, useCallback } from "react";
 import { set, remove, getOr } from "unchanged";
 
-import type { FilterMember, CubeMember } from "@/types/cube";
+import type { CubeMember } from "@/types/cube";
 import type { PlaygroundState } from "@/hooks/usePlayground";
 import type { SortBySet } from "@/components/VirtualTable";
 
@@ -162,7 +162,7 @@ export const initialState: PlaygroundState = {
   ...queryState,
 };
 
-const getName = (member: { name?: string }) => member.name;
+const getName = (member: { name?: string }): any => member.name;
 
 const getOperatorType = (member: CubeMember) =>
   getOr("", "dimension.type", member);
@@ -179,14 +179,14 @@ const useAnalyticsQuery = () => {
           value: toQuery(member),
           operatorType: getOperatorType(member),
         }),
-      remove: (member: FilterMember) =>
+      remove: (member: CubeMember) =>
         dispatch({
           type: "remove",
           memberType,
           value: toQuery(member),
           index: member.index,
         }),
-      update: (member: FilterMember, newValue: any) =>
+      update: (member: CubeMember, newValue: any) =>
         dispatch({
           type: "update",
           memberType,

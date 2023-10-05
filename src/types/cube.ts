@@ -30,14 +30,17 @@ export interface CubeMember {
     dimensions: CubeMember[];
     measures: CubeMember[];
   };
-  dimension?: {
-    name: string;
-    type: string;
-  };
+  dimension: CubeMember;
   granularity?: string;
   type: string;
   meta?: any;
   index?: number;
+  operators: {
+    name: string;
+    title: string;
+  }[];
+  operator: string;
+  values?: any;
 }
 
 export interface Dimension {
@@ -51,18 +54,6 @@ export interface SubSection {
   members: CubeMember[];
   haveSelected: boolean;
   subSectionType: string;
-}
-
-export interface FilterMember {
-  name?: string;
-  dimension: CubeMember;
-  index?: number;
-  operators: {
-    name: string;
-    title: string;
-  }[];
-  operator: string;
-  values?: any;
 }
 
 export interface CubeMeta {
@@ -82,5 +73,5 @@ export interface CubeMembers {
   timeDimensions?: CubeMember[];
   dimensions?: CubeMember[];
   measures?: CubeMember[];
-  filters?: FilterMember[];
+  filters?: CubeMember[];
 }

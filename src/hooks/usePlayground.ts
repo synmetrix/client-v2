@@ -105,6 +105,7 @@ export interface PlaygroundState {
 }
 
 export interface ExplorationState extends PlaygroundState {
+  modelingSection?: string;
   rows: object[];
   columns: object[];
   settings: QuerySettings;

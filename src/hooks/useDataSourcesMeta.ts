@@ -199,7 +199,10 @@ interface Props {
 
 interface Result {
   selectedQueryMembers?: Record<string, CubeMember[]>;
-  availableQueryMembers?: Record<string, Cube>;
+  availableQueryMembers?: Record<
+    string,
+    Record<string, Record<string, CubeMember>>
+  >;
 }
 
 export default ({ meta = [], playgroundState }: Props): Result => {

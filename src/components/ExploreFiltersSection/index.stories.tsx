@@ -554,6 +554,5 @@ Default.args = {
     experimentsCount: 0,
   },
   onItemClick: console.log,
-  onMemberChange: console.log,
   onToggleSection: console.log,
 };

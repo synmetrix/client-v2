@@ -16,7 +16,7 @@ interface ExploreFiltersSectionProps
   selectedQueryMembers: Record<string, (CubeMember | CubeMember)[]>;
   onMemberChange: (
     memberType: string,
-    toQuery?: (member: { name?: string | undefined }) => string | undefined
+    cb?: (member: CubeMember) => any
   ) => {
     add: (member: CubeMember) => void;
     remove: (member: CubeMember) => void;
@@ -30,7 +30,7 @@ interface ExploreFiltersSectionProps
   isActive?: boolean;
 }
 
-const toFilter = (member: any): any => ({
+const toFilter = (member: CubeMember) => ({
   dimension: member.dimension.name,
   operator: member.operator,
   values: member.values,

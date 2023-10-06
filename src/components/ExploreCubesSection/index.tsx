@@ -327,8 +327,8 @@ interface CubeProps {
     memberType?: string,
     cb?: (member: CubeMember) => any
   ) => {
-    add: (member: CubeMembers & { index?: number }) => void;
-    remove: (member: CubeMembers & { index?: number }) => void;
+    add: (member: CubeMember) => void;
+    remove: (member: CubeMember) => void;
   };
   selectedMembers: CubeMembers;
 }

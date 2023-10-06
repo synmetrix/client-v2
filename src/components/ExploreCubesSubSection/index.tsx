@@ -4,7 +4,7 @@ import { Collapse } from "antd";
 import { CaretRightOutlined } from "@ant-design/icons";
 
 import CategoryItemFilter from "@/components/ExploreCubesCategoryItemFilter";
-import type { SubSection } from "@/types/cube";
+import type { CubeMember, SubSection } from "@/types/cube";
 
 import s from "./index.module.less";
 
@@ -73,8 +73,8 @@ interface ExploreCubesSubSectionProps {
   name: string;
   subSection: SubSection;
   onFilterUpdate: {
-    add: (value: any) => void;
-    remove: (value: any) => void;
+    add: (member: CubeMember) => void;
+    remove: (member: CubeMember) => void;
   };
   children: ReactNode;
   selectedFilters: string[];

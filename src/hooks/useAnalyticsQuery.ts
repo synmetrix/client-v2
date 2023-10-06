@@ -171,7 +171,7 @@ const useAnalyticsQuery = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const updateMember = useCallback(
-    (memberType: string, toQuery = getName) => ({
+    (memberType: string, toQuery: (member: CubeMember) => any = getName) => ({
       add: (member: CubeMember) =>
         dispatch({
           type: "add",

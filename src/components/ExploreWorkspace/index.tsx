@@ -11,23 +11,45 @@ import useExploreWorkspace from "@/hooks/useExploreWorkspace";
 import useDimensions from "@/hooks/useDimensions";
 import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
+import type { CubeMember } from "@/types/cube";
 
-import type { FC } from "react";
-
-const DEFAULT_ACTIVE_TAB = 0;
+import type { FC, ReactNode } from "react";
 
 const DEFAULT_ROW_HEIGHT = 20;
 
-interface ExploreWorkSpaceProps {}
+interface ExploreWorkSpaceProps {
+  basePath: string;
+  loading: boolean;
+  meta: Record<string, any>[];
+  params: {
+    explorationId: string;
+    screenshotMode: boolean;
+    dataSourceId: string;
+  };
+  source: {
+    id: string;
+    name: string;
+    db_type: string;
+    db_params: {
+      ssl: boolean;
+      host: string;
+      port: string;
+      user: string;
+      database: string;
+      password: string;
+    };
+    created_at: "2021-09-09T11:52:58.347143+00:00";
+    updated_at: string;
+  };
+  header: ReactNode;
+}
 
-const { Title } = Typography;
-
-const ExploreWorkSpace: FC<any> = (props) => {
+const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
   const {
     header = <span style={{ fontSize: 20, fontWeight: 600 }}>Explore</span>,
     source: dataSource,
     meta,
-    params: { explorationId, tabId, chartId, screenshotMode },
+    params: { explorationId, screenshotMode },
   } = props;
 
   const { t } = useTranslation(["pages"]);

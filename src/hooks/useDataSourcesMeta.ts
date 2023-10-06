@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { getOr } from "unchanged";
 
 import fromPairs from "@/utils/helpers/fromPairs";
-import type { Cube, CubeMember, CubeMembers } from "@/types/cube";
+import type { CubeMember, CubeMembers } from "@/types/cube";
 import type { PlaygroundState } from "@/hooks/usePlayground";
 
 const operators = {
@@ -193,7 +193,7 @@ const updatePlaygroundState = (playgroundState: any, cubesMeta: Meta) => {
 };
 
 interface Props {
-  meta: Cube[];
+  meta: Record<string, any>[];
   playgroundState: PlaygroundState;
 }
 
@@ -217,7 +217,7 @@ export default ({ meta = [], playgroundState }: Props): Result => {
         dimensions: memberMap(c.dimensions),
         segments: memberMap(c.segments),
         timeDimensions: memberMap(
-          c.dimensions.filter((d) => d.type === "time")
+          c.dimensions.filter((d: CubeMember) => d.type === "time")
         ),
       },
     ]);

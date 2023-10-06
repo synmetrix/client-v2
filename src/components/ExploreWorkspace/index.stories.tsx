@@ -373,8 +373,6 @@ Default.args = {
   params: {
     dataSourceId: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
     explorationId: "b24d941c-94ac-4bca-8a3a-9e179a4fc06e",
-    tabId: null,
-    chartId: null,
     screenshotMode: false,
   },
   source: {

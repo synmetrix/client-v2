@@ -86,7 +86,7 @@ export const getColumns = (selectedQueryMembers: CubeMembers, settings = {}) =>
 interface Props {
   dataSourceId: string;
   editId: string;
-  meta?: [];
+  meta?: Record<string, any>[];
   rowsLimit?: number;
   offset?: number;
 }

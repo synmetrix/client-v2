@@ -13,8 +13,6 @@ import styles from "./index.module.less";
 
 import type { ReactNode } from "react";
 
-const { Content } = Layout;
-
 export type AppLayoutProps = {
   sidebar?: ReactNode;
   children: ReactNode;

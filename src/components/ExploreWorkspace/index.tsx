@@ -1,6 +1,3 @@
-import { Space, Typography } from "antd";
-import { useTranslation } from "react-i18next";
-
 import SidebarLayout from "@/layouts/SidebarLayout";
 import ExploreDataSection from "@/components/ExploreDataSection";
 import ErrorFound from "@/components/ErrorFound";
@@ -54,8 +51,6 @@ const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
     meta,
     params: { explorationId, screenshotMode },
   } = props;
-
-  const { t } = useTranslation(["pages"]);
 
   const selector = screenshotMode
     ? document.querySelector(".ant-layout-content")

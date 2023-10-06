@@ -11,7 +11,6 @@ import useExploreWorkspace from "@/hooks/useExploreWorkspace";
 import useDimensions from "@/hooks/useDimensions";
 import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
-import type { CubeMember } from "@/types/cube";
 
 import type { FC, ReactNode } from "react";
 
@@ -41,12 +40,16 @@ interface ExploreWorkSpaceProps {
     created_at: "2021-09-09T11:52:58.347143+00:00";
     updated_at: string;
   };
-  header: ReactNode;
+  header?: ReactNode;
+  subTitle?: ReactNode;
+  title?: ReactNode;
 }
 
 const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
   const {
-    header = <span style={{ fontSize: 20, fontWeight: 600 }}>Explore</span>,
+    header = null,
+    subTitle = <span style={{ fontSize: 20, fontWeight: 600 }}>Explore</span>,
+    title = null,
     source: dataSource,
     meta,
     params: { explorationId, screenshotMode },
@@ -194,12 +197,15 @@ const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
   }
 
   const sidebar = (
-    <ExploreCubes
-      availableQueryMembers={availableQueryMembers}
-      selectedQueryMembers={selectedQueryMembers}
-      onMemberSelect={updateMember}
-      dataSchemaValidation={validateMutation}
-    />
+    <>
+      {header}
+      <ExploreCubes
+        availableQueryMembers={availableQueryMembers}
+        selectedQueryMembers={selectedQueryMembers}
+        onMemberSelect={updateMember}
+        dataSchemaValidation={validateMutation}
+      />
+    </>
   );
 
   const filtersSection = !filtersFallback ? (
@@ -217,12 +223,7 @@ const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
   const Layout = cubesFallback ? AppLayout : SidebarLayout;
 
   return (
-    <Layout
-      title={t("pages:explore")}
-      divider={false}
-      subTitle={header}
-      items={sidebar}
-    >
+    <Layout title={title} divider={false} subTitle={subTitle} items={sidebar}>
       <div id="data-view">
         {dataSection} {filtersSection}
       </div>

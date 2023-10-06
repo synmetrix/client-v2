@@ -44,10 +44,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   );
 
   return (
-    <Layout>
-      <SideMenu />
-      {sidebar}
-      <Layout className={styles.root}>
+    <Layout className={styles.root}>
+      <div style={{ display: "flex" }}>
+        <SideMenu />
+        {sidebar}
+      </div>
+      <Layout>
         <Header
           title={title}
           bordered={divider}

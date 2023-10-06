@@ -1,4 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
+import DataSourcesMenu from "@/components/DataSourcesMenu";
 
 import ExploreWorkspace from ".";
 
@@ -390,4 +391,13 @@ Default.args = {
     created_at: "2021-09-09T11:52:58.347143+00:00",
     updated_at: "2023-08-25T07:04:44.238898+00:00",
   },
+  title: "Explore",
+  header: (
+    <DataSourcesMenu
+      entities={[
+        { id: "1", name: "datasource1" },
+        { id: "2", name: "datasource2" },
+      ]}
+    />
+  ),
 };

@@ -5,7 +5,7 @@ export default ({
   explorationResult,
 }: any): {
   rows: object[];
-  hitLimit: number;
+  hitLimit: boolean;
   skippedMembers: string[];
 } => {
   return useMemo(() => {

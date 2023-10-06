@@ -30,16 +30,16 @@ export interface CubeMember {
     dimensions: CubeMember[];
     measures: CubeMember[];
   };
-  dimension: CubeMember;
+  dimension?: CubeMember;
   granularity?: string;
   type: string;
   meta?: any;
   index?: number;
-  operators: {
+  operators?: {
     name: string;
     title: string;
   }[];
-  operator: string;
+  operator?: string;
   values?: any;
 }
 
@@ -70,8 +70,9 @@ export interface CubeMeta {
 }
 
 export interface CubeMembers {
-  timeDimensions?: CubeMember[];
-  dimensions?: CubeMember[];
-  measures?: CubeMember[];
-  filters?: CubeMember[];
+  timeDimensions?: Record<string, CubeMember>;
+  dimensions?: Record<string, CubeMember>;
+  measures?: Record<string, CubeMember>;
+  segments?: Record<string, CubeMember>;
+  filters?: Record<string, CubeMember>;
 }

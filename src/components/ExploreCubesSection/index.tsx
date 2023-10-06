@@ -115,6 +115,7 @@ const Cube = ({
   onMemberSelect,
 }: CubeProps): JSX.Element => {
   const { t } = useTranslation();
+
   const {
     baseMembers: { index: membersIndex },
   } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });
@@ -278,7 +279,7 @@ const Cube = ({
     const categoryCubeMembers = getSelectedCategoryMembers(category);
     const selectedFilters: string[] = Object.values(
       selectedMembers.filters || {}
-    ).map((m) => m.dimension.name);
+    ).map((m) => m.dimension!.name);
 
     return (
       <div key={category} className={s.categorySection}>
@@ -330,7 +331,7 @@ interface CubeProps {
     add: (member: CubeMember) => void;
     remove: (member: CubeMember) => void;
   };
-  selectedMembers: CubeMembers;
+  selectedMembers: Record<string, CubeMember[]>;
 }
 
 export default Cube;

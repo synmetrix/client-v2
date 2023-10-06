@@ -92,7 +92,7 @@ interface Props {
 }
 
 export interface PlaygroundState {
-  dimensions?: CubeMember[];
+  dimensions?: string[];
   filters?: string[];
   limit?: number;
   measures?: CubeMember[];
@@ -113,7 +113,7 @@ export interface ExplorationState extends PlaygroundState {
   progress: LoadingProgress;
   skippedMembers?: string[];
   error?: boolean;
-  hitLimit?: number;
+  hitLimit?: boolean;
   limit?: number;
   rawSql?: { params: any[]; preAggregations: any[]; sql: string };
 }

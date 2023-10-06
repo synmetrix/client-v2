@@ -31,7 +31,7 @@ interface ExploreFiltersSectionProps
 }
 
 const toFilter = (member: CubeMember) => ({
-  dimension: member.dimension.name,
+  dimension: member.dimension!.name,
   operator: member.operator,
   values: member.values,
 });

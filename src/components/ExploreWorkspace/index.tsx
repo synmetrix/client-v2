@@ -14,7 +14,6 @@ import type { FC, ReactNode } from "react";
 const DEFAULT_ROW_HEIGHT = 20;
 
 interface ExploreWorkSpaceProps {
-  basePath: string;
   loading: boolean;
   meta: Record<string, any>[];
   params: {

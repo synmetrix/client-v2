@@ -19,8 +19,6 @@ const Template: StoryFn<typeof ExploreWorkspace> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  basePath:
-    "/~/explore/35c549a8-c38a-4ff1-90a5-b3081a35aa93/b24d941c-94ac-4bca-8a3a-9e179a4fc06e",
   loading: false,
   meta: [
     {

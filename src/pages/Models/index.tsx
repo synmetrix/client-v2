@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import { Space, Typography } from "antd";
+import { Space, Typography, Row, Col } from "antd";
 
-import BasicLayout from "@/layouts/BasicLayout";
 import ModelsSidebar from "@/components/ModelsSidebar";
 import CodeEditor from "@/components/CodeEditor";
 import type { Version } from "@/types/version";
 import type { File } from "@/types/file";
+import AppLayout from "@/layouts/AppLayout";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
 
@@ -73,40 +73,37 @@ const Models: React.FC<ModelsProps> = ({
   };
 
   return (
-    <div>fix me</div>
-    // <BasicLayout
-    //   loggedIn
-    //   headerProps={{
-    //     title: "gh-api.clickhouse.tech",
-    //   }}
-    //   withSideMenu
-    //   sidebar={{
-    //     header: (
-    //       <Space size={7} align="center">
-    //         <ModelsActiveIcon />
-    //         <Title className={styles.sidebarTitle} level={4}>
-    //           Models
-    //         </Title>
-    //       </Space>
-    //     ),
-    //     children: (
-    //       <Suspense>
-    //         <ModelsSidebar
-    //           version={currentVersion.checksum}
-    //           branches={branches}
-    //           docs={docs}
-    //           files={files.map((f) => f.name)}
-    //           onCreateFile={onFileCreate}
-    //           onSelectFile={onSelectFile}
-    //           onSetDefaultVersion={console.log}
-    //         />
-    //       </Suspense>
-    //     ),
-    //     trigger: "models",
-    //   }}
-    // >
-    //   <CodeEditor files={selectedFiles} onRemove={onFileRemove} />
-    // </BasicLayout>
+    <AppLayout
+      title={"asdsad"}
+      divider
+      sidebar={
+        <Row>
+          <Col>
+            <div>
+              <Space size={7} align="center">
+                <ModelsActiveIcon />
+                <Title className={styles.sidebarTitle} level={4}>
+                  Models
+                </Title>
+              </Space>
+            </div>
+            <div>
+              <ModelsSidebar
+                version={currentVersion.checksum}
+                branches={branches}
+                docs={docs}
+                files={files.map((f) => f.name)}
+                onCreateFile={onFileCreate}
+                onSelectFile={onSelectFile}
+                onSetDefaultVersion={console.log}
+              />
+            </div>
+          </Col>
+        </Row>
+      }
+    >
+      <CodeEditor files={selectedFiles} onRemove={onFileRemove} />
+    </AppLayout>
   );
 };
 

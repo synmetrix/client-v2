@@ -1,5 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
-import type { FilterMember } from "@/types/cube";
+import type { CubeMember } from "@/types/cube";
 
 import PlaygroundFilterGroup from ".";
 
@@ -11,10 +11,10 @@ export default {
 } as Meta<typeof PlaygroundFilterGroup>;
 
 const Template: StoryFn<typeof PlaygroundFilterGroup> = (args) => {
-  const [members, setMembers] = useState<FilterMember[]>(args.members);
+  const [members, setMembers] = useState<CubeMember[]>(args.members);
 
   const updateMethods = {
-    update: (member: FilterMember, newMember: FilterMember) =>
+    update: (member: CubeMember, newMember: CubeMember) =>
       setMembers((prev) => {
         const newState = [...prev];
         const memberIndex = prev.findIndex(
@@ -23,7 +23,7 @@ const Template: StoryFn<typeof PlaygroundFilterGroup> = (args) => {
         newState[memberIndex] = newMember;
         return newState;
       }),
-    remove: (_: FilterMember) => setMembers([]),
+    remove: (_: CubeMember) => setMembers([]),
   };
 
   return (

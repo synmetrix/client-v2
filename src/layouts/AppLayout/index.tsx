@@ -13,8 +13,6 @@ import styles from "./index.module.less";
 
 import type { ReactNode } from "react";
 
-const { Content } = Layout;
-
 export type AppLayoutProps = {
   sidebar?: ReactNode;
   children: ReactNode;
@@ -45,15 +43,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   return (
     <Layout className={styles.root}>
-      <SideMenu />
-      {sidebar}
+      <div style={{ display: "flex" }}>
+        <SideMenu />
+        {sidebar}
+      </div>
       <Layout>
         <Header
           title={title}
           bordered={divider}
           content={isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
         />
-        <Content>{children}</Content>
+        <div className={styles.main}>{children}</div>
         <Footer />
       </Layout>
     </Layout>

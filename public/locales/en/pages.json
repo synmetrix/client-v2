@@ -13,5 +13,6 @@
     "alerts": "Alerts Logs",
     "reports": "Reports Logs",
     "query": "Query Logs"
-  }
+  },
+  "explore": "Explore"
 }

@@ -15,7 +15,6 @@ import type {
   SubSection,
   CubeMember,
   CubeMembers,
-  FilterMember,
 } from "@/types/cube";
 
 import s from "./index.module.less";
@@ -24,7 +23,7 @@ import type { ReactNode } from "react";
 
 const { Text } = Typography;
 
-const toFilter = (member: FilterMember) => ({
+const toFilter = (member: CubeMember) => ({
   dimension: member.dimension?.name,
   operator: member.operator,
   values: member.values,
@@ -116,6 +115,7 @@ const Cube = ({
   onMemberSelect,
 }: CubeProps): JSX.Element => {
   const { t } = useTranslation();
+
   const {
     baseMembers: { index: membersIndex },
   } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });
@@ -279,7 +279,7 @@ const Cube = ({
     const categoryCubeMembers = getSelectedCategoryMembers(category);
     const selectedFilters: string[] = Object.values(
       selectedMembers.filters || {}
-    ).map((m) => m.dimension.name);
+    ).map((m) => m.dimension!.name);
 
     return (
       <div key={category} className={s.categorySection}>
@@ -319,19 +319,19 @@ const Cube = ({
     );
   };
 
-  return <>{SHOWN_CATEGORIES.map(getCategory)}</>;
+  return <div className={s.root}>{SHOWN_CATEGORIES.map(getCategory)}</div>;
 };
 
 interface CubeProps {
   members: CubeMembers;
   onMemberSelect: (
     memberType?: string,
-    cb?: (member: FilterMember) => any
+    cb?: (member: CubeMember) => any
   ) => {
-    add: (member: CubeMembers & { index?: number }) => void;
-    remove: (member: CubeMembers & { index?: number }) => void;
+    add: (member: CubeMember) => void;
+    remove: (member: CubeMember) => void;
   };
-  selectedMembers: CubeMembers;
+  selectedMembers: Record<string, CubeMember[]>;
 }
 
 export default Cube;

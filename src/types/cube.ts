@@ -6,17 +6,14 @@ export interface Cube {
   operator: string;
   shortTitle: string;
   granularity: string;
-  dimension: {
-    name: string;
-  };
   meta: {
     subSection: string;
     subSectionType: string;
   };
   measures: CubeMember[];
   dimensions: CubeMember[];
-  segments?: CubeMember[];
-  timeDimensions?: CubeMember[];
+  segments: CubeMember[];
+  timeDimensions: CubeMember[];
 }
 
 export interface CubeMember {
@@ -33,14 +30,17 @@ export interface CubeMember {
     dimensions: CubeMember[];
     measures: CubeMember[];
   };
-  dimension?: {
-    name: string;
-    type: string;
-  };
+  dimension?: CubeMember;
   granularity?: string;
   type: string;
   meta?: any;
   index?: number;
+  operators?: {
+    name: string;
+    title: string;
+  }[];
+  operator?: string;
+  values?: any;
 }
 
 export interface Dimension {
@@ -54,18 +54,6 @@ export interface SubSection {
   members: CubeMember[];
   haveSelected: boolean;
   subSectionType: string;
-}
-
-export interface FilterMember {
-  name?: string;
-  dimension: CubeMember;
-  index?: number;
-  operators: {
-    name: string;
-    title: string;
-  }[];
-  operator: string;
-  values?: any;
 }
 
 export interface CubeMeta {
@@ -82,8 +70,9 @@ export interface CubeMeta {
 }
 
 export interface CubeMembers {
-  timeDimensions?: CubeMember[];
-  dimensions?: CubeMember[];
-  measures?: CubeMember[];
-  filters?: FilterMember[];
+  timeDimensions?: Record<string, CubeMember>;
+  dimensions?: Record<string, CubeMember>;
+  measures?: Record<string, CubeMember>;
+  segments?: Record<string, CubeMember>;
+  filters?: Record<string, CubeMember>;
 }

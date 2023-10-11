@@ -17,6 +17,7 @@ interface AlertLogsProps {
 }
 
 const AlertsLogs: React.FC<AlertLogsProps> = ({ logs }) => {
+  console.log(1111111111);
   const { t } = useTranslation(["logs", "common"]);
   return (
     <AppLayout divider title={t("pages:logs.alerts")}>

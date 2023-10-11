@@ -48,6 +48,10 @@ export default [
             component: "./pages/PersonalInfo",
           },
           {
+            path: "/logs/alerts",
+            component: "./pages/AlertsLogs",
+          },
+          {
             component: "./pages/404",
           },
         ],

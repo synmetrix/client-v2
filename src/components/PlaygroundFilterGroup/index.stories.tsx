@@ -42,6 +42,11 @@ export const Default = Template.bind({});
 Default.args = {
   members: [
     {
+      name: "name",
+      title: "title",
+      isVisible: true,
+      type: "string",
+      shortTitle: "shortTitle",
       dimension: {
         isVisible: true,
         name: "Orders.status",

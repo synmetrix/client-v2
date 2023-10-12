@@ -84,10 +84,14 @@
   display: flex !important;
   width: 100%;
   margin-bottom: 16px;
-  padding: 10px 0;
+  padding: 10px 0 10px;
   text-align: center;
-
+  background: transparent;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  * {
+    background: transparent;
+  }
 
   span {
     color: rgba(0, 0, 0, 0.5);
@@ -100,6 +104,7 @@
 }
 
 .buttonGroup :global(.ant-radio-button-wrapper-checked) {
+  background: transparent;
   &::before {
     display: none;
   }

@@ -2,7 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import cn from "classnames";
 import { Button } from "antd";
 
-import type { FilterMember, CubeMember } from "@/types/cube";
+import type { CubeMember } from "@/types/cube";
 
 import FilterIcon from "@/assets/explore-filter.svg";
 
@@ -16,11 +16,11 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
   onFilterUpdate,
   member,
 }) => {
-  const filterMember = { dimension: member };
+  const filterMember: Partial<CubeMember> = { dimension: member };
 
   const addFilter: MouseEventHandler<HTMLAnchorElement> &
     MouseEventHandler<HTMLButtonElement> = (e) => {
-    onFilterUpdate.add(filterMember);
+    onFilterUpdate.add(filterMember as CubeMember);
 
     if (e) {
       e.preventDefault();
@@ -31,10 +31,13 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
   const toggleFilter: MouseEventHandler<HTMLAnchorElement> &
     MouseEventHandler<HTMLButtonElement> = (e) => {
     if (selectedFilterIndex === -1) {
-      onFilterUpdate.add(filterMember);
+      onFilterUpdate.add(filterMember as CubeMember);
     }
 
-    onFilterUpdate.remove({ ...filterMember, index: selectedFilterIndex });
+    onFilterUpdate.remove({
+      ...(filterMember as CubeMember),
+      index: selectedFilterIndex,
+    });
 
     if (e) {
       e.preventDefault();
@@ -75,8 +78,8 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
 interface CategoryItemFilterProps {
   isVisible: boolean;
   onFilterUpdate: {
-    add: (member: FilterMember) => void;
-    remove: (member: FilterMember) => void;
+    add: (member: CubeMember) => void;
+    remove: (member: CubeMember) => void;
   };
   member: CubeMember;
   selectedFilterIndex: number;

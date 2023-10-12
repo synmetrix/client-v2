@@ -22,15 +22,13 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({ header, children }) => {
 
   return (
     <Layout className={styles.root}>
-      <Layout>
-        <Header
-          content={isMobile ? <BurgerMenu>{header}</BurgerMenu> : header}
-          withLogo
-          bordered
-        />
-        <Content>{children}</Content>
-        <Footer />
-      </Layout>
+      <Header
+        content={isMobile ? <BurgerMenu>{header}</BurgerMenu> : header}
+        withLogo
+        bordered
+      />
+      <Content>{children}</Content>
+      <Footer />
     </Layout>
   );
 };

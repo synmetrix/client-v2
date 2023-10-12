@@ -16,7 +16,7 @@ const { Sider } = Layout;
 interface SideMenuProps {}
 
 const SideMenu: FC<SideMenuProps> = () => {
-  const [_, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const windowSize = useResponsive();
   const isMobile = windowSize.sm === false;
 
@@ -40,7 +40,7 @@ const SideMenu: FC<SideMenuProps> = () => {
         <div className={cn(styles.menu, isMobile && styles.mobile)}>
           <img className={styles.logo} alt="" src="/logo_bg.png" />
 
-          {items.map((i, idx) => (
+          {items.map((i) => (
             <Button
               key={i.key}
               className={cn(styles.btn, isMobile && styles.mobile)}

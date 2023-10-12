@@ -22,7 +22,8 @@
     "run_query": "Run Query",
     "export": "Export",
     "new": "New",
-    "results": "Results"
+    "results": "Results",
+    "empty_desc": "Select dimensions & measures from left menu and run query"
   },
   "filters": {
     "filter_name": "Filter name"

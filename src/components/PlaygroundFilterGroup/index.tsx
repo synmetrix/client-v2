@@ -5,7 +5,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import PlaygroundFilterSelect from "@/components/PlaygroundFilterSelect";
 import FilterInput from "@/components/PlaygroundFilterInput";
 import trackEvent from "@/utils/helpers/trackEvent";
-import type { CubeMember, FilterMember } from "@/types/cube";
+import type { CubeMember } from "@/types/cube";
 
 import DoubleArrowIcon from "@/assets/doublearrow.svg";
 
@@ -22,7 +22,7 @@ const FilterGroup: FC<FilterGroupProps> = ({
   const { t } = useTranslation(["common"]);
 
   return (
-    <>
+    <Space direction="vertical" size={16} className={s.space}>
       {members.map((m) => (
         <Space key={m.index} size={10} align="center">
           <Button
@@ -37,20 +37,20 @@ const FilterGroup: FC<FilterGroupProps> = ({
           />
           <PlaygroundFilterSelect
             availableMembers={availableMembers}
-            value={t(m.dimension.title)}
+            value={t(m.dimension!.title)}
             onChange={(dimension) => {
               trackEvent("Update Member", { memberName: addMemberName });
               if (dimension) updateMethods.update(m, { ...m, dimension });
             }}
           />
           <Select
-            value={t(`common:operators.${m.operator}`, m.operator)}
+            value={t(`common:operators.${m.operator!}`, m.operator!)}
             onChange={(operator) => updateMethods.update(m, { ...m, operator })}
             className={s.select}
             size="large"
             suffixIcon={<DoubleArrowIcon />}
           >
-            {m.operators.map((operator) => (
+            {m.operators!.map((operator) => (
               <Select.Option key={operator.name} value={operator.name}>
                 {t(operator.title)}
               </Select.Option>
@@ -64,17 +64,17 @@ const FilterGroup: FC<FilterGroupProps> = ({
           />
         </Space>
       ))}
-    </>
+    </Space>
   );
 };
 
 interface FilterGroupProps {
-  members: FilterMember[];
+  members: CubeMember[];
   availableMembers: CubeMember[];
   addMemberName: string;
   updateMethods: {
-    update: (member: FilterMember, newValue: any) => void;
-    remove: (member: FilterMember) => void;
+    update: (member: CubeMember, newValue: any) => void;
+    remove: (member: CubeMember) => void;
   };
 }
 

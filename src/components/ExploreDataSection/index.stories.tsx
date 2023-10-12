@@ -1,6 +1,6 @@
 import RootLayout from "@/layouts/RootLayout";
-import { dataSectionProps } from "@/mocks/explore";
-import { getTitle } from "@/utils/helpers/getTitles";
+import { dataSectionProps, meta } from "@/mocks/explore";
+import usePlayground from "@/hooks/usePlayground";
 
 import ExploreDataSection from ".";
 
@@ -12,32 +12,28 @@ export default {
 } as Meta<typeof ExploreDataSection>;
 
 const Template: StoryFn<typeof ExploreDataSection> = (args) => {
-  const [settings, setSettings] = useState({
-    hideIndexColumn: false,
-    hideCubeNames: false,
+  const [isActive, setIsActive] = useState(false);
+  const { state: explorationState, dispatchSettings } = usePlayground({
+    dataSourceId: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
+    editId: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
+    meta,
   });
 
-  const [columns, setColumns] = useState(args.queryState.columns);
-
-  const [isActive, setIsActive] = useState(false);
-
-  const onQueryChange = (type: string, value: boolean) => {
-    if (settings[type as keyof typeof settings] === value) return;
-
-    setSettings((prev) => ({ ...prev, [type]: value }));
-  };
-
-  useEffect(() => {
-    setColumns(
-      args.queryState.columns.map((c) => {
-        const header = c["Header" as keyof typeof c] as string;
-        const newHeader = settings.hideCubeNames
-          ? header.split(" ")[1]
-          : header;
-        return { ...c, Header: newHeader };
-      })
-    );
-  }, [args.queryState.columns, args.queryState.rows, settings]);
+  const onQueryChange = useCallback(
+    (type: string, ...argss: any) => {
+      switch (type) {
+        case "hideCubeNames":
+          dispatchSettings({ type: "hideCubeNames", value: argss[0] });
+          break;
+        case "hideIndexColumn":
+          dispatchSettings({ type: "hideIndexColumn", value: argss[0] });
+          break;
+        default:
+          return () => {};
+      }
+    },
+    [dispatchSettings]
+  );
 
   return (
     <RootLayout>
@@ -46,7 +42,7 @@ const Template: StoryFn<typeof ExploreDataSection> = (args) => {
         isActive={isActive}
         onToggleSection={() => setIsActive((prev) => !prev)}
         onQueryChange={onQueryChange}
-        queryState={{ ...args.queryState, settings, columns }}
+        queryState={explorationState}
       />
     </RootLayout>
   );

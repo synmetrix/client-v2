@@ -12552,7 +12552,51 @@ export const dataSectionProps = {
     ],
     segments: [],
     timeDimensions: [],
-    filters: [],
+    filters: [
+      {
+        name: "name",
+        title: "title",
+        isVisible: true,
+        type: "string",
+        shortTitle: "shortTitle",
+        dimension: {
+          isVisible: true,
+          name: "Orders.status",
+          shortTitle: "Status",
+          suggestFilterValues: true,
+          title: "Orders Status",
+          type: "string",
+        },
+        operator: "set",
+        operators: [
+          {
+            name: "contains",
+            title: "contains",
+          },
+          {
+            name: "notContains",
+            title: "does not contain",
+          },
+          {
+            name: "equals",
+            title: "equals",
+          },
+          {
+            name: "notEquals",
+            title: "does not equal",
+          },
+          {
+            name: "set",
+            title: "is set",
+          },
+          {
+            name: "notSet",
+            title: "is not set",
+          },
+        ],
+        index: 0,
+      },
+    ],
   },
   state: {
     modelingSection: "modelDefinition",

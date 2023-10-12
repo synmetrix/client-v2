@@ -14,7 +14,14 @@ import type { ChangeEventHandler, FC, ReactNode } from "react";
 import type { RadioChangeEvent, AlertProps } from "antd";
 
 interface ExploreCubesProps {
-  onMemberSelect: any;
+  onMemberSelect: (
+    memberType?: string,
+    toQuery?: (member: CubeMember) => any
+  ) => {
+    add: (member: CubeMember) => void;
+    remove: (member: CubeMember) => void;
+    update: (member: CubeMember, newValue: any) => void;
+  };
   availableQueryMembers: Record<
     string,
     Record<string, Record<string, CubeMember>>

@@ -160,7 +160,6 @@ const updatePlaygroundState = (playgroundState: any, cubesMeta: Meta) => {
       if (keys.find((key) => key === curKey)) {
         const filteredArray = playgroundState[curKey].filter((m: any) => {
           let resolved: any = false;
-
           if (curKey === "filters") {
             resolved = cubesMeta.resolveMember(m.dimension, [
               "dimensions",

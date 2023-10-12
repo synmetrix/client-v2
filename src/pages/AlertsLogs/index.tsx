@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
@@ -5,6 +6,7 @@ import PageHeader from "@/components/PageHeader";
 import BasicLayout from "@/layouts/BasicLayout";
 import LogsTable from "@/components/LogsTable";
 import StatusCard from "@/components/StatusCard";
+import useLogs from "@/hooks/useLogs";
 import type { Log } from "@/types/logs";
 import AppLayout from "@/layouts/AppLayout";
 
@@ -16,9 +18,18 @@ interface AlertLogsProps {
   logs: Log[];
 }
 
-const AlertsLogs: React.FC<AlertLogsProps> = ({ logs }) => {
-  console.log(1111111111);
+const defaultFilterState = {
+  from: moment().subtract(1, "days"),
+  to: null,
+  sort: null,
+};
+
+const AlertsLogs: React.FC<AlertLogsProps> = () => {
+  const res = useLogs(defaultFilterState as any);
+  console.log(res);
   const { t } = useTranslation(["logs", "common"]);
+
+  return null;
   return (
     <AppLayout divider title={t("pages:logs.alerts")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>

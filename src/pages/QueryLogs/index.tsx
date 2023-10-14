@@ -1,10 +1,11 @@
 import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
+import AppLayout from "@/layouts/AppLayout";
 import PageHeader from "@/components/PageHeader";
 import QueryLogsTable from "@/components/QueryLogsTable";
+import QueryFilter from "@/components/QueryFilter";
 import type { QueryLog } from "@/types/logs";
-import AppLayout from "@/layouts/AppLayout";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -12,9 +13,10 @@ import styles from "./index.module.less";
 
 interface QueryLogsProps {
   logs: QueryLog[];
+  dataSources: string[];
 }
 
-const QueryLogs: React.FC<QueryLogsProps> = ({ logs }) => {
+const QueryLogs: React.FC<QueryLogsProps> = ({ logs, dataSources }) => {
   const { t } = useTranslation(["logs", "pages"]);
   return (
     <AppLayout divider title={t("pages:logs.query")}>
@@ -33,9 +35,10 @@ const QueryLogs: React.FC<QueryLogsProps> = ({ logs }) => {
             className: styles.action,
           }}
         />
-        <div className={styles.body}>
+        <Space className={styles.body} direction="vertical" size={17}>
+          <QueryFilter dataSources={dataSources} onChange={console.log} />
           <QueryLogsTable logs={logs} />
-        </div>
+        </Space>
       </Space>
     </AppLayout>
   );

@@ -20,4 +20,5 @@ export const Default = Template.bind({});
 
 Default.args = {
   logs: queryMocks,
+  dataSources: ["datasource1", "datasource2"],
 };

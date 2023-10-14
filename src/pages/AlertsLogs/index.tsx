@@ -25,7 +25,6 @@ const defaultFilterState = {
 const AlertsLogs: React.FC<AlertLogsProps> = ({ logs }) => {
   const { t } = useTranslation(["logs", "common"]);
 
-  return null;
   return (
     <AppLayout divider title={t("pages:logs.alerts")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>

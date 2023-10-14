@@ -5,7 +5,10 @@ import { useSubscription } from "urql";
 
 import equals from "@/utils/helpers/equals";
 import useQuery from "@/hooks/useQuery";
-import type { Request_Event_Logs_Order_By } from "@/graphql/generated";
+import type {
+  Request_Event_Logs_Order_By,
+  Request_Logs,
+} from "@/graphql/generated";
 
 import type { SubscriptionHandler } from "urql";
 
@@ -116,8 +119,10 @@ const getListVariables = (
   return res;
 };
 
-const handleSubscription: SubscriptionHandler<any, any> = (_: any, response) =>
-  response;
+const handleSubscription: SubscriptionHandler<any, Request_Logs> = (
+  _: any,
+  response
+) => response;
 
 interface Props {
   params?: Params;
@@ -142,7 +147,10 @@ export default ({
     handleSubscription
   );
 
-  const [currentData, execQueryCurrent] = useQuery(
+  const [currentData, execQueryCurrent] = useQuery<
+    { id: string | null },
+    Request_Logs
+  >(
     {
       query: currentLogQuery,
       variables: { id: rowId },

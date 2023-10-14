@@ -1,21 +1,27 @@
 import { useCallback } from "react";
 import { useQuery as useURQLQuery } from "urql";
 
-import type { AnyVariables, RequestPolicy, UseQueryArgs } from "urql";
+import type {
+  AnyVariables,
+  RequestPolicy,
+  UseQueryArgs,
+  UseQueryExecute,
+  UseQueryResponse,
+} from "urql";
 
 interface Options {
   requestPolicy: RequestPolicy;
   role: string;
 }
 
-export default (
-  query: UseQueryArgs<AnyVariables, any>,
+export default function <O extends AnyVariables, D>(
+  query: UseQueryArgs<O, D>,
   options: Options = {} as Options
-): any => {
-  const [data, doQueryData] = useURQLQuery(query);
+): UseQueryResponse {
+  const [data, doQueryData] = useURQLQuery<D, O>(query);
 
-  const execQueryData = useCallback(
-    (context: object) => {
+  const execQueryData: UseQueryExecute = useCallback(
+    (context) => {
       return doQueryData({
         requestPolicy: options.requestPolicy,
         role: options.role,
@@ -26,4 +32,4 @@ export default (
   );
 
   return [data, execQueryData];
-};
+}

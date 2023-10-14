@@ -3,10 +3,8 @@ import { Space } from "antd";
 import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
-import BasicLayout from "@/layouts/BasicLayout";
 import LogsTable from "@/components/LogsTable";
 import StatusCard from "@/components/StatusCard";
-import useLogs from "@/hooks/useLogs";
 import type { Log } from "@/types/logs";
 import AppLayout from "@/layouts/AppLayout";
 
@@ -24,9 +22,7 @@ const defaultFilterState = {
   sort: null,
 };
 
-const AlertsLogs: React.FC<AlertLogsProps> = () => {
-  const res = useLogs(defaultFilterState as any);
-  console.log(res);
+const AlertsLogs: React.FC<AlertLogsProps> = ({ logs }) => {
   const { t } = useTranslation(["logs", "common"]);
 
   return null;

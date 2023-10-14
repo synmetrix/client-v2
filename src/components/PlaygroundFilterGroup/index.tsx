@@ -37,20 +37,20 @@ const FilterGroup: FC<FilterGroupProps> = ({
           />
           <PlaygroundFilterSelect
             availableMembers={availableMembers}
-            value={t(m.dimension.title)}
+            value={t(m.dimension!.title)}
             onChange={(dimension) => {
               trackEvent("Update Member", { memberName: addMemberName });
               if (dimension) updateMethods.update(m, { ...m, dimension });
             }}
           />
           <Select
-            value={t(`common:operators.${m.operator}`, m.operator)}
+            value={t(`common:operators.${m.operator!}`, m.operator!)}
             onChange={(operator) => updateMethods.update(m, { ...m, operator })}
             className={s.select}
             size="large"
             suffixIcon={<DoubleArrowIcon />}
           >
-            {m.operators.map((operator) => (
+            {m.operators!.map((operator) => (
               <Select.Option key={operator.name} value={operator.name}>
                 {t(operator.title)}
               </Select.Option>
@@ -69,7 +69,7 @@ const FilterGroup: FC<FilterGroupProps> = ({
 };
 
 interface FilterGroupProps {
-  members: (CubeMember | CubeMember)[];
+  members: CubeMember[];
   availableMembers: CubeMember[];
   addMemberName: string;
   updateMethods: {

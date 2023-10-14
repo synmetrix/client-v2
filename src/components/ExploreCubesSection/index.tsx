@@ -326,10 +326,11 @@ interface CubeProps {
   members: CubeMembers;
   onMemberSelect: (
     memberType?: string,
-    cb?: (member: CubeMember) => any
+    toQuery?: (member: CubeMember) => any
   ) => {
     add: (member: CubeMember) => void;
     remove: (member: CubeMember) => void;
+    update: (member: CubeMember, newValue: any) => void;
   };
   selectedMembers: Record<string, CubeMember[]>;
 }

@@ -1,19 +1,23 @@
 declare global {
   interface Window {
-    GRAPHQL_WS_URL: any;
-    AUTH_PREFIX: any;
-    GRAPHQL_SERVER_URL: any;
-    GRAPHQL_PLUS_SERVER_URL: any;
-    CUBEJS_MYSQL_API_URL: any;
-    CUBEJS_PG_API_URL: any;
+    GRAPHQL_WS_URL: string;
+    AUTH_PREFIX: string;
+    GRAPHQL_SERVER_URL: string;
+    GRAPHQL_PLUS_SERVER_URL: string;
+    CUBEJS_MYSQL_API_URL: string;
+    CUBEJS_PG_API_URL: string;
   }
 }
 
-export const AUTH_PREFIX = window.AUTH_PREFIX || "";
-export const GRAPHQL_SERVER_URL = window.GRAPHQL_SERVER_URL || "";
-export const GRAPHQL_PLUS_SERVER_URL = window.GRAPHQL_PLUS_SERVER_URL || "";
-export const CUBEJS_MYSQL_API_URL = window.CUBEJS_MYSQL_API_URL || "";
-export const CUBEJS_PG_API_URL = window.CUBEJS_PG_API_URL || "";
+export const AUTH_PREFIX = window.AUTH_PREFIX || import.meta.env.AUTH_PREFIX;
+export const GRAPHQL_SERVER_URL =
+  window.GRAPHQL_SERVER_URL || import.meta.env.GRAPHQL_SERVER_URL;
+export const GRAPHQL_PLUS_SERVER_URL =
+  window.GRAPHQL_PLUS_SERVER_URL || import.meta.env.GRAPHQL_PLUS_SERVER_URL;
+export const CUBEJS_MYSQL_API_URL =
+  window.CUBEJS_MYSQL_API_URL || import.meta.env.CUBEJS_MYSQL_API_URL;
+export const CUBEJS_PG_API_URL =
+  window.CUBEJS_PG_API_URL || import.meta.env.CUBEJS_PG_API_URL;
 
 const getWsUrl = (path: string) => {
   // if url contains ws:// already

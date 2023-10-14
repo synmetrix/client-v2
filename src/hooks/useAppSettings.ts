@@ -9,14 +9,15 @@ declare global {
   }
 }
 
-export const AUTH_PREFIX = window.AUTH_PREFIX || import.meta.env.AUTH_PREFIX;
-export const GRAPHQL_SERVER_URL =
+export const AUTH_PREFIX: string =
+  window.AUTH_PREFIX || import.meta.env.AUTH_PREFIX;
+export const GRAPHQL_SERVER_URL: string =
   window.GRAPHQL_SERVER_URL || import.meta.env.GRAPHQL_SERVER_URL;
-export const GRAPHQL_PLUS_SERVER_URL =
+export const GRAPHQL_PLUS_SERVER_URL: string =
   window.GRAPHQL_PLUS_SERVER_URL || import.meta.env.GRAPHQL_PLUS_SERVER_URL;
-export const CUBEJS_MYSQL_API_URL =
+export const CUBEJS_MYSQL_API_URL: string =
   window.CUBEJS_MYSQL_API_URL || import.meta.env.CUBEJS_MYSQL_API_URL;
-export const CUBEJS_PG_API_URL =
+export const CUBEJS_PG_API_URL: string =
   window.CUBEJS_PG_API_URL || import.meta.env.CUBEJS_PG_API_URL;
 
 const getWsUrl = (path: string) => {

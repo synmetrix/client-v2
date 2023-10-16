@@ -9,6 +9,8 @@ import styles from "./index.module.less";
 
 import type { FC } from "react";
 
+const { Paragraph } = Typography;
+
 interface DataModelSelectionProps {
   title: string;
   dataModels: DataModelOption[];
@@ -32,9 +34,11 @@ const DataModelSelection: FC<DataModelSelectionProps> = ({
 
   return (
     <Space className={styles.wrapper} direction="vertical" size={16}>
-      <Space direction="vertical" size={16}>
+      <Space direction="vertical" size={16} style={{ width: "100%" }}>
         <Text className={styles.title}>{t("common:words.data_models")}</Text>
-        <Text className={styles.resource}>{title}</Text>
+        <Paragraph ellipsis className={styles.resource}>
+          {title}
+        </Paragraph>
       </Space>
 
       <Space className={styles.dataModels} direction="vertical" size={8}>

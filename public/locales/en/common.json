@@ -70,7 +70,8 @@
     "author": "Author",
     "checksum": "Checksum",
     "restore": "Restore",
-    "all": "all"
+    "all": "all",
+    "empty_default": "No Data"
   },
   "form": {
     "labels": {

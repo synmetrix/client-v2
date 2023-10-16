@@ -11,7 +11,7 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekYear from "dayjs/plugin/weekYear";
 
 import I18n from "i18next.config";
-import type { FilterMember } from "@/types/cube";
+import type { CubeMember } from "@/types/cube";
 import trackEvent from "@/utils/helpers/trackEvent";
 
 import type { FC } from "react";
@@ -86,10 +86,10 @@ const filterInputs = {
 };
 
 interface FilterInputProps {
-  member: FilterMember;
+  member: CubeMember;
   updateMethods: {
-    update: (member: FilterMember, newValue: any) => void;
-    remove: (member: FilterMember) => void;
+    update: (member: CubeMember, newValue: any) => void;
+    remove: (member: CubeMember) => void;
   };
   addMemberName: string;
 }

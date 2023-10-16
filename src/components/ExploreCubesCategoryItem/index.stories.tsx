@@ -31,5 +31,6 @@ Default.args = {
       dimensions: [],
       measures: [],
     },
+    type: "string",
   },
 };

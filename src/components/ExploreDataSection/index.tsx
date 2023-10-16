@@ -14,12 +14,11 @@ import VirtualTable, { cellRenderer } from "@/components/VirtualTable";
 import PrismCode from "@/components/PrismCode";
 import ComponentSwitcher from "@/components/ComponentSwitcher";
 import genName from "@/utils/helpers/genName";
+import type { ExploreWorkspaceState } from "@/hooks/useExploreWorkspace";
 import type { SortBySet } from "@/components/VirtualTable";
 import type { ErrorMessage } from "@/types/errorMessage";
 import type { CubeMember } from "@/types/cube";
-import type { SortBy } from "@/types/sort";
-import type { LoadingProgress } from "@/types/loading";
-import type { QuerySettings } from "@/types/querySettings";
+import type { ExplorationState } from "@/hooks/usePlayground";
 
 import CSVIcon from "@/assets/csv.svg";
 import AlertIcon from "@/assets/alert.svg";
@@ -30,42 +29,18 @@ import s from "./index.module.less";
 import type { FC, ReactNode } from "react";
 import type { CollapsePanelProps, RadioChangeEvent } from "antd";
 
-type SortUpdateCrator = (nextSortBy: SortBySet[]) => void;
+type SortUpdater = (nextSortBy: SortBySet[]) => void;
 
-interface ExploreDataSectionProps extends CollapsePanelProps {
-  width: number;
-  height: number;
+interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
+  width?: number;
+  height?: number;
   onToggleSection: (section: string) => void;
   onSectionChange: (radioEvent: RadioChangeEvent) => void;
   onExec: any;
-  onQueryChange: (query: string, args?: any) => void | SortUpdateCrator;
+  onQueryChange: (query: string, ...args: any) => void | SortUpdater;
   disabled: boolean;
-  state: {
-    dataSection: string;
-    experimentsCount: number;
-    filtersCount: number;
-    modelingSection: string;
-  };
-  queryState: {
-    rows: object[];
-    columns: object[];
-    settings: QuerySettings;
-    loading: boolean;
-    progress: LoadingProgress;
-    skippedMembers?: string[];
-    error?: boolean;
-    offset?: number;
-    hitLimit?: boolean;
-    limit?: number;
-    order?: SortBy[];
-    rawSql?: { params: []; preAggregations: []; sql: string };
-    dimensions: string[];
-    measures: string[];
-    segments: string[];
-    timeDimensions: string[];
-    page: number;
-    timezone: string;
-  };
+  state: ExploreWorkspaceState;
+  queryState: ExplorationState;
   explorationRowId: string;
   selectedQueryMembers: Record<string, CubeMember[]>;
   isActive: boolean;
@@ -207,7 +182,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     settings: queryState?.settings,
   });
 
-  const tableEmptyDesc = emptyDesc || t("empty_desc");
+  const tableEmptyDesc = emptyDesc || t("data_section.empty_desc");
 
   const Table = useMemo(() => {
     const messages: ErrorMessage[] = [];
@@ -254,7 +229,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         data={rows}
         sortBy={order}
         cellRenderer={(args) => cellRenderer(args, membersIndex)}
-        onSortUpdate={onQueryChange("order") as SortUpdateCrator}
+        onSortUpdate={onQueryChange("order") as SortUpdater}
         emptyDesc={tableEmptyDesc}
         settings={settings}
         rowHeight={rowHeight}

@@ -22,7 +22,6 @@ const Template: StoryFn<typeof VirtualTable> = (args) => {
 export const Default = Template.bind({});
 
 Default.args = {
-  width: "100%",
   messages: [
     {
       type: "error",

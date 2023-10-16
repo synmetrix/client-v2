@@ -1,4 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
+import { availableQueryMembers, selectedQueryMembers } from "@/mocks/explore";
 
 import ExploreCubesSection from ".";
 
@@ -18,76 +19,6 @@ const Template: StoryFn<typeof ExploreCubesSection> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  members: {
-    measures: [
-      {
-        name: "test measure",
-        title: "string",
-        shortTitle: "string",
-        isVisible: true,
-        aggType: "string",
-        cumulative: true,
-        cumulativeTotal: true,
-        drillMembers: [],
-        drillMembersGrouped: {
-          dimensions: [],
-          measures: [],
-        },
-      },
-    ],
-    dimensions: [
-      {
-        name: "test dimension",
-        title: "string1",
-        shortTitle: "string1",
-        isVisible: true,
-        aggType: "string1",
-        cumulative: true,
-        cumulativeTotal: true,
-        drillMembers: [],
-        drillMembersGrouped: {
-          dimensions: [],
-          measures: [],
-        },
-      },
-    ],
-  },
-  selectedMembers: {
-    measures: [
-      {
-        name: "test measure",
-        title: "string",
-        shortTitle: "string",
-        isVisible: true,
-        aggType: "string",
-        cumulative: true,
-        cumulativeTotal: true,
-        drillMembers: [],
-        drillMembersGrouped: {
-          dimensions: [],
-          measures: [],
-        },
-      },
-    ],
-    dimensions: [
-      {
-        name: "test dimension",
-        title: "string1",
-        shortTitle: "string1",
-        isVisible: true,
-        aggType: "string1",
-        cumulative: true,
-        cumulativeTotal: true,
-        drillMembers: [],
-        drillMembersGrouped: {
-          dimensions: [],
-          measures: [],
-        },
-      },
-    ],
-  },
-  onMemberSelect: () => ({
-    add: () => {},
-    remove: () => {},
-  }),
+  selectedMembers: selectedQueryMembers,
+  members: availableQueryMembers,
 };

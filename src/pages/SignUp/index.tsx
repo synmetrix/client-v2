@@ -30,7 +30,7 @@ const SignUp: React.FC = () => {
   return (
     <BasicLayout header={<AuthLinks currentPage="signup" />}>
       <Row className={styles.container} justify="center" align="middle">
-        <Col>
+        <Col xs={24}>
           <SignUpForm onSubmit={onSubmit} />
           {error && (
             <Alert

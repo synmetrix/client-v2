@@ -47,14 +47,15 @@ const GeneralInfoForm: FC<GeneralInfoFormProps> = ({
 
         <Col span={24} md={12}>
           <Input
+            label={t("common:form.labels.email")}
+            placeholder={t("common:form.placeholders.email")}
             control={control}
             rules={{
-              required: t("common:form.errors.email"),
-              validate: validate.email,
+              required: true,
+              validate: (v: string) =>
+                validate.email(v) || t("common:form.errors.email"),
             }}
             name="email"
-            label={t("common:form.labels.email")}
-            defaultValue={initialValue?.displayName}
           />
         </Col>
       </Row>

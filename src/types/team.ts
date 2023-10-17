@@ -1,4 +1,4 @@
-export enum ChangableRoles {
+export enum ChangeableRoles {
   admin = "admin",
   member = "member",
 }
@@ -11,7 +11,7 @@ export enum Roles {
 
 export interface TeamRole {
   id: string;
-  name: Roles | ChangableRoles;
+  name: Roles | ChangeableRoles;
 }
 
 export interface AccessList {

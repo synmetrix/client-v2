@@ -24,7 +24,7 @@ import SidebarLayout from "@/layouts/SidebarLayout";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
   AccessList,
-  ChangableRoles,
+  ChangeableRoles,
   Member,
   Roles,
   TeamRole,
@@ -38,7 +38,7 @@ interface MembersProps {
   currentRole?: Roles;
   onDeleteMember?: (id: string) => void;
   onInviteMember?: (data: Invite) => void;
-  onRoleChange?: (id: string, newRole: ChangableRoles) => void;
+  onRoleChange?: (id: string, newRole: ChangeableRoles) => void;
   onAccessListChange?: (id: string) => void;
 }
 
@@ -184,7 +184,7 @@ const MembersWrapper = () => {
     execDeleteMutation({ id });
   };
 
-  const onRoleChange = (id: string, newRole: ChangableRoles) => {
+  const onRoleChange = (id: string, newRole: ChangeableRoles) => {
     execUpdateRoleMutation({
       pk_columns: { id },
       _set: {

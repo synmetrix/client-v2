@@ -6,7 +6,7 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 import type { Team_Roles_Enum } from "@/graphql/generated";
-import { ChangableRoles } from "@/types/team";
+import { ChangeableRoles } from "@/types/team";
 import validate from "@/utils/validations";
 
 import styles from "./index.module.less";
@@ -54,8 +54,8 @@ const MembersForm: FC<MembersFormProps> = ({ onSubmit, initialValue }) => {
             name="role"
             control={control}
             fieldType="select"
-            defaultValue={ChangableRoles.member}
-            options={createRoleOptions(ChangableRoles)}
+            defaultValue={ChangeableRoles.member}
+            options={createRoleOptions(ChangeableRoles)}
           />
         </Col>
       </Row>

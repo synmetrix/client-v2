@@ -4,6 +4,7 @@ import cn from "classnames";
 
 import Avatar from "@/components/Avatar";
 import type { QueryLog } from "@/types/logs";
+import type { Request_Logs } from "@/graphql/generated";
 
 import styles from "./index.module.less";
 
@@ -11,18 +12,18 @@ import type { TableProps } from "antd";
 import type { FC } from "react";
 
 interface QueryLogsTableProps {
-  logs: QueryLog[];
+  logs: Request_Logs[];
 }
 
 const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
   const { t } = useTranslation(["logs"]);
-  const columns: TableProps<QueryLog>["columns"] = [
+  const columns: TableProps<Request_Logs>["columns"] = [
     {
       title: t("query.table.data_source"),
-      dataIndex: "dataSource",
-      key: "dataSource",
+      dataIndex: "datasource",
+      key: "datasource",
       render: (value) => (
-        <span className={cn(styles.cell, styles.dataSource)}>{value}</span>
+        <span className={cn(styles.cell, styles.dataSource)}>{value.name}</span>
       ),
     },
     {
@@ -35,21 +36,21 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
     },
     {
       title: t("query.table.events"),
-      dataIndex: "events",
-      key: "events",
+      dataIndex: "request_event_logs",
+      key: "request_event_logs",
       render: (value) => (
-        <span className={cn(styles.cell, styles.events)}>{value}</span>
+        <span className={cn(styles.cell, styles.events)}>{value?.length}</span>
       ),
     },
     {
       title: t("query.table.creator"),
-      dataIndex: "creator",
-      key: "creator",
+      dataIndex: "user",
+      key: "user",
       render: (value) => (
         <span className={cn(styles.cell, styles.creator)}>
           <Space size={10}>
-            <Avatar img={value.avatarUrl} username={value.displayName} />
-            <span>{value.email}</span>
+            <Avatar img={value.avatarUrl} username={value.display_name} />
+            <span>{value.display_name}</span>
           </Space>
         </span>
       ),
@@ -68,8 +69,8 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
       title: (
         <div className={styles.headerRight}>{t("query.table.start_time")}</div>
       ),
-      dataIndex: "startTime",
-      key: "startTime",
+      dataIndex: "start_time",
+      key: "start_time",
       render: (value) => (
         <span className={cn(styles.cell, styles.startTime)}>{value}</span>
       ),
@@ -78,8 +79,8 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
       title: (
         <div className={styles.headerRight}>{t("query.table.created_at")}</div>
       ),
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "created_at",
+      key: "created_at",
       render: (value) => (
         <span className={cn(styles.cell, styles.createdAt)}>{value}</span>
       ),

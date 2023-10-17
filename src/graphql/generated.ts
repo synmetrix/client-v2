@@ -11624,6 +11624,111 @@ export type InviteMemberMutation = {
   } | null;
 };
 
+export type DefaultFieldsFragment = {
+  __typename?: "request_logs";
+  id: any;
+  created_at: any;
+  updated_at: any;
+  request_id: string;
+  start_time: any;
+  end_time: any;
+  duration?: any | null;
+  path?: string | null;
+  user: { __typename?: "users"; display_name?: string | null };
+  datasource: { __typename?: "datasources"; name: string };
+};
+
+export type CurrentLogQueryVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type CurrentLogQuery = {
+  __typename?: "query_root";
+  request_logs_by_pk?: {
+    __typename?: "request_logs";
+    id: any;
+    created_at: any;
+    updated_at: any;
+    request_id: string;
+    start_time: any;
+    end_time: any;
+    duration?: any | null;
+    path?: string | null;
+    request_event_logs: {
+      __typename?: "request_event_logs";
+      id: any;
+      duration?: any | null;
+      event: string;
+      path?: string | null;
+      query?: any | null;
+      query_key?: any | null;
+      query_sql?: string | null;
+      query_key_md5?: string | null;
+      queue_prefix?: string | null;
+      time_in_queue?: any | null;
+      timestamp?: any | null;
+      error?: string | null;
+    }[];
+    user: { __typename?: "users"; display_name?: string | null };
+    datasource: { __typename?: "datasources"; name: string };
+  } | null;
+};
+
+export type AllLogsQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Request_Logs_Bool_Exp>;
+  order_by?: InputMaybe<Request_Logs_Order_By[] | Request_Logs_Order_By>;
+}>;
+
+export type AllLogsQuery = {
+  __typename?: "query_root";
+  request_logs: {
+    __typename?: "request_logs";
+    id: any;
+    created_at: any;
+    updated_at: any;
+    request_id: string;
+    start_time: any;
+    end_time: any;
+    duration?: any | null;
+    path?: string | null;
+    request_event_logs: {
+      __typename?: "request_event_logs";
+      path?: string | null;
+      error?: string | null;
+    }[];
+    request_event_logs_aggregate: {
+      __typename?: "request_event_logs_aggregate";
+      aggregate?: {
+        __typename?: "request_event_logs_aggregate_fields";
+        count: number;
+      } | null;
+    };
+    user: { __typename?: "users"; display_name?: string | null };
+    datasource: { __typename?: "datasources"; name: string };
+  }[];
+  request_logs_aggregate: {
+    __typename?: "request_logs_aggregate";
+    aggregate?: {
+      __typename?: "request_logs_aggregate_fields";
+      count: number;
+    } | null;
+  };
+};
+
+export type SubAllLogsSubscriptionVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Request_Logs_Bool_Exp>;
+  order_by?: InputMaybe<Request_Logs_Order_By[] | Request_Logs_Order_By>;
+}>;
+
+export type SubAllLogsSubscription = {
+  __typename?: "subscription_root";
+  request_logs: { __typename?: "request_logs"; id: any }[];
+};
+
 export type CredentialsQueryVariables = Exact<{
   teamId: Scalars["uuid"];
 }>;
@@ -11736,6 +11841,24 @@ export type GetUsersQuery = {
   users: { __typename?: "users"; id: any }[];
 };
 
+export const DefaultFieldsFragmentDoc = gql`
+  fragment DefaultFields on request_logs {
+    id
+    created_at
+    updated_at
+    request_id
+    start_time
+    end_time
+    duration
+    path
+    user {
+      display_name
+    }
+    datasource {
+      name
+    }
+  }
+`;
 export const AllAccessListsDocument = gql`
   query AllAccessLists(
     $offset: Int
@@ -12396,6 +12519,109 @@ export function useInviteMemberMutation() {
     InviteMemberDocument
   );
 }
+export const CurrentLogDocument = gql`
+  query CurrentLog($id: uuid!) {
+    request_logs_by_pk(id: $id) {
+      ...DefaultFields
+      request_event_logs(order_by: { timestamp: desc }) {
+        id
+        duration
+        event
+        path
+        query
+        query_key
+        query_sql
+        query_key_md5
+        queue_prefix
+        time_in_queue
+        timestamp
+        error
+      }
+    }
+  }
+  ${DefaultFieldsFragmentDoc}
+`;
+
+export function useCurrentLogQuery(
+  options: Omit<Urql.UseQueryArgs<CurrentLogQueryVariables>, "query">
+) {
+  return Urql.useQuery<CurrentLogQuery, CurrentLogQueryVariables>({
+    query: CurrentLogDocument,
+    ...options,
+  });
+}
+export const AllLogsDocument = gql`
+  query AllLogs(
+    $offset: Int
+    $limit: Int
+    $where: request_logs_bool_exp
+    $order_by: [request_logs_order_by!]
+  ) {
+    request_logs(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      ...DefaultFields
+      request_event_logs(order_by: { timestamp: desc }) {
+        path
+        error
+      }
+      request_event_logs_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    request_logs_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+  ${DefaultFieldsFragmentDoc}
+`;
+
+export function useAllLogsQuery(
+  options?: Omit<Urql.UseQueryArgs<AllLogsQueryVariables>, "query">
+) {
+  return Urql.useQuery<AllLogsQuery, AllLogsQueryVariables>({
+    query: AllLogsDocument,
+    ...options,
+  });
+}
+export const SubAllLogsDocument = gql`
+  subscription SubAllLogs(
+    $offset: Int
+    $limit: Int
+    $where: request_logs_bool_exp
+    $order_by: [request_logs_order_by!]
+  ) {
+    request_logs(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+    }
+  }
+`;
+
+export function useSubAllLogsSubscription<TData = SubAllLogsSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<SubAllLogsSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<SubAllLogsSubscription, TData>
+) {
+  return Urql.useSubscription<
+    SubAllLogsSubscription,
+    TData,
+    SubAllLogsSubscriptionVariables
+  >({ query: SubAllLogsDocument, ...options }, handler);
+}
 export const CredentialsDocument = gql`
   query Credentials($teamId: uuid!) {
     sql_credentials(
@@ -12571,6 +12797,8 @@ export const namedOperations = {
     FetchMeta: "FetchMeta",
     CurrentDataSource: "CurrentDataSource",
     Members: "Members",
+    CurrentLog: "CurrentLog",
+    AllLogs: "AllLogs",
     Credentials: "Credentials",
     CurrentTeam: "CurrentTeam",
     GetUsers: "GetUsers",
@@ -12600,6 +12828,10 @@ export const namedOperations = {
     SubAccessLists: "SubAccessLists",
     SubCurrentUser: "SubCurrentUser",
     AllDatasources: "AllDatasources",
+    SubAllLogs: "SubAllLogs",
     SubCredentials: "SubCredentials",
+  },
+  Fragment: {
+    DefaultFields: "DefaultFields",
   },
 };

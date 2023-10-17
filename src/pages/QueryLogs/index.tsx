@@ -16,6 +16,7 @@ interface QueryLogsProps {
 
 const QueryLogs: React.FC<QueryLogsProps> = ({ logs }) => {
   const { t } = useTranslation(["logs", "pages"]);
+
   return (
     <AppLayout divider title={t("pages:logs.query")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>

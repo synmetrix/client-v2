@@ -1,4 +1,4 @@
-import { Card, Space } from "antd";
+import { Card, Space, Typography } from "antd";
 import cn from "classnames";
 
 import DataSourceTag from "@/components/DataSourceTag";
@@ -8,6 +8,8 @@ import type { DataAccessFormOption, DataSourceAccess } from "@/types/access";
 import styles from "./index.module.less";
 
 import type { FC } from "react";
+
+const { Paragraph } = Typography;
 
 interface AccessCardProps extends DataSourceAccess {
   active?: boolean;
@@ -31,8 +33,10 @@ const AccessCard: FC<AccessCardProps> = ({
       hoverable
       onClick={() => onClick?.({ id, name, access, dataSource })}
     >
-      <Space direction="vertical" size={14}>
-        <span className={styles.url}>{name}</span>
+      <Space direction="vertical" size={14} style={{ width: "100%" }}>
+        <Paragraph ellipsis className={styles.url}>
+          {name}
+        </Paragraph>
 
         <Space size={29}>
           <AccessTypeWrapper

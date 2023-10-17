@@ -1,6 +1,7 @@
 import { SettingOutlined } from "@ant-design/icons";
 import { Card, Typography, Dropdown } from "antd";
 import { useTranslation } from "react-i18next";
+import cx from "classnames";
 
 import Button from "@/components/Button";
 import DataSourceTag from "@/components/DataSourceTag";
@@ -33,11 +34,19 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
       headStyle={{ padding: 16 }}
       title={
         <Button
-          className={styles.btn}
+          block
           type="link"
+          className={styles.btn}
+          style={{ textAlign: "left" }}
           onClick={() => id && onEdit(id)}
         >
-          {name}
+          <Paragraph
+            ellipsis
+            style={{ display: "inline-block", width: "95%" }}
+            className={cx(styles.paragraph, styles.btn)}
+          >
+            {name}
+          </Paragraph>
         </Button>
       }
       extra={
@@ -66,7 +75,15 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
       <ul className={styles.list}>
         <li className={styles.listItem}>
           <span className={styles.label}>{t("common:words.host")}</span>
-          <Paragraph className={styles.paragraph} ellipsis>
+          <Paragraph
+            className={styles.paragraph}
+            style={{
+              display: "inline",
+              textAlign: "right",
+              width: "80%",
+            }}
+            ellipsis
+          >
             {dbParams.host}
           </Paragraph>
         </li>

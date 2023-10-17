@@ -5,7 +5,9 @@ import { useForm } from "react-hook-form";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
-import { Team_Roles_Enum } from "@/graphql/generated";
+import type { Team_Roles_Enum } from "@/graphql/generated";
+import { ChangeableRoles } from "@/types/team";
+import validate from "@/utils/validations";
 
 import styles from "./index.module.less";
 
@@ -38,6 +40,11 @@ const MembersForm: FC<MembersFormProps> = ({ onSubmit, initialValue }) => {
             label={t("members.members.invite_team_member")}
             name="email"
             control={control}
+            rules={{
+              required: true,
+              validate: (v: string) =>
+                validate.email(v) || t("common:form.errors.email"),
+            }}
           />
         </Col>
 
@@ -47,7 +54,8 @@ const MembersForm: FC<MembersFormProps> = ({ onSubmit, initialValue }) => {
             name="role"
             control={control}
             fieldType="select"
-            options={createRoleOptions(Team_Roles_Enum)}
+            defaultValue={ChangeableRoles.member}
+            options={createRoleOptions(ChangeableRoles)}
           />
         </Col>
       </Row>

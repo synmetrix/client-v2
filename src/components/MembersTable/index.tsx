@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
 import type { AccessList, Member } from "@/types/team";
-import { Roles, ChangableRoles } from "@/types/team";
+import { Roles, ChangeableRoles } from "@/types/team";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 
 import TrashIcon from "@/assets/trash.svg";
@@ -19,7 +19,7 @@ interface MembersTableProps {
   members: Member[];
   accessLists: AccessList[];
   currentRole?: Roles;
-  onRoleChange: (id: string, newRole: ChangableRoles) => void;
+  onRoleChange: (id: string, newRole: ChangeableRoles) => void;
   onAccessListChange: (accessListId: string) => void;
   onRemove: (member: Member) => void;
 }
@@ -87,12 +87,12 @@ const MembersTable: FC<MembersTableProps> = ({
                 onChange={(value) =>
                   onRoleChange(
                     record.role.id,
-                    value as unknown as ChangableRoles
+                    value as unknown as ChangeableRoles
                   )
                 }
                 bordered={false}
                 value={role}
-                options={createRoleOptions(ChangableRoles)}
+                options={createRoleOptions(ChangeableRoles)}
               />
             </span>
           ),

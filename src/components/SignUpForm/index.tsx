@@ -59,7 +59,11 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
           bordered={false}
           placeholder={t("common:form.placeholders.email")}
           control={control}
-          rules={{ required: true }}
+          rules={{
+            required: true,
+            validate: (v: string) =>
+              validate.email(v) || t("common:form.errors.email"),
+          }}
           name="email"
         />
         <Input
@@ -70,8 +74,9 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
           placeholder={t("common:form.placeholders.password")}
           control={control}
           rules={{
-            required: t("common:form.errors.password"),
-            validate: validate.passsword,
+            required: true,
+            validate: (v: string) =>
+              validate.password(v) || t("common:form.errors.password"),
           }}
           name="password"
           fieldType="password"

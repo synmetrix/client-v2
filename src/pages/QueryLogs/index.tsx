@@ -116,7 +116,7 @@ const QueryLogsWrapper = () => {
 
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
-  const basePath = withAuthPrefix("/logs/requests");
+  const basePath = withAuthPrefix("/logs/query");
 
   const {
     tableState: { pageSize, currentPage, paginationVars },

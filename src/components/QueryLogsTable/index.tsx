@@ -15,11 +15,13 @@ interface QueryLogsTableProps {
   logs: Request_Logs[];
   pagination?: TableProps<Request_Logs>["pagination"];
   onChange?: TableProps<Request_Logs>["onChange"];
+  onClickRow?: (rowId: string) => void;
 }
 
 const QueryLogsTable: FC<QueryLogsTableProps> = ({
   logs,
   onChange,
+  onClickRow,
   pagination = false,
 }) => {
   const { t } = useTranslation(["logs"]);
@@ -98,6 +100,9 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
       columns={columns}
       dataSource={logs}
       rowKey={(record) => record.id}
+      onRow={(r) => ({
+        onClick: () => onClickRow?.(r.id),
+      })}
       pagination={pagination}
       onChange={onChange}
     />

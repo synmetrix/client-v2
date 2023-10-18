@@ -52,6 +52,8 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
     },
   });
 
+  const onClickRow = (rowId: string) => console.log(rowId);
+
   return (
     <AppLayout divider title={t("pages:logs.query")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
@@ -73,6 +75,7 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
           <BouncingDotsLoader loading={allData?.fetching}>
             <QueryLogsTable
               logs={allLogs as unknown as Request_Logs[]}
+              onClickRow={onClickRow}
               pagination={{
                 pageSize,
                 current: currentPage,

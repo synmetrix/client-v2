@@ -1,7 +1,7 @@
 import RootLayout from "@/layouts/RootLayout";
 import { queryMocks } from "@/mocks/logs";
 
-import QueryLogs from ".";
+import { QueryLogs } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 

@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
 import QueryLogsTable from "@/components/QueryLogsTable";
-import type { QueryLog } from "@/types/logs";
 import SidebarLayout from "@/layouts/SidebarLayout";
 import useLogs from "@/hooks/useLogs";
 import useTableState from "@/hooks/useTableState";
@@ -18,15 +17,14 @@ import type { QueryFilterForm } from "@/types/queryFilter";
 import SidebarHeader from "@/components/SidebarHeader";
 import SidebarMenu from "@/components/SidebarMenu";
 import { logsMenuItems } from "@/mocks/sidebarMenu";
+import type { DataSourceInfo } from "@/types/dataSource";
 
 import LogsIcon from "@/assets/logs-active.svg";
 import DocsIcon from "@/assets/docs.svg";
 
 import styles from "./index.module.less";
 
-interface QueryLogsProps {
-  logs: QueryLog[];
-}
+import type { TablePaginationConfig } from "antd";
 
 const defaultFilterState: QueryFilterForm = {
   from: moment().subtract(1, "days").toISOString(),
@@ -35,8 +33,85 @@ const defaultFilterState: QueryFilterForm = {
   dataSourceId: null,
 };
 
-const QueryLogs: React.FC<QueryLogsProps> = () => {
+interface QueryLogsProps {
+  logs: Request_Logs[];
+  logsCount: number;
+  pageSize: number;
+  currentPage: number;
+  fetching: boolean;
+  dataSources: DataSourceInfo[];
+  onClickRow: (recordId: string) => void;
+  filter: QueryFilterForm;
+  onFilterUpdate: (filters: QueryFilterForm) => void;
+  onPageChange: ({ current }: TablePaginationConfig) => void;
+}
+
+export const QueryLogs: React.FC<QueryLogsProps> = ({
+  logs = [],
+  logsCount = 0,
+  currentPage,
+  pageSize = 1,
+  fetching = false,
+  dataSources,
+  filter,
+  onFilterUpdate = () => {},
+  onPageChange = () => {},
+  onClickRow = () => {},
+}) => {
   const { t } = useTranslation(["logs", "pages", "common"]);
+
+  return (
+    <SidebarLayout
+      divider
+      title={t("pages:logs.query")}
+      subTitle={
+        <SidebarHeader icon={<LogsIcon />} title={t("common:words.logs")} />
+      }
+      items={<SidebarMenu items={logsMenuItems} />}
+    >
+      <Space className={styles.wrapper} direction="vertical" size={13}>
+        <PageHeader
+          title={t("query.title")}
+          action={
+            <Space size={10} align="start">
+              <span className={styles.actionIcon}>
+                <DocsIcon />
+              </span>
+              {t("query.action")}
+            </Space>
+          }
+          actionProps={{
+            className: styles.action,
+          }}
+        />
+        <div className={styles.body}>
+          <BouncingDotsLoader loading={fetching}>
+            <Space size={27} className={styles.space} direction="vertical">
+              <QueryFilter
+                defaultValues={defaultFilterState}
+                values={filter}
+                dataSources={dataSources}
+                onChange={onFilterUpdate}
+              />
+              <QueryLogsTable
+                logs={logs}
+                onClickRow={onClickRow}
+                pagination={{
+                  pageSize,
+                  current: currentPage,
+                  total: logsCount,
+                  onChange: (current) => onPageChange({ current }),
+                }}
+              />
+            </Space>
+          </BouncingDotsLoader>
+        </div>
+      </Space>
+    </SidebarLayout>
+  );
+};
+
+const QueryLogsWrapper = () => {
   const [filter, setFilter] = useState(defaultFilterState);
 
   const { withAuthPrefix } = useAppSettings();
@@ -67,54 +142,19 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
     setLocation(`${basePath}/${recordId}`);
 
   return (
-    <SidebarLayout
-      divider
-      title={t("pages:logs.query")}
-      subTitle={
-        <SidebarHeader icon={<LogsIcon />} title={t("common:words.logs")} />
-      }
-      items={<SidebarMenu items={logsMenuItems} />}
-    >
-      <Space className={styles.wrapper} direction="vertical" size={13}>
-        <PageHeader
-          title={t("query.title")}
-          action={
-            <Space size={10} align="start">
-              <span className={styles.actionIcon}>
-                <DocsIcon />
-              </span>
-              {t("query.action")}
-            </Space>
-          }
-          actionProps={{
-            className: styles.action,
-          }}
-        />
-        <div className={styles.body}>
-          <BouncingDotsLoader loading={allData?.fetching}>
-            <Space size={27} direction="vertical">
-              <QueryFilter
-                defaultValues={defaultFilterState}
-                values={filter}
-                dataSources={dataSources}
-                onChange={setFilter}
-              />
-              <QueryLogsTable
-                logs={allLogs as unknown as Request_Logs[]}
-                onClickRow={onClickRow}
-                pagination={{
-                  pageSize,
-                  current: currentPage,
-                  total: totalCount,
-                  onChange: (current) => onPageChange({ current }),
-                }}
-              />
-            </Space>
-          </BouncingDotsLoader>
-        </div>
-      </Space>
-    </SidebarLayout>
+    <QueryLogs
+      logs={allLogs as Request_Logs[]}
+      logsCount={totalCount}
+      currentPage={currentPage}
+      pageSize={pageSize}
+      fetching={allData.fetching}
+      dataSources={dataSources}
+      filter={filter}
+      onFilterUpdate={setFilter}
+      onPageChange={onPageChange}
+      onClickRow={onClickRow}
+    />
   );
 };
 
-export default QueryLogs;
+export default QueryLogsWrapper;

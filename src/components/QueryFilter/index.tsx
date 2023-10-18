@@ -11,7 +11,7 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface QueryFilterProps {
-  dataSources: DataSourceInfo[];
+  dataSources?: DataSourceInfo[];
   defaultValues?: Partial<QueryFilterForm>;
   values?: QueryFilterForm;
   onChange: (data: QueryFilterForm) => void;
@@ -28,6 +28,7 @@ const QueryFilter: FC<QueryFilterProps> = ({
   },
   values,
 }) => {
+  console.log(JSON.stringify(dataSources));
   const { t } = useTranslation(["logs"]);
   const { control, watch } = useForm<QueryFilterForm>({
     defaultValues,
@@ -49,7 +50,7 @@ const QueryFilter: FC<QueryFilterProps> = ({
           placeholder={t("query.filter.select")}
           label={t("query.filter.data_source")}
           fieldType="select"
-          options={dataSources.map((d) => ({
+          options={dataSources?.map((d) => ({
             value: d.id || "",
             label: d.name,
           }))}

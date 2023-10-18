@@ -1,11 +1,18 @@
-import { Suspense } from "react";
-import { Space, Typography, Row, Col } from "antd";
+import { Col, Row, Space, Typography } from "antd";
+import { useTranslation } from "react-i18next";
 
-import ModelsSidebar from "@/components/ModelsSidebar";
 import CodeEditor from "@/components/CodeEditor";
-import type { Version } from "@/types/version";
-import type { File } from "@/types/file";
+import ModelsSidebar from "@/components/ModelsSidebar";
+import useLocation from "@/hooks/useLocation";
 import AppLayout from "@/layouts/AppLayout";
+import CurrentUserStore from "@/stores/CurrentUserStore";
+import type { File } from "@/types/file";
+import type { Version } from "@/types/version";
+// import type {
+//   Datasources_Pk_Columns_Input,
+//   Datasources_Set_Input,
+// } from "@/graphql/generated";
+import { useDataschemasQuery } from "@/graphql/generated";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
 
@@ -107,4 +114,35 @@ const Models: React.FC<ModelsProps> = ({
   );
 };
 
-export default Models;
+const ModelsWrapper: React.FC = () => {
+  const currentVersion = {
+    id: "asdasd",
+    checksum: "asdasd",
+    createdAt: "asdasd",
+    author: {
+      id: "asdasd",
+      name: "asdasd",
+      email: "asdasd",
+      avatarUrl: "asdasd",
+    },
+    files: [
+      {
+        name: "asdasd",
+        value: "asdasd",
+        language: "asdasd",
+      },
+    ],
+  };
+
+  const [query, execQuery] = useDataschemasQuery({
+    variables: {},
+  });
+
+  const { t } = useTranslation(["dataSourceStepForm"]);
+  const { currentUser, currentTeamId } = CurrentUserStore();
+  const [location, setLocation] = useLocation();
+
+  return <Models branches={[]} docs="asdasd" currentVersion={currentVersion} />;
+};
+
+export default ModelsWrapper;

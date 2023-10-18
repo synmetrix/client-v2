@@ -11374,6 +11374,40 @@ export type UpdateUserInfoMutation = {
   } | null;
 };
 
+export type DataschemasQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Branches_Bool_Exp>;
+  order_by?: InputMaybe<Branches_Order_By[] | Branches_Order_By>;
+}>;
+
+export type DataschemasQuery = {
+  __typename?: "query_root";
+  branches: {
+    __typename?: "branches";
+    id: any;
+    name: string;
+    status: Branch_Statuses_Enum;
+    versions: {
+      __typename?: "versions";
+      id: any;
+      checksum: string;
+      created_at: any;
+      updated_at: any;
+      user: { __typename?: "users"; display_name?: string | null };
+      dataschemas: {
+        __typename?: "dataschemas";
+        id: any;
+        name: string;
+        code: string;
+        created_at: any;
+        updated_at: any;
+        datasource_id: any;
+      }[];
+    }[];
+  }[];
+};
+
 export type CreateDataSourceMutationVariables = Exact<{
   object: Datasources_Insert_Input;
 }>;
@@ -12047,6 +12081,51 @@ export function useUpdateUserInfoMutation() {
     UpdateUserInfoMutationVariables
   >(UpdateUserInfoDocument);
 }
+export const DataschemasDocument = gql`
+  query Dataschemas(
+    $offset: Int
+    $limit: Int
+    $where: branches_bool_exp
+    $order_by: [branches_order_by!]
+  ) {
+    branches(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+      name
+      status
+      versions(order_by: { created_at: desc }) {
+        id
+        checksum
+        created_at
+        updated_at
+        user {
+          display_name
+        }
+        dataschemas {
+          id
+          name
+          code
+          created_at
+          updated_at
+          datasource_id
+        }
+      }
+    }
+  }
+`;
+
+export function useDataschemasQuery(
+  options?: Omit<Urql.UseQueryArgs<DataschemasQueryVariables>, "query">
+) {
+  return Urql.useQuery<DataschemasQuery, DataschemasQueryVariables>({
+    query: DataschemasDocument,
+    ...options,
+  });
+}
 export const CreateDataSourceDocument = gql`
   mutation CreateDataSource($object: datasources_insert_input!) {
     insert_datasources_one(object: $object) {
@@ -12566,6 +12645,7 @@ export const namedOperations = {
     AllAccessLists: "AllAccessLists",
     AccessList: "AccessList",
     CurrentUser: "CurrentUser",
+    Dataschemas: "Dataschemas",
     Datasources: "Datasources",
     FetchTables: "FetchTables",
     FetchMeta: "FetchMeta",

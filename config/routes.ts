@@ -24,6 +24,10 @@ export default [
             component: "./pages/Home",
           },
           {
+            path: "/models",
+            component: "./pages/Models",
+          },
+          {
             path: "/teams",
             component: "./pages/Teams",
           },

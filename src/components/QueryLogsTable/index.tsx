@@ -13,9 +13,15 @@ import type { FC } from "react";
 
 interface QueryLogsTableProps {
   logs: Request_Logs[];
+  pagination?: TableProps<Request_Logs>["pagination"];
+  onChange?: TableProps<Request_Logs>["onChange"];
 }
 
-const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
+const QueryLogsTable: FC<QueryLogsTableProps> = ({
+  logs,
+  onChange,
+  pagination = false,
+}) => {
   const { t } = useTranslation(["logs"]);
   const columns: TableProps<Request_Logs>["columns"] = [
     {
@@ -92,7 +98,8 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
       columns={columns}
       dataSource={logs}
       rowKey={(record) => record.id}
-      pagination={false}
+      pagination={pagination}
+      onChange={onChange}
     />
   );
 };

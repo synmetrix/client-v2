@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useSetState } from "ahooks";
 
+import type { TablePaginationConfig } from "antd";
+
 const defaultPageSize = 10;
 
 interface Props {

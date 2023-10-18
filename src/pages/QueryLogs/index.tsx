@@ -74,6 +74,7 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
             <QueryLogsTable
               logs={allLogs as unknown as Request_Logs[]}
               pagination={{
+                pageSize,
                 current: currentPage,
                 total: totalCount,
                 onChange: (current) => onPageChange({ current }),

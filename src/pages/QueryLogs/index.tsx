@@ -11,7 +11,10 @@ import useTableState from "@/hooks/useTableState";
 import useAppSettings from "@/hooks/useAppSettings";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import useLocation from "@/hooks/useLocation";
-import type { Order_By, Request_Logs } from "@/graphql/generated";
+import type { Request_Logs } from "@/graphql/generated";
+import QueryFilter from "@/components/QueryFilter";
+import useUserData from "@/hooks/useUserData";
+import type { QueryFilterForm } from "@/types/queryFilter";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -21,21 +24,15 @@ interface QueryLogsProps {
   logs: QueryLog[];
 }
 
-interface LogsFilter {
-  from: moment.Moment | null;
-  to: moment.Moment | null;
-  sort: Order_By | null;
-}
-
-const defaultFilterState: LogsFilter = {
-  from: moment().subtract(1, "days"),
+const defaultFilterState: QueryFilterForm = {
+  from: moment().subtract(1, "days").toISOString(),
   to: null,
   sort: null,
+  dataSourceId: null,
 };
 
 const QueryLogs: React.FC<QueryLogsProps> = () => {
   const { t } = useTranslation(["logs", "pages"]);
-
   const [filter, setFilter] = useState(defaultFilterState);
 
   const { withAuthPrefix } = useAppSettings();
@@ -57,6 +54,10 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
       ...filter,
     },
   });
+
+  const {
+    currentUser: { dataSources },
+  } = useUserData();
 
   const onClickRow = (recordId: string) =>
     setLocation(`${basePath}/${recordId}`);
@@ -80,16 +81,24 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
         />
         <div className={styles.body}>
           <BouncingDotsLoader loading={allData?.fetching}>
-            <QueryLogsTable
-              logs={allLogs as unknown as Request_Logs[]}
-              onClickRow={onClickRow}
-              pagination={{
-                pageSize,
-                current: currentPage,
-                total: totalCount,
-                onChange: (current) => onPageChange({ current }),
-              }}
-            />
+            <Space size={27} direction="vertical">
+              <QueryFilter
+                defaultValues={defaultFilterState}
+                values={filter}
+                dataSources={dataSources}
+                onChange={setFilter}
+              />
+              <QueryLogsTable
+                logs={allLogs as unknown as Request_Logs[]}
+                onClickRow={onClickRow}
+                pagination={{
+                  pageSize,
+                  current: currentPage,
+                  total: totalCount,
+                  onChange: (current) => onPageChange({ current }),
+                }}
+              />
+            </Space>
           </BouncingDotsLoader>
         </div>
       </Space>

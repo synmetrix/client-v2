@@ -277,9 +277,12 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
               <DatePicker
                 size={size}
                 className={cn(styles.input, props.className)}
-                onChange={(_, dateString) =>
+                onChange={(date) =>
                   onChange(
-                    dateString as PathValue<FieldValues, Path<FieldValues>>
+                    date?.toISOString() as PathValue<
+                      FieldValues,
+                      Path<FieldValues>
+                    >
                   )
                 }
                 locale={locales[language as keyof typeof locales]}

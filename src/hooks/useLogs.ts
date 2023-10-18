@@ -31,11 +31,15 @@ const getListVariables = (
   }
 
   if (params?.from) {
-    res = set("where.created_at._gte", params.from.toISOString(), res);
+    res = set("where.created_at._gte", params.from, res);
   }
 
   if (params?.to) {
-    res = set("where.created_at._lte", params.to.toISOString(), res);
+    res = set("where.created_at._lte", params.to, res);
+  }
+
+  if (params?.dataSourceId) {
+    res = set("where.datasource_id._eq", params.dataSourceId, res);
   }
 
   if (params?.sort) {

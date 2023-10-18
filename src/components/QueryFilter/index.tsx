@@ -4,23 +4,38 @@ import { useForm } from "react-hook-form";
 
 import Input from "@/components/Input";
 import type { QueryFilterForm } from "@/types/queryFilter";
-import type { DeepPartial } from "@/types/deepPartial";
+import type { DataSourceInfo } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
 interface QueryFilterProps {
-  dataSources: string[];
-  onChange: (data: DeepPartial<QueryFilterForm>) => void;
+  dataSources: DataSourceInfo[];
+  defaultValues?: Partial<QueryFilterForm>;
+  values?: QueryFilterForm;
+  onChange: (data: QueryFilterForm) => void;
 }
 
-const QueryFilter: FC<QueryFilterProps> = ({ dataSources, onChange }) => {
+const QueryFilter: FC<QueryFilterProps> = ({
+  dataSources,
+  onChange,
+  defaultValues = {
+    dataSourceId: null,
+    from: null,
+    to: null,
+    sort: null,
+  },
+  values,
+}) => {
   const { t } = useTranslation(["logs"]);
-  const { control, watch } = useForm<QueryFilterForm>();
+  const { control, watch } = useForm<QueryFilterForm>({
+    defaultValues,
+    values,
+  });
 
   useEffect(() => {
-    const subscription = watch((value) => onChange(value));
+    const subscription = watch((value) => onChange(value as QueryFilterForm));
     return () => subscription.unsubscribe();
   }, [onChange, watch]);
 
@@ -30,27 +45,27 @@ const QueryFilter: FC<QueryFilterProps> = ({ dataSources, onChange }) => {
         <Input
           className={styles.input}
           control={control}
-          name="dataSource"
+          name="dataSourceId"
           placeholder={t("query.filter.select")}
           label={t("query.filter.data_source")}
           fieldType="select"
           options={dataSources.map((d) => ({
-            value: d,
-            label: d,
+            value: d.id || "",
+            label: d.name,
           }))}
         />
 
         <Input
           className={styles.input}
           control={control}
-          name="date.from"
+          name="from"
           fieldType="date"
           label={t("query.filter.from")}
         />
         <Input
           className={styles.input}
           control={control}
-          name="date.to"
+          name="to"
           fieldType="date"
           label={t("query.filter.to")}
         />

@@ -8,6 +8,7 @@ import type { QueryLog } from "@/types/logs";
 import AppLayout from "@/layouts/AppLayout";
 import useLogs from "@/hooks/useLogs";
 import useTableState from "@/hooks/useTableState";
+import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import type { Order_By, Request_Logs } from "@/graphql/generated";
 
 import DocsIcon from "@/assets/docs.svg";
@@ -69,14 +70,16 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
           }}
         />
         <div className={styles.body}>
-          <QueryLogsTable
-            logs={allLogs as unknown as Request_Logs[]}
-            pagination={{
-              current: currentPage,
-              total: totalCount,
-              onChange: (current) => onPageChange({ current }),
-            }}
-          />
+          <BouncingDotsLoader loading={allData?.fetching}>
+            <QueryLogsTable
+              logs={allLogs as unknown as Request_Logs[]}
+              pagination={{
+                current: currentPage,
+                total: totalCount,
+                onChange: (current) => onPageChange({ current }),
+              }}
+            />
+          </BouncingDotsLoader>
         </div>
       </Space>
     </AppLayout>

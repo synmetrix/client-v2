@@ -102,6 +102,7 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
       rowKey={(record) => record.id}
       onRow={(r) => ({
         onClick: () => onClickRow?.(r.id),
+        style: { cursor: "pointer" },
       })}
       pagination={pagination}
       onChange={onChange}

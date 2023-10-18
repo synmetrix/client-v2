@@ -3,21 +3,21 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 
 import Input from "@/components/Input";
-import type { QueryFilterForm } from "@/types/queryFilter";
+import type { QueryFiltersForm } from "@/types/queryFilter";
 import type { DataSourceInfo } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-interface QueryFilterProps {
+interface QueryFiltersProps {
   dataSources?: DataSourceInfo[];
-  defaultValues?: Partial<QueryFilterForm>;
-  values?: QueryFilterForm;
-  onChange: (data: QueryFilterForm) => void;
+  defaultValues?: Partial<QueryFiltersForm>;
+  values?: QueryFiltersForm;
+  onChange: (data: QueryFiltersForm) => void;
 }
 
-const QueryFilter: FC<QueryFilterProps> = ({
+const QueryFilters: FC<QueryFiltersProps> = ({
   dataSources,
   onChange,
   defaultValues = {
@@ -29,13 +29,13 @@ const QueryFilter: FC<QueryFilterProps> = ({
   values,
 }) => {
   const { t } = useTranslation(["logs"]);
-  const { control, watch } = useForm<QueryFilterForm>({
+  const { control, watch } = useForm<QueryFiltersForm>({
     defaultValues,
     values,
   });
 
   useEffect(() => {
-    const subscription = watch((value) => onChange(value as QueryFilterForm));
+    const subscription = watch((value) => onChange(value as QueryFiltersForm));
     return () => subscription.unsubscribe();
   }, [onChange, watch]);
 
@@ -87,4 +87,4 @@ const QueryFilter: FC<QueryFilterProps> = ({
   );
 };
 
-export default QueryFilter;
+export default QueryFilters;

@@ -11,9 +11,9 @@ import useAppSettings from "@/hooks/useAppSettings";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import useLocation from "@/hooks/useLocation";
 import type { Request_Logs } from "@/graphql/generated";
-import QueryFilter from "@/components/QueryFilter";
+import QueryFilters from "@/components/QueryFilters";
 import useUserData from "@/hooks/useUserData";
-import type { QueryFilterForm } from "@/types/queryFilter";
+import type { QueryFiltersForm } from "@/types/queryFilter";
 import SidebarHeader from "@/components/SidebarHeader";
 import SidebarMenu from "@/components/SidebarMenu";
 import { logsMenuItems } from "@/mocks/sidebarMenu";
@@ -26,7 +26,7 @@ import styles from "./index.module.less";
 
 import type { TablePaginationConfig } from "antd";
 
-const defaultFilterState: QueryFilterForm = {
+const defaultFilterState: QueryFiltersForm = {
   from: moment().subtract(1, "days").toISOString(),
   to: null,
   sort: null,
@@ -41,8 +41,8 @@ interface QueryLogsProps {
   fetching: boolean;
   dataSources: DataSourceInfo[];
   onClickRow: (recordId: string) => void;
-  filter: QueryFilterForm;
-  onFilterUpdate: (filters: QueryFilterForm) => void;
+  filter: QueryFiltersForm;
+  onFilterUpdate: (filters: QueryFiltersForm) => void;
   onPageChange: ({ current }: TablePaginationConfig) => void;
 }
 
@@ -87,7 +87,7 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
         <div className={styles.body}>
           <BouncingDotsLoader loading={fetching}>
             <Space size={27} className={styles.space} direction="vertical">
-              <QueryFilter
+              <QueryFilters
                 defaultValues={defaultFilterState}
                 values={filter}
                 dataSources={dataSources}

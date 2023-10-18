@@ -1,17 +1,17 @@
 import RootLayout from "@/layouts/RootLayout";
 
-import QueryFilter from ".";
+import QueryFilters from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Logs/QueryFilter",
-  component: QueryFilter,
-} as Meta<typeof QueryFilter>;
+  title: "Components/Logs/QueryFilters",
+  component: QueryFilters,
+} as Meta<typeof QueryFilters>;
 
-const Template: StoryFn<typeof QueryFilter> = (args) => (
+const Template: StoryFn<typeof QueryFilters> = (args) => (
   <RootLayout>
-    <QueryFilter {...args} />
+    <QueryFilters {...args} />
   </RootLayout>
 );
 

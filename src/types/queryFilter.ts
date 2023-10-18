@@ -1,6 +1,6 @@
 import type { Order_By } from "@/graphql/generated";
 
-export interface QueryFilterForm {
+export interface QueryFiltersForm {
   from: string | null;
   to: string | null;
   sort: Order_By | null;

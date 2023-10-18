@@ -122,7 +122,7 @@
     },
     "errors": {
       "email": "Enter a valid e-mail",
-      "password": "Minimum 8 characters, at least 1 letter and 1 number"
+      "password": "Minimum 6 characters"
     }
   },
   "operators": {

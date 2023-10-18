@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Table, Typography } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
@@ -13,6 +13,8 @@ import styles from "./index.module.less";
 
 import type { ColumnsType } from "antd/es/table";
 import type { FC } from "react";
+
+const { Paragraph } = Typography;
 
 interface AccessTableProps {
   accessLists: AccessList[];
@@ -95,7 +97,15 @@ const AccessTable: FC<AccessTableProps> = ({
         dataIndex: "name",
         key: "name",
         width: 225,
-        render: (value) => <span className={styles.url}>{value}</span>,
+        render: (value) => (
+          <Paragraph
+            ellipsis
+            style={{ display: "inline-block", maxWidth: 225 }}
+            className={styles.paragraph}
+          >
+            {value}
+          </Paragraph>
+        ),
       },
       {
         title: "type",

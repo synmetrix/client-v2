@@ -4,6 +4,7 @@ import { Col, Form, Row, Typography } from "antd";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import validate from "@/utils/validations";
 
 import styles from "./index.module.less";
 
@@ -49,7 +50,11 @@ const SecurityForm: FC<SecurityFormProps> = ({ initialValue, onSubmit }) => {
         <Col span={24} md={12}>
           <Input
             control={control}
-            rules={{ required: true }}
+            rules={{
+              required: true,
+              validate: (v: string) =>
+                validate.password(v) || t("common:form.errors.password"),
+            }}
             name="newPassword"
             label={t("common:form.labels.new_password")}
             defaultValue={initialValue?.newPassword}

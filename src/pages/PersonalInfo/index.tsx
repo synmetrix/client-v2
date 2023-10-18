@@ -92,7 +92,7 @@ const PersonalInfoWrapper = () => {
   const onLogout = async () => {
     await logout();
     cleanTokens();
-    setLocation("/signin");
+    setLocation("/auth/signin");
   };
 
   const initialValue = {

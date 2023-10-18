@@ -28,7 +28,6 @@ const QueryFilter: FC<QueryFilterProps> = ({
   },
   values,
 }) => {
-  console.log(JSON.stringify(dataSources));
   const { t } = useTranslation(["logs"]);
   const { control, watch } = useForm<QueryFilterForm>({
     defaultValues,

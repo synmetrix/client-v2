@@ -71,7 +71,8 @@
     "checksum": "Checksum",
     "restore": "Restore",
     "all": "all",
-    "empty_default": "No Data"
+    "empty_default": "No Data",
+    "logs": "Logs"
   },
   "form": {
     "labels": {

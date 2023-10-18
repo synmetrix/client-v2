@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import PageHeader from "@/components/PageHeader";
 import QueryLogsTable from "@/components/QueryLogsTable";
 import type { QueryLog } from "@/types/logs";
-import AppLayout from "@/layouts/AppLayout";
+import SidebarLayout from "@/layouts/SidebarLayout";
 import useLogs from "@/hooks/useLogs";
 import useTableState from "@/hooks/useTableState";
 import useAppSettings from "@/hooks/useAppSettings";
@@ -15,7 +15,11 @@ import type { Request_Logs } from "@/graphql/generated";
 import QueryFilter from "@/components/QueryFilter";
 import useUserData from "@/hooks/useUserData";
 import type { QueryFilterForm } from "@/types/queryFilter";
+import SidebarHeader from "@/components/SidebarHeader";
+import SidebarMenu from "@/components/SidebarMenu";
+import { logsMenuItems } from "@/mocks/sidebarMenu";
 
+import LogsIcon from "@/assets/logs-active.svg";
 import DocsIcon from "@/assets/docs.svg";
 
 import styles from "./index.module.less";
@@ -32,7 +36,7 @@ const defaultFilterState: QueryFilterForm = {
 };
 
 const QueryLogs: React.FC<QueryLogsProps> = () => {
-  const { t } = useTranslation(["logs", "pages"]);
+  const { t } = useTranslation(["logs", "pages", "common"]);
   const [filter, setFilter] = useState(defaultFilterState);
 
   const { withAuthPrefix } = useAppSettings();
@@ -63,7 +67,14 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
     setLocation(`${basePath}/${recordId}`);
 
   return (
-    <AppLayout divider title={t("pages:logs.query")}>
+    <SidebarLayout
+      divider
+      title={t("pages:logs.query")}
+      subTitle={
+        <SidebarHeader icon={<LogsIcon />} title={t("common:words.logs")} />
+      }
+      items={<SidebarMenu items={logsMenuItems} />}
+    >
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("query.title")}
@@ -102,7 +113,7 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
           </BouncingDotsLoader>
         </div>
       </Space>
-    </AppLayout>
+    </SidebarLayout>
   );
 };
 

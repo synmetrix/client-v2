@@ -7,7 +7,7 @@ import DataSourceForm from "@/components/DataSourceForm";
 import Modal from "@/components/Modal";
 import NoDataSource from "@/components/NoDataSource";
 import PageHeader from "@/components/PageHeader";
-import SettingsMenu from "@/components/SettingsMenu";
+import SidebarMenu from "@/components/SidebarMenu";
 import type {
   Datasources_Pk_Columns_Input,
   Datasources_Set_Input,
@@ -32,6 +32,7 @@ import type {
   DataSourceSetupForm,
   DynamicForm,
 } from "@/types/dataSource";
+import { settingsMenuItems } from "@/mocks/sidebarMenu";
 
 import styles from "./index.module.less";
 
@@ -82,7 +83,7 @@ export const DataSources = ({
   return (
     <SidebarLayout
       title={t("pages:settings.data_sources")}
-      items={<SettingsMenu />}
+      items={<SidebarMenu items={settingsMenuItems} />}
     >
       <Spin spinning={loading}>
         {dataSources.length === 0 && <NoDataSource onConnect={onOpen} />}

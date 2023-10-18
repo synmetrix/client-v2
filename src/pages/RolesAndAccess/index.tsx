@@ -5,7 +5,7 @@ import AccessTable from "@/components/AccessTable";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import RoleForm from "@/components/RoleForm";
-import SettingsMenu from "@/components/SettingsMenu";
+import SidebarMenu from "@/components/SidebarMenu";
 import type { AllAccessListsQuery, Datasources } from "@/graphql/generated";
 import {
   useAllAccessListsQuery,
@@ -26,6 +26,7 @@ import type {
   RoleForm as RoleFormType,
 } from "@/types/access";
 import type { Cube, DataSourceInfo } from "@/types/dataSource";
+import { settingsMenuItems } from "@/mocks/sidebarMenu";
 
 import styles from "./index.module.less";
 interface RolesAndAccessProps {
@@ -73,7 +74,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   return (
     <SidebarLayout
       title={t("pages:settings.roles_and_access")}
-      items={<SettingsMenu />}
+      items={<SidebarMenu items={settingsMenuItems} />}
     >
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>

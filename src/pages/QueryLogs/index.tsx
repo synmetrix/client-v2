@@ -27,7 +27,7 @@ import styles from "./index.module.less";
 import type { TablePaginationConfig } from "antd";
 
 const defaultFilterState: QueryFiltersForm = {
-  from: moment().subtract(1, "days").toISOString(),
+  from: null,
   to: null,
   sort: null,
   dataSourceId: null,
@@ -85,14 +85,14 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
           }}
         />
         <div className={styles.body}>
-          <BouncingDotsLoader loading={fetching}>
-            <Space size={27} className={styles.space} direction="vertical">
-              <QueryFilters
-                defaultValues={defaultFilterState}
-                values={filter}
-                dataSources={dataSources}
-                onChange={onFilterUpdate}
-              />
+          <Space size={27} className={styles.space} direction="vertical">
+            <QueryFilters
+              defaultValues={defaultFilterState}
+              values={filter}
+              dataSources={dataSources}
+              onChange={onFilterUpdate}
+            />
+            <BouncingDotsLoader loading={fetching}>
               <QueryLogsTable
                 logs={logs}
                 onClickRow={onClickRow}
@@ -103,8 +103,8 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
                   onChange: (current) => onPageChange({ current }),
                 }}
               />
-            </Space>
-          </BouncingDotsLoader>
+            </BouncingDotsLoader>
+          </Space>
         </div>
       </Space>
     </SidebarLayout>

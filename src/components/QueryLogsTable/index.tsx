@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
 import Avatar from "@/components/Avatar";
-import type { QueryLog } from "@/types/logs";
+import formatTime from "@/utils/helpers/formatTime";
 import type { Request_Logs } from "@/graphql/generated";
 
 import styles from "./index.module.less";
@@ -80,7 +80,9 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
       dataIndex: "start_time",
       key: "start_time",
       render: (value) => (
-        <span className={cn(styles.cell, styles.startTime)}>{value}</span>
+        <span className={cn(styles.cell, styles.startTime)}>
+          {formatTime(value)}
+        </span>
       ),
     },
     {
@@ -90,7 +92,9 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
       dataIndex: "created_at",
       key: "created_at",
       render: (value) => (
-        <span className={cn(styles.cell, styles.createdAt)}>{value}</span>
+        <span className={cn(styles.cell, styles.createdAt)}>
+          {formatTime(value)}
+        </span>
       ),
     },
   ];

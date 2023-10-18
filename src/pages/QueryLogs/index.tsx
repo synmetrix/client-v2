@@ -8,7 +8,9 @@ import type { QueryLog } from "@/types/logs";
 import AppLayout from "@/layouts/AppLayout";
 import useLogs from "@/hooks/useLogs";
 import useTableState from "@/hooks/useTableState";
+import useAppSettings from "@/hooks/useAppSettings";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
+import useLocation from "@/hooks/useLocation";
 import type { Order_By, Request_Logs } from "@/graphql/generated";
 
 import DocsIcon from "@/assets/docs.svg";
@@ -36,6 +38,10 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
 
   const [filter, setFilter] = useState(defaultFilterState);
 
+  const { withAuthPrefix } = useAppSettings();
+  const [, setLocation] = useLocation();
+  const basePath = withAuthPrefix("/logs/requests");
+
   const {
     tableState: { pageSize, currentPage, paginationVars },
     onPageChange,
@@ -52,7 +58,8 @@ const QueryLogs: React.FC<QueryLogsProps> = () => {
     },
   });
 
-  const onClickRow = (rowId: string) => console.log(rowId);
+  const onClickRow = (recordId: string) =>
+    setLocation(`${basePath}/${recordId}`);
 
   return (
     <AppLayout divider title={t("pages:logs.query")}>

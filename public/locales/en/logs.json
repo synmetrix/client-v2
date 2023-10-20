@@ -36,6 +36,14 @@
       "time_in_queue": "Time in queue (ms)",
       "timestamp": "Timestamp"
     },
+    "info": {
+      "request_id": "Request ID",
+      "start_time": "Start Time",
+      "path": "Path",
+      "end_time": "End Time",
+      "duration": "Duration",
+      "query_key_md5": "Query Key md5"
+    },
     "details": {
       "query_key": "Query Key",
       "sql": "SQL",

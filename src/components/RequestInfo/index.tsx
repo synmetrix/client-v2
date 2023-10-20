@@ -1,4 +1,5 @@
 import { Col, Row } from "antd";
+import { useTranslation } from "react-i18next";
 
 import type { Maybe, Request_Logs } from "@/graphql/generated";
 
@@ -14,36 +15,43 @@ const RequestInfo: FC<Partial<Request_Logs> & { queryKey?: Maybe<string> }> = ({
   end_time,
   queryKey,
 }) => {
+  const { t } = useTranslation(["logs"]);
+
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} md={12}>
         <div className={styles.item}>
-          <span className={styles.label}>Request ID:</span> {id}
+          <span className={styles.label}>{t("query.info.request_id")}:</span>{" "}
+          {id}
         </div>
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
-          <span className={styles.label}>Start Time:</span> {start_time}
+          <span className={styles.label}>{t("query.info.start_time")}:</span>{" "}
+          {start_time}
         </div>
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
-          <span className={styles.label}>Path:</span> {path}
+          <span className={styles.label}>{t("query.info.path")}:</span> {path}
         </div>
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
-          <span className={styles.label}>End Time:</span> {end_time}
+          <span className={styles.label}>{t("query.info.end_time")}:</span>{" "}
+          {end_time}
         </div>
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
-          <span className={styles.label}>Duration:</span> {duration}
+          <span className={styles.label}>{t("query:info.duration")}:</span>{" "}
+          {duration}
         </div>
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
-          <span className={styles.label}>Query Key md5:</span> {queryKey}
+          <span className={styles.label}>{t("query.info.query_key_md5")}:</span>{" "}
+          {queryKey}
         </div>
       </Col>
     </Row>

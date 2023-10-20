@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import QueryPreview from "@/components/QueryPreview";
 import Copy from "@/components/Copy";
 import EventsTable from "@/components/EventsTable";
-import type { QueryPreview as QueryType } from "@/types/queryPreview";
 import type { Maybe, Request_Event_Logs } from "@/graphql/generated";
 
 import styles from "./index.module.less";

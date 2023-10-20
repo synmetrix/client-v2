@@ -1,8 +1,6 @@
 import { Form, Input } from "antd";
 import cn from "classnames";
 
-import type { Maybe } from "@/graphql/generated";
-
 import CopyIcon from "@/assets/copy.svg";
 
 import styles from "./index.module.less";

@@ -1,4 +1,4 @@
-import { Tabs, Typography } from "antd";
+import { Empty, Tabs, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import QueryPreview from "@/components/QueryPreview";
@@ -11,7 +11,7 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface QueryDetailsProps {
-  query: string;
+  query: Maybe<string>;
   SQLString?: Maybe<string>;
   events: Request_Event_Logs[];
 }
@@ -25,7 +25,7 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
     {
       label: <span className={styles.btn}>{t("query.details.query_key")}</span>,
       key: "1",
-      children: (
+      children: query ? (
         <>
           <Title level={5}>{t("query.details.query_key")}</Title>
           <QueryPreview
@@ -34,22 +34,26 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
             withButton={false}
           />
         </>
+      ) : (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       ),
     },
     {
       label: <span className={styles.btn}>{t("query.details.sql")}</span>,
       key: "2",
-      children: (
+      children: SQLString ? (
         <>
           <Title level={5}>{t("query.details.sql")}</Title>
-          <Copy key="sql" value={SQLString || ""} />
+          <Copy key="sql" value={SQLString} />
         </>
+      ) : (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       ),
     },
     {
       label: <span className={styles.btn}>{t("query.details.query")}</span>,
       key: "3",
-      children: (
+      children: query ? (
         <>
           <Title level={5}>{t("query.details.query")}</Title>
           <Copy
@@ -57,16 +61,20 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
             value={JSON.stringify(JSON.parse(query), null, 2)}
           />
         </>
+      ) : (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       ),
     },
     {
       label: <span className={styles.btn}>{t("query.table.events")}</span>,
       key: "4",
-      children: (
+      children: events ? (
         <>
           <Title level={5}>{t("query.table.events")}</Title>
           <EventsTable events={events} />
         </>
+      ) : (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       ),
     },
   ];

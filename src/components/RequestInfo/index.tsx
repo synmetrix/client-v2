@@ -45,7 +45,7 @@ const RequestInfo: FC<Partial<Request_Logs> & { queryKey?: Maybe<string> }> = ({
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
-          <span className={styles.label}>{t("query:info.duration")}:</span>{" "}
+          <span className={styles.label}>{t("query.info.duration")}:</span>{" "}
           {duration}
         </div>
       </Col>

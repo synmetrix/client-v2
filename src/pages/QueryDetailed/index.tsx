@@ -1,32 +1,52 @@
-import { Space } from "antd";
+import { Alert, Empty, Space } from "antd";
+import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
 import RequestInfo from "@/components/RequestInfo";
 import QueryDetails from "@/components/QueryDetails";
-import type { Request } from "@/types/request";
-import type { QueryPreview } from "@/types/queryPreview";
-import type { Event } from "@/types/event";
+import PageLoading from "@/components/PageLoading";
 import AppLayout from "@/layouts/AppLayout";
+import useLogs from "@/hooks/useLogs";
+import type {
+  Maybe,
+  Request_Event_Logs,
+  Request_Logs,
+} from "@/graphql/generated";
 
 import DocsIcon from "@/assets/docs.svg";
 
 import styles from "./index.module.less";
 
 interface QueryDetailedProps {
-  request: Request;
-  query: QueryPreview;
-  SQLString: string;
-  events: Event[];
+  request: Partial<Request_Logs>;
+  query: string;
+  SQLString?: Maybe<string>;
+  events: Request_Event_Logs[];
+  queryKey?: Maybe<string>;
+  fetching?: boolean;
+  error?: Maybe<string>;
 }
 
-const QueryDetailed: React.FC<QueryDetailedProps> = ({
+export const QueryDetailed: React.FC<QueryDetailedProps> = ({
+  error,
   request,
+  fetching,
   query,
   SQLString,
+  queryKey,
   events,
 }) => {
   const { t } = useTranslation(["logs", "pages", "common"]);
+
+  if (!request?.request_id) {
+    return (
+      <PageLoading spinning={fetching}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </PageLoading>
+    );
+  }
+
   return (
     <AppLayout divider title={t("pages:logs.query")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
@@ -46,7 +66,8 @@ const QueryDetailed: React.FC<QueryDetailedProps> = ({
         />
 
         <Space className={styles.body} size={13} direction="vertical">
-          <RequestInfo {...request} />
+          {error && <Alert message={error} type="error" />}
+          <RequestInfo {...request} queryKey={queryKey} />
           <QueryDetails query={query} SQLString={SQLString} events={events} />
         </Space>
       </Space>
@@ -54,4 +75,63 @@ const QueryDetailed: React.FC<QueryDetailedProps> = ({
   );
 };
 
-export default QueryDetailed;
+const QueryDetailedWrapper = () => {
+  const { id } = useParams();
+
+  const {
+    current,
+    queries: { currentData },
+  } = useLogs({
+    pauseQueryAll: true,
+    rowId: id,
+  });
+
+  const { events, querySql, queryKeyMd5, error } = useMemo(() => {
+    let eventLogs = current?.request_event_logs || [];
+    eventLogs = eventLogs.map((e, i) => {
+      const curTimestamp: string = eventLogs?.[i]?.timestamp;
+      const prevTimestamp: string =
+        eventLogs?.[i + 1]?.timestamp || curTimestamp;
+
+      const duration = Date.parse(curTimestamp) - Date.parse(prevTimestamp);
+
+      return {
+        ...e,
+        duration,
+      };
+    });
+
+    let key = current?.request_event_logs?.find((e) => e.query_key)?.query_key;
+
+    if (key) {
+      try {
+        key = JSON.parse(key);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    return {
+      events: eventLogs,
+      error: eventLogs?.find((e) => e?.error)?.error,
+      querySql: eventLogs?.find((e) => e?.query_sql)?.query_sql,
+      queryKey: key,
+      queryKeyMd5: current?.request_event_logs?.find((e) => e.query_key_md5)
+        ?.query_key_md5,
+    };
+  }, [current.request_event_logs]);
+
+  return (
+    <QueryDetailed
+      request={current}
+      SQLString={querySql}
+      events={events}
+      queryKey={queryKeyMd5}
+      query={events?.find((e) => e?.query)?.query}
+      fetching={currentData.fetching}
+      error={error}
+    />
+  );
+};
+
+export default QueryDetailedWrapper;

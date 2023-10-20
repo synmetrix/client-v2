@@ -52,6 +52,10 @@ export default [
             component: "./pages/QueryLogs",
           },
           {
+            path: "/logs/query/:id",
+            component: "./pages/QueryDetailed",
+          },
+          {
             component: "./pages/404",
           },
         ],

@@ -27,6 +27,7 @@
       "data_source": "Data source",
       "path": "Path",
       "events": "Events",
+      "event": "Event",
       "creator": "Creator",
       "duration": "Duration",
       "start_time": "Start Time",

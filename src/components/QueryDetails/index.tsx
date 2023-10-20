@@ -5,16 +5,16 @@ import QueryPreview from "@/components/QueryPreview";
 import Copy from "@/components/Copy";
 import EventsTable from "@/components/EventsTable";
 import type { QueryPreview as QueryType } from "@/types/queryPreview";
-import type { Event } from "@/types/event";
+import type { Maybe, Request_Event_Logs } from "@/graphql/generated";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
 interface QueryDetailsProps {
-  query: QueryType;
-  SQLString: string;
-  events: Event[];
+  query: string;
+  SQLString?: Maybe<string>;
+  events: Request_Event_Logs[];
 }
 
 const { Title } = Typography;
@@ -29,7 +29,11 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
       children: (
         <>
           <Title level={5}>{t("query.details.query_key")}</Title>
-          <QueryPreview key="queryKey" {...query} withButton={false} />
+          <QueryPreview
+            key="queryKey"
+            {...JSON.parse(query)}
+            withButton={false}
+          />
         </>
       ),
     },
@@ -39,7 +43,7 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
       children: (
         <>
           <Title level={5}>{t("query.details.sql")}</Title>
-          <Copy key="sql" value={SQLString} />
+          <Copy key="sql" value={SQLString || ""} />
         </>
       ),
     },
@@ -49,7 +53,10 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
       children: (
         <>
           <Title level={5}>{t("query.details.query")}</Title>
-          <Copy key="query" value={JSON.stringify(query, null, 2)} />
+          <Copy
+            key="query"
+            value={JSON.stringify(JSON.parse(query), null, 2)}
+          />
         </>
       ),
     },

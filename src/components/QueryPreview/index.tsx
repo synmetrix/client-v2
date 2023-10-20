@@ -75,14 +75,14 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
         key={"1"}
       >
         <Space className={styles.collapseInner} direction="vertical" size={10}>
-          {(dimensions || timeDimensions) && (
+          {(dimensions.length > 0 || timeDimensions.length > 0) && (
             <Space size={9}>
               <span className={styles.tagLabel}>{t("common:words.by")}</span>
               <QueryTags content={dimensions} type="dimension" />
               <QueryTags content={timeDimensions} type="timeDimension" />
             </Space>
           )}
-          {segments && (
+          {segments.length > 0 && (
             <Space size={9}>
               <span className={styles.tagLabel}>{t("common:words.in")}</span>
               <QueryTags content={segments} type="segment" />

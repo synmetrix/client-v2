@@ -2,7 +2,7 @@ import { Table } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
-import type { Event } from "@/types/event";
+import type { Request_Event_Logs } from "@/graphql/generated";
 
 import styles from "./index.module.less";
 
@@ -10,17 +10,17 @@ import type { TableProps } from "antd";
 import type { FC } from "react";
 
 interface EventsTableProps {
-  events: Event[];
+  events: Request_Event_Logs[];
 }
 
 const EventsTable: FC<EventsTableProps> = ({ events }) => {
   const { t } = useTranslation(["logs"]);
 
-  const columns: TableProps<Event>["columns"] = [
+  const columns: TableProps<Request_Event_Logs>["columns"] = [
     {
-      title: t("query.table.events"),
-      dataIndex: "name",
-      key: "name",
+      title: t("query.table.event"),
+      dataIndex: "event",
+      key: "event",
       render: (value) => <span className={styles.cell}>{value}</span>,
     },
     {
@@ -31,8 +31,8 @@ const EventsTable: FC<EventsTableProps> = ({ events }) => {
     },
     {
       title: t("query.table.time_in_queue"),
-      dataIndex: "timeInQueue",
-      key: "timeInQueue",
+      dataIndex: "time_in_queue",
+      key: "time_in_queue",
       render: (value) => <span className={styles.cell}>{value}</span>,
     },
     {

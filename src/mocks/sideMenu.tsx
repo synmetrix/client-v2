@@ -49,7 +49,7 @@ export const items: SidebarItem[] = [
   {
     key: "logs",
     label: "Logs",
-    href: "/logs/alerts",
+    href: "/logs/query",
     icon: <LogsIcon />,
     activeIcon: <LogsActiveIcon />,
     //   items: [

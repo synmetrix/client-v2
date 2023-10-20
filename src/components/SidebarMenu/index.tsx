@@ -1,22 +1,22 @@
-import { useResponsive } from "ahooks";
-import { Drawer, Layout, Space, Typography } from "antd";
+import { Space } from "antd";
 import cn from "classnames";
 
 import Button from "@/components/Button";
-import { items } from "@/mocks/settingsMenu";
-import type { SettingsMenuItem } from "@/mocks/settingsMenu";
+import type { SidebarMenuItem } from "@/mocks/sidebarMenu";
 import useLocation from "@/hooks/useLocation";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-interface SettingsMenuProps {}
+interface SidebarMenuProps {
+  items: SidebarMenuItem[];
+}
 
-const SettingsMenu: FC<SettingsMenuProps> = () => {
+const SidebarMenu: FC<SidebarMenuProps> = ({ items }) => {
   const [_, setLocation] = useLocation();
 
-  const onClick = (menuItem: SettingsMenuItem) => {
+  const onClick = (menuItem: SidebarMenuItem) => {
     const href = menuItem.href;
 
     if (href) {
@@ -47,4 +47,4 @@ const SettingsMenu: FC<SettingsMenuProps> = () => {
   return <div>{content}</div>;
 };
 
-export default SettingsMenu;
+export default SidebarMenu;

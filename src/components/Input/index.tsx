@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Controller } from "react-hook-form";
 import {
   Input as BasicInput,
@@ -14,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import ru from "antd/es/date-picker/locale/ru_RU";
 import en from "antd/es/date-picker/locale/en_US";
+
+import formatTime from "@/utils/helpers/formatTime";
 
 import CalendarIcon from "@/assets/calendar.svg";
 
@@ -272,19 +275,31 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           control={control}
           name={name}
           defaultValue={defaultValue}
-          render={({ field: { onChange }, fieldState: { invalid, error } }) => (
+          render={({
+            field: { onChange, value },
+            fieldState: { invalid, error },
+          }) => (
             <WrapperComponent {...wrapperProps}>
               <DatePicker
                 size={size}
-                className={cn(styles.input, props.className)}
-                onChange={(_, dateString) =>
+                className={cn(
+                  styles.input,
+                  value && styles.filledDate,
+                  props.className
+                )}
+                onChange={(date) =>
                   onChange(
-                    dateString as PathValue<FieldValues, Path<FieldValues>>
+                    date?.toISOString() as PathValue<
+                      FieldValues,
+                      Path<FieldValues>
+                    >
                   )
                 }
                 locale={locales[language as keyof typeof locales]}
                 suffixIcon={<CalendarIcon />}
-                placeholder={placeholder}
+                placeholder={
+                  !value ? placeholder : formatTime(value, "YYYY-MM-DD")
+                }
                 status={invalid ? "error" : undefined}
               />
               <span className={styles.error}>{error?.message}</span>

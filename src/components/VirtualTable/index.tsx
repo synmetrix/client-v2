@@ -328,7 +328,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
     );
   };
 
-  if (loading) return <BouncingDotsLoader />;
+  if (loading) return <BouncingDotsLoader loading />;
 
   if (!columns.length && !rows.length)
     return (

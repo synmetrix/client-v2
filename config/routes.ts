@@ -48,6 +48,10 @@ export default [
             component: "./pages/PersonalInfo",
           },
           {
+            path: "/logs/query",
+            component: "./pages/QueryLogs",
+          },
+          {
             component: "./pages/404",
           },
         ],

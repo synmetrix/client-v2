@@ -1,12 +1,28 @@
 import styles from "./index.module.less";
 
-const BouncingDotsLoader: React.FC = () => {
+import type { ReactNode } from "react";
+
+interface BouncingDotsLoaderProps {
+  loading?: boolean;
+  children?: ReactNode;
+}
+
+const BouncingDotsLoader: React.FC<BouncingDotsLoaderProps> = ({
+  loading,
+  children,
+}) => {
   return (
-    <div className={styles.bouncingDots}>
-      <div className={styles.dot} />
-      <div className={styles.dot} />
-      <div className={styles.dot} />
-    </div>
+    <>
+      {loading ? (
+        <div className={styles.bouncingDots}>
+          <div className={styles.dot} />
+          <div className={styles.dot} />
+          <div className={styles.dot} />
+        </div>
+      ) : (
+        children
+      )}
+    </>
   );
 };
 

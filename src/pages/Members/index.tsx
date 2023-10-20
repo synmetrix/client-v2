@@ -6,7 +6,7 @@ import MembersForm from "@/components/MembersForm";
 import MembersTable from "@/components/MembersTable";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
-import SettingsMenu from "@/components/SettingsMenu";
+import SidebarMenu from "@/components/SidebarMenu";
 import type {
   AllAccessListsQuery,
   Members as MembersType,
@@ -29,6 +29,7 @@ import type {
   Roles,
   TeamRole,
 } from "@/types/team";
+import { settingsMenuItems } from "@/mocks/sidebarMenu";
 
 import styles from "./index.module.less";
 
@@ -62,7 +63,10 @@ export const Members: React.FC<MembersProps> = ({
   const onRemove = (member: Member) => onDeleteMember(member.id);
 
   return (
-    <SidebarLayout title={t("pages:settings.members")} items={<SettingsMenu />}>
+    <SidebarLayout
+      title={t("pages:settings.members")}
+      items={<SidebarMenu items={settingsMenuItems} />}
+    >
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("settings:members.title")}

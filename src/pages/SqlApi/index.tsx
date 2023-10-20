@@ -11,7 +11,7 @@ import CredentialsTable from "@/components/CredentialsTable";
 import Modal from "@/components/Modal";
 import NoCredentials from "@/components/NoCredentials";
 import PageHeader from "@/components/PageHeader";
-import SettingsMenu from "@/components/SettingsMenu";
+import SidebarMenu from "@/components/SidebarMenu";
 import type { Datasources, Sql_Credentials } from "@/graphql/generated";
 import {
   useCredentialsQuery,
@@ -29,6 +29,7 @@ import type { ApiSetupForm, DataSourceInfo } from "@/types/dataSource";
 import type { Member } from "@/types/team";
 import formatTime from "@/utils/helpers/formatTime";
 import genName from "@/utils/helpers/genName";
+import { settingsMenuItems } from "@/mocks/sidebarMenu";
 
 import styles from "./index.module.less";
 
@@ -84,7 +85,10 @@ export const SqlApi = ({
     editPermission && credentials.length ? t("settings:sql_api.action") : null;
 
   return (
-    <SidebarLayout title={t("pages:settings.sql_api")} items={<SettingsMenu />}>
+    <SidebarLayout
+      title={t("pages:settings.sql_api")}
+      items={<SidebarMenu items={settingsMenuItems} />}
+    >
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader

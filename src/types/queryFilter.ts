@@ -1,10 +1,8 @@
-import type { Sort } from "./sort";
+import type { Order_By } from "@/graphql/generated";
 
-export interface QueryFilterForm {
-  dataSource: string;
-  date: {
-    from: string;
-    to: string;
-  };
-  sort: Sort;
+export interface QueryFiltersForm {
+  from: string | null;
+  to: string | null;
+  sort: Order_By | null;
+  dataSourceId: string | null;
 }

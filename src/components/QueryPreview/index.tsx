@@ -28,6 +28,8 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
 
   const [activePanel, setActivePanel] = useState<string>();
 
+  const isShown = (arr?: string[]) => arr && arr.length > 0;
+
   return (
     <Collapse
       expandIcon={({ isActive }) =>
@@ -54,19 +56,34 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
               <QueryTags content={measures} type="measure" />
               {!activePanel && (
                 <>
-                  <span className={styles.tagLabel}>
-                    {t("common:words.by")}
-                  </span>
-                  <QueryTags content={dimensions} type="dimension" />
-                  <QueryTags content={timeDimensions} type="timeDimension" />
-                  <span className={styles.tagLabel}>
-                    {t("common:words.in")}
-                  </span>
-                  <QueryTags content={segments} type="segment" />
-                  <span className={styles.tagLabel}>
-                    {t("common:words.ordered_by")}
-                  </span>
-                  <QueryTags content={orders} type="order" />
+                  {(isShown(dimensions) || isShown(timeDimensions)) && (
+                    <>
+                      <span className={styles.tagLabel}>
+                        {t("common:words.by")}
+                      </span>
+                      <QueryTags content={dimensions} type="dimension" />
+                      <QueryTags
+                        content={timeDimensions}
+                        type="timeDimension"
+                      />
+                    </>
+                  )}
+                  {isShown(segments) && (
+                    <>
+                      <span className={styles.tagLabel}>
+                        {t("common:words.in")}
+                      </span>
+                      <QueryTags content={segments} type="segment" />
+                    </>
+                  )}
+                  {isShown(orders) && (
+                    <>
+                      <span className={styles.tagLabel}>
+                        {t("common:words.ordered_by")}
+                      </span>
+                      <QueryTags content={orders} type="order" />
+                    </>
+                  )}
                 </>
               )}
             </Space>
@@ -75,21 +92,21 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
         key={"1"}
       >
         <Space className={styles.collapseInner} direction="vertical" size={10}>
-          {(dimensions.length > 0 || timeDimensions.length > 0) && (
+          {(isShown(dimensions) || isShown(timeDimensions)) && (
             <Space size={9}>
               <span className={styles.tagLabel}>{t("common:words.by")}</span>
               <QueryTags content={dimensions} type="dimension" />
               <QueryTags content={timeDimensions} type="timeDimension" />
             </Space>
           )}
-          {segments.length > 0 && (
+          {isShown(segments) && (
             <Space size={9}>
               <span className={styles.tagLabel}>{t("common:words.in")}</span>
               <QueryTags content={segments} type="segment" />
             </Space>
           )}
 
-          {orders && (
+          {isShown(orders) && (
             <Space size={9}>
               <span className={styles.tagLabel}>
                 {t("common:words.ordered_by")}

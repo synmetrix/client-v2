@@ -61,6 +61,7 @@ const QueryFilters: FC<QueryFiltersProps> = ({
           name="from"
           fieldType="date"
           label={t("query.filter.from")}
+          showTime
         />
         <Input
           className={styles.input}
@@ -68,6 +69,7 @@ const QueryFilters: FC<QueryFiltersProps> = ({
           name="to"
           fieldType="date"
           label={t("query.filter.to")}
+          showTime
         />
 
         <Input

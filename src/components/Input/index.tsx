@@ -29,6 +29,7 @@ import type {
   RadioGroupProps,
   UploadProps,
   SelectProps,
+  DatePickerProps,
 } from "antd";
 import type { Control, Path, PathValue, FieldValues } from "react-hook-form";
 import type { PasswordProps } from "antd/es/input/Password";
@@ -52,6 +53,8 @@ export interface InputProps<T extends FieldValues> extends ParentProps {
   rules?: object;
   starPosition?: "left" | "right";
   starColor?: string;
+  format?: DatePickerProps["format"];
+  showTime?: boolean;
 }
 
 const locales = {
@@ -71,6 +74,8 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   starPosition = "right",
   starColor = "#000000",
   children,
+  showTime = false,
+  format,
   ...props
 }) => {
   const {
@@ -287,6 +292,8 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                   value && styles.filledDate,
                   props.className
                 )}
+                showTime={showTime}
+                format={format}
                 onChange={(date) =>
                   onChange(
                     date?.toISOString() as PathValue<

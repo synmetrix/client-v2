@@ -2,6 +2,7 @@
   "words": {
     "apply": "Apply",
     "generate": "Generate",
+    "generate_models": "Generate Models",
     "test_connection": "Test connection",
     "skip": "Skip",
     "back": "Back",

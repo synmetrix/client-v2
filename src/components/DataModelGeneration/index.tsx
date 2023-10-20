@@ -1,4 +1,4 @@
-import { Col, Collapse, Form, Row, Typography } from "antd";
+import { Col, Collapse, Empty, Form, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
@@ -21,7 +21,8 @@ const { Panel } = Collapse;
 
 interface DataModelGenerationProps {
   dataSource: DataSource;
-  schema: Schema;
+  schema: Schema | undefined;
+  isOnboarding: boolean;
   onSubmit: (data: DynamicForm) => void;
   onGoBack: () => void;
   onSkip: () => void;
@@ -39,6 +40,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   onSubmit,
   onGoBack,
   onSkip,
+  isOnboarding = false,
   initialValue = {
     type: "js",
   },
@@ -79,40 +81,46 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
           onChange={setSearchValue}
         />
         <Form id="data-model-generation">
-          <Collapse
-            className={styles.collapse}
-            expandIcon={() => <TableIcon />}
-          >
-            {Object.keys(schema)
-              .filter(
-                (s) =>
-                  s.includes(searchValue) ||
-                  Object.keys(schema[s]).some((tb) => tb.includes(searchValue))
-              )
-              .map((s) => {
-                const count = getCount(watch(), s);
+          {schema ? (
+            <Collapse
+              className={styles.collapse}
+              expandIcon={() => <TableIcon />}
+            >
+              {Object.keys(schema)
+                .filter(
+                  (s) =>
+                    s.includes(searchValue) ||
+                    Object.keys(schema[s]).some((tb) =>
+                      tb.includes(searchValue)
+                    )
+                )
+                .map((s) => {
+                  const count = getCount(watch(), s);
 
-                return (
-                  <Panel
-                    className={styles.collapse}
-                    header={
-                      <span className={styles.collapseHeader}>
-                        {s} {count > 0 && <span>({count})</span>}
-                      </span>
-                    }
-                    key={s}
-                  >
-                    <TableSelection
-                      control={control}
-                      type={watch("type")}
-                      schema={schema}
-                      path={s}
-                      initialValue={initialValue}
-                    />
-                  </Panel>
-                );
-              })}
-          </Collapse>
+                  return (
+                    <Panel
+                      className={styles.collapse}
+                      header={
+                        <span className={styles.collapseHeader}>
+                          {s} {count > 0 && <span>({count})</span>}
+                        </span>
+                      }
+                      key={s}
+                    >
+                      <TableSelection
+                        control={control}
+                        type={watch("type")}
+                        schema={schema}
+                        path={s}
+                        initialValue={initialValue}
+                      />
+                    </Panel>
+                  );
+                })}
+            </Collapse>
+          ) : (
+            <Empty />
+          )}
 
           <Title level={5}>{t("choose_markup")}</Title>
 
@@ -127,16 +135,18 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
 
           <Row align="middle" justify={"space-between"}>
             <Col xs={24} md={18}>
-              <Button
-                className={cn(styles.back, {
-                  [styles.fullwidth]: !windowSize.md,
-                })}
-                size="large"
-                color="primary"
-                onClick={onGoBack}
-              >
-                {t("common:words.back")}
-              </Button>
+              {isOnboarding && (
+                <Button
+                  className={cn(styles.back, {
+                    [styles.fullwidth]: !windowSize.md,
+                  })}
+                  size="large"
+                  color="primary"
+                  onClick={onGoBack}
+                >
+                  {t("common:words.back")}
+                </Button>
+              )}
               <Button
                 className={cn(styles.submit, {
                   [styles.fullwidth]: !windowSize.md,
@@ -151,21 +161,23 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
               </Button>
             </Col>
 
-            <Col
-              xs={24}
-              md={6}
-              className={cn(styles.skip, { [styles.center]: !windowSize.md })}
-            >
-              <Button
-                className={cn(styles.link, {
-                  [styles.fullwidth]: !windowSize.md,
-                })}
-                type="link"
-                onClick={onSkip}
+            {isOnboarding && (
+              <Col
+                xs={24}
+                md={6}
+                className={cn(styles.skip, { [styles.center]: !windowSize.md })}
               >
-                {t("common:words.skip")}
-              </Button>
-            </Col>
+                <Button
+                  className={cn(styles.link, {
+                    [styles.fullwidth]: !windowSize.md,
+                  })}
+                  type="link"
+                  onClick={onSkip}
+                >
+                  {t("common:words.skip")}
+                </Button>
+              </Col>
+            )}
           </Row>
         </Form>
       </div>

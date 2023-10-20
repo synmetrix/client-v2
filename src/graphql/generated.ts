@@ -11384,6 +11384,7 @@ export type CreateDataSourceMutation = {
     __typename?: "datasources";
     id: any;
     name: string;
+    branches: { __typename?: "branches"; id: any }[];
   } | null;
 };
 
@@ -11404,6 +11405,7 @@ export type DatasourcesQuery = {
     db_type: string;
     created_at: any;
     updated_at: any;
+    branches: { __typename?: "branches"; id: any }[];
     sql_credentials: {
       __typename?: "sql_credentials";
       id: any;
@@ -11439,6 +11441,7 @@ export type AllDatasourcesSubscription = {
     db_type: string;
     created_at: any;
     updated_at: any;
+    branches: { __typename?: "branches"; id: any }[];
     sql_credentials: {
       __typename?: "sql_credentials";
       id: any;
@@ -12175,6 +12178,9 @@ export const CreateDataSourceDocument = gql`
     insert_datasources_one(object: $object) {
       id
       name
+      branches {
+        id
+      }
     }
   }
 `;
@@ -12204,6 +12210,9 @@ export const DatasourcesDocument = gql`
       db_type
       created_at
       updated_at
+      branches(where: { status: { _eq: active } }) {
+        id
+      }
       sql_credentials {
         id
         username
@@ -12250,6 +12259,9 @@ export const AllDatasourcesDocument = gql`
       db_type
       created_at
       updated_at
+      branches(where: { status: { _eq: active } }) {
+        id
+      }
       sql_credentials {
         id
         username

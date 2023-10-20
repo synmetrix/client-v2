@@ -50,7 +50,7 @@ interface ApiSetupProps {
   onSubmit: (data: ApiSetupForm) => void;
   onGoBack?: () => void;
   editId?: string;
-  initialValue: ApiSetupForm;
+  initialValue: ApiSetupForm | undefined;
   connectionOptions?: ApiSetupField[];
   dataSources?: DataSourceInfo[];
   teamMembers?: Member[];
@@ -93,14 +93,14 @@ const ApiSetup: FC<ApiSetupProps> = ({
     ({
       connection = CONNECTION_DEFAULT,
       host = connectionUrls[CONNECTION_DEFAULT],
-      user = initialValue.db_username,
-      password = initialValue.password,
-      database = initialValue.db,
+      user = initialValue?.db_username,
+      password = initialValue?.password,
+      database = initialValue?.db,
     }) => `${connection}  --host=${host}
     - -user=${user}
-    - -password=${"*".repeat(password?.length)}
+    - -password=${"*".repeat(password?.length || 0)}
     - -database=${database}`,
-    [initialValue.password, initialValue.db_username, initialValue.db]
+    [initialValue?.password, initialValue?.db_username, initialValue?.db]
   );
 
   const onDownload = () => {
@@ -156,7 +156,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                 name="user_id"
                 fieldType="select"
                 label={getLabel("team_member")}
-                defaultValue={initialValue.user_id}
+                defaultValue={initialValue?.user_id}
                 options={(teamMembers || []).map((m) => ({
                   value: m.id,
                   label: m.displayName,
@@ -171,7 +171,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                 name="datasource_id"
                 fieldType="select"
                 label={getLabel("data_source")}
-                defaultValue={initialValue.datasource_id}
+                defaultValue={initialValue?.datasource_id}
                 options={(dataSources || []).map((d) => ({
                   value: d.id as string,
                   label: d.name,
@@ -184,7 +184,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
           <Input
             control={control}
             name="name"
-            defaultValue={initialValue.name}
+            defaultValue={initialValue?.name}
             label={getLabel("data_source")}
             disabled
           />

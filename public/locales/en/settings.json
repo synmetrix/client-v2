@@ -64,6 +64,7 @@
     "access_list_created": "Access list created.",
     "access_list_updated": "Access list updated.",
     "access_list_removed": "Access list removed.",
+    "models_not_found": "Models not found",
     "access_table": {
       "count": "Access to data sources"
     },

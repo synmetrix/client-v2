@@ -36,6 +36,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   const {
     editId,
     step,
+    isOnboarding,
     formState: formData,
     schema,
     setStep,
@@ -72,8 +73,6 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   }, [editId, setStep]);
 
   const curDataSource = formState?.step0 || formData?.step0;
-
-  if (!curDataSource && step > 0) setStep(0);
   switch (step) {
     case 0:
       return (
@@ -96,6 +95,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
                 ) ?? "default"
               ]
             }
+            isOnboarding={isOnboarding}
             initialValue={initialValue}
             onSubmit={onDataSourceSetup}
             onGoBack={onGoBack}
@@ -105,31 +105,29 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
         );
       }
     case 2:
-      if (schema)
-        return (
-          <DataModelGeneration
-            dataSource={{
-              icon: curDataSource?.icon,
-              name: curDataSource?.name,
-            }}
-            schema={schema}
-            onSubmit={onDataModelGeneration}
-            onGoBack={onGoBack}
-            onSkip={onSkip}
-            initialValue={formState?.step2 || formData?.step2 || {}}
-          />
-        );
+      return (
+        <DataModelGeneration
+          dataSource={{
+            icon: curDataSource?.icon,
+            name: curDataSource?.name,
+          }}
+          isOnboarding={isOnboarding}
+          schema={schema}
+          onSubmit={onDataModelGeneration}
+          onGoBack={onGoBack}
+          onSkip={onSkip}
+          initialValue={formState?.step2 || formData?.step2 || {}}
+        />
+      );
     case 3:
       const initialValue = formState?.step3 || formData?.step3;
-      if (initialValue) {
-        return (
-          <ApiSetup
-            initialValue={initialValue}
-            onSubmit={onFinish}
-            onGoBack={onGoBack}
-          />
-        );
-      }
+      return (
+        <ApiSetup
+          initialValue={initialValue}
+          onSubmit={onFinish}
+          onGoBack={onGoBack}
+        />
+      );
   }
 
   return (

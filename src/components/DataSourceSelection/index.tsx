@@ -45,11 +45,13 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
       />
       <Row className={styles.tiles} gutter={[16, 16]} justify={"center"}>
         {options
-          .filter((db) => db.name.toLowerCase().includes(keyword.toLowerCase()))
+          .filter((db) =>
+            db.name?.toLowerCase().includes(keyword.toLowerCase())
+          )
           .map((tile) => (
             <Col className={styles.tile} key={tile.name} span={4}>
               <FormTile
-                title={tile.name}
+                title={tile.name || ""}
                 icon={tile.icon}
                 active={activeTile?.value === tile.value}
                 onClick={() => setActiveTile(tile)}
@@ -70,21 +72,6 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
             onClick={() => activeTile && onSubmit(activeTile)}
           >
             {t("common:words.next")}
-          </Button>
-        </Col>
-
-        <Col
-          xs={24}
-          md={6}
-          className={cn(styles.skip, { [styles.center]: !windowSize.md })}
-        >
-          <Button
-            className={cn(styles.link, {
-              [styles.fullwidth]: !windowSize.md,
-            })}
-            type="link"
-          >
-            {t("common:words.skip")}
           </Button>
         </Col>
       </Row>

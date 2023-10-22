@@ -67,8 +67,12 @@ export const QueryDetailed: React.FC<QueryDetailedProps> = ({
 
         <Space className={styles.body} size={13} direction="vertical">
           {error && <Alert message={error} type="error" />}
-          <RequestInfo {...request} queryKey={queryKey} />
-          <QueryDetails query={query} SQLString={SQLString} events={events} />
+          <RequestInfo request={request} queryKey={queryKey} />
+          <QueryDetails
+            query={query && JSON.parse(query)}
+            SQLString={SQLString}
+            events={events}
+          />
         </Space>
       </Space>
     </AppLayout>

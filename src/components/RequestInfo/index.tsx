@@ -8,14 +8,12 @@ import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-const RequestInfo: FC<Partial<Request_Logs> & { queryKey?: Maybe<string> }> = ({
-  id,
-  path,
-  duration,
-  start_time,
-  end_time,
-  queryKey,
-}) => {
+interface RequestInfoProps {
+  request: Partial<Request_Logs>;
+  queryKey?: Maybe<string>;
+}
+
+const RequestInfo: FC<RequestInfoProps> = ({ request, queryKey }) => {
   const { t } = useTranslation(["logs"]);
 
   return (
@@ -23,30 +21,31 @@ const RequestInfo: FC<Partial<Request_Logs> & { queryKey?: Maybe<string> }> = ({
       <Col span={24} md={12}>
         <div className={styles.item}>
           <span className={styles.label}>{t("query.info.request_id")}:</span>{" "}
-          {id}
+          {request.id}
         </div>
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
           <span className={styles.label}>{t("query.info.start_time")}:</span>{" "}
-          {formatTime(start_time)}
+          {formatTime(request.start_time)}
         </div>
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
-          <span className={styles.label}>{t("query.info.path")}:</span> {path}
+          <span className={styles.label}>{t("query.info.path")}:</span>{" "}
+          {request.path}
         </div>
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
           <span className={styles.label}>{t("query.info.end_time")}:</span>{" "}
-          {formatTime(end_time)}
+          {formatTime(request.end_time)}
         </div>
       </Col>
       <Col span={24} md={12}>
         <div className={styles.item}>
           <span className={styles.label}>{t("query.info.duration")}:</span>{" "}
-          {duration}
+          {request.duration}
         </div>
       </Col>
       <Col span={24} md={12}>

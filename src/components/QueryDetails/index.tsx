@@ -5,15 +5,16 @@ import QueryPreview from "@/components/QueryPreview";
 import Copy from "@/components/Copy";
 import EventsTable from "@/components/EventsTable";
 import type { Maybe, Request_Event_Logs } from "@/graphql/generated";
+import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
 
 interface QueryDetailsProps {
-  query: Maybe<string>;
   SQLString?: Maybe<string>;
   events: Request_Event_Logs[];
+  query?: Maybe<QueryPreviewType>;
 }
 
 const { Title } = Typography;
@@ -28,11 +29,7 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
       children: query ? (
         <>
           <Title level={5}>{t("query.details.query_key")}</Title>
-          <QueryPreview
-            key="queryKey"
-            {...JSON.parse(query)}
-            withButton={false}
-          />
+          <QueryPreview key="queryKey" {...query} withButton={false} />
         </>
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
@@ -56,10 +53,7 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
       children: query ? (
         <>
           <Title level={5}>{t("query.details.query")}</Title>
-          <Copy
-            key="query"
-            value={JSON.stringify(JSON.parse(query), null, 2)}
-          />
+          <Copy key="query" value={JSON.stringify(query, null, 2)} />
         </>
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />

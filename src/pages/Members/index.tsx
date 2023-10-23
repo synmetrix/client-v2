@@ -232,7 +232,7 @@ const MembersWrapper = () => {
 
   const accessLists = useMemo(
     () =>
-      prepareAccessData(allAccessLists.data as unknown as AllAccessListsQuery),
+      prepareAccessData(allAccessLists?.data as unknown as AllAccessListsQuery),
     [allAccessLists]
   );
 

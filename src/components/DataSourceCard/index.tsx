@@ -16,7 +16,7 @@ const { Paragraph } = Typography;
 
 interface DataSourceCardProps {
   dataSource: DataSourceInfo;
-  onEdit: (id: string, step?: number) => void;
+  onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onGenerate: (id: string) => void;
 }

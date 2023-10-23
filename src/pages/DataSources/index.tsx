@@ -63,8 +63,7 @@ export const DataSources = ({
 }: DataSourcesProps) => {
   const { t } = useTranslation(["settings", "pages"]);
   const [, setLocation] = useLocation();
-  const { setStep, editId, clean, schema, isOnboarding, setIsOnboarding } =
-    DataSourceStore();
+  const { setStep, editId, clean, setIsOnboarding } = DataSourceStore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = () => {
     setIsOnboarding(true);

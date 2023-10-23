@@ -31,7 +31,7 @@ interface DataModelGenerationProps {
 
 const options = [
   { label: "JS", value: "js", disabled: false },
-  { label: "YML", value: "yml", disabled: false },
+  { label: "YAML", value: "yaml", disabled: false },
 ];
 
 const DataModelGeneration: FC<DataModelGenerationProps> = ({
@@ -127,7 +127,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
           <Input
             control={control}
             name="type"
-            defaultValue={initialValue.type || "yml"}
+            defaultValue={initialValue.type || "yaml"}
             fieldType="radio"
             optionType="button"
             options={options}

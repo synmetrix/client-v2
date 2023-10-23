@@ -162,10 +162,7 @@ const DataSourcesWrapper = ({
     editId,
     formState: { step0: dataSource, step1: dataSourceSetup },
     schema,
-    step,
     isOnboarding,
-    activeBranchId,
-    setActiveBranchId,
     setSchema,
     setFormStateData,
     setLoading,
@@ -195,6 +192,20 @@ const DataSourcesWrapper = ({
   useCheckResponse(createMutation, () => {}, {
     successMessage: t("datasource_created"),
   });
+
+  const datasources = useMemo(
+    () => (dataSources.length ? dataSources : currentUser.dataSources || []),
+    [dataSources, currentUser]
+  ) as DataSourceInfo[];
+  const curDataSource = useMemo(
+    () =>
+      datasources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
+    [curId, dataSourceSetup?.id, datasources]
+  );
+  const activeBranchId = useMemo(
+    () => curDataSource?.branch?.id,
+    [curDataSource?.branch?.id]
+  );
 
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
     let dataSourceId;
@@ -291,15 +302,14 @@ const DataSourcesWrapper = ({
     );
 
     if (dataSourceSetup) {
-      const genData = {
-        datasource_id: dataSourceSetup.id,
-        branch_id: "main",
-        tables,
-        format: data?.type || "yml",
-      };
-
       try {
-        const res = await execGenSchemaMutation(genData);
+        const res = await execGenSchemaMutation({
+          datasource_id: dataSourceSetup.id,
+          branch_id: activeBranchId,
+          tables,
+          format: data?.type || "yaml",
+          overwrite: true,
+        });
 
         if (res.error) {
           setError(t("no_schema"));
@@ -343,16 +353,6 @@ const DataSourcesWrapper = ({
   const onEdit = (dataSourceId: string) => {
     setLocation(`/settings/sources?id=${dataSourceId}`);
   };
-
-  const datasources = useMemo(
-    () => (dataSources.length ? dataSources : currentUser.dataSources || []),
-    [dataSources, currentUser]
-  ) as DataSourceInfo[];
-  const curDataSource = useMemo(
-    () =>
-      datasources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
-    [curId, dataSourceSetup?.id, datasources]
-  );
 
   useEffect(() => {
     if (curDataSource) {

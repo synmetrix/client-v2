@@ -22,7 +22,6 @@ export interface DataSourceData {
   step: number;
   isOnboarding: boolean;
   formState: FormState;
-  activeBranchId: string | undefined;
   loading: boolean;
   error: string | null | undefined;
   message: string | null | undefined;
@@ -39,7 +38,6 @@ interface DataSourceState extends DataSourceData {
   setEditId: (id: string) => void;
   setFormStateData: (step: number, data: any) => void;
   setIsOnboarding: (value: boolean) => void;
-  setActiveBranchId: (id: string) => void;
   clean: () => void;
 }
 
@@ -55,7 +53,6 @@ const defaultState = {
   step: 0,
   isOnboarding: false,
   formState: defaultFormState,
-  activeBranchId: undefined,
   loading: false,
   error: null,
   message: null,
@@ -100,8 +97,6 @@ const dataSourceStore = create<DataSourceState>()(
           ...prev,
           isOnboarding: value,
         })),
-      setActiveBranchId: (id: string) =>
-        set((prev) => ({ ...prev, activeBranchId: id })),
       clean: () => set({ ...defaultState }),
     })),
     {

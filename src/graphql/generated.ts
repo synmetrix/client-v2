@@ -11235,6 +11235,23 @@ export type CurrentUserQuery = {
       db_type: string;
       created_at: any;
       updated_at: any;
+      branches: {
+        __typename?: "branches";
+        id: any;
+        name: string;
+        status: Branch_Statuses_Enum;
+        versions: {
+          __typename?: "versions";
+          id: any;
+          dataschemas_aggregate: {
+            __typename?: "dataschemas_aggregate";
+            aggregate?: {
+              __typename?: "dataschemas_aggregate_fields";
+              count: number;
+            } | null;
+          };
+        }[];
+      }[];
       sql_credentials: {
         __typename?: "sql_credentials";
         id: any;
@@ -11307,6 +11324,23 @@ export type SubCurrentUserSubscription = {
       db_type: string;
       created_at: any;
       updated_at: any;
+      branches: {
+        __typename?: "branches";
+        id: any;
+        name: string;
+        status: Branch_Statuses_Enum;
+        versions: {
+          __typename?: "versions";
+          id: any;
+          dataschemas_aggregate: {
+            __typename?: "dataschemas_aggregate";
+            aggregate?: {
+              __typename?: "dataschemas_aggregate_fields";
+              count: number;
+            } | null;
+          };
+        }[];
+      }[];
       sql_credentials: {
         __typename?: "sql_credentials";
         id: any;
@@ -12009,6 +12043,19 @@ export const CurrentUserDocument = gql`
         db_type
         created_at
         updated_at
+        branches(where: { status: { _eq: active } }) {
+          id
+          name
+          status
+          versions(limit: 1, order_by: { created_at: desc }) {
+            id
+            dataschemas_aggregate {
+              aggregate {
+                count
+              }
+            }
+          }
+        }
         sql_credentials {
           id
           username
@@ -12082,6 +12129,19 @@ export const SubCurrentUserDocument = gql`
         db_type
         created_at
         updated_at
+        branches(where: { status: { _eq: active } }) {
+          id
+          name
+          status
+          versions(limit: 1, order_by: { created_at: desc }) {
+            id
+            dataschemas_aggregate {
+              aggregate {
+                count
+              }
+            }
+          }
+        }
         sql_credentials {
           id
           username

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Form, Space, Spin } from "antd";
+import { Form, Space, Spin, Empty } from "antd";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 
@@ -7,6 +7,7 @@ import Input from "@/components/Input";
 import AccessSelection from "@/components/AccessSelection";
 import AccessController from "@/components/AccessController";
 import Button from "@/components/Button";
+import useLocation from "@/hooks/useLocation";
 import { useFetchMetaQuery } from "@/graphql/generated";
 import type {
   DataResource,
@@ -53,6 +54,7 @@ const RoleForm: FC<RoleFormProps> = ({
   onSubmit,
 }) => {
   const { t } = useTranslation(["settings", "common"]);
+  const [, setLocation] = useLocation();
 
   const { control, handleSubmit, setValue, watch } = useForm<RoleFormType>({
     values: initialValues,
@@ -116,7 +118,7 @@ const RoleForm: FC<RoleFormProps> = ({
             />
           </Form.Item>
 
-          {resourceData && (
+          {resourceData?.dataModels.length ? (
             <Suspense>
               <AccessController
                 control={control}
@@ -124,6 +126,21 @@ const RoleForm: FC<RoleFormProps> = ({
                 resource={resourceData as DataResource}
               />
             </Suspense>
+          ) : (
+            <div>
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={t("roles_and_access.models_not_found")}
+              >
+                <Button
+                  type="primary"
+                  className={styles.btn}
+                  onClick={() => setLocation("/models")}
+                >
+                  {t("common:words.generate")}
+                </Button>
+              </Empty>
+            </div>
           )}
 
           <Button

@@ -40,7 +40,7 @@ interface MembersProps {
   onDeleteMember?: (id: string) => void;
   onInviteMember?: (data: Invite) => void;
   onRoleChange?: (id: string, newRole: ChangeableRoles) => void;
-  onAccessListChange?: (id: string) => void;
+  onAccessListChange?: (id: string, accessListId: string | null) => void;
 }
 
 export const Members: React.FC<MembersProps> = ({
@@ -197,6 +197,15 @@ const MembersWrapper = () => {
     });
   };
 
+  const onAccessListChange = (id: string, accessListId: string | null) => {
+    execUpdateRoleMutation({
+      pk_columns: { id },
+      _set: {
+        access_list_id: accessListId,
+      },
+    });
+  };
+
   const onInviteMember = (data: Invite) => {
     execInviteMutation({
       ...data,
@@ -222,7 +231,8 @@ const MembersWrapper = () => {
   }, [allMembersData.data]);
 
   const accessLists = useMemo(
-    () => prepareAccessData(allAccessLists as unknown as AllAccessListsQuery),
+    () =>
+      prepareAccessData(allAccessLists?.data as unknown as AllAccessListsQuery),
     [allAccessLists]
   );
 
@@ -234,6 +244,7 @@ const MembersWrapper = () => {
       onDeleteMember={onDeleteMember}
       onInviteMember={onInviteMember}
       onRoleChange={onRoleChange}
+      onAccessListChange={onAccessListChange}
     />
   );
 };

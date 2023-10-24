@@ -11,7 +11,6 @@ import type {
 } from "@/types/dataSource";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import DataSourceStore from "@/stores/DataSourceStore";
 
 import styles from "./index.module.less";
 
@@ -22,6 +21,7 @@ const { Title, Text } = Typography;
 interface DataSourceSetupProps {
   dataSource: DataSource;
   fields: DataSoureSetupField[];
+  isOnboarding: boolean;
   onSubmit: (values: DataSourceSetupForm) => void;
   onGoBack: () => void;
   onSkip: () => void;
@@ -37,9 +37,9 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
   onSkip,
   onTestConnection,
   initialValue,
+  isOnboarding = false,
 }) => {
   const { t } = useTranslation(["dataSetupForm", "common"]);
-  const { editId } = DataSourceStore();
 
   const [error] = useState<boolean>(false);
 
@@ -101,7 +101,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
 
         <Row align="middle" justify="space-between">
           <Col xs={24} md={18}>
-            {!editId && (
+            {isOnboarding && (
               <Button
                 className={cn(styles.back, {
                   [styles.fullwidth]: !windowSize.md,
@@ -123,7 +123,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
               htmlType="submit"
               onClick={handleSubmit(onSubmit)}
             >
-              {editId ? t("common:words.save") : t("common:words.apply")}
+              {isOnboarding ? t("common:words.apply") : t("common:words.save")}
             </Button>
 
             <Button
@@ -142,13 +142,13 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             md={6}
             className={cn(styles.skip, { [styles.center]: !windowSize.md })}
           >
-            {!editId && (
+            {isOnboarding && (
               <Button
                 className={cn(styles.link, {
                   [styles.fullwidth]: !windowSize.md,
                 })}
                 type="link"
-                onClick={onSkip}
+                onClick={handleSubmit(onSkip)}
               >
                 {t("common:words.skip")}
               </Button>

@@ -29,6 +29,7 @@ export const prepareDataSourceData = (data: Datasources[] | undefined) => {
         createdAt: d.created_at,
         updatedAt: d.updated_at,
         type: dbTiles.find((tile) => tile.value === d.db_type.toLowerCase()),
+        branch: d.branches?.[0],
       } as DataSourceInfo)
   );
 };

@@ -18,12 +18,14 @@ interface DataSourceCardProps {
   dataSource: DataSourceInfo;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  onGenerate: (id: string) => void;
 }
 
 const DataSourceCard: FC<DataSourceCardProps> = ({
   dataSource: { id, name, dbParams, type, updatedAt, createdAt },
   onEdit = () => {},
   onDelete = () => {},
+  onGenerate = () => {},
 }) => {
   const { t } = useTranslation(["common"]);
 
@@ -64,6 +66,11 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
                 key: "delete",
                 label: t("common:words.delete"),
                 onClick: () => id && onDelete(id),
+              },
+              {
+                key: "generate",
+                label: t("common:words.generate_models"),
+                onClick: () => id && onGenerate(id),
               },
             ],
           }}

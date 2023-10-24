@@ -78,6 +78,7 @@ export const AccessTypeWrapper: FC<AccessTypeWrapperProps> = ({
   const [metaData] = useFetchMetaQuery({
     variables: { datasource_id: dataSourceId },
   });
+
   useEffect(() => {
     const cubes = metaData?.data?.fetch_meta?.cubes;
 

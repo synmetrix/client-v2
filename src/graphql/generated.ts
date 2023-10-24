@@ -11215,6 +11215,47 @@ export type CreateAccessListMutation = {
   insert_access_lists_one?: { __typename?: "access_lists"; id: any } | null;
 };
 
+export type BranchesFieldsFragment = {
+  __typename?: "branches";
+  id: any;
+  name: string;
+  status: Branch_Statuses_Enum;
+  versions: {
+    __typename?: "versions";
+    id: any;
+    dataschemas_aggregate: {
+      __typename?: "dataschemas_aggregate";
+      aggregate?: {
+        __typename?: "dataschemas_aggregate_fields";
+        count: number;
+      } | null;
+    };
+  }[];
+};
+
+export type TeamFieldsFragment = {
+  __typename?: "teams";
+  id: any;
+  name: string;
+  created_at: any;
+  updated_at: any;
+  members: {
+    __typename?: "members";
+    member_roles: {
+      __typename?: "member_roles";
+      id: any;
+      team_role: Team_Roles_Enum;
+    }[];
+    user: {
+      __typename?: "users";
+      id: any;
+      avatar_url?: string | null;
+      display_name?: string | null;
+      account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+    };
+  }[];
+};
+
 export type CurrentUserQueryVariables = Exact<{
   id: Scalars["uuid"];
 }>;
@@ -11235,6 +11276,23 @@ export type CurrentUserQuery = {
       db_type: string;
       created_at: any;
       updated_at: any;
+      branches: {
+        __typename?: "branches";
+        id: any;
+        name: string;
+        status: Branch_Statuses_Enum;
+        versions: {
+          __typename?: "versions";
+          id: any;
+          dataschemas_aggregate: {
+            __typename?: "dataschemas_aggregate";
+            aggregate?: {
+              __typename?: "dataschemas_aggregate_fields";
+              count: number;
+            } | null;
+          };
+        }[];
+      }[];
       sql_credentials: {
         __typename?: "sql_credentials";
         id: any;
@@ -11307,6 +11365,23 @@ export type SubCurrentUserSubscription = {
       db_type: string;
       created_at: any;
       updated_at: any;
+      branches: {
+        __typename?: "branches";
+        id: any;
+        name: string;
+        status: Branch_Statuses_Enum;
+        versions: {
+          __typename?: "versions";
+          id: any;
+          dataschemas_aggregate: {
+            __typename?: "dataschemas_aggregate";
+            aggregate?: {
+              __typename?: "dataschemas_aggregate_fields";
+              count: number;
+            } | null;
+          };
+        }[];
+      }[];
       sql_credentials: {
         __typename?: "sql_credentials";
         id: any;
@@ -11384,6 +11459,7 @@ export type CreateDataSourceMutation = {
     __typename?: "datasources";
     id: any;
     name: string;
+    branches: { __typename?: "branches"; id: any }[];
   } | null;
 };
 
@@ -11404,6 +11480,7 @@ export type DatasourcesQuery = {
     db_type: string;
     created_at: any;
     updated_at: any;
+    branches: { __typename?: "branches"; id: any }[];
     sql_credentials: {
       __typename?: "sql_credentials";
       id: any;
@@ -11439,6 +11516,7 @@ export type AllDatasourcesSubscription = {
     db_type: string;
     created_at: any;
     updated_at: any;
+    branches: { __typename?: "branches"; id: any }[];
     sql_credentials: {
       __typename?: "sql_credentials";
       id: any;
@@ -11841,6 +11919,43 @@ export type GetUsersQuery = {
   users: { __typename?: "users"; id: any }[];
 };
 
+export const BranchesFieldsFragmentDoc = gql`
+  fragment BranchesFields on branches {
+    id
+    name
+    status
+    versions(limit: 1, order_by: { created_at: desc }) {
+      id
+      dataschemas_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+`;
+export const TeamFieldsFragmentDoc = gql`
+  fragment TeamFields on teams {
+    id
+    name
+    created_at
+    updated_at
+    members {
+      member_roles {
+        id
+        team_role
+      }
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+    }
+  }
+`;
 export const DefaultFieldsFragmentDoc = gql`
   fragment DefaultFields on request_logs {
     id
@@ -12006,6 +12121,9 @@ export const CurrentUserDocument = gql`
         db_type
         created_at
         updated_at
+        branches(where: { status: { _eq: active } }) {
+          ...BranchesFields
+        }
         sql_credentials {
           id
           username
@@ -12031,28 +12149,13 @@ export const CurrentUserDocument = gql`
           }
         }
         team {
-          id
-          name
-          created_at
-          updated_at
-          members {
-            member_roles {
-              id
-              team_role
-            }
-            user {
-              id
-              avatar_url
-              display_name
-              account {
-                email
-              }
-            }
-          }
+          ...TeamFields
         }
       }
     }
   }
+  ${BranchesFieldsFragmentDoc}
+  ${TeamFieldsFragmentDoc}
 `;
 
 export function useCurrentUserQuery(
@@ -12079,6 +12182,9 @@ export const SubCurrentUserDocument = gql`
         db_type
         created_at
         updated_at
+        branches(where: { status: { _eq: active } }) {
+          ...BranchesFields
+        }
         sql_credentials {
           id
           username
@@ -12104,28 +12210,13 @@ export const SubCurrentUserDocument = gql`
           }
         }
         team {
-          id
-          name
-          created_at
-          updated_at
-          members {
-            member_roles {
-              id
-              team_role
-            }
-            user {
-              id
-              avatar_url
-              display_name
-              account {
-                email
-              }
-            }
-          }
+          ...TeamFields
         }
       }
     }
   }
+  ${BranchesFieldsFragmentDoc}
+  ${TeamFieldsFragmentDoc}
 `;
 
 export function useSubCurrentUserSubscription<
@@ -12175,6 +12266,9 @@ export const CreateDataSourceDocument = gql`
     insert_datasources_one(object: $object) {
       id
       name
+      branches {
+        id
+      }
     }
   }
 `;
@@ -12204,6 +12298,9 @@ export const DatasourcesDocument = gql`
       db_type
       created_at
       updated_at
+      branches(where: { status: { _eq: active } }) {
+        id
+      }
       sql_credentials {
         id
         username
@@ -12250,6 +12347,9 @@ export const AllDatasourcesDocument = gql`
       db_type
       created_at
       updated_at
+      branches(where: { status: { _eq: active } }) {
+        id
+      }
       sql_credentials {
         id
         username
@@ -12832,6 +12932,8 @@ export const namedOperations = {
     SubCredentials: "SubCredentials",
   },
   Fragment: {
+    BranchesFields: "BranchesFields",
+    TeamFields: "TeamFields",
     DefaultFields: "DefaultFields",
   },
 };

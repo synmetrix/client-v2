@@ -20,7 +20,7 @@ interface MembersTableProps {
   accessLists: AccessList[];
   currentRole?: Roles;
   onRoleChange: (id: string, newRole: ChangeableRoles) => void;
-  onAccessListChange: (accessListId: string) => void;
+  onAccessListChange: (id: string, accessListId: string | null) => void;
   onRemove: (member: Member) => void;
 }
 
@@ -117,17 +117,25 @@ const MembersTable: FC<MembersTableProps> = ({
               <span className={styles.cell}>
                 <Select
                   className={styles.select}
-                  onChange={(accessList) => onAccessListChange(accessList)}
+                  onChange={(accessListId) => {
+                    onAccessListChange(record.role.id, accessListId);
+                  }}
                   bordered={false}
                   disabled={!accessLists?.length}
                   value={
                     curAccessList?.id ||
                     `* ${t("common:words.full_access").toUpperCase()} *`
                   }
-                  options={(accessLists || []).map((al) => ({
-                    key: al.id,
-                    label: al.name,
-                  }))}
+                  options={[
+                    {
+                      value: null,
+                      label: t("common:words.full_access").toUpperCase(),
+                    },
+                    ...(accessLists || []).map((al) => ({
+                      value: al.id,
+                      label: al.name,
+                    })),
+                  ]}
                 />
               </span>
             ),

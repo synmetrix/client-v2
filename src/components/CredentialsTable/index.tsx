@@ -133,7 +133,6 @@ const CredentialsTable: FC<CredentialsProps> = ({
         rootClassName={styles.table}
         columns={columns}
         dataSource={credentials}
-        rowClassName={() => styles.row}
         pagination={false}
         rowKey={(record) => record.id}
       />

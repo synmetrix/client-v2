@@ -11215,6 +11215,47 @@ export type CreateAccessListMutation = {
   insert_access_lists_one?: { __typename?: "access_lists"; id: any } | null;
 };
 
+export type BranchesFieldsFragment = {
+  __typename?: "branches";
+  id: any;
+  name: string;
+  status: Branch_Statuses_Enum;
+  versions: {
+    __typename?: "versions";
+    id: any;
+    dataschemas_aggregate: {
+      __typename?: "dataschemas_aggregate";
+      aggregate?: {
+        __typename?: "dataschemas_aggregate_fields";
+        count: number;
+      } | null;
+    };
+  }[];
+};
+
+export type TeamFieldsFragment = {
+  __typename?: "teams";
+  id: any;
+  name: string;
+  created_at: any;
+  updated_at: any;
+  members: {
+    __typename?: "members";
+    member_roles: {
+      __typename?: "member_roles";
+      id: any;
+      team_role: Team_Roles_Enum;
+    }[];
+    user: {
+      __typename?: "users";
+      id: any;
+      avatar_url?: string | null;
+      display_name?: string | null;
+      account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+    };
+  }[];
+};
+
 export type CurrentUserQueryVariables = Exact<{
   id: Scalars["uuid"];
 }>;
@@ -11878,6 +11919,43 @@ export type GetUsersQuery = {
   users: { __typename?: "users"; id: any }[];
 };
 
+export const BranchesFieldsFragmentDoc = gql`
+  fragment BranchesFields on branches {
+    id
+    name
+    status
+    versions(limit: 1, order_by: { created_at: desc }) {
+      id
+      dataschemas_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+`;
+export const TeamFieldsFragmentDoc = gql`
+  fragment TeamFields on teams {
+    id
+    name
+    created_at
+    updated_at
+    members {
+      member_roles {
+        id
+        team_role
+      }
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+    }
+  }
+`;
 export const DefaultFieldsFragmentDoc = gql`
   fragment DefaultFields on request_logs {
     id
@@ -12044,17 +12122,7 @@ export const CurrentUserDocument = gql`
         created_at
         updated_at
         branches(where: { status: { _eq: active } }) {
-          id
-          name
-          status
-          versions(limit: 1, order_by: { created_at: desc }) {
-            id
-            dataschemas_aggregate {
-              aggregate {
-                count
-              }
-            }
-          }
+          ...BranchesFields
         }
         sql_credentials {
           id
@@ -12081,28 +12149,13 @@ export const CurrentUserDocument = gql`
           }
         }
         team {
-          id
-          name
-          created_at
-          updated_at
-          members {
-            member_roles {
-              id
-              team_role
-            }
-            user {
-              id
-              avatar_url
-              display_name
-              account {
-                email
-              }
-            }
-          }
+          ...TeamFields
         }
       }
     }
   }
+  ${BranchesFieldsFragmentDoc}
+  ${TeamFieldsFragmentDoc}
 `;
 
 export function useCurrentUserQuery(
@@ -12130,17 +12183,7 @@ export const SubCurrentUserDocument = gql`
         created_at
         updated_at
         branches(where: { status: { _eq: active } }) {
-          id
-          name
-          status
-          versions(limit: 1, order_by: { created_at: desc }) {
-            id
-            dataschemas_aggregate {
-              aggregate {
-                count
-              }
-            }
-          }
+          ...BranchesFields
         }
         sql_credentials {
           id
@@ -12167,28 +12210,13 @@ export const SubCurrentUserDocument = gql`
           }
         }
         team {
-          id
-          name
-          created_at
-          updated_at
-          members {
-            member_roles {
-              id
-              team_role
-            }
-            user {
-              id
-              avatar_url
-              display_name
-              account {
-                email
-              }
-            }
-          }
+          ...TeamFields
         }
       }
     }
   }
+  ${BranchesFieldsFragmentDoc}
+  ${TeamFieldsFragmentDoc}
 `;
 
 export function useSubCurrentUserSubscription<
@@ -12904,6 +12932,8 @@ export const namedOperations = {
     SubCredentials: "SubCredentials",
   },
   Fragment: {
+    BranchesFields: "BranchesFields",
+    TeamFields: "TeamFields",
     DefaultFields: "DefaultFields",
   },
 };

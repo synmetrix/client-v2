@@ -26,7 +26,7 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
-  const [activePanel, setActivePanel] = useState<string>();
+  const [activePanel, setActivePanel] = useState<string>("1");
 
   const isShown = (val?: any) => (Array.isArray(val) ? val.length > 0 : !!val);
 
@@ -34,8 +34,10 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
     return arr.reduce((res, a) => (a?.length ? res + a.length : res), 0);
   };
 
-  const isCollapsible =
-    getCount([measures, dimensions, order, timeDimensions, segments]) <= 2;
+  // const isCollapsible =
+  //   getCount([measures, dimensions, order, timeDimensions, segments]) <= 2;
+
+  const isCollapsible = false;
 
   return (
     <Collapse
@@ -49,7 +51,7 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
       bordered={false}
       className={cn(styles.collapse, !isCollapsible && styles.collapseDisabled)}
       activeKey={activePanel}
-      onChange={(keys) => setActivePanel(keys[0])}
+      // onChange={(keys) => setActivePanel(keys[0])}
     >
       <Panel
         className={cn(styles.panel)}

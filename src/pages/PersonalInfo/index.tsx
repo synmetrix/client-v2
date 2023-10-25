@@ -57,7 +57,7 @@ const PersonalInfoWrapper = () => {
   const [, setLocation] = useLocation();
   const { currentUser } = CurrentUserStore();
   const { cleanTokens } = AuthTokensStore();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>();
 
   const [updateMutation, execUpdateMutation] = useUpdateUserInfoMutation();
 
@@ -80,13 +80,12 @@ const PersonalInfoWrapper = () => {
     };
 
     const res = await changePass(values);
-    if (res?.message) {
-      setError(res.message);
-    }
 
     if (res.statusCode === 204) {
-      setError(null);
+      setError(undefined);
       message.success(t("settings:personal_info.password_updated"));
+    } else {
+      setError(res?.message || res?.error);
     }
   };
 

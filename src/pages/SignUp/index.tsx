@@ -12,15 +12,23 @@ import styles from "./index.module.less";
 
 const SignUp: React.FC = () => {
   const [error, setError] = useState<any>();
-  const { register } = useAuth();
-  const [, setLocation] = useLocation();
+  const { register, sendMagicLink } = useAuth();
+  const [location, setLocation] = useLocation();
+  const { magicLink } = location.query;
+  const isMagicLink = magicLink !== undefined;
 
   const onSubmit = async (data: SignUpFormType) => {
     delete data.privacy;
-    const res = await register(data);
+
+    let res;
+    if (isMagicLink) {
+      res = await sendMagicLink(data);
+    } else {
+      res = await register(data);
+    }
 
     if (res?.error) {
-      setError(res);
+      setError(res.message || res.error);
       return;
     }
 
@@ -31,10 +39,8 @@ const SignUp: React.FC = () => {
     <BasicLayout header={<AuthLinks currentPage="signup" />}>
       <Row className={styles.container} justify="center" align="middle">
         <Col xs={24} style={{ maxWidth: 356 }}>
-          <SignUpForm onSubmit={onSubmit} />
-          {error && (
-            <Alert message={<span>{error.message}</span>} type="error" />
-          )}
+          <SignUpForm onSubmit={onSubmit} isMagicLink={isMagicLink} />
+          {error && <Alert message={<span>{error}</span>} type="error" />}
         </Col>
       </Row>
     </BasicLayout>

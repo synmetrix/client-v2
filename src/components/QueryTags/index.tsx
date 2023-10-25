@@ -36,9 +36,11 @@ const QueryTags: FC<QueryTagsProps> = ({ content, type }) => {
             let tagSplited: string[] = [];
 
             if (typeof tag === "string") {
-              tagSplited = tag.split(".");
+              tagSplited = tag?.split(".");
             } else {
-              tagSplited = `${tag.dimension}.${tag.granularity}`.split(".");
+              tagSplited = `${tag?.dimension || ""}.${
+                tag?.granularity || ""
+              }`.split(".");
             }
 
             return (

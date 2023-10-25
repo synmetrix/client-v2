@@ -30,6 +30,14 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
 
   const isShown = (arr?: string[]) => arr && arr.length > 0;
 
+  const getCount = (arr: any[]) => {
+    return arr.reduce((res, a) => (a?.length ? res + a.length : res), 0);
+  };
+
+  const isCollapsible = (arr: any[]) => {
+    return getCount(arr) <= 2;
+  };
+
   return (
     <Collapse
       expandIcon={({ isActive }) =>
@@ -46,10 +54,30 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
     >
       <Panel
         className={styles.panel}
+        collapsible={
+          isCollapsible([
+            measures,
+            dimensions,
+            orders,
+            timeDimensions,
+            segments,
+          ])
+            ? "disabled"
+            : undefined
+        }
         header={
           <div
             className={cn(
-              !activePanel && !isMobile && styles.headerWrapperDots
+              !activePanel &&
+                !isMobile &&
+                !isCollapsible([
+                  measures,
+                  dimensions,
+                  orders,
+                  timeDimensions,
+                  segments,
+                ]) &&
+                styles.headerWrapperDots
             )}
           >
             <Space className={styles.header} size={10} align="center">

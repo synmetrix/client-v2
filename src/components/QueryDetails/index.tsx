@@ -29,7 +29,15 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
       children: query ? (
         <>
           <Title level={5}>{t("query.details.query_key")}</Title>
-          <QueryPreview key="queryKey" {...query} withButton={false} />
+          <QueryPreview
+            key="queryKey"
+            measures={query?.measures}
+            dimensions={query?.dimensions}
+            segments={query?.segments}
+            timeDimensions={query?.timeDimensions}
+            orders={query?.orders}
+            withButton={false}
+          />
         </>
       ) : (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />

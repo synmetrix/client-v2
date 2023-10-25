@@ -56,10 +56,6 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit, isMagicLink }) => {
         </Button>
       </div>
 
-      <div className={styles.or}>
-        <Text>{t("common:words.or")}</Text>
-      </div>
-
       <Form className={styles.form}>
         <Input
           className={cn(styles.formItem, styles.input, {

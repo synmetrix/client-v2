@@ -11,6 +11,7 @@
 .header {
   width: 80%;
   overflow: hidden;
+  color: --var(--color-black) !important;
 }
 
 .collapseInner {
@@ -20,18 +21,32 @@
 .panel {
   background: none;
   border: none !important;
+  opacity: 1 !important;
 }
 
 .tagLabel {
+  color: rgba(0, 0, 0, 0.5);
   font-weight: 700;
-  opacity: 0.5;
 }
 
 .collapse {
   background: none;
   border: none;
+
+  * {
+    color: --var(--color-black) !important;
+    cursor: pointer !important;
+  }
+
   *:not([class*="tag"], [class*="collapseBtn"], [class*="input"]) {
     padding-left: 0 !important;
+  }
+}
+
+.collapseDisabled {
+  * {
+    color: --var(--color-black) !important;
+    cursor: default !important;
   }
 }
 

@@ -34,9 +34,8 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
     return arr.reduce((res, a) => (a?.length ? res + a.length : res), 0);
   };
 
-  const isCollapsible = (arr: any[]) => {
-    return getCount(arr) <= 2;
-  };
+  const isCollapsible =
+    getCount([measures, dimensions, order, timeDimensions, segments]) <= 2;
 
   return (
     <Collapse
@@ -48,29 +47,19 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
         )
       }
       bordered={false}
-      className={styles.collapse}
+      className={cn(styles.collapse, !isCollapsible && styles.collapseDisabled)}
       activeKey={activePanel}
       onChange={(keys) => setActivePanel(keys[0])}
     >
       <Panel
-        className={styles.panel}
-        collapsible={
-          isCollapsible([measures, dimensions, order, timeDimensions, segments])
-            ? "disabled"
-            : undefined
-        }
+        className={cn(styles.panel)}
+        collapsible={!isCollapsible ? "disabled" : undefined}
         header={
           <div
             className={cn(
               !activePanel &&
                 !isMobile &&
-                !isCollapsible([
-                  measures,
-                  dimensions,
-                  order,
-                  timeDimensions,
-                  segments,
-                ]) &&
+                !isCollapsible &&
                 styles.headerWrapperDots
             )}
           >

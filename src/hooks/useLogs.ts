@@ -10,8 +10,10 @@ import {
 } from "@/graphql/generated";
 import type {
   AllLogsQueryVariables,
+  Request_Logs,
   SubAllLogsSubscription,
 } from "@/graphql/generated";
+import type { QueryFiltersForm } from "@/types/queryFilter";
 
 import type { SubscriptionHandler } from "urql";
 
@@ -58,12 +60,19 @@ const handleSubscription: SubscriptionHandler<
   SubAllLogsSubscription
 > = (_, response) => response;
 
+interface Props {
+  pauseQueryAll?: boolean;
+  rowId?: string | null;
+  params?: Partial<QueryFiltersForm>;
+  pagination?: Partial<Pagination>;
+}
+
 export default ({
   pauseQueryAll = false,
   rowId = null,
   pagination = {},
   params = {},
-}) => {
+}: Props) => {
   const [subscription, execSubscription] = useSubAllLogsSubscription(
     {
       variables: getListVariables(pagination, params),
@@ -118,7 +127,7 @@ export default ({
     [allData.data]
   );
   const current = useMemo(
-    () => currentData.data?.request_logs_by_pk || {},
+    () => (currentData.data?.request_logs_by_pk || {}) as Partial<Request_Logs>,
     [currentData]
   );
 

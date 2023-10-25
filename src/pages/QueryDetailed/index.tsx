@@ -8,6 +8,7 @@ import QueryDetails from "@/components/QueryDetails";
 import PageLoading from "@/components/PageLoading";
 import AppLayout from "@/layouts/AppLayout";
 import useLogs from "@/hooks/useLogs";
+import type { QueryPreview } from "@/types/queryPreview";
 import type {
   Maybe,
   Request_Event_Logs,
@@ -20,7 +21,7 @@ import styles from "./index.module.less";
 
 interface QueryDetailedProps {
   request: Partial<Request_Logs>;
-  query: string;
+  query: Maybe<QueryPreview>;
   SQLString?: Maybe<string>;
   events: Request_Event_Logs[];
   queryKey?: Maybe<string>;
@@ -68,11 +69,7 @@ export const QueryDetailed: React.FC<QueryDetailedProps> = ({
         <Space className={styles.body} size={13} direction="vertical">
           {error && <Alert message={error} type="error" />}
           <RequestInfo request={request} queryKey={queryKey} />
-          <QueryDetails
-            query={query && JSON.parse(query)}
-            SQLString={SQLString}
-            events={events}
-          />
+          <QueryDetails query={query} SQLString={SQLString} events={events} />
         </Space>
       </Space>
     </AppLayout>
@@ -125,13 +122,15 @@ const QueryDetailedWrapper = () => {
     };
   }, [current.request_event_logs]);
 
+  const query: string = events?.find((e) => e?.query)?.query;
+
   return (
     <QueryDetailed
       request={current}
       SQLString={querySql}
       events={events}
       queryKey={queryKeyMd5}
-      query={events?.find((e) => e?.query)?.query}
+      query={query && JSON.parse(query)}
       fetching={currentData.fetching}
       error={error}
     />

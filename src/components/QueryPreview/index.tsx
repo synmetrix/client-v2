@@ -19,7 +19,7 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
   dimensions,
   segments,
   timeDimensions,
-  orders,
+  order,
   withButton = true,
 }) => {
   const { t } = useTranslation(["alerts", "common"]);
@@ -28,7 +28,7 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
 
   const [activePanel, setActivePanel] = useState<string>();
 
-  const isShown = (arr?: string[]) => arr && arr.length > 0;
+  const isShown = (val?: any) => (Array.isArray(val) ? val.length > 0 : !!val);
 
   const getCount = (arr: any[]) => {
     return arr.reduce((res, a) => (a?.length ? res + a.length : res), 0);
@@ -55,13 +55,7 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
       <Panel
         className={styles.panel}
         collapsible={
-          isCollapsible([
-            measures,
-            dimensions,
-            orders,
-            timeDimensions,
-            segments,
-          ])
+          isCollapsible([measures, dimensions, order, timeDimensions, segments])
             ? "disabled"
             : undefined
         }
@@ -73,7 +67,7 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
                 !isCollapsible([
                   measures,
                   dimensions,
-                  orders,
+                  order,
                   timeDimensions,
                   segments,
                 ]) &&
@@ -104,12 +98,12 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
                       <QueryTags content={segments} type="segment" />
                     </>
                   )}
-                  {isShown(orders) && (
+                  {isShown(order) && (
                     <>
                       <span className={styles.tagLabel}>
                         {t("common:words.ordered_by")}
                       </span>
-                      <QueryTags content={orders} type="order" />
+                      <QueryTags content={order} type="order" />
                     </>
                   )}
                 </>
@@ -134,12 +128,12 @@ const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
             </Space>
           )}
 
-          {isShown(orders) && (
+          {isShown(order) && (
             <Space size={9}>
               <span className={styles.tagLabel}>
                 {t("common:words.ordered_by")}
               </span>
-              <QueryTags content={orders} type="order" />
+              <QueryTags content={order} type="order" />
             </Space>
           )}
         </Space>

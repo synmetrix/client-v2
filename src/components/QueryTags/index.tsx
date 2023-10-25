@@ -2,6 +2,7 @@ import { Space } from "antd";
 
 import NestedTag from "@/components/NestedTag";
 import { QUERY_COLORS } from "@/utils/constants/colors";
+import type { QueryPreview } from "@/types/queryPreview";
 
 import ArrowIcon from "@/assets/arrow.svg";
 
@@ -10,7 +11,7 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface QueryTagsProps {
-  content?: string[];
+  content?: QueryPreview[keyof QueryPreview];
   type: keyof typeof QUERY_COLORS;
 }
 
@@ -26,22 +27,47 @@ const QueryTags: FC<QueryTagsProps> = ({ content, type }) => {
     }
   };
 
+  if (!content) return null;
+
   return (
     <Space size={10}>
-      {content?.map((tag) => {
-        const tagSplited = tag.split(".");
-        return (
-          <NestedTag
-            key={JSON.stringify(tag)}
-            tag={{ title: tagSplited[0], color: QUERY_COLORS[type][0] }}
-            nested={tagSplited.slice(1).map((t, idx) => ({
-              title: detectIcon(t),
-              color: QUERY_COLORS[type][1],
-              key: idx,
-            }))}
-          />
-        );
-      })}
+      {Array.isArray(content)
+        ? content?.map((tag) => {
+            let tagSplited: string[] = [];
+
+            if (typeof tag === "string") {
+              tagSplited = tag.split(".");
+            } else {
+              tagSplited = `${tag.dimension}.${tag.granularity}`.split(".");
+            }
+
+            return (
+              <NestedTag
+                key={JSON.stringify(tag)}
+                tag={{ title: tagSplited[0], color: QUERY_COLORS[type][0] }}
+                nested={tagSplited.slice(1).map((t, idx) => ({
+                  title: detectIcon(t),
+                  color: QUERY_COLORS[type][1],
+                  key: idx,
+                }))}
+              />
+            );
+          })
+        : Object.entries(content).map(([key, value]) => {
+            const tagSplited: string[] = `${key}.${value}`.split(".");
+
+            return (
+              <NestedTag
+                key={JSON.stringify(key)}
+                tag={{ title: tagSplited[0], color: QUERY_COLORS[type][0] }}
+                nested={tagSplited.slice(1).map((t, idx) => ({
+                  title: detectIcon(t),
+                  color: QUERY_COLORS[type][1],
+                  key: idx,
+                }))}
+              />
+            );
+          })}
     </Space>
   );
 };

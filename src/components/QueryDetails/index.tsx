@@ -35,7 +35,7 @@ const QueryDetails: FC<QueryDetailsProps> = ({ query, SQLString, events }) => {
             dimensions={query?.dimensions}
             segments={query?.segments}
             timeDimensions={query?.timeDimensions}
-            orders={query?.orders}
+            order={query?.order}
             withButton={false}
           />
         </>

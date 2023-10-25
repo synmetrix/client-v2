@@ -1,7 +1,7 @@
 export const queryPreviewMock = {
-  measures: ["stories.count", "data_table2.count"],
-  segments: ["product_categories.toys"],
-  dimensions: ["stories.category"],
-  timeDimensions: ["stories.time"],
-  orders: ["stories.count.asc"],
+  measures: ["Actors.count"],
+  dimensions: ["Actors.type"],
+  timeDimensions: [{ dimension: "Actors.createdAt", granularity: "day" }],
+  segments: [],
+  order: { "emptyCube.emptyKey": "asc" },
 };

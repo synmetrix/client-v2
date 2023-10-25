@@ -17,6 +17,7 @@ type AuthResponse = {
   statusCode?: number;
   error?: string;
   message?: string;
+  magicLink?: boolean;
 };
 
 export const validateResponse = async (response: any) => {
@@ -74,10 +75,16 @@ export default () => {
       };
     }
 
-    setAuthData({
-      accessToken: res.jwt_token,
-      refreshToken: res.refresh_token,
-    });
+    if (res?.jwt_token && res?.refresh_token) {
+      setAuthData({
+        accessToken: res.jwt_token,
+        refreshToken: res.refresh_token,
+      });
+    }
+
+    return {
+      magicLink: res?.magicLink,
+    };
   };
 
   const register = async (values: SignUpFormType) => {
@@ -162,10 +169,41 @@ export default () => {
     return res;
   };
 
+  const sendMagicLink = async ({ email }: SignUpFormType) => {
+    const response = await fetch(
+      `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/register`,
+      {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const res = <AuthResponse>await validateResponse(response);
+
+    if (res.error) {
+      return {
+        error: res.error,
+        message: res.message,
+      };
+    }
+
+    setAuthData({
+      accessToken: res.jwt_token,
+      refreshToken: res.refresh_token,
+    });
+
+    return res;
+  };
+
   return {
     login,
     register,
     logout,
     changePass,
+    sendMagicLink,
   };
 };

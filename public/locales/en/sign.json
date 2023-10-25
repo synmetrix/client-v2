@@ -1,10 +1,14 @@
 {
   "sign_in": {
+    "sign_in_password": "Sign In with Password",
     "title": "Welcome Back",
     "text": "Please Enter your details!",
     "bottom_text": " Don't have an account?",
     "sign_up_link": "Sign up for free",
-    "login": "Login"
+    "login": "Login",
+    "send_link": "Send link",
+    "magic_link_login": "Sign In with Magic Link",
+    "link_sended": "Link sent successfully. Please check your email."
   },
   "sign_up": {
     "title": "Sign Up",

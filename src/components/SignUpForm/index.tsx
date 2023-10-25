@@ -16,15 +16,16 @@ const { Title, Text } = Typography;
 
 export interface SignUpFormType {
   email: string;
-  password: string;
+  password?: string;
   privacy?: boolean;
 }
 
 interface SignUpProps {
   onSubmit: (data: SignUpFormType) => void;
+  isMagicLink: boolean;
 }
 
-const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
+const SignUpForm: FC<SignUpProps> = ({ onSubmit, isMagicLink }) => {
   const [_, setLocation] = useLocation();
 
   const { t } = useTranslation(["sign", "common"]);
@@ -42,8 +43,16 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
       </div>
 
       <div className={styles.magicLinkWrapper}>
-        <Button className={styles.magicLink} type="default">
-          {t("sign_up.magic_link_login")}
+        <Button
+          className={styles.magicLink}
+          type="default"
+          onClick={() =>
+            isMagicLink
+              ? setLocation("/auth/signup")
+              : setLocation("/auth/signup?magicLink")
+          }
+        >
+          {isMagicLink ? t("sign_up.sign_up") : t("sign_up.magic_link_login")}
         </Button>
       </div>
 
@@ -66,21 +75,23 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit }) => {
           }}
           name="email"
         />
-        <Input
-          className={cn(styles.formItem, styles.input, {
-            [styles.error]: errors?.password,
-          })}
-          bordered={false}
-          placeholder={t("common:form.placeholders.password")}
-          control={control}
-          rules={{
-            required: true,
-            validate: (v: string) =>
-              validate.password(v) || t("common:form.errors.password"),
-          }}
-          name="password"
-          fieldType="password"
-        />
+        {!isMagicLink && (
+          <Input
+            className={cn(styles.formItem, styles.input, {
+              [styles.error]: errors?.password,
+            })}
+            bordered={false}
+            placeholder={t("common:form.placeholders.password")}
+            control={control}
+            rules={{
+              required: true,
+              validate: (v: string) =>
+                validate.password(v) || t("common:form.errors.password"),
+            }}
+            name="password"
+            fieldType="password"
+          />
+        )}
 
         <div className={styles.checkboxWrapper}>
           <Input

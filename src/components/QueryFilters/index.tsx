@@ -49,6 +49,7 @@ const QueryFilters: FC<QueryFiltersProps> = ({
           placeholder={t("query.filter.select")}
           label={t("query.filter.data_source")}
           fieldType="select"
+          allowClear
           options={dataSources?.map((d) => ({
             value: d.id || "",
             label: d.name,
@@ -79,6 +80,7 @@ const QueryFilters: FC<QueryFiltersProps> = ({
           label={t("query.filter.sort")}
           fieldType="select"
           defaultValue={"asc"}
+          allowClear
           options={[
             { value: "asc", label: "Asc" },
             { value: "desc", label: "Desc" },

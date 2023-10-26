@@ -7,6 +7,7 @@ import cn from "classnames";
 import Button from "@/components/Button";
 import Select from "@/components/Select";
 import SearchInput from "@/components/SearchInput";
+import DataSourcesMenu from "@/components/DataSourcesMenu";
 
 import BranchIcon from "@/assets/branch.svg";
 import VerticalDots from "@/assets/dots-vertical.svg";
@@ -67,79 +68,33 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
   return (
     <Space className={styles.wrapper} size={16} direction="vertical">
-      <Space className={styles.space} align="end">
-        <Space className={styles.space} size={10} direction="vertical">
-          <div className={styles.label}>{t("common:words.branch")}:</div>
+      <DataSourcesMenu
+        entities={[
+          { id: "1", name: "1" },
+          { id: "2", name: "2" },
+        ]}
+      />
+      <div className={styles.inner}>
+        <Space className={styles.space} align="end">
+          <Space className={styles.space} size={10} direction="vertical">
+            <div className={styles.label}>{t("common:words.branch")}:</div>
 
-          <Select
-            className={cn(styles.select, isMobile && styles.selectMobile)}
-            prefixIcon={<BranchIcon />}
-            size="large"
-            defaultValue={branches.find((b) => b.includes("default"))}
-            optionLabelProp="valueLabel"
-            suffixIcon={<DownOutlined />}
-            options={branches.map((b) => ({
-              value: b,
-              label: b,
-            }))}
-          />
-        </Space>
-
-        <Dropdown
-          className={styles.dropdown}
-          trigger={["click"]}
-          menu={{
-            items: items.map((i) => ({
-              ...i,
-            })) as MenuProps["items"],
-          }}
-          placement="bottomRight"
-          arrow
-        >
-          <Button type="ghost">
-            <VerticalDots />
-          </Button>
-        </Dropdown>
-      </Space>
-
-      <Space className={styles.space} size={10} direction="vertical">
-        <div>
-          <span> {t("sidebar.version")}:</span>{" "}
-          <Button
-            className={styles.docsLink}
-            type="link"
-            href={docs}
-            target="_blank"
-          >
-            {t("sidebar.open_docs")}
-          </Button>
-        </div>
-        <div className={styles.version}>{version}</div>
-        <Button
-          className={styles.default}
-          onClick={() => onSetDefaultVersion(version)}
-        >
-          {t("sidebar.set_as_default")}
-        </Button>
-      </Space>
-
-      <Space className={styles.space} size={16} direction="vertical">
-        <Space className={styles.space} size={10} align="center">
-          <SearchInput
-            value={searchValue}
-            onChange={setSearchValue}
-            placeholder={t("common:form.placeholders.search")}
-          />
-          <Button
-            className={styles.addFile}
-            onClick={() =>
-              searchValue?.includes(".") && onCreateFile(searchValue)
-            }
-          >
-            <PlusOutlined className={styles.plusIcon} />
-          </Button>
+            <Select
+              className={cn(styles.select, isMobile && styles.selectMobile)}
+              prefixIcon={<BranchIcon />}
+              size="large"
+              defaultValue={branches.find((b) => b.includes("default"))}
+              optionLabelProp="valueLabel"
+              suffixIcon={<DownOutlined />}
+              options={branches.map((b) => ({
+                value: b,
+                label: b,
+              }))}
+            />
+          </Space>
 
           <Dropdown
+            className={styles.dropdown}
             trigger={["click"]}
             menu={{
               items: items.map((i) => ({
@@ -155,20 +110,74 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
           </Dropdown>
         </Space>
 
-        {files
-          .filter((f) => f.toLowerCase().includes(searchValue.toLowerCase()))
-          .map((f) => (
+        <Space className={styles.space} size={10} direction="vertical">
+          <div>
+            <span> {t("sidebar.version")}:</span>{" "}
             <Button
-              key={f}
-              className={styles.fileBtn}
-              type="text"
-              icon={<YMLIcon className={styles.fileIcon} />}
-              onClick={() => onSelectFile(f)}
+              className={styles.docsLink}
+              type="link"
+              href={docs}
+              target="_blank"
             >
-              {f}
+              {t("sidebar.open_docs")}
             </Button>
-          ))}
-      </Space>
+          </div>
+          <div className={styles.version}>{version}</div>
+          <Button
+            className={styles.default}
+            onClick={() => onSetDefaultVersion(version)}
+          >
+            {t("sidebar.set_as_default")}
+          </Button>
+        </Space>
+
+        <Space className={styles.space} size={16} direction="vertical">
+          <Space className={styles.space} size={10} align="center">
+            <SearchInput
+              value={searchValue}
+              onChange={setSearchValue}
+              placeholder={t("common:form.placeholders.search")}
+            />
+            <Button
+              className={styles.addFile}
+              onClick={() =>
+                searchValue?.includes(".") && onCreateFile(searchValue)
+              }
+            >
+              <PlusOutlined className={styles.plusIcon} />
+            </Button>
+
+            <Dropdown
+              trigger={["click"]}
+              menu={{
+                items: items.map((i) => ({
+                  ...i,
+                })) as MenuProps["items"],
+              }}
+              placement="bottomRight"
+              arrow
+            >
+              <Button type="ghost">
+                <VerticalDots />
+              </Button>
+            </Dropdown>
+          </Space>
+
+          {files
+            .filter((f) => f.toLowerCase().includes(searchValue.toLowerCase()))
+            .map((f) => (
+              <Button
+                key={f}
+                className={styles.fileBtn}
+                type="text"
+                icon={<YMLIcon className={styles.fileIcon} />}
+                onClick={() => onSelectFile(f)}
+              >
+                {f}
+              </Button>
+            ))}
+        </Space>
+      </div>
     </Space>
   );
 };

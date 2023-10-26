@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import CodeEditor from "@/components/CodeEditor";
 import ModelsSidebar from "@/components/ModelsSidebar";
 import useLocation from "@/hooks/useLocation";
+import SidebarLayout from "@/layouts/SidebarLayout";
 import AppLayout from "@/layouts/AppLayout";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { File } from "@/types/file";
@@ -80,41 +81,37 @@ const Models: React.FC<ModelsProps> = ({
   };
 
   return (
-    <AppLayout
-      title={"asdsad"}
+    <SidebarLayout
+      title={"gh-api.clickhouse.tech"}
+      subTitle={
+        <Space size={7} align="center">
+          <ModelsActiveIcon />
+          <Title className={styles.sidebarTitle} level={4}>
+            Models
+          </Title>
+        </Space>
+      }
       divider
-      sidebar={
-        <Row>
-          <Col>
-            <div>
-              <Space size={7} align="center">
-                <ModelsActiveIcon />
-                <Title className={styles.sidebarTitle} level={4}>
-                  Models
-                </Title>
-              </Space>
-            </div>
-            <div>
-              <ModelsSidebar
-                version={currentVersion.checksum}
-                branches={branches}
-                docs={docs}
-                files={files.map((f) => f.name)}
-                onCreateFile={onFileCreate}
-                onSelectFile={onSelectFile}
-                onSetDefaultVersion={console.log}
-              />
-            </div>
-          </Col>
-        </Row>
+      items={
+        <ModelsSidebar
+          version={currentVersion.checksum}
+          branches={branches}
+          docs={docs}
+          files={files.map((f) => f.name)}
+          onCreateFile={onFileCreate}
+          onSelectFile={onSelectFile}
+          onSetDefaultVersion={console.log}
+        />
       }
     >
       <CodeEditor files={selectedFiles} onRemove={onFileRemove} />
-    </AppLayout>
+    </SidebarLayout>
   );
 };
 
 const ModelsWrapper: React.FC = () => {
+  const { t } = useTranslation(["dataSourceStepForm"]);
+
   const currentVersion = {
     id: "asdasd",
     checksum: "asdasd",
@@ -138,7 +135,6 @@ const ModelsWrapper: React.FC = () => {
     variables: {},
   });
 
-  const { t } = useTranslation(["dataSourceStepForm"]);
   const { currentUser, currentTeamId } = CurrentUserStore();
   const [location, setLocation] = useLocation();
 

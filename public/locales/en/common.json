@@ -1,5 +1,7 @@
 {
   "words": {
+    "delete_datasource": "Delete Data Source",
+    "are_you_sure": "Are you sure?",
     "apply": "Apply",
     "generate": "Generate",
     "generate_models": "Generate Models",

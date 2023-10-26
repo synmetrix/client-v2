@@ -7,11 +7,9 @@ import DataSourceForm from "@/components/DataSourceForm";
 import Modal from "@/components/Modal";
 import NoDataSource from "@/components/NoDataSource";
 import PageHeader from "@/components/PageHeader";
-import SidebarMenu from "@/components/SidebarMenu";
 import type {
   Datasources_Pk_Columns_Input,
   Datasources_Set_Input,
-  Branches_Arr_Rel_Insert_Input,
 } from "@/graphql/generated";
 import {
   useCheckConnectionMutation,
@@ -25,7 +23,6 @@ import {
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
-import SidebarLayout from "@/layouts/SidebarLayout";
 import { prepareInitValues } from "@/pages/SqlApi";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
@@ -34,7 +31,6 @@ import type {
   DataSourceSetupForm,
   DynamicForm,
 } from "@/types/dataSource";
-import { settingsMenuItems } from "@/mocks/sidebarMenu";
 
 import styles from "./index.module.less";
 
@@ -94,10 +90,7 @@ export const DataSources = ({
   }, [editId, setIsOpen]);
 
   return (
-    <SidebarLayout
-      title={t("pages:settings.data_sources")}
-      items={<SidebarMenu items={settingsMenuItems} />}
-    >
+    <>
       <Spin spinning={loading}>
         {dataSources.length === 0 && <NoDataSource onConnect={onOpen} />}
         {dataSources.length > 0 && (
@@ -144,7 +137,7 @@ export const DataSources = ({
           shadow={false}
         />
       </Modal>
-    </SidebarLayout>
+    </>
   );
 };
 

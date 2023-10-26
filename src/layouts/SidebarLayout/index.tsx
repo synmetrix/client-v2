@@ -4,6 +4,7 @@ import Sidebar from "@/components/Sidebar";
 import type { ReactNode } from "react";
 
 export type SidebarLayoutProps = {
+  icon?: ReactNode;
   title?: ReactNode | string;
   subTitle?: ReactNode | string;
   items?: ReactNode[] | ReactNode;
@@ -12,6 +13,7 @@ export type SidebarLayoutProps = {
 };
 
 const SidebarLayout: React.FC<SidebarLayoutProps> = ({
+  icon,
   title = "Main",
   subTitle = "Settings",
   items = [],
@@ -22,7 +24,11 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
     <AppLayout
       title={title}
       divider={divider}
-      sidebar={<Sidebar title={subTitle}>{items}</Sidebar>}
+      sidebar={
+        <Sidebar icon={icon} title={subTitle}>
+          {items}
+        </Sidebar>
+      }
     >
       {children}
     </AppLayout>

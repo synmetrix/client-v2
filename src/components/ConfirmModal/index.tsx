@@ -31,11 +31,11 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   const confirm = () => {
     modal.confirm({
-      title: title || t("delete"),
+      title: title || t("common:words.delete"),
       icon,
-      content: content || t("are_you_sure"),
-      okText: okText || t("ok"),
-      cancelText: cancelText || t("cancel"),
+      content: content || t("common:words.are_you_sure"),
+      okText: okText || t("common:words.ok"),
+      cancelText: cancelText || t("common:words.cancel"),
       onOk: onConfirm,
       onCancel,
     });

@@ -13,7 +13,6 @@ import type { Version } from "@/types/version";
 //   Datasources_Pk_Columns_Input,
 //   Datasources_Set_Input,
 // } from "@/graphql/generated";
-import { useDataschemasQuery } from "@/graphql/generated";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
 
@@ -28,7 +27,7 @@ interface ModelsProps {
 
 const { Title } = Typography;
 
-const Models: React.FC<ModelsProps> = ({
+export const Models: React.FC<ModelsProps> = ({
   // versions,
   branches,
   docs,
@@ -131,14 +130,10 @@ const ModelsWrapper: React.FC = () => {
     ],
   };
 
-  const [query, execQuery] = useDataschemasQuery({
-    variables: {},
-  });
-
   const { currentUser, currentTeamId } = CurrentUserStore();
   const [location, setLocation] = useLocation();
 
-  return <Models branches={[]} docs="asdasd" currentVersion={currentVersion} />;
+  return null;
 };
 
 export default ModelsWrapper;

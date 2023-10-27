@@ -26,7 +26,7 @@ query Datasources(
     db_type
     created_at
     updated_at
-    branches(where: { status: {_eq: active}}) {
+    branches(where: { status: { _eq: active } }) {
       id
     }
     sql_credentials {
@@ -65,7 +65,7 @@ subscription AllDatasources(
     db_type
     created_at
     updated_at
-    branches (where: { status: {_eq: active}}) {
+    branches(where: { status: { _eq: active } }) {
       id
     }
     sql_credentials {

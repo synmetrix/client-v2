@@ -1,7 +1,7 @@
 import RootLayout from "@/layouts/RootLayout";
 import { versions } from "@/mocks/versions";
 
-import Models from ".";
+import { Models } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 

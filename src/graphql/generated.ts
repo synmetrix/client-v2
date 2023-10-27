@@ -2,7 +2,9 @@ import gql from "graphql-tag";
 import * as Urql from "urql";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends Record<string, unknown>> = { [K in keyof T]: T[K] };
+export type Exact<T extends Record<string, unknown>> = {
+  [K in keyof T]: T[K];
+};
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]?: Maybe<T[SubKey]>;
 };
@@ -11215,6 +11217,77 @@ export type CreateAccessListMutation = {
   insert_access_lists_one?: { __typename?: "access_lists"; id: any } | null;
 };
 
+export type AllDataSchemasQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Branches_Bool_Exp>;
+  order_by?: InputMaybe<Branches_Order_By[] | Branches_Order_By>;
+}>;
+
+export type AllDataSchemasQuery = {
+  __typename?: "query_root";
+  branches: {
+    __typename?: "branches";
+    id: any;
+    name: string;
+    status: Branch_Statuses_Enum;
+    versions: {
+      __typename?: "versions";
+      id: any;
+      checksum: string;
+      created_at: any;
+      updated_at: any;
+      user: { __typename?: "users"; display_name?: string | null };
+      dataschemas: {
+        __typename?: "dataschemas";
+        id: any;
+        name: string;
+        code: string;
+        created_at: any;
+        updated_at: any;
+        datasource_id: any;
+      }[];
+    }[];
+  }[];
+};
+
+export type AllSchemasSubscriptionVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Dataschemas_Bool_Exp>;
+  order_by?: InputMaybe<Dataschemas_Order_By[] | Dataschemas_Order_By>;
+}>;
+
+export type AllSchemasSubscription = {
+  __typename?: "subscription_root";
+  dataschemas: {
+    __typename?: "dataschemas";
+    id: any;
+    user_id: any;
+    name: string;
+    checksum?: string | null;
+    datasource: { __typename?: "datasources"; team_id?: any | null };
+  }[];
+};
+
+export type CreateBranchMutationVariables = Exact<{
+  object: Branches_Insert_Input;
+}>;
+
+export type CreateBranchMutation = {
+  __typename?: "mutation_root";
+  insert_branches_one?: { __typename?: "branches"; id: any } | null;
+};
+
+export type CreateVersionMutationVariables = Exact<{
+  object: Versions_Insert_Input;
+}>;
+
+export type CreateVersionMutation = {
+  __typename?: "mutation_root";
+  insert_versions_one?: { __typename?: "versions"; id: any } | null;
+};
+
 export type BranchesFieldsFragment = {
   __typename?: "branches";
   id: any;
@@ -11449,40 +11522,6 @@ export type UpdateUserInfoMutation = {
   } | null;
 };
 
-export type DataschemasQueryVariables = Exact<{
-  offset?: InputMaybe<Scalars["Int"]>;
-  limit?: InputMaybe<Scalars["Int"]>;
-  where?: InputMaybe<Branches_Bool_Exp>;
-  order_by?: InputMaybe<Branches_Order_By[] | Branches_Order_By>;
-}>;
-
-export type DataschemasQuery = {
-  __typename?: "query_root";
-  branches: {
-    __typename?: "branches";
-    id: any;
-    name: string;
-    status: Branch_Statuses_Enum;
-    versions: {
-      __typename?: "versions";
-      id: any;
-      checksum: string;
-      created_at: any;
-      updated_at: any;
-      user: { __typename?: "users"; display_name?: string | null };
-      dataschemas: {
-        __typename?: "dataschemas";
-        id: any;
-        name: string;
-        code: string;
-        created_at: any;
-        updated_at: any;
-        datasource_id: any;
-      }[];
-    }[];
-  }[];
-};
-
 export type CreateDataSourceMutationVariables = Exact<{
   object: Datasources_Insert_Input;
 }>;
@@ -11659,6 +11698,27 @@ export type GenDataSchemasMutation = {
     __typename?: "GenSourceSchemaOutput";
     code: string;
     message?: string | null;
+  } | null;
+};
+
+export type DeleteSchemaMutationMutationVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type DeleteSchemaMutationMutation = {
+  __typename?: "mutation_root";
+  update_branches_by_pk?: { __typename?: "branches"; id: any } | null;
+};
+
+export type ExportDataMutationVariables = Exact<{
+  branch_id?: InputMaybe<Scalars["String"]>;
+}>;
+
+export type ExportDataMutation = {
+  __typename?: "mutation_root";
+  export_data_models?: {
+    __typename?: "ExportDataModelsOutput";
+    download_url: string;
   } | null;
 };
 
@@ -11839,6 +11899,20 @@ export type SubAllLogsSubscriptionVariables = Exact<{
 export type SubAllLogsSubscription = {
   __typename?: "subscription_root";
   request_logs: { __typename?: "request_logs"; id: any }[];
+};
+
+export type SetDefaultBranchMutationVariables = Exact<{
+  branch_id: Scalars["uuid"];
+  datasource_id: Scalars["uuid"];
+}>;
+
+export type SetDefaultBranchMutation = {
+  __typename?: "mutation_root";
+  update_branches?: {
+    __typename?: "branches_mutation_response";
+    affected_rows: number;
+  } | null;
+  update_branches_by_pk?: { __typename?: "branches"; id: any } | null;
 };
 
 export type CredentialsQueryVariables = Exact<{
@@ -12139,6 +12213,115 @@ export function useCreateAccessListMutation() {
     CreateAccessListMutationVariables
   >(CreateAccessListDocument);
 }
+export const AllDataSchemasDocument = gql`
+  query AllDataSchemas(
+    $offset: Int
+    $limit: Int
+    $where: branches_bool_exp
+    $order_by: [branches_order_by!]
+  ) {
+    branches(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+      name
+      status
+      versions(order_by: { created_at: desc }) {
+        id
+        checksum
+        created_at
+        updated_at
+        user {
+          display_name
+        }
+        dataschemas {
+          id
+          name
+          code
+          created_at
+          updated_at
+          datasource_id
+        }
+      }
+    }
+  }
+`;
+
+export function useAllDataSchemasQuery(
+  options?: Omit<Urql.UseQueryArgs<AllDataSchemasQueryVariables>, "query">
+) {
+  return Urql.useQuery<AllDataSchemasQuery, AllDataSchemasQueryVariables>({
+    query: AllDataSchemasDocument,
+    ...options,
+  });
+}
+export const AllSchemasDocument = gql`
+  subscription AllSchemas(
+    $offset: Int
+    $limit: Int
+    $where: dataschemas_bool_exp
+    $order_by: [dataschemas_order_by!]
+  ) {
+    dataschemas(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+      user_id
+      name
+      checksum
+      datasource {
+        team_id
+      }
+    }
+  }
+`;
+
+export function useAllSchemasSubscription<TData = AllSchemasSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<AllSchemasSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<AllSchemasSubscription, TData>
+) {
+  return Urql.useSubscription<
+    AllSchemasSubscription,
+    TData,
+    AllSchemasSubscriptionVariables
+  >({ query: AllSchemasDocument, ...options }, handler);
+}
+export const CreateBranchDocument = gql`
+  mutation CreateBranch($object: branches_insert_input!) {
+    insert_branches_one(object: $object) {
+      id
+    }
+  }
+`;
+
+export function useCreateBranchMutation() {
+  return Urql.useMutation<CreateBranchMutation, CreateBranchMutationVariables>(
+    CreateBranchDocument
+  );
+}
+export const CreateVersionDocument = gql`
+  mutation CreateVersion($object: versions_insert_input!) {
+    insert_versions_one(object: $object) {
+      id
+    }
+  }
+`;
+
+export function useCreateVersionMutation() {
+  return Urql.useMutation<
+    CreateVersionMutation,
+    CreateVersionMutationVariables
+  >(CreateVersionDocument);
+}
 export const CurrentUserDocument = gql`
   query CurrentUser($id: uuid!) {
     users_by_pk(id: $id) {
@@ -12294,51 +12477,6 @@ export function useUpdateUserInfoMutation() {
     UpdateUserInfoMutation,
     UpdateUserInfoMutationVariables
   >(UpdateUserInfoDocument);
-}
-export const DataschemasDocument = gql`
-  query Dataschemas(
-    $offset: Int
-    $limit: Int
-    $where: branches_bool_exp
-    $order_by: [branches_order_by!]
-  ) {
-    branches(
-      offset: $offset
-      limit: $limit
-      where: $where
-      order_by: $order_by
-    ) {
-      id
-      name
-      status
-      versions(order_by: { created_at: desc }) {
-        id
-        checksum
-        created_at
-        updated_at
-        user {
-          display_name
-        }
-        dataschemas {
-          id
-          name
-          code
-          created_at
-          updated_at
-          datasource_id
-        }
-      }
-    }
-  }
-`;
-
-export function useDataschemasQuery(
-  options?: Omit<Urql.UseQueryArgs<DataschemasQueryVariables>, "query">
-) {
-  return Urql.useQuery<DataschemasQuery, DataschemasQueryVariables>({
-    query: DataschemasDocument,
-    ...options,
-  });
 }
 export const CreateDataSourceDocument = gql`
   mutation CreateDataSource($object: datasources_insert_input!) {
@@ -12598,6 +12736,33 @@ export function useGenDataSchemasMutation() {
     GenDataSchemasMutationVariables
   >(GenDataSchemasDocument);
 }
+export const DeleteSchemaMutationDocument = gql`
+  mutation DeleteSchemaMutation($id: uuid!) {
+    update_branches_by_pk(_set: { status: archived }, pk_columns: { id: $id }) {
+      id
+    }
+  }
+`;
+
+export function useDeleteSchemaMutationMutation() {
+  return Urql.useMutation<
+    DeleteSchemaMutationMutation,
+    DeleteSchemaMutationMutationVariables
+  >(DeleteSchemaMutationDocument);
+}
+export const ExportDataDocument = gql`
+  mutation ExportData($branch_id: String) {
+    export_data_models(branch_id: $branch_id) {
+      download_url
+    }
+  }
+`;
+
+export function useExportDataMutation() {
+  return Urql.useMutation<ExportDataMutation, ExportDataMutationVariables>(
+    ExportDataDocument
+  );
+}
 export const MembersDocument = gql`
   query Members(
     $offset: Int
@@ -12801,6 +12966,29 @@ export function useSubAllLogsSubscription<TData = SubAllLogsSubscription>(
     SubAllLogsSubscriptionVariables
   >({ query: SubAllLogsDocument, ...options }, handler);
 }
+export const SetDefaultBranchDocument = gql`
+  mutation SetDefaultBranch($branch_id: uuid!, $datasource_id: uuid!) {
+    update_branches(
+      _set: { status: created }
+      where: { datasource_id: { _eq: $datasource_id }, status: { _eq: active } }
+    ) {
+      affected_rows
+    }
+    update_branches_by_pk(
+      _set: { status: active }
+      pk_columns: { id: $branch_id }
+    ) {
+      id
+    }
+  }
+`;
+
+export function useSetDefaultBranchMutation() {
+  return Urql.useMutation<
+    SetDefaultBranchMutation,
+    SetDefaultBranchMutationVariables
+  >(SetDefaultBranchDocument);
+}
 export const CredentialsDocument = gql`
   query Credentials($teamId: uuid!) {
     sql_credentials(
@@ -12970,8 +13158,8 @@ export const namedOperations = {
   Query: {
     AllAccessLists: "AllAccessLists",
     AccessList: "AccessList",
+    AllDataSchemas: "AllDataSchemas",
     CurrentUser: "CurrentUser",
-    Dataschemas: "Dataschemas",
     Datasources: "Datasources",
     FetchTables: "FetchTables",
     FetchMeta: "FetchMeta",
@@ -12987,6 +13175,8 @@ export const namedOperations = {
     UpdateAccessList: "UpdateAccessList",
     DeleteAccessList: "DeleteAccessList",
     CreateAccessList: "CreateAccessList",
+    CreateBranch: "CreateBranch",
+    CreateVersion: "CreateVersion",
     UpdateUserInfo: "UpdateUserInfo",
     CreateDataSource: "CreateDataSource",
     ValidateDataSource: "ValidateDataSource",
@@ -12994,10 +13184,13 @@ export const namedOperations = {
     CheckConnection: "CheckConnection",
     DeleteDataSource: "DeleteDataSource",
     GenDataSchemas: "GenDataSchemas",
+    DeleteSchemaMutation: "DeleteSchemaMutation",
+    ExportData: "ExportData",
     UpdateMember: "UpdateMember",
     UpdateMemberRole: "UpdateMemberRole",
     DeleteMember: "DeleteMember",
     InviteMember: "InviteMember",
+    SetDefaultBranch: "SetDefaultBranch",
     InsertSqlCredentials: "InsertSqlCredentials",
     DeleteCredentials: "DeleteCredentials",
     CreateTeam: "CreateTeam",
@@ -13006,6 +13199,7 @@ export const namedOperations = {
   },
   Subscription: {
     SubAccessLists: "SubAccessLists",
+    AllSchemas: "AllSchemas",
     SubCurrentUser: "SubCurrentUser",
     AllDatasources: "AllDatasources",
     SubAllLogs: "SubAllLogs",

@@ -1,0 +1,5 @@
+mutation ExportData($branch_id: String) {
+  export_data_models(branch_id: $branch_id) {
+    download_url
+  }
+}

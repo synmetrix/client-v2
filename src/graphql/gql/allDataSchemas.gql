@@ -1,4 +1,4 @@
-query Dataschemas(
+query AllDataSchemas(
   $offset: Int
   $limit: Int
   $where: branches_bool_exp

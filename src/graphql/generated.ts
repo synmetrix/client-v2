@@ -11701,11 +11701,11 @@ export type GenDataSchemasMutation = {
   } | null;
 };
 
-export type DeleteSchemaMutationMutationVariables = Exact<{
+export type DeleteSchemaMutationVariables = Exact<{
   id: Scalars["uuid"];
 }>;
 
-export type DeleteSchemaMutationMutation = {
+export type DeleteSchemaMutation = {
   __typename?: "mutation_root";
   update_branches_by_pk?: { __typename?: "branches"; id: any } | null;
 };
@@ -12736,19 +12736,18 @@ export function useGenDataSchemasMutation() {
     GenDataSchemasMutationVariables
   >(GenDataSchemasDocument);
 }
-export const DeleteSchemaMutationDocument = gql`
-  mutation DeleteSchemaMutation($id: uuid!) {
+export const DeleteSchemaDocument = gql`
+  mutation DeleteSchema($id: uuid!) {
     update_branches_by_pk(_set: { status: archived }, pk_columns: { id: $id }) {
       id
     }
   }
 `;
 
-export function useDeleteSchemaMutationMutation() {
-  return Urql.useMutation<
-    DeleteSchemaMutationMutation,
-    DeleteSchemaMutationMutationVariables
-  >(DeleteSchemaMutationDocument);
+export function useDeleteSchemaMutation() {
+  return Urql.useMutation<DeleteSchemaMutation, DeleteSchemaMutationVariables>(
+    DeleteSchemaDocument
+  );
 }
 export const ExportDataDocument = gql`
   mutation ExportData($branch_id: String) {
@@ -13184,7 +13183,7 @@ export const namedOperations = {
     CheckConnection: "CheckConnection",
     DeleteDataSource: "DeleteDataSource",
     GenDataSchemas: "GenDataSchemas",
-    DeleteSchemaMutation: "DeleteSchemaMutation",
+    DeleteSchema: "DeleteSchema",
     ExportData: "ExportData",
     UpdateMember: "UpdateMember",
     UpdateMemberRole: "UpdateMemberRole",

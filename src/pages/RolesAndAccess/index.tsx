@@ -5,7 +5,6 @@ import AccessTable from "@/components/AccessTable";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import RoleForm from "@/components/RoleForm";
-import SettingsMenu from "@/components/SettingsMenu";
 import type { AllAccessListsQuery, Datasources } from "@/graphql/generated";
 import {
   useAllAccessListsQuery,
@@ -18,7 +17,6 @@ import {
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
 import { prepareDataSourceData } from "@/hooks/useUserData";
-import SidebarLayout from "@/layouts/SidebarLayout";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
   AccessList,
@@ -71,10 +69,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   }, [initialValues, setIsOpen]);
 
   return (
-    <SidebarLayout
-      title={t("pages:settings.roles_and_access")}
-      items={<SettingsMenu />}
-    >
+    <>
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
@@ -103,7 +98,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
           onSubmit={onFormFinish}
         />
       </Modal>
-    </SidebarLayout>
+    </>
   );
 };
 

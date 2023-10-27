@@ -7,7 +7,6 @@ import DataSourceForm from "@/components/DataSourceForm";
 import Modal from "@/components/Modal";
 import NoDataSource from "@/components/NoDataSource";
 import PageHeader from "@/components/PageHeader";
-import SettingsMenu from "@/components/SettingsMenu";
 import type {
   Datasources_Pk_Columns_Input,
   Datasources_Set_Input,
@@ -20,10 +19,10 @@ import {
   useGenDataSchemasMutation,
   useInsertSqlCredentialsMutation,
   useUpdateDataSourceMutation,
+  Branch_Statuses_Enum,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
-import SidebarLayout from "@/layouts/SidebarLayout";
 import { prepareInitValues } from "@/pages/SqlApi";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
@@ -44,6 +43,7 @@ interface DataSourcesProps {
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
+  onGenerate?: (id: string) => void;
 }
 
 export const DataSources = ({
@@ -55,22 +55,32 @@ export const DataSources = ({
   onEdit = () => {},
   onDelete = () => {},
   onFinish = () => {},
+  onGenerate = () => {},
 }: DataSourcesProps) => {
   const { t } = useTranslation(["settings", "pages"]);
   const [, setLocation] = useLocation();
-  const { editId, clean } = DataSourceStore();
+  const { setStep, editId, clean, setIsOnboarding } = DataSourceStore();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const onOpen = () => setIsOpen(true);
+  const onOpen = () => {
+    setIsOnboarding(true);
+    setIsOpen(true);
+  };
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     clean();
     setIsOpen(false);
     setLocation("/settings/sources");
-  };
+  }, [clean, setLocation]);
 
   const onFormFinish = () => {
     onClose();
     onFinish();
+  };
+
+  const onGenerateModel = (id: string) => {
+    onGenerate(id);
+    setIsOpen(true);
+    setStep(2);
   };
 
   useEffect(() => {
@@ -80,10 +90,7 @@ export const DataSources = ({
   }, [editId, setIsOpen]);
 
   return (
-    <SidebarLayout
-      title={t("pages:settings.data_sources")}
-      items={<SettingsMenu />}
-    >
+    <>
       <Spin spinning={loading}>
         {dataSources.length === 0 && <NoDataSource onConnect={onOpen} />}
         {dataSources.length > 0 && (
@@ -105,6 +112,7 @@ export const DataSources = ({
                     dataSource={d}
                     onEdit={onEdit}
                     onDelete={onDelete}
+                    onGenerate={onGenerateModel}
                   />
                 </Col>
               ))}
@@ -113,7 +121,13 @@ export const DataSources = ({
         )}
       </Spin>
 
-      <Modal width={1000} open={isOpen} onClose={onClose} closable>
+      <Modal
+        width={1000}
+        open={isOpen}
+        onClose={onClose}
+        destroyOnClose
+        closable
+      >
         <DataSourceForm
           onFinish={onFormFinish}
           onTestConnection={onTestConnection}
@@ -123,7 +137,7 @@ export const DataSources = ({
           shadow={false}
         />
       </Modal>
-    </SidebarLayout>
+    </>
   );
 };
 
@@ -139,6 +153,8 @@ const DataSourcesWrapper = ({
   const {
     editId,
     formState: { step0: dataSource, step1: dataSourceSetup },
+    schema,
+    isOnboarding,
     setSchema,
     setFormStateData,
     setLoading,
@@ -169,6 +185,20 @@ const DataSourcesWrapper = ({
     successMessage: t("datasource_created"),
   });
 
+  const datasources = useMemo(
+    () => (dataSources.length ? dataSources : currentUser.dataSources || []),
+    [dataSources, currentUser]
+  ) as DataSourceInfo[];
+  const curDataSource = useMemo(
+    () =>
+      datasources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
+    [curId, dataSourceSetup?.id, datasources]
+  );
+  const activeBranchId = useMemo(
+    () => curDataSource?.branch?.id,
+    [curDataSource?.branch?.id]
+  );
+
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
     let dataSourceId;
     if (!editId && !dataSourceSetup?.id) {
@@ -182,7 +212,17 @@ const DataSourcesWrapper = ({
       }
 
       const result = await execCreateMutation({
-        object: newData,
+        object: {
+          ...newData,
+          branches: {
+            data: [
+              {
+                status: Branch_Statuses_Enum.Active,
+                user_id: currentUser.id,
+              },
+            ],
+          },
+        },
       });
 
       dataSourceId = result?.data?.insert_datasources_one?.id;
@@ -214,22 +254,13 @@ const DataSourcesWrapper = ({
   };
 
   const onDataSourceSetupSubmit = async (data: DataSourceSetupForm) => {
-    const dataSourceId = await createOrUpdateDataSource(data);
+    await createOrUpdateDataSource(data);
 
-    if (editId) {
+    if (!isOnboarding) {
       return;
     }
 
-    await execFetchTables({ id: dataSourceId });
-    const schema = fetchTablesQuery.data?.fetch_tables?.schema;
-
-    if (schema) {
-      setSchema(schema);
-      nextStep();
-      return;
-    } else {
-      setMessage(t("no_schema"));
-    }
+    nextStep();
   };
 
   const onFinish = () => {
@@ -263,40 +294,46 @@ const DataSourcesWrapper = ({
     );
 
     if (dataSourceSetup) {
-      const genData = {
-        datasource_id: dataSourceSetup.id,
-        branch_id: "main",
-        tables,
-        format: data?.type || "yml",
-      };
-
       try {
-        await execGenSchemaMutation(genData);
+        const res = await execGenSchemaMutation({
+          datasource_id: dataSourceSetup.id,
+          branch_id: activeBranchId,
+          tables,
+          format: data?.type || "yaml",
+          overwrite: true,
+        });
+
+        if (res.error) {
+          setError(t("no_schema"));
+          return null;
+        }
         setMessage(t("schema_generated"));
       } catch (error) {
         setError(JSON.stringify(error));
         return null;
       }
 
-      const apiSetup = prepareInitValues(
-        dataSourceSetup.id,
-        dataSourceSetup.name,
-        currentUser.id
-      );
-      const credentialParams = {
-        user_id: currentUser.id,
-        datasource_id: dataSourceSetup.id,
-        username: apiSetup.db_username,
-        password: apiSetup.password,
-      };
+      if (isOnboarding) {
+        const apiSetup = prepareInitValues(
+          dataSourceSetup.id,
+          dataSourceSetup.name,
+          currentUser.id
+        );
+        const credentialParams = {
+          user_id: currentUser.id,
+          datasource_id: dataSourceSetup.id,
+          username: apiSetup.db_username,
+          password: apiSetup.password,
+        };
 
-      setFormStateData(3, apiSetup);
+        setFormStateData(3, apiSetup);
 
-      try {
-        await execInsertSqlCredentialsMutation({ object: credentialParams });
-        nextStep();
-      } catch (error) {
-        setError(JSON.stringify(error));
+        try {
+          await execInsertSqlCredentialsMutation({ object: credentialParams });
+          nextStep();
+        } catch (error) {
+          setError(JSON.stringify(error));
+        }
       }
     }
   };
@@ -309,28 +346,21 @@ const DataSourcesWrapper = ({
     setLocation(`/settings/sources?id=${dataSourceId}`);
   };
 
-  const datasources = useMemo(
-    () => (dataSources.length ? dataSources : currentUser.dataSources || []),
-    [dataSources, currentUser]
-  ) as DataSourceInfo[];
-  const curDataSource = useMemo(
-    () => datasources.find((d) => d.id === curId),
-    [curId, datasources]
-  );
-
   useEffect(() => {
     if (curDataSource) {
-      DataSourceStore.setState({
+      DataSourceStore.setState((prev) => ({
         editId: curId,
         formState: {
           ...defaultFormState,
+          ...prev.formState,
           step0: curDataSource.type,
           step1: {
+            id: curDataSource?.id,
             db_params: { ...curDataSource.dbParams },
             name: curDataSource.name,
           },
         },
-      });
+      }));
     }
   }, [curId, curDataSource]);
 
@@ -356,12 +386,29 @@ const DataSourcesWrapper = ({
     setLoading,
   ]);
 
+  useEffect(() => {
+    if (!editId && dataSourceSetup?.id && !schema) {
+      execFetchTables();
+    }
+  }, [dataSourceSetup?.id, schema, editId, execFetchTables]);
+
+  useEffect(() => {
+    if (fetchTablesQuery.data) {
+      setSchema(fetchTablesQuery.data?.fetch_tables?.schema);
+    }
+  }, [fetchTablesQuery.data, setSchema]);
+
+  const onGenerate = (id: string) => {
+    setFormStateData(1, { ...dataSourceSetup, id });
+  };
+
   return (
     <DataSources
       dataSources={datasources}
       onEdit={onEdit}
       onDelete={onDelete}
       onFinish={onFinish}
+      onGenerate={onGenerate}
       onTestConnection={onTestConnection}
       onDataSourceSetupSubmit={onDataSourceSetupSubmit}
       onDataModelGenerationSubmit={onDataModelGenerationSubmit}

@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Controller } from "react-hook-form";
 import {
   Input as BasicInput,
@@ -15,6 +16,8 @@ import cn from "classnames";
 import ru from "antd/es/date-picker/locale/ru_RU";
 import en from "antd/es/date-picker/locale/en_US";
 
+import formatTime from "@/utils/helpers/formatTime";
+
 import CalendarIcon from "@/assets/calendar.svg";
 
 import styles from "./index.module.less";
@@ -26,6 +29,7 @@ import type {
   RadioGroupProps,
   UploadProps,
   SelectProps,
+  DatePickerProps,
 } from "antd";
 import type { Control, Path, PathValue, FieldValues } from "react-hook-form";
 import type { PasswordProps } from "antd/es/input/Password";
@@ -49,6 +53,8 @@ export interface InputProps<T extends FieldValues> extends ParentProps {
   rules?: object;
   starPosition?: "left" | "right";
   starColor?: string;
+  format?: DatePickerProps["format"];
+  showTime?: boolean;
 }
 
 const locales = {
@@ -68,6 +74,8 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   starPosition = "right",
   starColor = "#000000",
   children,
+  showTime = false,
+  format,
   ...props
 }) => {
   const {
@@ -272,19 +280,33 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           control={control}
           name={name}
           defaultValue={defaultValue}
-          render={({ field: { onChange }, fieldState: { invalid, error } }) => (
+          render={({
+            field: { onChange, value },
+            fieldState: { invalid, error },
+          }) => (
             <WrapperComponent {...wrapperProps}>
               <DatePicker
                 size={size}
-                className={cn(styles.input, props.className)}
-                onChange={(_, dateString) =>
+                className={cn(
+                  styles.input,
+                  value && styles.filledDate,
+                  props.className
+                )}
+                showTime={showTime}
+                format={format}
+                onChange={(date) =>
                   onChange(
-                    dateString as PathValue<FieldValues, Path<FieldValues>>
+                    date?.toISOString() as PathValue<
+                      FieldValues,
+                      Path<FieldValues>
+                    >
                   )
                 }
                 locale={locales[language as keyof typeof locales]}
                 suffixIcon={<CalendarIcon />}
-                placeholder={placeholder}
+                placeholder={
+                  !value ? placeholder : formatTime(value, "YYYY-MM-DD")
+                }
                 status={invalid ? "error" : undefined}
               />
               <span className={styles.error}>{error?.message}</span>

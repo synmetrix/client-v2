@@ -69,6 +69,7 @@ export interface DataSourceInfo {
   dbParams: DynamicForm;
   updatedAt: string;
   createdAt: string;
+  branch: Branch;
 }
 
 export interface CubeOption {
@@ -84,4 +85,23 @@ export interface Cube {
   dimensions: CubeOption[];
   measures: CubeOption[];
   segments: CubeOption[];
+}
+
+export interface DataSchema {
+  id: string;
+  name: string;
+  code: string;
+  checksum: string;
+}
+
+export interface Version {
+  id: string;
+  dataSchemas: DataSchema[];
+}
+
+export interface Branch {
+  id: string;
+  name: string;
+  status: string;
+  versions: Version[];
 }

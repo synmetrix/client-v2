@@ -11215,6 +11215,47 @@ export type CreateAccessListMutation = {
   insert_access_lists_one?: { __typename?: "access_lists"; id: any } | null;
 };
 
+export type BranchesFieldsFragment = {
+  __typename?: "branches";
+  id: any;
+  name: string;
+  status: Branch_Statuses_Enum;
+  versions: {
+    __typename?: "versions";
+    id: any;
+    dataschemas_aggregate: {
+      __typename?: "dataschemas_aggregate";
+      aggregate?: {
+        __typename?: "dataschemas_aggregate_fields";
+        count: number;
+      } | null;
+    };
+  }[];
+};
+
+export type TeamFieldsFragment = {
+  __typename?: "teams";
+  id: any;
+  name: string;
+  created_at: any;
+  updated_at: any;
+  members: {
+    __typename?: "members";
+    member_roles: {
+      __typename?: "member_roles";
+      id: any;
+      team_role: Team_Roles_Enum;
+    }[];
+    user: {
+      __typename?: "users";
+      id: any;
+      avatar_url?: string | null;
+      display_name?: string | null;
+      account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+    };
+  }[];
+};
+
 export type CurrentUserQueryVariables = Exact<{
   id: Scalars["uuid"];
 }>;
@@ -11235,6 +11276,23 @@ export type CurrentUserQuery = {
       db_type: string;
       created_at: any;
       updated_at: any;
+      branches: {
+        __typename?: "branches";
+        id: any;
+        name: string;
+        status: Branch_Statuses_Enum;
+        versions: {
+          __typename?: "versions";
+          id: any;
+          dataschemas_aggregate: {
+            __typename?: "dataschemas_aggregate";
+            aggregate?: {
+              __typename?: "dataschemas_aggregate_fields";
+              count: number;
+            } | null;
+          };
+        }[];
+      }[];
       sql_credentials: {
         __typename?: "sql_credentials";
         id: any;
@@ -11307,6 +11365,23 @@ export type SubCurrentUserSubscription = {
       db_type: string;
       created_at: any;
       updated_at: any;
+      branches: {
+        __typename?: "branches";
+        id: any;
+        name: string;
+        status: Branch_Statuses_Enum;
+        versions: {
+          __typename?: "versions";
+          id: any;
+          dataschemas_aggregate: {
+            __typename?: "dataschemas_aggregate";
+            aggregate?: {
+              __typename?: "dataschemas_aggregate_fields";
+              count: number;
+            } | null;
+          };
+        }[];
+      }[];
       sql_credentials: {
         __typename?: "sql_credentials";
         id: any;
@@ -11418,6 +11493,7 @@ export type CreateDataSourceMutation = {
     __typename?: "datasources";
     id: any;
     name: string;
+    branches: { __typename?: "branches"; id: any }[];
   } | null;
 };
 
@@ -11438,6 +11514,7 @@ export type DatasourcesQuery = {
     db_type: string;
     created_at: any;
     updated_at: any;
+    branches: { __typename?: "branches"; id: any }[];
     sql_credentials: {
       __typename?: "sql_credentials";
       id: any;
@@ -11473,6 +11550,7 @@ export type AllDatasourcesSubscription = {
     db_type: string;
     created_at: any;
     updated_at: any;
+    branches: { __typename?: "branches"; id: any }[];
     sql_credentials: {
       __typename?: "sql_credentials";
       id: any;
@@ -11658,6 +11736,111 @@ export type InviteMemberMutation = {
   } | null;
 };
 
+export type DefaultFieldsFragment = {
+  __typename?: "request_logs";
+  id: any;
+  created_at: any;
+  updated_at: any;
+  request_id: string;
+  start_time: any;
+  end_time: any;
+  duration?: any | null;
+  path?: string | null;
+  user: { __typename?: "users"; display_name?: string | null };
+  datasource: { __typename?: "datasources"; name: string };
+};
+
+export type CurrentLogQueryVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type CurrentLogQuery = {
+  __typename?: "query_root";
+  request_logs_by_pk?: {
+    __typename?: "request_logs";
+    id: any;
+    created_at: any;
+    updated_at: any;
+    request_id: string;
+    start_time: any;
+    end_time: any;
+    duration?: any | null;
+    path?: string | null;
+    request_event_logs: {
+      __typename?: "request_event_logs";
+      id: any;
+      duration?: any | null;
+      event: string;
+      path?: string | null;
+      query?: any | null;
+      query_key?: any | null;
+      query_sql?: string | null;
+      query_key_md5?: string | null;
+      queue_prefix?: string | null;
+      time_in_queue?: any | null;
+      timestamp?: any | null;
+      error?: string | null;
+    }[];
+    user: { __typename?: "users"; display_name?: string | null };
+    datasource: { __typename?: "datasources"; name: string };
+  } | null;
+};
+
+export type AllLogsQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Request_Logs_Bool_Exp>;
+  order_by?: InputMaybe<Request_Logs_Order_By[] | Request_Logs_Order_By>;
+}>;
+
+export type AllLogsQuery = {
+  __typename?: "query_root";
+  request_logs: {
+    __typename?: "request_logs";
+    id: any;
+    created_at: any;
+    updated_at: any;
+    request_id: string;
+    start_time: any;
+    end_time: any;
+    duration?: any | null;
+    path?: string | null;
+    request_event_logs: {
+      __typename?: "request_event_logs";
+      path?: string | null;
+      error?: string | null;
+    }[];
+    request_event_logs_aggregate: {
+      __typename?: "request_event_logs_aggregate";
+      aggregate?: {
+        __typename?: "request_event_logs_aggregate_fields";
+        count: number;
+      } | null;
+    };
+    user: { __typename?: "users"; display_name?: string | null };
+    datasource: { __typename?: "datasources"; name: string };
+  }[];
+  request_logs_aggregate: {
+    __typename?: "request_logs_aggregate";
+    aggregate?: {
+      __typename?: "request_logs_aggregate_fields";
+      count: number;
+    } | null;
+  };
+};
+
+export type SubAllLogsSubscriptionVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Request_Logs_Bool_Exp>;
+  order_by?: InputMaybe<Request_Logs_Order_By[] | Request_Logs_Order_By>;
+}>;
+
+export type SubAllLogsSubscription = {
+  __typename?: "subscription_root";
+  request_logs: { __typename?: "request_logs"; id: any }[];
+};
+
 export type CredentialsQueryVariables = Exact<{
   teamId: Scalars["uuid"];
 }>;
@@ -11770,6 +11953,61 @@ export type GetUsersQuery = {
   users: { __typename?: "users"; id: any }[];
 };
 
+export const BranchesFieldsFragmentDoc = gql`
+  fragment BranchesFields on branches {
+    id
+    name
+    status
+    versions(limit: 1, order_by: { created_at: desc }) {
+      id
+      dataschemas_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+`;
+export const TeamFieldsFragmentDoc = gql`
+  fragment TeamFields on teams {
+    id
+    name
+    created_at
+    updated_at
+    members {
+      member_roles {
+        id
+        team_role
+      }
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+    }
+  }
+`;
+export const DefaultFieldsFragmentDoc = gql`
+  fragment DefaultFields on request_logs {
+    id
+    created_at
+    updated_at
+    request_id
+    start_time
+    end_time
+    duration
+    path
+    user {
+      display_name
+    }
+    datasource {
+      name
+    }
+  }
+`;
 export const AllAccessListsDocument = gql`
   query AllAccessLists(
     $offset: Int
@@ -11917,6 +12155,9 @@ export const CurrentUserDocument = gql`
         db_type
         created_at
         updated_at
+        branches(where: { status: { _eq: active } }) {
+          ...BranchesFields
+        }
         sql_credentials {
           id
           username
@@ -11942,28 +12183,13 @@ export const CurrentUserDocument = gql`
           }
         }
         team {
-          id
-          name
-          created_at
-          updated_at
-          members {
-            member_roles {
-              id
-              team_role
-            }
-            user {
-              id
-              avatar_url
-              display_name
-              account {
-                email
-              }
-            }
-          }
+          ...TeamFields
         }
       }
     }
   }
+  ${BranchesFieldsFragmentDoc}
+  ${TeamFieldsFragmentDoc}
 `;
 
 export function useCurrentUserQuery(
@@ -11990,6 +12216,9 @@ export const SubCurrentUserDocument = gql`
         db_type
         created_at
         updated_at
+        branches(where: { status: { _eq: active } }) {
+          ...BranchesFields
+        }
         sql_credentials {
           id
           username
@@ -12015,28 +12244,13 @@ export const SubCurrentUserDocument = gql`
           }
         }
         team {
-          id
-          name
-          created_at
-          updated_at
-          members {
-            member_roles {
-              id
-              team_role
-            }
-            user {
-              id
-              avatar_url
-              display_name
-              account {
-                email
-              }
-            }
-          }
+          ...TeamFields
         }
       }
     }
   }
+  ${BranchesFieldsFragmentDoc}
+  ${TeamFieldsFragmentDoc}
 `;
 
 export function useSubCurrentUserSubscription<
@@ -12131,6 +12345,9 @@ export const CreateDataSourceDocument = gql`
     insert_datasources_one(object: $object) {
       id
       name
+      branches {
+        id
+      }
     }
   }
 `;
@@ -12160,6 +12377,9 @@ export const DatasourcesDocument = gql`
       db_type
       created_at
       updated_at
+      branches(where: { status: { _eq: active } }) {
+        id
+      }
       sql_credentials {
         id
         username
@@ -12206,6 +12426,9 @@ export const AllDatasourcesDocument = gql`
       db_type
       created_at
       updated_at
+      branches(where: { status: { _eq: active } }) {
+        id
+      }
       sql_credentials {
         id
         username
@@ -12475,6 +12698,109 @@ export function useInviteMemberMutation() {
     InviteMemberDocument
   );
 }
+export const CurrentLogDocument = gql`
+  query CurrentLog($id: uuid!) {
+    request_logs_by_pk(id: $id) {
+      ...DefaultFields
+      request_event_logs(order_by: { timestamp: desc }) {
+        id
+        duration
+        event
+        path
+        query
+        query_key
+        query_sql
+        query_key_md5
+        queue_prefix
+        time_in_queue
+        timestamp
+        error
+      }
+    }
+  }
+  ${DefaultFieldsFragmentDoc}
+`;
+
+export function useCurrentLogQuery(
+  options: Omit<Urql.UseQueryArgs<CurrentLogQueryVariables>, "query">
+) {
+  return Urql.useQuery<CurrentLogQuery, CurrentLogQueryVariables>({
+    query: CurrentLogDocument,
+    ...options,
+  });
+}
+export const AllLogsDocument = gql`
+  query AllLogs(
+    $offset: Int
+    $limit: Int
+    $where: request_logs_bool_exp
+    $order_by: [request_logs_order_by!]
+  ) {
+    request_logs(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      ...DefaultFields
+      request_event_logs(order_by: { timestamp: desc }) {
+        path
+        error
+      }
+      request_event_logs_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    request_logs_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+  ${DefaultFieldsFragmentDoc}
+`;
+
+export function useAllLogsQuery(
+  options?: Omit<Urql.UseQueryArgs<AllLogsQueryVariables>, "query">
+) {
+  return Urql.useQuery<AllLogsQuery, AllLogsQueryVariables>({
+    query: AllLogsDocument,
+    ...options,
+  });
+}
+export const SubAllLogsDocument = gql`
+  subscription SubAllLogs(
+    $offset: Int
+    $limit: Int
+    $where: request_logs_bool_exp
+    $order_by: [request_logs_order_by!]
+  ) {
+    request_logs(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+    }
+  }
+`;
+
+export function useSubAllLogsSubscription<TData = SubAllLogsSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<SubAllLogsSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<SubAllLogsSubscription, TData>
+) {
+  return Urql.useSubscription<
+    SubAllLogsSubscription,
+    TData,
+    SubAllLogsSubscriptionVariables
+  >({ query: SubAllLogsDocument, ...options }, handler);
+}
 export const CredentialsDocument = gql`
   query Credentials($teamId: uuid!) {
     sql_credentials(
@@ -12651,6 +12977,8 @@ export const namedOperations = {
     FetchMeta: "FetchMeta",
     CurrentDataSource: "CurrentDataSource",
     Members: "Members",
+    CurrentLog: "CurrentLog",
+    AllLogs: "AllLogs",
     Credentials: "Credentials",
     CurrentTeam: "CurrentTeam",
     GetUsers: "GetUsers",
@@ -12680,6 +13008,12 @@ export const namedOperations = {
     SubAccessLists: "SubAccessLists",
     SubCurrentUser: "SubCurrentUser",
     AllDatasources: "AllDatasources",
+    SubAllLogs: "SubAllLogs",
     SubCredentials: "SubCredentials",
+  },
+  Fragment: {
+    BranchesFields: "BranchesFields",
+    TeamFields: "TeamFields",
+    DefaultFields: "DefaultFields",
   },
 };

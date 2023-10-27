@@ -39,7 +39,6 @@ const SecurityForm: FC<SecurityFormProps> = ({ initialValue, onSubmit }) => {
         <Col span={24} md={12}>
           <Input
             control={control}
-            rules={{ required: true }}
             name="oldPassword"
             label={t("common:form.labels.old_password")}
             defaultValue={initialValue?.oldPassword}

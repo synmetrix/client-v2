@@ -6,12 +6,10 @@ import GeneralInfoForm from "@/components/GeneralInfoForm";
 import LogoutSessions from "@/components/LogoutSessions";
 import type { Security } from "@/components/SecurityForm";
 import SecurityForm from "@/components/SecurityForm";
-import SettingsMenu from "@/components/SettingsMenu";
 import { useUpdateUserInfoMutation } from "@/graphql/generated";
 import useAuth from "@/hooks/useAuth";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
-import SidebarLayout from "@/layouts/SidebarLayout";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 
@@ -35,17 +33,14 @@ export const PersonalInfo: React.FC<PersonalInfoProps> = ({
   const { t } = useTranslation(["settings", "pages"]);
 
   return (
-    <SidebarLayout
-      title={t("pages:settings.personal_info")}
-      items={<SettingsMenu />}
-    >
+    <>
       <Space className={styles.wrapper} direction="vertical" size={25}>
         {error && <Alert type="error" message={error} />}
         <GeneralInfoForm initialValue={initialValue} onSubmit={onInfoSubmit} />
         <SecurityForm onSubmit={onUpdatePassword} />
         <LogoutSessions onSubmit={onLogout} />
       </Space>
-    </SidebarLayout>
+    </>
   );
 };
 
@@ -56,7 +51,7 @@ const PersonalInfoWrapper = () => {
   const [, setLocation] = useLocation();
   const { currentUser } = CurrentUserStore();
   const { cleanTokens } = AuthTokensStore();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>();
 
   const [updateMutation, execUpdateMutation] = useUpdateUserInfoMutation();
 
@@ -79,13 +74,12 @@ const PersonalInfoWrapper = () => {
     };
 
     const res = await changePass(values);
-    if (res?.message) {
-      setError(res.message);
-    }
 
     if (res.statusCode === 204) {
-      setError(null);
+      setError(undefined);
       message.success(t("settings:personal_info.password_updated"));
+    } else {
+      setError(res?.message || res?.error);
     }
   };
 

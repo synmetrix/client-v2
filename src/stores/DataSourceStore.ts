@@ -20,6 +20,7 @@ export interface FormState {
 export interface DataSourceData {
   editId: string | null;
   step: number;
+  isOnboarding: boolean;
   formState: FormState;
   loading: boolean;
   error: string | null | undefined;
@@ -36,6 +37,7 @@ interface DataSourceState extends DataSourceData {
   setSchema: (schema: object) => void;
   setEditId: (id: string) => void;
   setFormStateData: (step: number, data: any) => void;
+  setIsOnboarding: (value: boolean) => void;
   clean: () => void;
 }
 
@@ -49,6 +51,7 @@ export const defaultFormState = {
 const defaultState = {
   editId: null,
   step: 0,
+  isOnboarding: false,
   formState: defaultFormState,
   loading: false,
   error: null,
@@ -88,6 +91,11 @@ const dataSourceStore = create<DataSourceState>()(
           step: prev.step + 1,
           error: null,
           message: null,
+        })),
+      setIsOnboarding: (value: boolean) =>
+        set((prev) => ({
+          ...prev,
+          isOnboarding: value,
         })),
       clean: () => set({ ...defaultState }),
     })),

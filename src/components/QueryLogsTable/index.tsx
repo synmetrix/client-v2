@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
 import Avatar from "@/components/Avatar";
-import type { QueryLog } from "@/types/logs";
+import formatTime from "@/utils/helpers/formatTime";
+import type { Request_Logs } from "@/graphql/generated";
 
 import styles from "./index.module.less";
 
@@ -11,18 +12,26 @@ import type { TableProps } from "antd";
 import type { FC } from "react";
 
 interface QueryLogsTableProps {
-  logs: QueryLog[];
+  logs: Request_Logs[];
+  pagination?: TableProps<Request_Logs>["pagination"];
+  onChange?: TableProps<Request_Logs>["onChange"];
+  onClickRow?: (rowId: string) => void;
 }
 
-const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
+const QueryLogsTable: FC<QueryLogsTableProps> = ({
+  logs,
+  onChange,
+  onClickRow,
+  pagination = false,
+}) => {
   const { t } = useTranslation(["logs"]);
-  const columns: TableProps<QueryLog>["columns"] = [
+  const columns: TableProps<Request_Logs>["columns"] = [
     {
       title: t("query.table.data_source"),
-      dataIndex: "dataSource",
-      key: "dataSource",
+      dataIndex: "datasource",
+      key: "datasource",
       render: (value) => (
-        <span className={cn(styles.cell, styles.dataSource)}>{value}</span>
+        <span className={cn(styles.cell, styles.dataSource)}>{value.name}</span>
       ),
     },
     {
@@ -35,21 +44,21 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
     },
     {
       title: t("query.table.events"),
-      dataIndex: "events",
-      key: "events",
+      dataIndex: "request_event_logs",
+      key: "request_event_logs",
       render: (value) => (
-        <span className={cn(styles.cell, styles.events)}>{value}</span>
+        <span className={cn(styles.cell, styles.events)}>{value?.length}</span>
       ),
     },
     {
       title: t("query.table.creator"),
-      dataIndex: "creator",
-      key: "creator",
+      dataIndex: "user",
+      key: "user",
       render: (value) => (
         <span className={cn(styles.cell, styles.creator)}>
           <Space size={10}>
-            <Avatar img={value.avatarUrl} username={value.displayName} />
-            <span>{value.email}</span>
+            <Avatar img={value.avatarUrl} username={value.display_name} />
+            <span>{value.display_name}</span>
           </Space>
         </span>
       ),
@@ -68,20 +77,24 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
       title: (
         <div className={styles.headerRight}>{t("query.table.start_time")}</div>
       ),
-      dataIndex: "startTime",
-      key: "startTime",
+      dataIndex: "start_time",
+      key: "start_time",
       render: (value) => (
-        <span className={cn(styles.cell, styles.startTime)}>{value}</span>
+        <span className={cn(styles.cell, styles.startTime)}>
+          {formatTime(value)}
+        </span>
       ),
     },
     {
       title: (
         <div className={styles.headerRight}>{t("query.table.created_at")}</div>
       ),
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "created_at",
+      key: "created_at",
       render: (value) => (
-        <span className={cn(styles.cell, styles.createdAt)}>{value}</span>
+        <span className={cn(styles.cell, styles.createdAt)}>
+          {formatTime(value)}
+        </span>
       ),
     },
   ];
@@ -91,7 +104,12 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({ logs }) => {
       columns={columns}
       dataSource={logs}
       rowKey={(record) => record.id}
-      pagination={false}
+      onRow={(r) => ({
+        onClick: () => onClickRow?.(r.id),
+        style: { cursor: "pointer" },
+      })}
+      pagination={pagination}
+      onChange={onChange}
     />
   );
 };

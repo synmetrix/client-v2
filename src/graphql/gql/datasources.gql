@@ -2,6 +2,9 @@ mutation CreateDataSource($object: datasources_insert_input!) {
   insert_datasources_one(object: $object) {
     id
     name
+    branches {
+      id
+    }
   }
 }
 
@@ -23,6 +26,9 @@ query Datasources(
     db_type
     created_at
     updated_at
+    branches(where: { status: {_eq: active}}) {
+      id
+    }
     sql_credentials {
       id
       username
@@ -59,6 +65,9 @@ subscription AllDatasources(
     db_type
     created_at
     updated_at
+    branches (where: { status: {_eq: active}}) {
+      id
+    }
     sql_credentials {
       id
       username

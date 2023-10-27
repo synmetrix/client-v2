@@ -5,6 +5,7 @@ import cx from "classnames";
 
 import Button from "@/components/Button";
 import DataSourceTag from "@/components/DataSourceTag";
+import ConfirmModal from "@/components/ConfirmModal";
 import formatTime from "@/utils/helpers/formatTime";
 import type { DataSourceInfo } from "@/types/dataSource";
 
@@ -18,12 +19,14 @@ interface DataSourceCardProps {
   dataSource: DataSourceInfo;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  onGenerate: (id: string) => void;
 }
 
 const DataSourceCard: FC<DataSourceCardProps> = ({
   dataSource: { id, name, dbParams, type, updatedAt, createdAt },
   onEdit = () => {},
   onDelete = () => {},
+  onGenerate = () => {},
 }) => {
   const { t } = useTranslation(["common"]);
 
@@ -62,8 +65,19 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
               },
               {
                 key: "delete",
-                label: t("common:words.delete"),
-                onClick: () => id && onDelete(id),
+                label: (
+                  <ConfirmModal
+                    title={t("common:words.delete_datasource")}
+                    onConfirm={() => id && onDelete(id)}
+                  >
+                    {t("common:words.delete")}
+                  </ConfirmModal>
+                ),
+              },
+              {
+                key: "generate",
+                label: t("common:words.generate_models"),
+                onClick: () => id && onGenerate(id),
               },
             ],
           }}

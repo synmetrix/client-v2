@@ -6,6 +6,8 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import validate from "@/utils/validations";
 
+import styles from "./index.module.less";
+
 import type { FC } from "react";
 
 export interface GeneralInfo {
@@ -32,7 +34,9 @@ const GeneralInfoForm: FC<GeneralInfoFormProps> = ({
 
   return (
     <Form layout="vertical">
-      <Title level={5}>{t("personal_info.general_info.title")}</Title>
+      <Title level={5} className={styles.title}>
+        {t("personal_info.general_info.title")}
+      </Title>
 
       <Row gutter={[16, 16]}>
         <Col span={24} md={12}>

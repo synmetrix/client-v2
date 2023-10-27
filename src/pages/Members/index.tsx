@@ -6,7 +6,6 @@ import MembersForm from "@/components/MembersForm";
 import MembersTable from "@/components/MembersTable";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
-import SettingsMenu from "@/components/SettingsMenu";
 import type {
   AllAccessListsQuery,
   Members as MembersType,
@@ -20,7 +19,6 @@ import {
   useUpdateMemberRoleMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
-import SidebarLayout from "@/layouts/SidebarLayout";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
   AccessList,
@@ -39,7 +37,7 @@ interface MembersProps {
   onDeleteMember?: (id: string) => void;
   onInviteMember?: (data: Invite) => void;
   onRoleChange?: (id: string, newRole: ChangeableRoles) => void;
-  onAccessListChange?: (id: string) => void;
+  onAccessListChange?: (id: string, accessListId: string | null) => void;
 }
 
 export const Members: React.FC<MembersProps> = ({
@@ -62,7 +60,7 @@ export const Members: React.FC<MembersProps> = ({
   const onRemove = (member: Member) => onDeleteMember(member.id);
 
   return (
-    <SidebarLayout title={t("pages:settings.members")} items={<SettingsMenu />}>
+    <>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("settings:members.title")}
@@ -82,7 +80,7 @@ export const Members: React.FC<MembersProps> = ({
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
         <MembersForm onSubmit={onSubmit} />
       </Modal>
-    </SidebarLayout>
+    </>
   );
 };
 
@@ -193,6 +191,15 @@ const MembersWrapper = () => {
     });
   };
 
+  const onAccessListChange = (id: string, accessListId: string | null) => {
+    execUpdateRoleMutation({
+      pk_columns: { id },
+      _set: {
+        access_list_id: accessListId,
+      },
+    });
+  };
+
   const onInviteMember = (data: Invite) => {
     execInviteMutation({
       ...data,
@@ -218,7 +225,8 @@ const MembersWrapper = () => {
   }, [allMembersData.data]);
 
   const accessLists = useMemo(
-    () => prepareAccessData(allAccessLists as unknown as AllAccessListsQuery),
+    () =>
+      prepareAccessData(allAccessLists?.data as unknown as AllAccessListsQuery),
     [allAccessLists]
   );
 
@@ -230,6 +238,7 @@ const MembersWrapper = () => {
       onDeleteMember={onDeleteMember}
       onInviteMember={onInviteMember}
       onRoleChange={onRoleChange}
+      onAccessListChange={onAccessListChange}
     />
   );
 };

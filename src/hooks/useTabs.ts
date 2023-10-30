@@ -30,7 +30,7 @@ interface ChangeAction {
 interface CloseAction {
   type: "close";
   id: string;
-  fallbackId: string;
+  fallbackId?: string;
 }
 
 type Action = OpenAction | ChangeTabAction | ChangeAction | CloseAction;
@@ -79,7 +79,7 @@ export default (defaultState = {}) => {
     [dispatch]
   );
   const closeTab = useCallback(
-    (id: string, fallbackId: string) =>
+    (id: string, fallbackId?: string) =>
       dispatch({ type: "close", id, fallbackId }),
     [dispatch]
   );

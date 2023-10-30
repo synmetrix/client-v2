@@ -4,10 +4,6 @@ export default [
     component: "./layouts/RootLayout",
     routes: [
       {
-        path: "/models",
-        component: "./pages/Models",
-      },
-      {
         path: "/auth",
         routes: [
           {
@@ -19,6 +15,18 @@ export default [
             component: "./pages/SignIn",
           },
         ],
+      },
+      {
+        path: "/models",
+        component: "./pages/Models",
+      },
+      {
+        path: "/models/:dataSourceId",
+        component: "./pages/Models",
+      },
+      {
+        path: "/models/:dataSourceId/:slug",
+        component: "./pages/Models",
       },
       {
         path: "/settings",

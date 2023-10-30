@@ -7,4 +7,13 @@ export interface Version {
   author: User;
   createdAt: string;
   files: File[];
+  dataschemas: {
+    __typename?: "dataschemas";
+    id: string;
+    name: string;
+    code: string;
+    created_at: any;
+    updated_at: any;
+    datasource_id: any;
+  }[];
 }

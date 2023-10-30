@@ -109,31 +109,7 @@ export const Models: React.FC<ModelsProps> = ({
 };
 
 const ModelsWrapper: React.FC = () => {
-  const { t } = useTranslation(["dataSourceStepForm"]);
-
-  const currentVersion = {
-    id: "asdasd",
-    checksum: "asdasd",
-    createdAt: "asdasd",
-    author: {
-      id: "asdasd",
-      name: "asdasd",
-      email: "asdasd",
-      avatarUrl: "asdasd",
-    },
-    files: [
-      {
-        name: "asdasd",
-        value: "asdasd",
-        language: "asdasd",
-      },
-    ],
-  };
-
-  const { currentUser, currentTeamId } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
-
-  return null;
+  return <>this is models page </>;
 };
 
 export default ModelsWrapper;

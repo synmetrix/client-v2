@@ -4,6 +4,10 @@ export default [
     component: "./layouts/RootLayout",
     routes: [
       {
+        path: "/models",
+        component: "./pages/Models",
+      },
+      {
         path: "/auth",
         routes: [
           {

@@ -1,5 +1,0 @@
-mutation DeleteSchema($id: uuid!) {
-  update_branches_by_pk(_set: { status: archived }, pk_columns: { id: $id }) {
-    id
-  }
-}

@@ -18,8 +18,8 @@ import {
   useFetchTablesQuery,
   useGenDataSchemasMutation,
   useInsertSqlCredentialsMutation,
-  useUpdateDataSourceMutation,
   Branch_Statuses_Enum,
+  useUpdateDataSourceMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";

@@ -1,4 +1,4 @@
-import { Dropdown, Space } from "antd";
+import { Input, Space } from "antd";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
 import { useResponsive } from "ahooks";
 import { useTranslation } from "react-i18next";
@@ -28,10 +28,14 @@ export interface ModelsSidebarProps {
   onChangeBranch: (branchId?: string) => void;
   docs: string;
   version?: string;
-  files: string[];
+  files: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
   onCreateFile: (name: string) => void;
-  onSelectFile: (name: string) => void;
+  onSelectFile: (
+    schema: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number],
+    hash?: string
+  ) => void;
   onSetDefault: (branchId?: string) => void;
+  onCreateBranch: (name: string) => Promise<void>;
 }
 
 const ModelsSidebar: FC<ModelsSidebarProps> = ({
@@ -46,12 +50,14 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   files,
   onCreateFile,
   onSelectFile,
+  onCreateBranch,
 }) => {
   const { t } = useTranslation(["models", "common"]);
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
   const [searchValue, setSearchValue] = useState<string>("");
+  const [newBranchName, setNewBranchName] = useState<string>("");
 
   return (
     <Space className={styles.wrapper} size={16} direction="vertical">
@@ -80,6 +86,23 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 label: b.name,
               }))}
               onChange={onChangeBranch}
+              dropdownRender={(menu) => (
+                <>
+                  {menu}
+                  <Input
+                    value={newBranchName}
+                    onChange={(e) => setNewBranchName(e.target.value)}
+                    addonAfter={
+                      <PlusOutlined
+                        onClick={() => {
+                          onCreateBranch(newBranchName);
+                          setNewBranchName("");
+                        }}
+                      />
+                    }
+                  />
+                </>
+              )}
             />
           </Space>
 
@@ -145,16 +168,18 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
           </Space>
 
           {files
-            .filter((f) => f.toLowerCase().includes(searchValue.toLowerCase()))
+            .filter((f) =>
+              f.name.toLowerCase().includes(searchValue.toLowerCase())
+            )
             .map((f) => (
               <Button
-                key={f}
+                key={f.id}
                 className={styles.fileBtn}
                 type="text"
                 icon={<YMLIcon className={styles.fileIcon} />}
                 onClick={() => onSelectFile(f)}
               >
-                {f}
+                {f.name}
               </Button>
             ))}
         </Space>

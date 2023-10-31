@@ -22,7 +22,7 @@ import usePermissions from "@/hooks/usePermissions";
 import equals from "@/utils/helpers/equals";
 import calcChecksum from "@/utils/helpers/dataschemasChecksum";
 import type { File } from "@/types/file";
-import type { Version } from "@/types/version";
+import type { DataSource, DataSourceInfo } from "@/types/dataSource";
 import type {
   AllDataSchemasQuery,
   Branches_Insert_Input,
@@ -41,9 +41,16 @@ interface ModelsProps {
   branches: AllDataSchemasQuery["branches"];
   onSetDefault: (branchId?: string) => void;
   onChangeBranch: (branchId?: string) => void;
+  onCreateBranch: (name: string) => Promise<void>;
+  onOpenSchema: (
+    schema: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number],
+    hash?: string
+  ) => void;
+  dataSource?: DataSourceInfo;
   versions?: AllDataSchemasQuery["branches"][number]["versions"];
-  currentVersion?: AllDataSchemasQuery["branches"][number]["versions"][number];
   currentBranch?: AllDataSchemasQuery["branches"][number];
+  currentVersion?: AllDataSchemasQuery["branches"][number]["versions"][number];
+  dataSchemas?: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
   fetching?: boolean;
   docs?: string;
 }
@@ -51,6 +58,7 @@ interface ModelsProps {
 const { Title } = Typography;
 
 export const Models: React.FC<ModelsProps> = ({
+  dataSource,
   versions,
   branchMenu,
   ideMenu,
@@ -59,8 +67,11 @@ export const Models: React.FC<ModelsProps> = ({
   docs,
   currentVersion,
   onChangeBranch,
+  onCreateBranch,
   onSetDefault,
   fetching,
+  onOpenSchema,
+  dataSchemas = [],
 }) => {
   // const [selectedFiles, setSelectedFiles] = useState<Record<
   //   string,
@@ -110,7 +121,7 @@ export const Models: React.FC<ModelsProps> = ({
 
   return (
     <SidebarLayout
-      title={"gh-api.clickhouse.tech"}
+      title={dataSource?.name}
       subTitle={
         <Space size={7} align="center">
           <ModelsActiveIcon />
@@ -130,9 +141,10 @@ export const Models: React.FC<ModelsProps> = ({
           onChangeBranch={onChangeBranch}
           onSetDefault={onSetDefault}
           docs={"docs"}
-          files={[]}
+          files={dataSchemas}
+          onCreateBranch={onCreateBranch}
           onCreateFile={() => {}}
-          onSelectFile={() => {}}
+          onSelectFile={onOpenSchema}
         />
       }
     >
@@ -171,6 +183,11 @@ const getTables = (obj: object, prefix: string = "") => {
 const ModelsWrapper: React.FC = () => {
   const { t } = useTranslation();
 
+  const { currentUser } = useUserData();
+  const [, setLocation] = useLocation();
+  const { withAuthPrefix } = useAppSettings();
+  const basePath = withAuthPrefix("/schemas");
+
   const [isConsoleOpen, toggleConsole] = useState<boolean>(false);
   const [error, setError] = useState(null);
 
@@ -179,11 +196,10 @@ const ModelsWrapper: React.FC = () => {
     () => [getOr("", "dataSourceId", params), getOr("", "slug", params)],
     [params]
   );
-
-  const { currentUser } = useUserData();
-  const [, setLocation] = useLocation();
-  const { withAuthPrefix } = useAppSettings();
-  const basePath = withAuthPrefix("/schemas");
+  const dataSource = useMemo(
+    () => currentUser?.dataSources?.find((d) => d.id === dataSourceId),
+    [dataSourceId, currentUser]
+  );
 
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState(
     `${dataSourceId}:currentBranch`
@@ -275,7 +291,9 @@ const ModelsWrapper: React.FC = () => {
     [all, currentBranchId]
   );
   const currentVersion = useMemo(
-    () => currentBranch?.versions?.[0] || ({} as Version),
+    () =>
+      currentBranch?.versions?.[0] ||
+      ({} as AllDataSchemasQuery["branches"][number]["versions"][number]),
     [currentBranch]
   );
   const dataschemas = useMemo(
@@ -703,6 +721,8 @@ const ModelsWrapper: React.FC = () => {
 
   return (
     <Models
+      dataSchemas={dataschemas}
+      dataSource={dataSource}
       branchMenu={branchMenu}
       ideMenu={ideMenu}
       branches={all}
@@ -711,6 +731,9 @@ const ModelsWrapper: React.FC = () => {
       versions={currentBranch?.versions}
       onChangeBranch={setCurrentBranchId}
       onSetDefault={onSetDefault}
+      onCreateBranch={onCreateBranch}
+      onOpenSchema={openSchema}
+      currentVersion={currentVersion}
     />
   );
 };

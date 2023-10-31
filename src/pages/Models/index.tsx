@@ -1,4 +1,4 @@
-import { Space, Typography, message } from "antd";
+import { Space, Spin, Typography, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { useLocalStorageState, useTrackedEffect } from "ahooks";
@@ -32,68 +32,81 @@ import ModelsActiveIcon from "@/assets/models-active.svg";
 
 import styles from "./index.module.less";
 
+import type { MenuProps } from "antd";
 import type { ChangeEvent } from "react";
 
 interface ModelsProps {
-  versions: Version[];
-  currentVersion: Version;
-  branches: string[];
-  docs: string;
+  branchMenu: MenuProps["items"];
+  ideMenu: MenuProps["items"];
+  branches: AllDataSchemasQuery["branches"];
+  onSetDefault: (branchId?: string) => void;
+  onChangeBranch: (branchId?: string) => void;
+  versions?: AllDataSchemasQuery["branches"][number]["versions"];
+  currentVersion?: AllDataSchemasQuery["branches"][number]["versions"][number];
+  currentBranch?: AllDataSchemasQuery["branches"][number];
+  fetching?: boolean;
+  docs?: string;
 }
 
 const { Title } = Typography;
 
 export const Models: React.FC<ModelsProps> = ({
-  // versions,
+  versions,
+  branchMenu,
+  ideMenu,
   branches,
+  currentBranch,
   docs,
   currentVersion,
+  onChangeBranch,
+  onSetDefault,
+  fetching,
 }) => {
-  const [selectedFiles, setSelectedFiles] = useState<Record<
-    string,
-    File
-  > | null>(null);
-  const [files, setFiles] = useState<File[]>(currentVersion.files);
+  // const [selectedFiles, setSelectedFiles] = useState<Record<
+  //   string,
+  //   File
+  // > | null>(null);
+  // const [files, setFiles] = useState<File[]>(currentVersion.files);
 
-  const onSelectFile = (fileName: string) => {
-    setSelectedFiles((prevState) => {
-      const file = currentVersion.files.find((f) => f.name === fileName);
-      if (file) {
-        const newState = prevState
-          ? { ...prevState, [fileName]: file }
-          : { [fileName]: file };
-        return newState;
-      }
-      return prevState;
-    });
-  };
+  // const onSelectFile = (fileName: string) => {
+  //   setSelectedFiles((prevState) => {
+  //     const file = currentVersion.files.find((f) => f.name === fileName);
+  //     if (file) {
+  //       const newState = prevState
+  //         ? { ...prevState, [fileName]: file }
+  //         : { [fileName]: file };
+  //       return newState;
+  //     }
+  //     return prevState;
+  //   });
+  // };
 
-  const onFileRemove = (fileName: string) => {
-    setSelectedFiles((prevState) => {
-      if (prevState) {
-        const newState = { ...prevState };
-        delete newState[fileName];
-        return newState;
-      }
-      return prevState;
-    });
-  };
+  // const onFileRemove = (fileName: string) => {
+  //   setSelectedFiles((prevState) => {
+  //     if (prevState) {
+  //       const newState = { ...prevState };
+  //       delete newState[fileName];
+  //       return newState;
+  //     }
+  //     return prevState;
+  //   });
+  // };
 
-  const onFileCreate = (fileName: string) => {
-    setFiles((prevState) => {
-      const language = fileName.split(".").at(-1);
-      if (prevState && language) {
-        const newState = [...prevState];
-        newState.push({
-          name: fileName,
-          value: "",
-          language,
-        });
-        return newState;
-      }
-      return prevState;
-    });
-  };
+  // const onFileCreate = (fileName: string) => {
+  //   setFiles((prevState) => {
+  //     const language = fileName.split(".").at(-1);
+  //     if (prevState && language) {
+  //       const newState = [...prevState];
+  //       newState.push({
+  //         name: fileName,
+  //         value: "",
+  //         language,
+  //       });
+  //       return newState;
+  //     }
+  //     return prevState;
+  //   });
+  // };
 
   return (
     <SidebarLayout
@@ -109,17 +122,23 @@ export const Models: React.FC<ModelsProps> = ({
       divider
       items={
         <ModelsSidebar
-          version={currentVersion.checksum}
+          version={currentVersion?.checksum}
+          branchMenu={branchMenu}
+          ideMenu={ideMenu}
           branches={branches}
-          docs={docs}
-          files={files.map((f) => f.name)}
-          onCreateFile={onFileCreate}
-          onSelectFile={onSelectFile}
-          onSetDefaultVersion={console.log}
+          currentBranch={currentBranch}
+          onChangeBranch={onChangeBranch}
+          onSetDefault={onSetDefault}
+          docs={"docs"}
+          files={[]}
+          onCreateFile={() => {}}
+          onSelectFile={() => {}}
         />
       }
     >
-      <CodeEditor files={selectedFiles} onRemove={onFileRemove} />
+      <Spin spinning={fetching}>
+        <CodeEditor files={null} onRemove={() => {}} />
+      </Spin>
     </SidebarLayout>
   );
 };
@@ -418,32 +437,43 @@ const ModelsWrapper: React.FC = () => {
 
   const ideMenu = [
     {
-      path: `${basePath}/${dataSourceId}/genschema`,
-      title: t("Generate Schema"),
+      key: "gen",
+      label: t("Generate Schema"),
+      onClick: () => setLocation(`${basePath}/${dataSourceId}/genschema`),
     },
     {
-      path: `${basePath}/${dataSourceId}`,
-      title: t("Import data models"),
-      onClick: () => uploadFile(),
+      key: "import",
+      label: t("Import data models"),
+      onClick: () => {
+        setLocation(`${basePath}/${dataSourceId}`);
+        uploadFile();
+      },
     },
     {
-      path: `${basePath}/${dataSourceId}`,
+      key: "export",
       title: t("Export data models"),
-      onClick: () => exportData(),
+      onClick: () => {
+        setLocation(`${basePath}/${dataSourceId}`);
+        exportData();
+      },
     },
-  ];
+  ] as MenuProps["items"];
 
   const branchMenu = [
     {
-      path: `${basePath}/${dataSourceId}/versions`,
-      title: t("Show versions"),
+      key: "versions",
+      label: t("Show versions"),
+      onClick: () => setLocation(`${basePath}/${dataSourceId}/versions`),
     },
     all.length > 1 && {
-      path: `${basePath}/${dataSourceId}`,
-      title: t("Remove branch"),
-      onClick: () => execDeleteMutation({ id: currentBranchId }),
+      key: "remove",
+      label: t("Remove branch"),
+      onClick: () => {
+        execDeleteMutation({ id: currentBranchId });
+        setLocation(`${basePath}/${dataSourceId}`);
+      },
     },
-  ].filter(Boolean);
+  ].filter(Boolean) as MenuProps["items"];
 
   const onGenSubmit = async (format?: string, values?: any) => {
     const tables = getTables(values);
@@ -671,7 +701,18 @@ const ModelsWrapper: React.FC = () => {
     });
   };
 
-  return <>this is models page </>;
+  return (
+    <Models
+      branchMenu={branchMenu}
+      ideMenu={ideMenu}
+      branches={all}
+      fetching={fetching}
+      currentBranch={currentBranch}
+      versions={currentBranch?.versions}
+      onChangeBranch={setCurrentBranchId}
+      onSetDefault={onSetDefault}
+    />
+  );
 };
 
 export default ModelsWrapper;

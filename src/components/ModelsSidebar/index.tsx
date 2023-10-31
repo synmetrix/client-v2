@@ -7,7 +7,9 @@ import cn from "classnames";
 import Button from "@/components/Button";
 import Select from "@/components/Select";
 import SearchInput from "@/components/SearchInput";
+import PopoverButton from "@/components/PopoverButton";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
+import type { AllDataSchemasQuery } from "@/graphql/generated";
 
 import BranchIcon from "@/assets/branch.svg";
 import VerticalDots from "@/assets/dots-vertical.svg";
@@ -19,52 +21,37 @@ import type { FC } from "react";
 import type { MenuProps } from "antd";
 
 export interface ModelsSidebarProps {
-  branches: string[];
+  branchMenu: MenuProps["items"];
+  ideMenu: MenuProps["items"];
+  branches: AllDataSchemasQuery["branches"];
+  currentBranch?: AllDataSchemasQuery["branches"][number];
+  onChangeBranch: (branchId?: string) => void;
   docs: string;
-  version: string;
+  version?: string;
   files: string[];
   onCreateFile: (name: string) => void;
   onSelectFile: (name: string) => void;
-  onSetDefaultVersion: (version: string) => void;
+  onSetDefault: (branchId?: string) => void;
 }
 
 const ModelsSidebar: FC<ModelsSidebarProps> = ({
   branches,
+  currentBranch,
+  branchMenu,
+  ideMenu,
+  onChangeBranch,
+  onSetDefault,
   docs,
   version,
   files,
   onCreateFile,
   onSelectFile,
-  onSetDefaultVersion,
 }) => {
   const { t } = useTranslation(["models", "common"]);
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
   const [searchValue, setSearchValue] = useState<string>("");
-
-  const items: MenuProps["items"] = [
-    {
-      label: <span>Menu</span>,
-      key: "1",
-      title: "",
-    },
-    {
-      label: <span>Items</span>,
-      key: "2",
-      title: "",
-    },
-    {
-      label: <span>Will be</span>,
-      key: "3",
-      title: "",
-    },
-    {
-      label: <span>Here</span>,
-      key: "4",
-      title: "",
-    },
-  ];
 
   return (
     <Space className={styles.wrapper} size={16} direction="vertical">
@@ -81,33 +68,30 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
             <Select
               className={cn(styles.select, isMobile && styles.selectMobile)}
+              placeholder={"Select branch"}
               prefixIcon={<BranchIcon />}
               size="large"
-              defaultValue={branches.find((b) => b.includes("default"))}
+              defaultValue={currentBranch?.id}
+              value={currentBranch?.id}
               optionLabelProp="valueLabel"
               suffixIcon={<DownOutlined />}
               options={branches.map((b) => ({
-                value: b,
-                label: b,
+                value: b.id,
+                label: b.name,
               }))}
+              onChange={onChangeBranch}
             />
           </Space>
 
-          <Dropdown
+          <PopoverButton
             className={styles.dropdown}
+            popoverType="dropdown"
+            buttonProps={{ type: "ghost" }}
+            menu={{ items: branchMenu }}
+            icon={<VerticalDots />}
             trigger={["click"]}
-            menu={{
-              items: items.map((i) => ({
-                ...i,
-              })) as MenuProps["items"],
-            }}
-            placement="bottomRight"
             arrow
-          >
-            <Button type="ghost">
-              <VerticalDots />
-            </Button>
-          </Dropdown>
+          />
         </Space>
 
         <Space className={styles.space} size={10} direction="vertical">
@@ -123,12 +107,14 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
             </Button>
           </div>
           <div className={styles.version}>{version}</div>
-          <Button
-            className={styles.default}
-            onClick={() => onSetDefaultVersion(version)}
-          >
-            {t("sidebar.set_as_default")}
-          </Button>
+          {currentBranch && currentBranch.status !== "active" && (
+            <Button
+              className={styles.default}
+              onClick={() => onSetDefault(currentBranch?.id)}
+            >
+              {t("sidebar.set_as_default")}
+            </Button>
+          )}
         </Space>
 
         <Space className={styles.space} size={16} direction="vertical">
@@ -147,20 +133,15 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               <PlusOutlined className={styles.plusIcon} />
             </Button>
 
-            <Dropdown
+            <PopoverButton
+              className={styles.dropdown}
+              popoverType="dropdown"
+              buttonProps={{ type: "ghost" }}
+              menu={{ items: ideMenu }}
+              icon={<VerticalDots />}
               trigger={["click"]}
-              menu={{
-                items: items.map((i) => ({
-                  ...i,
-                })) as MenuProps["items"],
-              }}
-              placement="bottomRight"
               arrow
-            >
-              <Button type="ghost">
-                <VerticalDots />
-              </Button>
-            </Dropdown>
+            />
           </Space>
 
           {files

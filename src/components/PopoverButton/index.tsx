@@ -57,6 +57,7 @@ const PopoverButton: FC<PopoverButtonProps> = ({
     <Button
       size="small"
       disabled={disabled}
+      style={{ display: "flex", alignItems: "center" }}
       onClick={(e) => {
         stopPropagation(e);
         onClick?.(e);

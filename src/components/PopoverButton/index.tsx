@@ -15,6 +15,7 @@ type PopoverButtonProps = (PopoverProps | DropdownProps | PopconfirmProps) & {
   icon?: ReactNode | null;
   actionText?: string | null;
   defaultVisible?: boolean;
+  isVisible?: boolean;
   onVisibleChange?: (isVisible: boolean) => void;
   onClick?: (e: MouseEvent) => void;
   disabled?: boolean;
@@ -25,7 +26,7 @@ const PopoverButton: FC<PopoverButtonProps> = ({
   popoverType,
   icon = null,
   actionText = null,
-  visible,
+  isVisible,
   defaultVisible,
   disabled = false,
   onVisibleChange,
@@ -36,10 +37,10 @@ const PopoverButton: FC<PopoverButtonProps> = ({
   const [visibleState, setVisible] = useState<boolean>(!!defaultVisible);
 
   useEffect(() => {
-    if (visible !== null && visible !== visibleState) {
-      setVisible(!!visible);
+    if (isVisible !== null && isVisible !== visibleState) {
+      setVisible(!!isVisible);
     }
-  }, [visible, visibleState]);
+  }, [isVisible, visibleState]);
 
   const stopPropagation = (e: any) => {
     e.preventDefault();
@@ -90,7 +91,7 @@ const PopoverButton: FC<PopoverButtonProps> = ({
   return (
     <div style={{ display: "inline-block" }} onClick={stopPropagation}>
       <Popover
-        popupVisible={visibleState}
+        open={visibleState}
         onOpenChange={onVisChange}
         {...(restProps as PopoverProps)}
       >

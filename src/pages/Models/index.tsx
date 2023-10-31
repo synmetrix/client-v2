@@ -46,6 +46,13 @@ interface ModelsProps {
     schema: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number],
     hash?: string
   ) => void;
+  onSchemaDelete: (id: string) => void;
+  onSchemaUpdate: (
+    editId: string,
+    values: Partial<
+      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+    >
+  ) => void;
   dataSource?: DataSourceInfo;
   versions?: AllDataSchemasQuery["branches"][number]["versions"];
   currentBranch?: AllDataSchemasQuery["branches"][number];
@@ -71,6 +78,8 @@ export const Models: React.FC<ModelsProps> = ({
   onSetDefault,
   fetching,
   onOpenSchema,
+  onSchemaDelete,
+  onSchemaUpdate,
   dataSchemas = [],
 }) => {
   // const [selectedFiles, setSelectedFiles] = useState<Record<
@@ -133,6 +142,8 @@ export const Models: React.FC<ModelsProps> = ({
       divider
       items={
         <ModelsSidebar
+          onSchemaDelete={onSchemaDelete}
+          onSchemaUpdate={onSchemaUpdate}
           version={currentVersion?.checksum}
           branchMenu={branchMenu}
           ideMenu={ideMenu}
@@ -721,6 +732,8 @@ const ModelsWrapper: React.FC = () => {
 
   return (
     <Models
+      onSchemaUpdate={onClickUpdate}
+      onSchemaDelete={onClickDelete}
       dataSchemas={dataschemas}
       dataSource={dataSource}
       branchMenu={branchMenu}

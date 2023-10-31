@@ -17,7 +17,7 @@ const Template: StoryFn<typeof PopoverButton> = (args) => {
     <RootLayout>
       <PopoverButton
         {...args}
-        visible={isVisible}
+        isVisible={isVisible}
         onVisibleChange={setIsVisible}
       />
     </RootLayout>

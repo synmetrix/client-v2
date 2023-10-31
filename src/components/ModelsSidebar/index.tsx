@@ -1,5 +1,10 @@
-import { Input, Space } from "antd";
-import { DownOutlined, PlusOutlined } from "@ant-design/icons";
+import { Col, Form, Input, Row, Space } from "antd";
+import {
+  DeleteOutlined,
+  DownOutlined,
+  EditOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useResponsive } from "ahooks";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
@@ -36,6 +41,13 @@ export interface ModelsSidebarProps {
   ) => void;
   onSetDefault: (branchId?: string) => void;
   onCreateBranch: (name: string) => Promise<void>;
+  onSchemaDelete: (id: string) => void;
+  onSchemaUpdate: (
+    editId: string,
+    values: Partial<
+      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+    >
+  ) => void;
 }
 
 const ModelsSidebar: FC<ModelsSidebarProps> = ({
@@ -51,6 +63,8 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   onCreateFile,
   onSelectFile,
   onCreateBranch,
+  onSchemaDelete,
+  onSchemaUpdate,
 }) => {
   const { t } = useTranslation(["models", "common"]);
   const windowSize = useResponsive();
@@ -58,6 +72,28 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
   const [searchValue, setSearchValue] = useState<string>("");
   const [newBranchName, setNewBranchName] = useState<string>("");
+  const [fileName, setFileName] = useState<string>("");
+  const [popover, setPopover] = useState<{
+    id: string;
+    type: "remove" | "edit";
+  } | null>(null);
+
+  const onPopoverChange =
+    (
+      file: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number],
+      type: "remove" | "edit"
+    ) =>
+    (isVisible: boolean) => {
+      if (isVisible) {
+        setFileName(file.name);
+        setPopover({
+          id: file.id,
+          type,
+        });
+      } else {
+        setPopover(null);
+      }
+    };
 
   return (
     <Space className={styles.wrapper} size={16} direction="vertical">
@@ -176,10 +212,78 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 key={f.id}
                 className={styles.fileBtn}
                 type="text"
-                icon={<YMLIcon className={styles.fileIcon} />}
                 onClick={() => onSelectFile(f)}
               >
-                {f.name}
+                <Row justify={"space-between"}>
+                  <Col>
+                    <YMLIcon className={styles.fileIcon} /> {f.name}
+                  </Col>
+
+                  <Col>
+                    <Space size={5}>
+                      <PopoverButton
+                        trigger={["click"]}
+                        icon={<EditOutlined />}
+                        isVisible={
+                          popover?.id === f.id && popover?.type === "edit"
+                        }
+                        onVisibleChange={onPopoverChange(f, "edit")}
+                        content={
+                          <Space direction="vertical">
+                            <Form layout="vertical">
+                              <Form.Item label="Filename">
+                                <Input
+                                  value={fileName}
+                                  onChange={(e) => setFileName(e.target.value)}
+                                />
+                              </Form.Item>
+                            </Form>
+
+                            <Button
+                              type="primary"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onSchemaUpdate(f.id, {
+                                  ...f,
+                                  name: fileName,
+                                });
+                              }}
+                            >
+                              Submit
+                            </Button>
+                          </Space>
+                        }
+                        buttonProps={{
+                          size: "small",
+                          type: "text",
+                        }}
+                      />
+
+                      <PopoverButton
+                        popoverType="popconfirm"
+                        title="Are you sure delete this data schema?"
+                        buttonProps={{
+                          size: "small",
+                          type: "text",
+                        }}
+                        isVisible={
+                          popover?.id === f.id && popover?.type === "remove"
+                        }
+                        onVisibleChange={onPopoverChange(f, "remove")}
+                        trigger={"click"}
+                        onConfirm={(e) => {
+                          e?.preventDefault();
+                          e?.stopPropagation();
+                          onSchemaDelete(f.id);
+                        }}
+                        okText={"Remove"}
+                        cancelText={"Cancel"}
+                        icon={<DeleteOutlined />}
+                      />
+                    </Space>
+                  </Col>
+                </Row>
               </Button>
             ))}
         </Space>

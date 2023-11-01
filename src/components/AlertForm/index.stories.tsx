@@ -1,5 +1,6 @@
 import RootLayout from "@/layouts/RootLayout";
-import { queryPreviewMock } from "@/mocks/queryPreview";
+import { queryStateMock } from "@/mocks/queryState";
+import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 
 import AlertForm from ".";
 
@@ -19,21 +20,28 @@ const Template: StoryFn<typeof AlertForm> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  query: queryPreviewMock,
-  type: "webhook",
+  query: queryStateMock,
+  type: "WEBHOOK",
   initialValue: {
     name: "asd",
-    type: "webhook",
-    measures: {
-      "stories.count": {
-        lowerBound: 1,
-        upperBound: 2,
-      },
-    },
+    type: "WEBHOOK",
     schedule: "test",
-    requestTimeout: 1,
-    timeoutOnFire: 2,
-    webhook: "test",
+    deliveryConfig: {
+      url: "https://webhook.catch",
+    },
+    exploration: SAMPLE_EXPLORATION,
+    triggerConfig: {
+      lowerBound: 1,
+      upperBound: 2,
+      measures: {
+        "GithubEvents.count": {
+          lowerBound: 1,
+          upperBound: 2,
+        },
+      },
+      timeoutOnFire: 1,
+      requestTimeout: 1,
+    },
   },
   onSubmit: console.log,
   onTest: console.log,

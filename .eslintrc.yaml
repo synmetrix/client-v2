@@ -84,3 +84,4 @@ rules:
     [1, { disallowTypeAnnotations: false }]
   '@typescript-eslint/triple-slash-reference':
     [0, { no-unused-expressions: off }]
+  '@typescript-eslint/array-type': 0

@@ -28,6 +28,14 @@ export default [
             component: "./pages/Teams",
           },
           {
+            path: "/alerts",
+            component: "./pages/Alerts",
+          },
+          {
+            path: "/reports",
+            component: "./pages/Reports",
+          },
+          {
             path: "/settings/sources",
             component: "./pages/DataSources",
           },

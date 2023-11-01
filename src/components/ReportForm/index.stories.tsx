@@ -1,5 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
-import { queryPreviewMock } from "@/mocks/queryPreview";
+import { queryStateMock } from "@/mocks/queryState";
 
 import ReportForm from ".";
 
@@ -19,7 +19,7 @@ const Template: StoryFn<typeof ReportForm> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  query: queryPreviewMock,
-  type: "email",
+  query: queryStateMock,
+  type: "EMAIL",
   onSubmit: console.log,
 };

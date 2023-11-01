@@ -25,5 +25,8 @@
     "title": "No Alerts Found",
     "text": "There are currently no alerts to display",
     "explore_btn": "Explore"
-  }
+  },
+  "alert_created": "Alert created",
+  "alert_updated": "Alert updated",
+  "alert_deleted": "Alert deleted"
 }

@@ -22,7 +22,7 @@ import QueryPreview from "@/components/QueryPreview";
 import { capitalize } from "@/utils/helpers/capitalize";
 import validate from "@/utils/validations";
 import { QUERY_COLORS } from "@/utils/constants/colors";
-import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
+import type { QueryState } from "@/types/queryState";
 import type { AlertFormType, AlertType } from "@/types/alert";
 
 import InfoIcon from "@/assets/info.svg";
@@ -37,7 +37,7 @@ const { Title } = Typography;
 const { Panel } = Collapse;
 
 interface AlertFormProps {
-  query: QueryPreviewType;
+  query: QueryState;
   onSubmit: (data: AlertFormType) => void;
   onTest: (data: AlertFormType) => void;
   type?: AlertType;
@@ -45,7 +45,7 @@ interface AlertFormProps {
 }
 
 const AlertForm: FC<AlertFormProps> = ({
-  type = "webhook",
+  type = "WEBHOOK",
   query,
   initialValue,
   onSubmit,
@@ -61,7 +61,7 @@ const AlertForm: FC<AlertFormProps> = ({
 
   const schedule = watch("schedule");
 
-  const colums: TableProps<{ name: string }>["columns"] = [
+  const columns: TableProps<{ name: string }>["columns"] = [
     {
       title: capitalize(t("common:words.measures")),
       width: "50%",
@@ -85,8 +85,15 @@ const AlertForm: FC<AlertFormProps> = ({
         <Input
           className={styles.input}
           control={control}
-          name={`measures.${record.name}.lowerBound`}
-          defaultValue={initialValue?.measures?.[record.name]?.lowerBound}
+          name={`triggerConfig.measures.${record.name.replace(
+            ".",
+            ":"
+          )}.lowerBound`}
+          defaultValue={
+            initialValue?.triggerConfig?.measures?.[
+              record.name.replace(".", ":")
+            ]?.lowerBound
+          }
         />
       ),
     },
@@ -96,8 +103,15 @@ const AlertForm: FC<AlertFormProps> = ({
         <Input
           className={styles.input}
           control={control}
-          name={`measures.${record.name}.upperBound`}
-          defaultValue={initialValue?.measures?.[record.name]?.upperBound}
+          name={`triggerConfig.measures.${record.name.replace(
+            ".",
+            ":"
+          )}.upperBound`}
+          defaultValue={
+            initialValue?.triggerConfig?.measures?.[
+              record.name.replace(".", ":")
+            ]?.upperBound
+          }
         />
       ),
     },
@@ -155,8 +169,8 @@ const AlertForm: FC<AlertFormProps> = ({
           <span className={styles.subtitle}>{t("set_metrics_boundaries")}</span>
           <Table
             rootClassName={styles.table}
-            columns={colums}
-            dataSource={query.measures?.map((m) => ({ name: m }))}
+            columns={columns}
+            dataSource={query?.measures?.map((m) => ({ name: m }))}
             pagination={false}
             rowKey={(record) => record.name}
           />
@@ -172,8 +186,16 @@ const AlertForm: FC<AlertFormProps> = ({
                 starColor="#A31BCB"
                 label={`${capitalize(type)}:`}
                 control={control}
-                name={type}
-                defaultValue={initialValue?.[type]}
+                name={
+                  type === "EMAIL"
+                    ? "deliveryConfig.address"
+                    : "deliveryConfig.url"
+                }
+                defaultValue={
+                  type === "EMAIL"
+                    ? initialValue?.deliveryConfig?.address
+                    : initialValue?.deliveryConfig?.url
+                }
               />
             </Space>
           </Col>
@@ -235,7 +257,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   className={styles.input}
                   label={t("form.request_timeout")}
                   control={control}
-                  name="requestTimeout"
+                  name="triggerConfig.requestTimeout"
                   fieldType="number"
                 />
               </Col>
@@ -248,7 +270,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   className={styles.input}
                   label={t("form.timeout_on_fire")}
                   control={control}
-                  name="timeoutOnFire"
+                  name="triggerConfig.timeoutOnFire"
                   fieldType="number"
                 />
               </Col>

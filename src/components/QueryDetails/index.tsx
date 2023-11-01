@@ -5,7 +5,7 @@ import QueryPreview from "@/components/QueryPreview";
 import Copy from "@/components/Copy";
 import EventsTable from "@/components/EventsTable";
 import type { Maybe, Request_Event_Logs } from "@/graphql/generated";
-import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
+import type { QueryState } from "@/types/queryState";
 
 import styles from "./index.module.less";
 
@@ -14,7 +14,7 @@ import type { FC } from "react";
 interface QueryDetailsProps {
   SQLString?: Maybe<string>;
   events: Request_Event_Logs[];
-  query?: Maybe<QueryPreviewType>;
+  query?: Maybe<QueryState>;
 }
 
 const { Title } = Typography;

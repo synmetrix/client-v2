@@ -17,15 +17,15 @@ export default [
         ],
       },
       {
-        path: "/models",
+        path: "/schemas",
         component: "./pages/Models",
       },
       {
-        path: "/models/:dataSourceId",
+        path: "/schemas/:dataSourceId",
         component: "./pages/Models",
       },
       {
-        path: "/models/:dataSourceId/:slug",
+        path: "/schemas/:dataSourceId/:slug",
         component: "./pages/Models",
       },
       {

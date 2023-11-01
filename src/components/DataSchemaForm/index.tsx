@@ -37,7 +37,7 @@ const DataSchemaForm: FC<DataSchemaFormProps> = ({
   return (
     <Space direction="vertical" size={0}>
       <Form layout="vertical">
-        <Form.Item label="Filename">
+        <Form.Item label="* Filename:">
           <Input
             status={error ? "error" : undefined}
             value={value}

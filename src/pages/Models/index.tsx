@@ -463,51 +463,11 @@ const ModelsWrapper: React.FC = () => {
     });
   };
 
-  const inputFile = useRef<HTMLElement>(null);
+  const inputFile = useRef<HTMLInputElement>(null);
 
   const uploadFile = () => {
     inputFile.current?.click();
   };
-
-  const ideMenu = [
-    {
-      key: "gen",
-      label: t("Generate Schema"),
-      onClick: () => setLocation(`${basePath}/${dataSourceId}/genschema`),
-    },
-    {
-      key: "import",
-      label: t("Import data models"),
-      onClick: () => {
-        setLocation(`${basePath}/${dataSourceId}`);
-        uploadFile();
-      },
-    },
-    {
-      key: "export",
-      label: t("Export data models"),
-      onClick: () => {
-        setLocation(`${basePath}/${dataSourceId}`);
-        exportData();
-      },
-    },
-  ] as MenuProps["items"];
-
-  const branchMenu = [
-    {
-      key: "versions",
-      label: t("Show versions"),
-      onClick: () => setLocation(`${basePath}/${dataSourceId}/versions`),
-    },
-    all.length > 1 && {
-      key: "remove",
-      label: t("Remove branch"),
-      onClick: () => {
-        execDeleteMutation({ id: currentBranchId });
-        setLocation(`${basePath}/${dataSourceId}`);
-      },
-    },
-  ].filter(Boolean) as MenuProps["items"];
 
   const onGenSubmit = async (format?: string, values?: any) => {
     const tables = getTables(values);
@@ -736,6 +696,57 @@ const ModelsWrapper: React.FC = () => {
       datasource_id: dataSourceId,
     });
   };
+
+  const ideMenu = [
+    {
+      key: "gen",
+      label: t("Generate Schema"),
+      onClick: () => setLocation(`${basePath}/${dataSourceId}/genschema`),
+    },
+    {
+      key: "import",
+      label: (
+        <>
+          {t("Import data models")}
+          <input
+            type="file"
+            ref={inputFile}
+            hidden
+            onChange={onUploadFile}
+            accept="application/zip"
+          />
+        </>
+      ),
+      onClick: () => {
+        setLocation(`${basePath}/${dataSourceId}`);
+        uploadFile();
+      },
+    },
+    {
+      key: "export",
+      label: t("Export data models"),
+      onClick: () => {
+        setLocation(`${basePath}/${dataSourceId}`);
+        exportData();
+      },
+    },
+  ] as MenuProps["items"];
+
+  const branchMenu = [
+    {
+      key: "versions",
+      label: t("Show versions"),
+      onClick: () => setLocation(`${basePath}/${dataSourceId}/versions`),
+    },
+    all.length > 1 && {
+      key: "remove",
+      label: t("Remove branch"),
+      onClick: () => {
+        execDeleteMutation({ id: currentBranchId });
+        setLocation(`${basePath}/${dataSourceId}`);
+      },
+    },
+  ].filter(Boolean) as MenuProps["items"];
 
   return (
     <Models

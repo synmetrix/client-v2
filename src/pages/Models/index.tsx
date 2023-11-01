@@ -21,8 +21,7 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import usePermissions from "@/hooks/usePermissions";
 import equals from "@/utils/helpers/equals";
 import calcChecksum from "@/utils/helpers/dataschemasChecksum";
-import type { File } from "@/types/file";
-import type { DataSource, DataSourceInfo } from "@/types/dataSource";
+import type { DataSourceInfo } from "@/types/dataSource";
 import type {
   AllDataSchemasQuery,
   Branches_Insert_Input,
@@ -203,7 +202,7 @@ const ModelsWrapper: React.FC = () => {
   const { currentUser } = useUserData();
   const [, setLocation] = useLocation();
   const { withAuthPrefix } = useAppSettings();
-  const basePath = withAuthPrefix("/schemas");
+  const basePath = withAuthPrefix("/models");
 
   const [isConsoleOpen, toggleConsole] = useState<boolean>(false);
   const [error, setError] = useState(null);

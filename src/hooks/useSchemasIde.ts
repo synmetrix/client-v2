@@ -23,7 +23,7 @@ export default ({ dataSourceId }: Props) => {
 
   const changePath = useCallback(
     (activeKey: string) => {
-      const basePath = [withAuthPrefix("/schemas"), dataSourceId, activeKey]
+      const basePath = [withAuthPrefix("/models"), dataSourceId, activeKey]
         .filter((v) => !!v)
         .join("/");
 

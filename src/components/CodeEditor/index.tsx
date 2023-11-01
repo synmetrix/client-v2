@@ -1,4 +1,4 @@
-import { Col, Row, Space, Tooltip } from "antd";
+import { Col, Form, InputNumber, Row, Space, Tooltip } from "antd";
 import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
@@ -6,7 +6,8 @@ import { useResponsive } from "ahooks";
 import cn from "classnames";
 
 import Button from "@/components/Button";
-import type { File } from "@/types/file";
+import PopoverButton from "@/components/PopoverButton";
+import type { AllDataSchemasQuery } from "@/graphql/generated";
 
 import styles from "./index.module.less";
 
@@ -14,8 +15,12 @@ import type { FC } from "react";
 import type { editor } from "monaco-editor";
 
 interface CodeEditorProps {
-  files: Record<string, File> | null;
-  onRemove: (fileName: string) => void;
+  schemas?: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
+  active?: string | null;
+  onTabChange: (id: string) => void;
+  onClose: (fileName: string) => void;
+  onRunSQL: (query: string, limit: number) => void;
+  onCodeSave: (id: string, code: string) => void;
 }
 
 const MONACO_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
@@ -40,32 +45,69 @@ const MONACO_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
   },
 };
 
-const CodeEditor: FC<CodeEditorProps> = ({ files, onRemove }) => {
+const CodeEditor: FC<CodeEditorProps> = ({
+  schemas = [],
+  active,
+  onClose,
+  onTabChange,
+  onRunSQL,
+  onCodeSave,
+}) => {
   const { t } = useTranslation(["models", "common"]);
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
-  const [activeFile, setActiveFile] = useState<File | null>(null);
+  const [limit, setLimit] = useState<number>(1000);
+  const [query, setQuery] = useState<string>("");
 
-  useEffect(() => {
-    const fileNames = files ? Object.keys(files) : null;
-    if (fileNames) {
-      const lastFileName = fileNames.at(-1) || fileNames[0];
-      const lastFile = files?.[lastFileName] || null;
-      setActiveFile(lastFile);
-    }
-  }, [files]);
+  const files = schemas?.reduce(
+    (res, schema) => ({
+      ...res,
+      [schema.id]: schema,
+    }),
+    {}
+  ) as Record<
+    string,
+    AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+  >;
+
+  const [content, setContent] = useState<string>(
+    active ? files[active]?.code : "active"
+  );
 
   const defaultButtons = [
-    <Button className={styles.btn} key="sqlrunner">
+    <Button
+      className={styles.btn}
+      key="sqlrunner"
+      onClick={() => onTabChange("sqlrunner")}
+    >
       {t("common:words.sql_runner")}
     </Button>,
-    <Button className={styles.run} type="primary" key="run">
+    <Button
+      className={styles.run}
+      type="primary"
+      key="run"
+      onClick={() => onRunSQL(query, limit)}
+    >
       {t("common:words.run")}
     </Button>,
-    <Button className={styles.settings} type="ghost" key="settings">
-      <SettingOutlined />
-    </Button>,
+    <PopoverButton
+      key="settings"
+      trigger={["click"]}
+      icon={<SettingOutlined />}
+      content={
+        <Form layout="vertical">
+          <Form.Item label="Rows limit:">
+            <InputNumber
+              width={300}
+              value={limit}
+              onChange={(val) => setLimit(val || 0)}
+            />
+          </Form.Item>
+        </Form>
+      }
+      buttonProps={{ className: styles.settings, type: "ghost" }}
+    />,
   ];
 
   return (
@@ -79,20 +121,24 @@ const CodeEditor: FC<CodeEditorProps> = ({ files, onRemove }) => {
         <Col className={styles.navBtns} order={isMobile ? 1 : -1}>
           <Space size={16} align="center">
             {files &&
-              Object.keys(files).map((fileName) => (
+              Object.keys(files).map((id) => (
                 <Button
                   type="default"
-                  key={fileName}
+                  key={id}
                   className={cn(styles.btn, {
-                    [styles.active]: fileName === activeFile?.name,
+                    [styles.active]: active && id === files[active]?.id,
                   })}
-                  onClick={() => setActiveFile(files[fileName])}
+                  onClick={() => onTabChange(id)}
                 >
-                  {fileName}
+                  {files[id].name}
                   <Tooltip title={t("common:words.close")}>
                     <CloseOutlined
                       className={styles.closeIcon}
-                      onClick={() => onRemove(fileName)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onClose(id);
+                      }}
                     />
                   </Tooltip>
                 </Button>
@@ -102,15 +148,31 @@ const CodeEditor: FC<CodeEditorProps> = ({ files, onRemove }) => {
         </Col>
 
         <Col order={isMobile ? -1 : 1}>
-          <Button className={styles.save}>{t("common:words.save")}</Button>
+          <Button
+            className={styles.save}
+            onClick={() => active && onCodeSave(active, content)}
+          >
+            {t("common:words.save")}
+          </Button>
         </Col>
       </Row>
-      {activeFile && (
+      {active && active !== "sqlrunner" ? (
         <Editor
           className={styles.monaco}
-          defaultLanguage={activeFile.language}
-          defaultValue={activeFile.value}
-          path={activeFile.name}
+          defaultLanguage={"yml"}
+          defaultValue={files[active]?.code}
+          value={content}
+          onChange={(val) => setContent(val || "")}
+          path={files[active]?.name}
+          options={MONACO_OPTIONS}
+        />
+      ) : (
+        <Editor
+          className={styles.monaco}
+          defaultLanguage={"query"}
+          defaultValue={query}
+          onChange={(val) => setQuery(val || "")}
+          path={"sql"}
           options={MONACO_OPTIONS}
         />
       )}

@@ -3,7 +3,6 @@ import { useCallback } from "react";
 import useLocation from "@/hooks/useLocation";
 import useTabs from "@/hooks/useTabs";
 import useAppSettings from "@/hooks/useAppSettings";
-import type { AllDataSchemasQuery } from "@/graphql/generated";
 
 interface Props {
   dataSourceId: string;
@@ -22,7 +21,7 @@ export default ({ dataSourceId }: Props) => {
   } = useTabs({ activeTab: defaultTabId });
 
   const changePath = useCallback(
-    (activeKey: string) => {
+    (activeKey?: string) => {
       const basePath = [withAuthPrefix("/models"), dataSourceId, activeKey]
         .filter((v) => !!v)
         .join("/");
@@ -36,7 +35,10 @@ export default ({ dataSourceId }: Props) => {
 
   const openSchema = useCallback(
     (
-      schema: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number],
+      schema: {
+        id: string;
+        name: string;
+      },
       hash?: string
     ) => {
       openTab(schema);
@@ -60,31 +62,30 @@ export default ({ dataSourceId }: Props) => {
         const anyOtherTab = Object.keys(tabsState.tabs).find(
           (tabId) => tabId !== id
         );
-
-        if (!anyOtherTab) return;
-
-        const anyOtherTabName = tabsState.tabs[anyOtherTab] || defaultTabId;
+        const anyOtherTabName = anyOtherTab
+          ? tabsState.tabs[anyOtherTab]
+          : defaultTabId;
 
         // if we're closing the active tab and there are any other tabs
-        if (activeTab === id) {
+        if (activeTab === id && anyOtherTabName) {
           changeActiveTab(anyOtherTabName);
 
           // if other tab is not the default one then open it
           if (anyOtherTabName !== defaultTabId) {
             openSchema({
-              id: anyOtherTab,
+              id: anyOtherTab!,
               name: anyOtherTabName,
-            } as AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]);
+            });
             // else change path only
           } else {
             changePath(anyOtherTabName);
           }
           // else move to active
         } else {
-          if (activeTab) {
-            const activeTabName = tabsState.tabs[activeTab];
-            changePath(activeTabName);
-          }
+          const activeTabName = activeTab
+            ? tabsState.tabs[activeTab]
+            : undefined;
+          changePath(activeTabName);
         }
       }
     },

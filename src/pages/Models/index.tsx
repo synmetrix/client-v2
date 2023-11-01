@@ -41,10 +41,6 @@ interface ModelsProps {
   onSetDefault: (branchId?: string) => void;
   onChangeBranch: (branchId?: string) => void;
   onCreateBranch: (name: string) => Promise<void>;
-  onOpenSchema: (
-    schema: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number],
-    hash?: string
-  ) => void;
   onSchemaDelete: (id: string) => void;
   onSchemaUpdate: (
     editId: string,
@@ -56,12 +52,15 @@ interface ModelsProps {
   versions?: AllDataSchemasQuery["branches"][number]["versions"];
   currentBranch?: AllDataSchemasQuery["branches"][number];
   currentVersion?: AllDataSchemasQuery["branches"][number]["versions"][number];
-  dataSchemas?: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
+  dataschemas?: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
   onSchemaCreate: (
     values: Partial<
       AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
     >
   ) => void;
+  onCodeSave: (id: string, code: string) => void;
+  onRunSQL: (query: string, limit: number) => void;
+  dataSchemaName: string;
   fetching?: boolean;
   docs?: string;
 }
@@ -71,6 +70,7 @@ const { Title } = Typography;
 export const Models: React.FC<ModelsProps> = ({
   dataSource,
   versions,
+  dataSchemaName,
   branchMenu,
   ideMenu,
   branches,
@@ -81,57 +81,41 @@ export const Models: React.FC<ModelsProps> = ({
   onCreateBranch,
   onSetDefault,
   fetching,
-  onOpenSchema,
   onSchemaCreate,
   onSchemaDelete,
   onSchemaUpdate,
-  dataSchemas = [],
+  dataschemas = [],
+  onRunSQL,
+  onCodeSave,
 }) => {
-  // const [selectedFiles, setSelectedFiles] = useState<Record<
-  //   string,
-  //   File
-  // > | null>(null);
-  // const [files, setFiles] = useState<File[]>(currentVersion.files);
+  const {
+    editTab,
+    activeTab,
+    changeActiveTab,
+    openTab,
+    openedTabs,
+    openSchema,
+  } = useSchemasIde({ dataSourceId: dataSource?.id || "" });
 
-  // const onSelectFile = (fileName: string) => {
-  //   setSelectedFiles((prevState) => {
-  //     const file = currentVersion.files.find((f) => f.name === fileName);
-  //     if (file) {
-  //       const newState = prevState
-  //         ? { ...prevState, [fileName]: file }
-  //         : { [fileName]: file };
-  //       return newState;
-  //     }
-  //     return prevState;
-  //   });
-  // };
+  const openedSchemas = useMemo(
+    () =>
+      Object.keys(openedTabs)
+        .map((id) => dataschemas.find((schema) => schema.id === id))
+        .filter(Boolean),
+    [dataschemas, openedTabs]
+  ) as AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
 
-  // const onFileRemove = (fileName: string) => {
-  //   setSelectedFiles((prevState) => {
-  //     if (prevState) {
-  //       const newState = { ...prevState };
-  //       delete newState[fileName];
-  //       return newState;
-  //     }
-  //     return prevState;
-  //   });
-  // };
+  useEffect(() => {
+    if (dataSchemaName) {
+      const schemaObj = dataschemas.find(
+        (schema) => schema.name === dataSchemaName
+      );
 
-  // const onFileCreate = (fileName: string) => {
-  //   setFiles((prevState) => {
-  //     const language = fileName.split(".").at(-1);
-  //     if (prevState && language) {
-  //       const newState = [...prevState];
-  //       newState.push({
-  //         name: fileName,
-  //         value: "",
-  //         language,
-  //       });
-  //       return newState;
-  //     }
-  //     return prevState;
-  //   });
-  // };
+      if (schemaObj && !Object.keys(openedTabs).includes(schemaObj.id)) {
+        openTab(schemaObj);
+      }
+    }
+  }, [dataschemas, dataSchemaName, openTab, openedTabs]);
 
   return (
     <SidebarLayout
@@ -157,15 +141,22 @@ export const Models: React.FC<ModelsProps> = ({
           onChangeBranch={onChangeBranch}
           onSetDefault={onSetDefault}
           docs={"docs"}
-          files={dataSchemas}
+          files={dataschemas}
           onCreateBranch={onCreateBranch}
           onCreateFile={onSchemaCreate}
-          onSelectFile={onOpenSchema}
+          onSelectFile={openSchema}
         />
       }
     >
       <Spin spinning={fetching}>
-        <CodeEditor files={null} onRemove={() => {}} />
+        <CodeEditor
+          schemas={openedSchemas}
+          onClose={(id) => editTab(id, "remove")}
+          onTabChange={changeActiveTab}
+          active={activeTab}
+          onRunSQL={onRunSQL}
+          onCodeSave={onCodeSave}
+        />
       </Spin>
     </SidebarLayout>
   );
@@ -223,16 +214,6 @@ const ModelsWrapper: React.FC = () => {
 
   const onModalClose = () => setLocation(`${basePath}/${dataSourceId}`);
   const dataSchemaName = (reservedSlugs.indexOf(slug) === -1 && slug) || null;
-
-  const {
-    getTabId,
-    editTab,
-    activeTab,
-    changeActiveTab,
-    openTab,
-    openedTabs,
-    openSchema,
-  } = useSchemasIde({ dataSourceId });
 
   const {
     all,
@@ -328,26 +309,6 @@ const ModelsWrapper: React.FC = () => {
       ),
     [dataschemas]
   );
-
-  const openedSchemas = useMemo(
-    () =>
-      Object.keys(openedTabs)
-        .map((id) => dataschemas.find((schema) => schema.id === id))
-        .filter(Boolean),
-    [dataschemas, openedTabs]
-  );
-
-  useEffect(() => {
-    if (dataSchemaName) {
-      const schemaObj = dataschemas.find(
-        (schema) => schema.name === dataSchemaName
-      );
-
-      if (schemaObj && !Object.keys(openedTabs).includes(schemaObj.id)) {
-        openTab(schemaObj);
-      }
-    }
-  }, [dataschemas, dataSchemaName, openTab, openedTabs]);
 
   useTrackedEffect(
     (changes, previousDeps, currentDeps) => {
@@ -753,7 +714,7 @@ const ModelsWrapper: React.FC = () => {
       onSchemaCreate={onClickCreate}
       onSchemaUpdate={onClickUpdate}
       onSchemaDelete={onClickDelete}
-      dataSchemas={dataschemas}
+      dataschemas={dataschemas}
       dataSource={dataSource}
       branchMenu={branchMenu}
       ideMenu={ideMenu}
@@ -764,8 +725,10 @@ const ModelsWrapper: React.FC = () => {
       onChangeBranch={setCurrentBranchId}
       onSetDefault={onSetDefault}
       onCreateBranch={onCreateBranch}
-      onOpenSchema={openSchema}
       currentVersion={currentVersion}
+      dataSchemaName={dataSchemaName}
+      onRunSQL={onRunSQL}
+      onCodeSave={onCodeSave}
     />
   );
 };

@@ -21,22 +21,6 @@ export default [
         component: "./layouts/SettingsLayout",
         routes: [
           {
-            path: "/",
-            component: "./pages/Home",
-          },
-          {
-            path: "/teams",
-            component: "./pages/Teams",
-          },
-          {
-            path: "/alerts",
-            component: "./pages/Alerts",
-          },
-          {
-            path: "/reports",
-            component: "./pages/Reports",
-          },
-          {
             path: "/settings/sources",
             component: "./pages/DataSources",
           },
@@ -68,6 +52,14 @@ export default [
           {
             path: "/teams",
             component: "./pages/Teams",
+          },
+          {
+            path: "/alerts",
+            component: "./pages/Alerts",
+          },
+          {
+            path: "/reports",
+            component: "./pages/Reports",
           },
           {
             path: "/logs/query",

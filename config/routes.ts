@@ -17,7 +17,8 @@ export default [
         ],
       },
       {
-        path: "/",
+        path: "/settings",
+        component: "./layouts/SettingsLayout",
         routes: [
           {
             path: "/",
@@ -54,6 +55,19 @@ export default [
           {
             path: "/settings/info",
             component: "./pages/PersonalInfo",
+          },
+        ],
+      },
+      {
+        path: "/",
+        routes: [
+          {
+            path: "/",
+            component: "./pages/Home",
+          },
+          {
+            path: "/teams",
+            component: "./pages/Teams",
           },
           {
             path: "/logs/query",

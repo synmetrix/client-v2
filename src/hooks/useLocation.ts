@@ -2,7 +2,7 @@ import { history, useLocation } from "@vitjs/runtime";
 
 import type { Params } from "react-router-dom";
 
-type Location = {
+export type Location = {
   id?: string;
   pathname: string;
   params?: Params<string>;

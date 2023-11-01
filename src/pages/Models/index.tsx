@@ -58,6 +58,11 @@ interface ModelsProps {
   currentBranch?: AllDataSchemasQuery["branches"][number];
   currentVersion?: AllDataSchemasQuery["branches"][number]["versions"][number];
   dataSchemas?: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
+  onSchemaCreate: (
+    values: Partial<
+      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+    >
+  ) => void;
   fetching?: boolean;
   docs?: string;
 }
@@ -78,6 +83,7 @@ export const Models: React.FC<ModelsProps> = ({
   onSetDefault,
   fetching,
   onOpenSchema,
+  onSchemaCreate,
   onSchemaDelete,
   onSchemaUpdate,
   dataSchemas = [],
@@ -154,7 +160,7 @@ export const Models: React.FC<ModelsProps> = ({
           docs={"docs"}
           files={dataSchemas}
           onCreateBranch={onCreateBranch}
-          onCreateFile={() => {}}
+          onCreateFile={onSchemaCreate}
           onSelectFile={onOpenSchema}
         />
       }
@@ -480,7 +486,7 @@ const ModelsWrapper: React.FC = () => {
     },
     {
       key: "export",
-      title: t("Export data models"),
+      label: t("Export data models"),
       onClick: () => {
         setLocation(`${basePath}/${dataSourceId}`);
         exportData();
@@ -566,7 +572,9 @@ const ModelsWrapper: React.FC = () => {
   };
 
   const onClickCreate = async (
-    values: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"]
+    values: Partial<
+      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+    >
   ) => {
     const newSchemas = [
       ...dataschemas,
@@ -732,6 +740,7 @@ const ModelsWrapper: React.FC = () => {
 
   return (
     <Models
+      onSchemaCreate={onClickCreate}
       onSchemaUpdate={onClickUpdate}
       onSchemaDelete={onClickDelete}
       dataSchemas={dataschemas}

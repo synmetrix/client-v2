@@ -26,7 +26,7 @@ const PopoverButton: FC<PopoverButtonProps> = ({
   popoverType,
   icon = null,
   actionText = null,
-  isVisible,
+  isVisible = null,
   defaultVisible,
   disabled = false,
   onVisibleChange,

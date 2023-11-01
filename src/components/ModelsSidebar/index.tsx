@@ -14,6 +14,7 @@ import Select from "@/components/Select";
 import SearchInput from "@/components/SearchInput";
 import PopoverButton from "@/components/PopoverButton";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
+import DataSchemaForm from "@/components/DataSchemaForm";
 import type { AllDataSchemasQuery } from "@/graphql/generated";
 
 import BranchIcon from "@/assets/branch.svg";
@@ -34,7 +35,6 @@ export interface ModelsSidebarProps {
   docs: string;
   version?: string;
   files: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
-  onCreateFile: (name: string) => void;
   onSelectFile: (
     schema: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number],
     hash?: string
@@ -44,6 +44,11 @@ export interface ModelsSidebarProps {
   onSchemaDelete: (id: string) => void;
   onSchemaUpdate: (
     editId: string,
+    values: Partial<
+      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+    >
+  ) => void;
+  onCreateFile: (
     values: Partial<
       AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
     >
@@ -72,8 +77,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
   const [searchValue, setSearchValue] = useState<string>("");
   const [newBranchName, setNewBranchName] = useState<string>("");
-  const [fileName, setFileName] = useState<string>("");
-  const [popover, setPopover] = useState<{
+  const [editPopover, setEditPopover] = useState<{
     id: string;
     type: "remove" | "edit";
   } | null>(null);
@@ -85,13 +89,12 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
     ) =>
     (isVisible: boolean) => {
       if (isVisible) {
-        setFileName(file.name);
-        setPopover({
+        setEditPopover({
           id: file.id,
           type,
         });
       } else {
-        setPopover(null);
+        setEditPopover(null);
       }
     };
 
@@ -183,14 +186,15 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               onChange={setSearchValue}
               placeholder={t("common:form.placeholders.search")}
             />
-            <Button
-              className={styles.addFile}
-              onClick={() =>
-                searchValue?.includes(".") && onCreateFile(searchValue)
-              }
-            >
-              <PlusOutlined className={styles.plusIcon} />
-            </Button>
+
+            <PopoverButton
+              trigger={["click"]}
+              icon={<PlusOutlined className={styles.plusIcon} />}
+              buttonProps={{
+                className: styles.addFile,
+              }}
+              content={<DataSchemaForm onSubmit={onCreateFile} />}
+            />
 
             <PopoverButton
               className={styles.dropdown}
@@ -208,10 +212,9 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               f.name.toLowerCase().includes(searchValue.toLowerCase())
             )
             .map((f) => (
-              <Button
+              <div
                 key={f.id}
                 className={styles.fileBtn}
-                type="text"
                 onClick={() => onSelectFile(f)}
               >
                 <Row justify={"space-between"}>
@@ -225,34 +228,20 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                         trigger={["click"]}
                         icon={<EditOutlined />}
                         isVisible={
-                          popover?.id === f.id && popover?.type === "edit"
+                          editPopover?.id === f.id &&
+                          editPopover?.type === "edit"
                         }
                         onVisibleChange={onPopoverChange(f, "edit")}
                         content={
-                          <Space direction="vertical">
-                            <Form layout="vertical">
-                              <Form.Item label="Filename">
-                                <Input
-                                  value={fileName}
-                                  onChange={(e) => setFileName(e.target.value)}
-                                />
-                              </Form.Item>
-                            </Form>
-
-                            <Button
-                              type="primary"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                onSchemaUpdate(f.id, {
-                                  ...f,
-                                  name: fileName,
-                                });
-                              }}
-                            >
-                              Submit
-                            </Button>
-                          </Space>
+                          <DataSchemaForm
+                            defaultValues={f}
+                            onSubmit={(d) =>
+                              onSchemaUpdate(f.id, {
+                                ...f,
+                                ...d,
+                              })
+                            }
+                          />
                         }
                         buttonProps={{
                           size: "small",
@@ -268,7 +257,8 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                           type: "text",
                         }}
                         isVisible={
-                          popover?.id === f.id && popover?.type === "remove"
+                          editPopover?.id === f.id &&
+                          editPopover?.type === "remove"
                         }
                         onVisibleChange={onPopoverChange(f, "remove")}
                         trigger={"click"}
@@ -284,7 +274,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                     </Space>
                   </Col>
                 </Row>
-              </Button>
+              </div>
             ))}
         </Space>
       </div>

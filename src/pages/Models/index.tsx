@@ -62,7 +62,6 @@ interface ModelsProps {
   onRunSQL: (query: string, limit: number) => void;
   dataSchemaName: string;
   fetching?: boolean;
-  docs?: string;
   genSchemaModalVisible?: boolean;
   versionsModalVisible?: boolean;
 }
@@ -77,7 +76,6 @@ export const Models: React.FC<ModelsProps> = ({
   ideMenu,
   branches,
   currentBranch,
-  docs,
   currentVersion,
   onChangeBranch,
   onCreateBranch,
@@ -144,7 +142,7 @@ export const Models: React.FC<ModelsProps> = ({
           currentBranch={currentBranch}
           onChangeBranch={onChangeBranch}
           onSetDefault={onSetDefault}
-          docs={"docs"}
+          docs={`/docs/${currentVersion?.id}`}
           files={dataschemas}
           onCreateBranch={onCreateBranch}
           onCreateFile={onSchemaCreate}

@@ -200,7 +200,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
           >
             <Editor
               className={styles.monaco}
-              defaultLanguage={"query"}
+              defaultLanguage={"sql"}
               wrapperProps={{ styles: { minHeight: monacoHeight } }}
               height={monacoHeight}
               defaultValue={query}

@@ -5,8 +5,7 @@ import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
 import Copy from "@/components/Copy";
 import type { User } from "@/types/user";
-import type { File } from "@/types/file";
-import type { Version } from "@/types/version";
+import type { AllDataSchemasQuery } from "@/graphql/generated";
 
 import DocsIcon from "@/assets/docs.svg";
 import YAMLIcon from "@/assets/yml-flie.svg";
@@ -19,19 +18,22 @@ import type { TableProps } from "antd";
 const { Title } = Typography;
 
 interface VersionsListProps {
-  versions: Version[];
-  onRestore: (versionId: string) => void;
-  onSave: () => void;
+  versions: AllDataSchemasQuery["branches"][number]["versions"];
+  onSave: (
+    checksum: string,
+    dataschemas: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"]
+  ) => void;
 }
 
-const VersionsList: FC<VersionsListProps> = ({
-  versions,
-  onRestore,
-  onSave,
-}) => {
+const VersionsList: FC<VersionsListProps> = ({ versions, onSave }) => {
   const { t } = useTranslation(["models", "common"]);
 
-  const columns: TableProps<Version>["columns"] = [
+  const [selectedVersion, setSelectedVersion] =
+    useState<AllDataSchemasQuery["branches"][number]["versions"][number]>();
+
+  const columns: TableProps<
+    AllDataSchemasQuery["branches"][number]["versions"][number]
+  >["columns"] = [
     {
       title: t("common:words.checksum"),
       dataIndex: "checksum",
@@ -42,10 +44,10 @@ const VersionsList: FC<VersionsListProps> = ({
       title: t("common:words.author"),
       dataIndex: "author",
       key: "author",
-      render: (value: User) => (
+      render: (value?: User) => (
         <Space className={styles.author} size={10}>
-          <Avatar img={value.avatarUrl} username={value.displayName} />
-          {value.email}
+          <Avatar img={value?.avatarUrl} username={value?.displayName} />
+          {value?.email}
         </Space>
       ),
     },
@@ -64,7 +66,7 @@ const VersionsList: FC<VersionsListProps> = ({
           <Button
             className={styles.restore}
             icon={<DocsIcon className={styles.restoreIcon} />}
-            onClick={() => onRestore(record.id)}
+            onClick={() => setSelectedVersion(record)}
           >
             {t("common:words.restore")}
           </Button>
@@ -73,12 +75,18 @@ const VersionsList: FC<VersionsListProps> = ({
     },
   ];
 
-  const renderFileValue = (record: File) => {
-    return <Copy value={record.value} />;
+  const renderFileValue = (
+    record: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+  ) => {
+    return <Copy value={record.code} />;
   };
 
-  const expandedRowRender = (record: Version) => {
-    const expandedColums: TableProps<File>["columns"] = [
+  const expandedRowRender = (
+    record: AllDataSchemasQuery["branches"][number]["versions"][number]
+  ) => {
+    const expandedColumns: TableProps<
+      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+    >["columns"] = [
       {
         key: "name",
         dataIndex: "name",
@@ -92,8 +100,8 @@ const VersionsList: FC<VersionsListProps> = ({
 
     return (
       <Table
-        columns={expandedColums}
-        dataSource={record.files}
+        columns={expandedColumns}
+        dataSource={record.dataschemas}
         rowKey={(rec) => rec.name}
         expandable={{ expandedRowRender: renderFileValue }}
         pagination={false}
@@ -117,7 +125,10 @@ const VersionsList: FC<VersionsListProps> = ({
         className={styles.save}
         type="primary"
         size="large"
-        onClick={onSave}
+        onClick={() =>
+          selectedVersion &&
+          onSave(selectedVersion.checksum, selectedVersion.dataschemas)
+        }
       >
         {t("common:words.save")}
       </Button>

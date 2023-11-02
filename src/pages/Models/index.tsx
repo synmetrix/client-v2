@@ -14,6 +14,7 @@ import SidebarLayout from "@/layouts/SidebarLayout";
 import Console from "@/components/Console";
 import Modal from "@/components/Modal";
 import DataModelGeneration from "@/components/DataModelGeneration";
+import VersionsList from "@/components/VersionsList";
 import useUserData from "@/hooks/useUserData";
 import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
@@ -75,6 +76,14 @@ interface ModelsProps {
   isConsoleOpen?: boolean;
   toggleConsole?: () => void;
   onTabChange?: (name: string) => void;
+  onSaveVersion: (
+    checksum: string,
+    data: ({
+      user_id?: string;
+    } & Partial<
+      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+    >)[]
+  ) => void;
   onGenSubmit: (values: object, format?: string) => void;
 }
 
@@ -110,6 +119,7 @@ export const Models: React.FC<ModelsProps> = ({
   onModalClose,
   onTabChange,
   onGenSubmit,
+  onSaveVersion,
 }) => {
   const {
     editTab,
@@ -209,6 +219,16 @@ export const Models: React.FC<ModelsProps> = ({
               loading={schemaFetching}
               onSubmit={onGenSubmit}
             />
+          </Modal>
+        )}
+
+        {versions && (
+          <Modal
+            width={1004}
+            open={versionsModalVisible}
+            onClose={onModalClose}
+          >
+            <VersionsList versions={versions} onSave={onSaveVersion} />
           </Modal>
         )}
       </Spin>
@@ -527,7 +547,14 @@ const ModelsWrapper: React.FC = () => {
     return <ErrorFound status={404} />;
   }
 
-  const createNewVersion = async (checksum: string, data: any[]) => {
+  const createNewVersion = async (
+    checksum: string,
+    data: ({
+      user_id?: string;
+    } & Partial<
+      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
+    >)[]
+  ) => {
     const preparedDataschemas = data.map((schema) => {
       const updatedData = {
         name: schema?.name,
@@ -547,6 +574,10 @@ const ModelsWrapper: React.FC = () => {
         data: preparedDataschemas,
       },
     };
+
+    if (versionsModalVisible) {
+      onModalClose();
+    }
 
     await execCreateVersionMutation({ object: versionData });
   };
@@ -622,7 +653,10 @@ const ModelsWrapper: React.FC = () => {
     const schemasChecksum = calcChecksum(newSchemas);
 
     if (newSchemas.length) {
-      await createNewVersion(schemasChecksum, newSchemas);
+      await createNewVersion(
+        schemasChecksum,
+        newSchemas as AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"]
+      );
     }
 
     return newSchemas;
@@ -800,6 +834,7 @@ const ModelsWrapper: React.FC = () => {
       onModalClose={onModalClose}
       onTabChange={(name) => setLocation(`${basePath}/${dataSourceId}/${name}`)}
       onGenSubmit={onGenSubmit}
+      onSaveVersion={createNewVersion}
     />
   );
 };

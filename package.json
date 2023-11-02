@@ -132,6 +132,7 @@
     "vite": "^4.4.9",
     "vite-plugin-imp": "^2.4.0",
     "vite-plugin-monaco-editor": "^1.1.0",
+    "vite-plugin-rewrite-all": "^1.0.1",
     "vite-plugin-svg-loader": "^1.0.0",
     "vite-plugin-windicss": "^1.8.10",
     "vite-tsconfig-paths": "^4.2.0",

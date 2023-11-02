@@ -63,6 +63,8 @@ interface ModelsProps {
   dataSchemaName: string;
   fetching?: boolean;
   docs?: string;
+  genSchemaModalVisible?: boolean;
+  versionsModalVisible?: boolean;
 }
 
 const { Title } = Typography;
@@ -87,6 +89,8 @@ export const Models: React.FC<ModelsProps> = ({
   dataschemas = [],
   onRunSQL,
   onCodeSave,
+  genSchemaModalVisible,
+  versionsModalVisible,
 }) => {
   const {
     editTab,
@@ -729,6 +733,8 @@ const ModelsWrapper: React.FC = () => {
       dataSchemaName={dataSchemaName}
       onRunSQL={onRunSQL}
       onCodeSave={onCodeSave}
+      genSchemaModalVisible={genSchemaModalVisible}
+      versionsModalVisible={versionsModalVisible}
     />
   );
 };

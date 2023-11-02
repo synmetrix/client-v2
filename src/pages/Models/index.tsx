@@ -75,6 +75,7 @@ interface ModelsProps {
   ) => void;
   onGenSubmit: (values: object, format?: string) => void;
   onDataSourceChange: (id: string) => void;
+  sqlError?: object;
 }
 
 const { Title } = Typography;
@@ -112,6 +113,7 @@ export const Models: React.FC<ModelsProps> = ({
   onSaveVersion,
   onDataSourceChange,
   dataSources,
+  sqlError,
 }) => {
   const {
     editTab,
@@ -189,6 +191,7 @@ export const Models: React.FC<ModelsProps> = ({
             onRunSQL={onRunSQL}
             onCodeSave={onCodeSave}
             data={data}
+            sqlError={sqlError}
           />
         </div>
 
@@ -780,7 +783,7 @@ const ModelsWrapper: React.FC = () => {
       branchMenu={branchMenu}
       ideMenu={ideMenu}
       branches={all}
-      fetching={fetching}
+      fetching={fetching || runQueryMutation?.fetching}
       currentBranch={currentBranch}
       versions={currentBranch?.versions}
       onChangeBranch={setCurrentBranchId}
@@ -804,6 +807,7 @@ const ModelsWrapper: React.FC = () => {
       onSaveVersion={createNewVersion}
       onDataSourceChange={(id) => setLocation(`${basePath}/${id}`)}
       dataSources={currentUser?.dataSources || []}
+      sqlError={runQueryMutation?.error}
     />
   );
 };

@@ -1,4 +1,4 @@
-import { Col, Form, InputNumber, Row, Space, Tooltip } from "antd";
+import { Alert, Col, Form, InputNumber, Row, Space, Tooltip } from "antd";
 import { ResizableBox } from "react-resizable";
 import {
   CloseOutlined,
@@ -28,6 +28,7 @@ interface CodeEditorProps {
   onRunSQL: (query: string, limit: number) => void;
   onCodeSave: (id: string, code: string) => void;
   data?: object[];
+  sqlError?: object;
 }
 
 const MONACO_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
@@ -60,6 +61,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   onRunSQL,
   onCodeSave,
   data,
+  sqlError = {},
 }) => {
   const { t } = useTranslation(["models", "common"]);
   const windowSize = useResponsive();
@@ -196,6 +198,17 @@ const CodeEditor: FC<CodeEditorProps> = ({
               setMonacoHeight(editor.size.height);
             }}
           >
+            {(Object.keys(sqlError).length && (
+              <div>
+                <Alert
+                  style={{ borderRadius: 0 }}
+                  type="error"
+                  message={sqlError.toString()}
+                  closable
+                />
+              </div>
+            )) ||
+              null}
             <Editor
               className={styles.monaco}
               defaultLanguage={"sql"}

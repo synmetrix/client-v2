@@ -11,6 +11,7 @@ import CodeEditor from "@/components/CodeEditor";
 import ErrorFound from "@/components/ErrorFound";
 import ModelsSidebar from "@/components/ModelsSidebar";
 import SidebarLayout from "@/layouts/SidebarLayout";
+import Console from "@/components/Console";
 import useUserData from "@/hooks/useUserData";
 import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
@@ -65,6 +66,9 @@ interface ModelsProps {
   genSchemaModalVisible?: boolean;
   versionsModalVisible?: boolean;
   data?: object[];
+  validationError?: string;
+  isConsoleOpen?: boolean;
+  toggleConsole?: () => void;
 }
 
 const { Title } = Typography;
@@ -90,6 +94,9 @@ export const Models: React.FC<ModelsProps> = ({
   onCodeSave,
   genSchemaModalVisible,
   versionsModalVisible,
+  validationError = "",
+  isConsoleOpen,
+  toggleConsole,
   data,
 }) => {
   const {
@@ -153,15 +160,26 @@ export const Models: React.FC<ModelsProps> = ({
       }
     >
       <Spin spinning={fetching}>
-        <CodeEditor
-          schemas={openedSchemas}
-          onClose={(id) => editTab(id, "remove")}
-          onTabChange={changeActiveTab}
-          active={activeTab}
-          onRunSQL={onRunSQL}
-          onCodeSave={onCodeSave}
-          data={data}
-        />
+        <div className={styles.editor}>
+          <CodeEditor
+            schemas={openedSchemas}
+            onClose={(id) => editTab(id, "remove")}
+            onTabChange={changeActiveTab}
+            active={activeTab}
+            onRunSQL={onRunSQL}
+            onCodeSave={onCodeSave}
+            data={data}
+          />
+        </div>
+
+        {isConsoleOpen && activeTab !== "sqlrunner" && (
+          <div className={styles.console}>
+            <Console
+              onClose={() => toggleConsole?.()}
+              errors={validationError}
+            />
+          </div>
+        )}
       </Spin>
     </SidebarLayout>
   );
@@ -739,6 +757,9 @@ const ModelsWrapper: React.FC = () => {
       genSchemaModalVisible={genSchemaModalVisible}
       versionsModalVisible={versionsModalVisible}
       data={sqlResult}
+      validationError={validationError}
+      isConsoleOpen={isConsoleOpen}
+      toggleConsole={() => toggleConsole(false)}
     />
   );
 };

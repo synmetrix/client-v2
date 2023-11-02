@@ -16,7 +16,7 @@ interface ReportsLogsProps {
 }
 
 const ReportsLogs: React.FC<ReportsLogsProps> = ({ logs }) => {
-  const { t } = useTranslation(["logs", "common"]);
+  const { t } = useTranslation(["logs", "pages", "common"]);
   return (
     <AppLayout divider title={t("pages:logs.reports")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>

@@ -115,6 +115,8 @@ export const Models: React.FC<ModelsProps> = ({
   dataSources,
   sqlError,
 }) => {
+  const { t } = useTranslation(["pages"]);
+
   const {
     editTab,
     activeTab,
@@ -151,7 +153,7 @@ export const Models: React.FC<ModelsProps> = ({
         <Space size={7} align="center">
           <ModelsActiveIcon />
           <Title className={styles.sidebarTitle} level={4}>
-            Models
+            {t("models")}
           </Title>
         </Space>
       }
@@ -260,7 +262,7 @@ const getTables = (obj: object, prefix: string = "") => {
 };
 
 const ModelsWrapper: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["models", "common"]);
 
   const { currentUser } = useUserData();
   const [, setLocation] = useLocation();
@@ -401,7 +403,7 @@ const ModelsWrapper: React.FC = () => {
       }
     },
     {
-      successMessage: t("Schema generated"),
+      successMessage: t("alerts.schema_generated"),
     }
   );
 
@@ -413,7 +415,7 @@ const ModelsWrapper: React.FC = () => {
       }
     },
     {
-      successMessage: t("Branch created"),
+      successMessage: t("alerts.branch_created"),
     }
   );
 
@@ -425,7 +427,7 @@ const ModelsWrapper: React.FC = () => {
       }
     },
     {
-      successMessage: t("Version created"),
+      successMessage: t("alerts.version_created"),
     }
   );
 
@@ -437,7 +439,9 @@ const ModelsWrapper: React.FC = () => {
       }
     },
     {
-      successMessage: t(`Branch "${currentBranch?.name}" is now default.`),
+      successMessage: `${t(`alerts.branch`)} "${
+        currentBranch?.name
+      }" ${`alerts.is_now_default`}`,
     }
   );
 
@@ -449,7 +453,7 @@ const ModelsWrapper: React.FC = () => {
       }
     },
     {
-      successMessage: t("Branch removed"),
+      successMessage: t("alerts.branch_removed"),
     }
   );
 
@@ -581,7 +585,7 @@ const ModelsWrapper: React.FC = () => {
     const file = target.files?.[0];
 
     if (file?.type !== "application/zip") {
-      message.error(t("Format is unsupported."));
+      message.error(t("alerts.format_is_unsupported"));
       return false;
     }
 
@@ -590,12 +594,12 @@ const ModelsWrapper: React.FC = () => {
     try {
       await zip.loadAsync(file);
     } catch (err) {
-      message.error(t("Bad archive."));
+      message.error(t("alerts.bad_archive"));
       return false;
     }
 
     if (!zip?.files?.["meta.yaml"]) {
-      message.error(t("Wrong archive."));
+      message.error(t("alergs.wrong_archive"));
       return false;
     }
 
@@ -615,7 +619,9 @@ const ModelsWrapper: React.FC = () => {
 
         if (zipMeta?.schemas?.[name]?.checksum !== checksum) {
           message.warning(
-            `${t("Checksum of file")} "${name}" ${t("do not match. Skipped.")}`
+            `${t("alergs.checksum_of_file")} "${name}" ${t(
+              "alerts.do_not_match"
+            )}`
           );
           return false;
         }
@@ -651,7 +657,7 @@ const ModelsWrapper: React.FC = () => {
     const checksum = calcChecksum(newDataschemas);
 
     if (currentVersion.checksum === checksum) {
-      message.info(t("There is no changes."));
+      message.info(t("alerts.no_changes"));
       return false;
     }
 
@@ -725,14 +731,14 @@ const ModelsWrapper: React.FC = () => {
   const ideMenu = [
     {
       key: "gen",
-      label: t("Generate Schema"),
+      label: t("ide_menu.generate_schema"),
       onClick: () => setLocation(`${basePath}/${dataSourceId}/genschema`),
     },
     {
       key: "import",
       label: (
         <>
-          {t("Import data models")}
+          {t("ide_menu.import_models")}
           <input
             type="file"
             ref={inputFile}
@@ -749,7 +755,7 @@ const ModelsWrapper: React.FC = () => {
     },
     {
       key: "export",
-      label: t("Export data models"),
+      label: t("ide_menu.export_models"),
       onClick: () => {
         setLocation(`${basePath}/${dataSourceId}`);
         exportData();
@@ -760,12 +766,12 @@ const ModelsWrapper: React.FC = () => {
   const branchMenu = [
     {
       key: "versions",
-      label: t("Show versions"),
+      label: t("branch_menu.show_versions"),
       onClick: () => setLocation(`${basePath}/${dataSourceId}/versions`),
     },
     all.length > 1 && {
       key: "remove",
-      label: t("Remove branch"),
+      label: t("branch_menu.remove_branch"),
       onClick: () => {
         execDeleteMutation({ id: currentBranchId });
         setLocation(`${basePath}/${dataSourceId}`);

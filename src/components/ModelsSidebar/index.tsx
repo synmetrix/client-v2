@@ -103,7 +103,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
             <Select
               className={cn(styles.select, isMobile && styles.selectMobile)}
-              placeholder={"Select branch"}
+              placeholder={t("common:words.select_branch")}
               prefixIcon={<BranchIcon />}
               size="large"
               defaultValue={currentBranch?.id}

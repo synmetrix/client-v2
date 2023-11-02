@@ -1,4 +1,5 @@
 import { Form, Input, Space } from "antd";
+import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import type { Dataschema } from "@/types/dataschema";
@@ -16,6 +17,7 @@ const DataSchemaForm: FC<DataSchemaFormProps> = ({
   },
   onSubmit,
 }) => {
+  const { t } = useTranslation(["common"]);
   const [value, setValue] = useState<string>(defaultValues.name || "");
   const [error, setError] = useState<boolean>(false);
 
@@ -31,7 +33,7 @@ const DataSchemaForm: FC<DataSchemaFormProps> = ({
   return (
     <Space direction="vertical" size={0}>
       <Form layout="vertical">
-        <Form.Item label="* Filename:">
+        <Form.Item label={`* ${t("common:words.filename")}:`}>
           <Input
             status={error ? "error" : undefined}
             value={value}
@@ -48,7 +50,7 @@ const DataSchemaForm: FC<DataSchemaFormProps> = ({
           onFormSubmit();
         }}
       >
-        Save
+        {t("common:words.save")}
       </Button>
     </Space>
   );

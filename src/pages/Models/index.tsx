@@ -732,8 +732,6 @@ const ModelsWrapper: React.FC = () => {
     },
   ].filter(Boolean) as MenuProps["items"];
 
-  console.log(sqlResult);
-
   return (
     <Models
       onSchemaCreate={onClickCreate}

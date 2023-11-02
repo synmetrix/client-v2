@@ -13,7 +13,7 @@ import cn from "classnames";
 import Button from "@/components/Button";
 import PopoverButton from "@/components/PopoverButton";
 import VirtualTable from "@/components/VirtualTable";
-import type { AllDataSchemasQuery } from "@/graphql/generated";
+import type { Dataschema } from "@/types/dataschema";
 
 import styles from "./index.module.less";
 
@@ -21,7 +21,7 @@ import type { FC, MutableRefObject } from "react";
 import type { editor } from "monaco-editor";
 
 interface CodeEditorProps {
-  schemas?: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
+  schemas?: Dataschema[];
   active?: string | null;
   onTabChange: (id: string) => void;
   onClose: (fileName: string) => void;
@@ -78,10 +78,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
       [schema.id]: schema,
     }),
     {}
-  ) as Record<
-    string,
-    AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-  >;
+  ) as Record<string, Dataschema>;
 
   const [content, setContent] = useState<string>(
     active ? files[active]?.code : "active"

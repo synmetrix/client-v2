@@ -25,11 +25,10 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import usePermissions from "@/hooks/usePermissions";
 import equals from "@/utils/helpers/equals";
 import calcChecksum from "@/utils/helpers/dataschemasChecksum";
-import type { DataSourceInfo, Schema } from "@/types/dataSource";
-import type {
-  AllDataSchemasQuery,
-  Branches_Insert_Input,
-} from "@/graphql/generated";
+import type { Branch, DataSourceInfo, Schema } from "@/types/dataSource";
+import type { Dataschema } from "@/types/dataschema";
+import type { Version } from "@/types/version";
+import type { Branches_Insert_Input } from "@/graphql/generated";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
 
@@ -42,27 +41,18 @@ interface ModelsProps {
   dataSources: DataSourceInfo[];
   branchMenu: MenuProps["items"];
   ideMenu: MenuProps["items"];
-  branches: AllDataSchemasQuery["branches"];
+  branches: Branch[];
   onSetDefault: (branchId?: string) => void;
   onChangeBranch: (branchId?: string) => void;
   onCreateBranch: (name: string) => Promise<void>;
   onSchemaDelete: (id: string) => void;
-  onSchemaUpdate: (
-    editId: string,
-    values: Partial<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >
-  ) => void;
+  onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
   dataSource?: DataSourceInfo;
-  versions?: AllDataSchemasQuery["branches"][number]["versions"];
-  currentBranch?: AllDataSchemasQuery["branches"][number];
-  currentVersion?: AllDataSchemasQuery["branches"][number]["versions"][number];
-  dataschemas?: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
-  onSchemaCreate: (
-    values: Partial<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >
-  ) => void;
+  versions?: Version[];
+  currentBranch?: Branch;
+  currentVersion?: Version;
+  dataschemas?: Dataschema[];
+  onSchemaCreate: (values: Partial<Dataschema>) => void;
   onCodeSave: (id: string, code: string) => void;
   onRunSQL: (query: string, limit: number) => void;
   dataSchemaName: string;
@@ -81,9 +71,7 @@ interface ModelsProps {
     checksum: string,
     data: ({
       user_id?: string;
-    } & Partial<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >)[]
+    } & Partial<Dataschema>)[]
   ) => void;
   onGenSubmit: (values: object, format?: string) => void;
   onDataSourceChange: (id: string) => void;
@@ -140,7 +128,7 @@ export const Models: React.FC<ModelsProps> = ({
         .map((id) => dataschemas.find((schema) => schema.id === id))
         .filter(Boolean),
     [dataschemas, openedTabs]
-  ) as AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
+  ) as Dataschema[];
 
   useEffect(() => {
     if (dataSchemaName) {
@@ -375,26 +363,12 @@ const ModelsWrapper: React.FC = () => {
     [all, currentBranchId]
   );
   const currentVersion = useMemo(
-    () =>
-      currentBranch?.versions?.[0] ||
-      ({} as AllDataSchemasQuery["branches"][number]["versions"][number]),
+    () => currentBranch?.versions?.[0] || ({} as Version),
     [currentBranch]
   );
   const dataschemas = useMemo(
     () => currentVersion?.dataschemas || [],
     [currentVersion]
-  );
-
-  const schemaIdToCode = useMemo(
-    () =>
-      dataschemas.reduce(
-        (acc: Record<string, { name: string; code: string }>, curr) => {
-          acc[curr.id] = { name: curr.name, code: curr.code };
-          return acc;
-        },
-        {}
-      ),
-    [dataschemas]
   );
 
   useTrackedEffect(
@@ -558,9 +532,7 @@ const ModelsWrapper: React.FC = () => {
     checksum: string,
     data: ({
       user_id?: string;
-    } & Partial<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >)[]
+    } & Partial<Dataschema>)[]
   ) => {
     const preparedDataschemas = data.map((schema) => {
       const updatedData = {
@@ -589,11 +561,7 @@ const ModelsWrapper: React.FC = () => {
     await execCreateVersionMutation({ object: versionData });
   };
 
-  const onClickCreate = async (
-    values: Partial<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >
-  ) => {
+  const onClickCreate = async (values: Partial<Dataschema>) => {
     const newSchemas = [
       ...dataschemas,
       {
@@ -660,21 +628,13 @@ const ModelsWrapper: React.FC = () => {
     const schemasChecksum = calcChecksum(newSchemas);
 
     if (newSchemas.length) {
-      await createNewVersion(
-        schemasChecksum,
-        newSchemas as AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"]
-      );
+      await createNewVersion(schemasChecksum, newSchemas as Dataschema[]);
     }
 
     return newSchemas;
   };
 
-  const onClickUpdate = async (
-    editId: string,
-    values: Partial<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >
-  ) => {
+  const onClickUpdate = async (editId: string, values: Partial<Dataschema>) => {
     const newDataschemas = [...dataschemas];
     const editSchemaIndex = newDataschemas.findIndex(
       (schema) => schema.id === editId

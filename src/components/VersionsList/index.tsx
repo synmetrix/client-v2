@@ -5,7 +5,8 @@ import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
 import Copy from "@/components/Copy";
 import type { User } from "@/types/user";
-import type { AllDataSchemasQuery } from "@/graphql/generated";
+import type { Dataschema } from "@/types/dataschema";
+import type { Version } from "@/types/version";
 
 import DocsIcon from "@/assets/docs.svg";
 import YAMLIcon from "@/assets/yml-flie.svg";
@@ -18,22 +19,16 @@ import type { TableProps } from "antd";
 const { Title } = Typography;
 
 interface VersionsListProps {
-  versions: AllDataSchemasQuery["branches"][number]["versions"];
-  onSave: (
-    checksum: string,
-    dataschemas: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"]
-  ) => void;
+  versions: Version[];
+  onSave: (checksum: string, dataschemas: Dataschema[]) => void;
 }
 
 const VersionsList: FC<VersionsListProps> = ({ versions, onSave }) => {
   const { t } = useTranslation(["models", "common"]);
 
-  const [selectedVersion, setSelectedVersion] =
-    useState<AllDataSchemasQuery["branches"][number]["versions"][number]>();
+  const [selectedVersion, setSelectedVersion] = useState<Version>();
 
-  const columns: TableProps<
-    AllDataSchemasQuery["branches"][number]["versions"][number]
-  >["columns"] = [
+  const columns: TableProps<Version>["columns"] = [
     {
       title: t("common:words.checksum"),
       dataIndex: "checksum",
@@ -75,18 +70,12 @@ const VersionsList: FC<VersionsListProps> = ({ versions, onSave }) => {
     },
   ];
 
-  const renderFileValue = (
-    record: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-  ) => {
+  const renderFileValue = (record: Dataschema) => {
     return <Copy value={record.code} />;
   };
 
-  const expandedRowRender = (
-    record: AllDataSchemasQuery["branches"][number]["versions"][number]
-  ) => {
-    const expandedColumns: TableProps<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >["columns"] = [
+  const expandedRowRender = (record: Version) => {
+    const expandedColumns: TableProps<Dataschema>["columns"] = [
       {
         key: "name",
         dataIndex: "name",

@@ -15,8 +15,8 @@ import SearchInput from "@/components/SearchInput";
 import PopoverButton from "@/components/PopoverButton";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
 import DataSchemaForm from "@/components/DataSchemaForm";
-import type { DataSourceInfo } from "@/types/dataSource";
-import type { AllDataSchemasQuery } from "@/graphql/generated";
+import type { Branch, DataSourceInfo } from "@/types/dataSource";
+import type { Dataschema } from "@/types/dataschema";
 
 import BranchIcon from "@/assets/branch.svg";
 import VerticalDots from "@/assets/dots-vertical.svg";
@@ -31,30 +31,18 @@ export interface ModelsSidebarProps {
   dataSourceId?: string | null;
   branchMenu: MenuProps["items"];
   ideMenu: MenuProps["items"];
-  branches: AllDataSchemasQuery["branches"];
-  currentBranch?: AllDataSchemasQuery["branches"][number];
+  branches: Branch[];
+  currentBranch?: Branch;
   onChangeBranch: (branchId?: string) => void;
   docs: string;
   version?: string;
-  files: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"];
-  onSelectFile: (
-    schema: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number],
-    hash?: string
-  ) => void;
+  files: Dataschema[];
+  onSelectFile: (schema: Dataschema, hash?: string) => void;
   onSetDefault: (branchId?: string) => void;
   onCreateBranch: (name: string) => Promise<void>;
   onSchemaDelete: (id: string) => void;
-  onSchemaUpdate: (
-    editId: string,
-    values: Partial<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >
-  ) => void;
-  onCreateFile: (
-    values: Partial<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >
-  ) => void;
+  onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
+  onCreateFile: (values: Partial<Dataschema>) => void;
   dataSources: DataSourceInfo[];
   onDataSourceChange: (id: string) => void;
 }
@@ -90,11 +78,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   } | null>(null);
 
   const onPopoverChange =
-    (
-      file: AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number],
-      type: "remove" | "edit"
-    ) =>
-    (isVisible: boolean) => {
+    (file: Dataschema, type: "remove" | "edit") => (isVisible: boolean) => {
       if (isVisible) {
         setEditPopover({
           id: file.id,

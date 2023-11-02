@@ -1,3 +1,5 @@
+import type { AllDataSchemasQuery } from "@/graphql/generated";
+
 import type { ReactNode } from "react";
 
 export interface ApiSetupField {
@@ -99,9 +101,4 @@ export interface Version {
   dataSchemas: DataSchema[];
 }
 
-export interface Branch {
-  id: string;
-  name: string;
-  status: string;
-  versions: Version[];
-}
+export type Branch = AllDataSchemasQuery["branches"][number];

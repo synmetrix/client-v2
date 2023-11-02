@@ -1,19 +1,13 @@
 import { Form, Input, Space } from "antd";
 
 import Button from "@/components/Button";
-import type { AllDataSchemasQuery } from "@/graphql/generated";
+import type { Dataschema } from "@/types/dataschema";
 
 import type { FC } from "react";
 
 interface DataSchemaFormProps {
-  defaultValues?: Partial<
-    AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-  >;
-  onSubmit: (
-    values: Partial<
-      AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
-    >
-  ) => void;
+  defaultValues?: Partial<Dataschema>;
+  onSubmit: (values: Partial<Dataschema>) => void;
 }
 
 const DataSchemaForm: FC<DataSchemaFormProps> = ({

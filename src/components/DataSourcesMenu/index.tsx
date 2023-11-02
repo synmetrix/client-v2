@@ -1,6 +1,7 @@
 import { DownOutlined } from "@ant-design/icons";
 
 import PopoverButton from "@/components/PopoverButton";
+import type { DataSourceInfo } from "@/types/dataSource";
 
 import s from "./index.module.less";
 
@@ -8,11 +9,8 @@ import type { FC } from "react";
 import type { MenuProps } from "antd";
 
 interface DataSourcesMenuProps {
-  entities: {
-    id: string;
-    name: string;
-  }[];
-  selectedId?: string;
+  entities: DataSourceInfo[];
+  selectedId?: string | null;
   onChange?: (id: string) => void;
 }
 
@@ -22,7 +20,7 @@ const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
   onChange,
 }) => {
   const items: MenuProps["items"] = entities.map((d) => ({
-    key: d.id,
+    key: d.id || d.name,
     label: d.name,
   }));
 

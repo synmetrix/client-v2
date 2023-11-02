@@ -39,6 +39,7 @@ import type { MenuProps } from "antd";
 import type { ChangeEvent } from "react";
 
 interface ModelsProps {
+  dataSources: DataSourceInfo[];
   branchMenu: MenuProps["items"];
   ideMenu: MenuProps["items"];
   branches: AllDataSchemasQuery["branches"];
@@ -85,6 +86,7 @@ interface ModelsProps {
     >)[]
   ) => void;
   onGenSubmit: (values: object, format?: string) => void;
+  onDataSourceChange: (id: string) => void;
 }
 
 const { Title } = Typography;
@@ -120,6 +122,8 @@ export const Models: React.FC<ModelsProps> = ({
   onTabChange,
   onGenSubmit,
   onSaveVersion,
+  onDataSourceChange,
+  dataSources,
 }) => {
   const {
     editTab,
@@ -164,6 +168,7 @@ export const Models: React.FC<ModelsProps> = ({
       divider
       items={
         <ModelsSidebar
+          onDataSourceChange={onDataSourceChange}
           onSchemaDelete={onSchemaDelete}
           onSchemaUpdate={onSchemaUpdate}
           version={currentVersion?.checksum}
@@ -178,6 +183,8 @@ export const Models: React.FC<ModelsProps> = ({
           onCreateBranch={onCreateBranch}
           onCreateFile={onSchemaCreate}
           onSelectFile={openSchema}
+          dataSources={dataSources}
+          dataSourceId={dataSource?.id}
         />
       }
     >
@@ -835,6 +842,8 @@ const ModelsWrapper: React.FC = () => {
       onTabChange={(name) => setLocation(`${basePath}/${dataSourceId}/${name}`)}
       onGenSubmit={onGenSubmit}
       onSaveVersion={createNewVersion}
+      onDataSourceChange={(id) => setLocation(`${basePath}/${id}`)}
+      dataSources={currentUser?.dataSources || []}
     />
   );
 };

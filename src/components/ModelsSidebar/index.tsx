@@ -15,6 +15,7 @@ import SearchInput from "@/components/SearchInput";
 import PopoverButton from "@/components/PopoverButton";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
 import DataSchemaForm from "@/components/DataSchemaForm";
+import type { DataSourceInfo } from "@/types/dataSource";
 import type { AllDataSchemasQuery } from "@/graphql/generated";
 
 import BranchIcon from "@/assets/branch.svg";
@@ -27,6 +28,7 @@ import type { FC } from "react";
 import type { MenuProps } from "antd";
 
 export interface ModelsSidebarProps {
+  dataSourceId?: string | null;
   branchMenu: MenuProps["items"];
   ideMenu: MenuProps["items"];
   branches: AllDataSchemasQuery["branches"];
@@ -53,6 +55,8 @@ export interface ModelsSidebarProps {
       AllDataSchemasQuery["branches"][number]["versions"][number]["dataschemas"][number]
     >
   ) => void;
+  dataSources: DataSourceInfo[];
+  onDataSourceChange: (id: string) => void;
 }
 
 const ModelsSidebar: FC<ModelsSidebarProps> = ({
@@ -70,6 +74,9 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   onCreateBranch,
   onSchemaDelete,
   onSchemaUpdate,
+  dataSources,
+  onDataSourceChange,
+  dataSourceId,
 }) => {
   const { t } = useTranslation(["models", "common"]);
   const windowSize = useResponsive();
@@ -101,10 +108,9 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   return (
     <Space className={styles.wrapper} size={16} direction="vertical">
       <DataSourcesMenu
-        entities={[
-          { id: "1", name: "1" },
-          { id: "2", name: "2" },
-        ]}
+        selectedId={dataSourceId}
+        entities={dataSources}
+        onChange={onDataSourceChange}
       />
       <div className={styles.inner}>
         <Space className={styles.space} align="end">

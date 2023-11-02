@@ -37,7 +37,7 @@ import type {
 import type { FC, ReactNode } from "react";
 import type { MenuProps } from "antd";
 
-const COL_WIDTH = 200;
+const COL_WIDTH = 250;
 
 // set with unique ids inside https://stackoverflow.com/a/49821454
 export class SortBySet extends Set {

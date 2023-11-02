@@ -12,12 +12,12 @@ import cn from "classnames";
 
 import Button from "@/components/Button";
 import PopoverButton from "@/components/PopoverButton";
+import VirtualTable from "@/components/VirtualTable";
 import type { AllDataSchemasQuery } from "@/graphql/generated";
 
 import styles from "./index.module.less";
 
 import type { FC, MutableRefObject } from "react";
-import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 
 interface CodeEditorProps {
@@ -27,6 +27,7 @@ interface CodeEditorProps {
   onClose: (fileName: string) => void;
   onRunSQL: (query: string, limit: number) => void;
   onCodeSave: (id: string, code: string) => void;
+  data?: object[];
 }
 
 const MONACO_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
@@ -58,13 +59,14 @@ const CodeEditor: FC<CodeEditorProps> = ({
   onTabChange,
   onRunSQL,
   onCodeSave,
+  data,
 }) => {
   const { t } = useTranslation(["models", "common"]);
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
   const [limit, setLimit] = useState<number>(1000);
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState<string>("SELECT id FROM users");
   const [monacoHeight, setMonacoHeight] = useState(100);
   const monacoRef: MutableRefObject<editor.IStandaloneCodeEditor | null> =
     useRef(null);
@@ -87,7 +89,6 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   useEffect(() => {
     monacoRef.current?.layout();
-    console.log(monacoHeight);
   }, [monacoHeight]);
 
   const defaultButtons = [
@@ -182,7 +183,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
           options={MONACO_OPTIONS}
         />
       ) : (
-        <>
+        <Space className={styles.sqlRunner} direction="vertical" size={25}>
           <ResizableBox
             height={100}
             handle={
@@ -210,13 +211,14 @@ const CodeEditor: FC<CodeEditorProps> = ({
               onMount={(editor) => (monacoRef.current = editor)}
             />
           </ResizableBox>
-          <div style={{ marginTop: 100 }}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-            commodi blanditiis explicabo ratione iusto labore numquam sunt
-            delectus, nihil nesciunt ea quas inventore voluptatum. Debitis
-            fugiat distinctio quos nobis consequatur?
+          <div>
+            <VirtualTable
+              data={data || []}
+              loading={false}
+              loadingProgress={{}}
+            />
           </div>
-        </>
+        </Space>
       )}
     </div>
   );

@@ -64,6 +64,7 @@ interface ModelsProps {
   fetching?: boolean;
   genSchemaModalVisible?: boolean;
   versionsModalVisible?: boolean;
+  data?: object[];
 }
 
 const { Title } = Typography;
@@ -89,6 +90,7 @@ export const Models: React.FC<ModelsProps> = ({
   onCodeSave,
   genSchemaModalVisible,
   versionsModalVisible,
+  data,
 }) => {
   const {
     editTab,
@@ -158,6 +160,7 @@ export const Models: React.FC<ModelsProps> = ({
           active={activeTab}
           onRunSQL={onRunSQL}
           onCodeSave={onCodeSave}
+          data={data}
         />
       </Spin>
     </SidebarLayout>
@@ -711,6 +714,8 @@ const ModelsWrapper: React.FC = () => {
     },
   ].filter(Boolean) as MenuProps["items"];
 
+  console.log(sqlResult);
+
   return (
     <Models
       onSchemaCreate={onClickCreate}
@@ -733,6 +738,7 @@ const ModelsWrapper: React.FC = () => {
       onCodeSave={onCodeSave}
       genSchemaModalVisible={genSchemaModalVisible}
       versionsModalVisible={versionsModalVisible}
+      data={sqlResult}
     />
   );
 };

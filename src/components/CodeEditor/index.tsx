@@ -1,5 +1,10 @@
 import { Col, Form, InputNumber, Row, Space, Tooltip } from "antd";
-import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
+import { ResizableBox } from "react-resizable";
+import {
+  CloseOutlined,
+  SettingOutlined,
+  VerticalAlignMiddleOutlined,
+} from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
@@ -11,7 +16,8 @@ import type { AllDataSchemasQuery } from "@/graphql/generated";
 
 import styles from "./index.module.less";
 
-import type { FC } from "react";
+import type { FC, MutableRefObject } from "react";
+import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 
 interface CodeEditorProps {
@@ -59,6 +65,10 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   const [limit, setLimit] = useState<number>(1000);
   const [query, setQuery] = useState<string>("");
+  const [monacoHeight, setMonacoHeight] = useState(100);
+  const monacoRef: MutableRefObject<editor.IStandaloneCodeEditor | null> =
+    useRef(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const files = schemas?.reduce(
     (res, schema) => ({
@@ -74,6 +84,11 @@ const CodeEditor: FC<CodeEditorProps> = ({
   const [content, setContent] = useState<string>(
     active ? files[active]?.code : "active"
   );
+
+  useEffect(() => {
+    monacoRef.current?.layout();
+    console.log(monacoHeight);
+  }, [monacoHeight]);
 
   const defaultButtons = [
     <Button
@@ -111,7 +126,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   ];
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} ref={wrapperRef}>
       <Row
         className={styles.nav}
         justify="space-between"
@@ -158,7 +173,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
       </Row>
       {active && active !== "sqlrunner" ? (
         <Editor
-          className={styles.monaco}
+          className={cn(styles.monaco, styles.monacoHeight)}
           defaultLanguage={"yml"}
           defaultValue={files[active]?.code}
           value={content}
@@ -167,14 +182,41 @@ const CodeEditor: FC<CodeEditorProps> = ({
           options={MONACO_OPTIONS}
         />
       ) : (
-        <Editor
-          className={styles.monaco}
-          defaultLanguage={"query"}
-          defaultValue={query}
-          onChange={(val) => setQuery(val || "")}
-          path={"sql"}
-          options={MONACO_OPTIONS}
-        />
+        <>
+          <ResizableBox
+            height={100}
+            handle={
+              <div className={styles.resizeIcon}>
+                <VerticalAlignMiddleOutlined />
+              </div>
+            }
+            axis="y"
+            resizeHandles={["s"]}
+            minConstraints={[100, 100]}
+            maxConstraints={[1000, 1000]}
+            onResize={(_w, editor) => {
+              setMonacoHeight(editor.size.height);
+            }}
+          >
+            <Editor
+              className={styles.monaco}
+              defaultLanguage={"query"}
+              wrapperProps={{ styles: { minHeight: monacoHeight } }}
+              height={monacoHeight}
+              defaultValue={query}
+              onChange={(val) => setQuery(val || "")}
+              path={"sql"}
+              options={MONACO_OPTIONS}
+              onMount={(editor) => (monacoRef.current = editor)}
+            />
+          </ResizableBox>
+          <div style={{ marginTop: 100 }}>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
+            commodi blanditiis explicabo ratione iusto labore numquam sunt
+            delectus, nihil nesciunt ea quas inventore voluptatum. Debitis
+            fugiat distinctio quos nobis consequatur?
+          </div>
+        </>
       )}
     </div>
   );

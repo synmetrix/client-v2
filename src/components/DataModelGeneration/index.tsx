@@ -1,11 +1,16 @@
-import { Col, Collapse, Empty, Form, Row, Typography } from "antd";
+import { Col, Collapse, Empty, Form, Row, Spin, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useResponsive } from "ahooks";
 import { useForm } from "react-hook-form";
 
 import Input from "@/components/Input";
-import type { DataSource, DynamicForm, Schema } from "@/types/dataSource";
+import type {
+  DataSource,
+  DataSourceInfo,
+  DynamicForm,
+  Schema,
+} from "@/types/dataSource";
 import SearchInput from "@/components/SearchInput";
 import TableSelection from "@/components/TableSelection";
 import Button from "@/components/Button";
@@ -20,13 +25,14 @@ const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
 interface DataModelGenerationProps {
-  dataSource: DataSource;
+  dataSource: DataSource | DataSourceInfo;
   schema: Schema | undefined;
   isOnboarding: boolean;
   onSubmit: (data: DynamicForm) => void;
-  onGoBack: () => void;
-  onSkip: () => void;
+  onGoBack?: () => void;
+  onSkip?: () => void;
   initialValue?: DynamicForm;
+  loading?: boolean;
 }
 
 const options = [
@@ -44,6 +50,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   initialValue = {
     type: "js",
   },
+  loading,
 }) => {
   const { t } = useTranslation(["dataModelGeneration", "common"]);
 
@@ -68,7 +75,9 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
     <div className={styles.wrapper}>
       <div className={styles.head}>
         <div className={styles.dataSource}>
-          <div className={styles.iconWrapper}>{dataSource.icon}</div>
+          {"icon" in dataSource && (
+            <div className={styles.iconWrapper}>{dataSource.icon}</div>
+          )}
           <Title className={styles.title} level={3}>
             {dataSource.name}
           </Title>
@@ -80,106 +89,112 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
           value={searchValue}
           onChange={setSearchValue}
         />
-        <Form id="data-model-generation">
-          {schema ? (
-            <Collapse
-              className={styles.collapse}
-              expandIcon={() => <TableIcon />}
-            >
-              {Object.keys(schema)
-                .filter(
-                  (s) =>
-                    s.includes(searchValue) ||
-                    Object.keys(schema[s]).some((tb) =>
-                      tb.includes(searchValue)
-                    )
-                )
-                .map((s) => {
-                  const count = getCount(watch(), s);
+        <Spin spinning={loading}>
+          <Form id="data-model-generation">
+            {schema ? (
+              <Collapse
+                className={styles.collapse}
+                expandIcon={() => <TableIcon />}
+              >
+                {Object.keys(schema)
+                  .filter(
+                    (s) =>
+                      s.includes(searchValue) ||
+                      Object.keys(schema[s]).some((tb) =>
+                        tb.includes(searchValue)
+                      )
+                  )
+                  .map((s) => {
+                    const count = getCount(watch(), s);
 
-                  return (
-                    <Panel
-                      className={styles.collapse}
-                      header={
-                        <span className={styles.collapseHeader}>
-                          {s} {count > 0 && <span>({count})</span>}
-                        </span>
-                      }
-                      key={s}
-                    >
-                      <TableSelection
-                        control={control}
-                        type={watch("type")}
-                        schema={schema}
-                        path={s}
-                        initialValue={initialValue}
-                      />
-                    </Panel>
-                  );
-                })}
-            </Collapse>
-          ) : (
-            <Empty />
-          )}
+                    return (
+                      <Panel
+                        className={styles.collapse}
+                        header={
+                          <span className={styles.collapseHeader}>
+                            {s} {count > 0 && <span>({count})</span>}
+                          </span>
+                        }
+                        key={s}
+                      >
+                        <TableSelection
+                          control={control}
+                          type={watch("type")}
+                          schema={schema}
+                          path={s}
+                          initialValue={initialValue}
+                        />
+                      </Panel>
+                    );
+                  })}
+              </Collapse>
+            ) : (
+              <Empty />
+            )}
 
-          <Title level={5}>{t("choose_markup")}</Title>
+            <div className={styles.markupSelection}>
+              <Title level={5}>{t("choose_markup")}</Title>
 
-          <Input
-            control={control}
-            name="type"
-            defaultValue={initialValue.type || "yaml"}
-            fieldType="radio"
-            optionType="button"
-            options={options}
-          />
+              <Input
+                control={control}
+                name="type"
+                defaultValue={initialValue.type || "yaml"}
+                fieldType="radio"
+                optionType="button"
+                options={options}
+              />
+            </div>
 
-          <Row align="middle" justify={"space-between"}>
-            <Col xs={24} md={18}>
-              {isOnboarding && (
+            <Row align="middle" justify={"space-between"}>
+              <Col xs={24} md={18}>
+                {isOnboarding && (
+                  <Button
+                    className={cn(styles.back, {
+                      [styles.fullwidth]: !windowSize.md,
+                    })}
+                    size="large"
+                    color="primary"
+                    onClick={onGoBack}
+                  >
+                    {t("common:words.back")}
+                  </Button>
+                )}
                 <Button
-                  className={cn(styles.back, {
+                  className={cn(styles.submit, {
                     [styles.fullwidth]: !windowSize.md,
                   })}
+                  type="primary"
                   size="large"
-                  color="primary"
-                  onClick={onGoBack}
+                  htmlType="submit"
+                  form="data-model-generation"
+                  onClick={handleSubmit(onSubmit)}
                 >
-                  {t("common:words.back")}
-                </Button>
-              )}
-              <Button
-                className={cn(styles.submit, {
-                  [styles.fullwidth]: !windowSize.md,
-                })}
-                type="primary"
-                size="large"
-                htmlType="submit"
-                form="data-model-generation"
-                onClick={handleSubmit(onSubmit)}
-              >
-                {t("common:words.generate")}
-              </Button>
-            </Col>
-
-            {isOnboarding && (
-              <Col
-                xs={24}
-                md={6}
-                className={cn(styles.skip, { [styles.center]: !windowSize.md })}
-              >
-                <Button
-                  className={cn(styles.link, {
-                    [styles.fullwidth]: !windowSize.md,
-                  })}
-                  type="link"
-                  onClick={onSkip}
-                >
-                  {t("common:words.skip")}
+                  {t("common:words.generate")}
                 </Button>
               </Col>
-            )}
-          </Row>
-        </Form>
+
+              {isOnboarding && (
+                <Col
+                  xs={24}
+                  md={6}
+                  className={cn(styles.skip, {
+                    [styles.center]: !windowSize.md,
+                  })}
+                >
+                  <Button
+                    className={cn(styles.link, {
+                      [styles.fullwidth]: !windowSize.md,
+                    })}
+                    type="link"
+                    onClick={onSkip}
+                  >
+                    {t("common:words.skip")}
+                  </Button>
+                </Col>
+              )}
+            </Row>
+          </Form>
+        </Spin>
       </div>
     </div>
   );

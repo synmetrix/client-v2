@@ -10,7 +10,7 @@ export interface ApiSetupField {
 
 export interface DataSource {
   name?: string;
-  icon: ReactNode;
+  icon?: ReactNode;
   value?: string;
   url?: string;
 }

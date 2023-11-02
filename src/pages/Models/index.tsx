@@ -12,6 +12,8 @@ import ErrorFound from "@/components/ErrorFound";
 import ModelsSidebar from "@/components/ModelsSidebar";
 import SidebarLayout from "@/layouts/SidebarLayout";
 import Console from "@/components/Console";
+import Modal from "@/components/Modal";
+import DataModelGeneration from "@/components/DataModelGeneration";
 import useUserData from "@/hooks/useUserData";
 import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
@@ -22,7 +24,7 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import usePermissions from "@/hooks/usePermissions";
 import equals from "@/utils/helpers/equals";
 import calcChecksum from "@/utils/helpers/dataschemasChecksum";
-import type { DataSourceInfo } from "@/types/dataSource";
+import type { DataSourceInfo, Schema } from "@/types/dataSource";
 import type {
   AllDataSchemasQuery,
   Branches_Insert_Input,
@@ -65,10 +67,15 @@ interface ModelsProps {
   fetching?: boolean;
   genSchemaModalVisible?: boolean;
   versionsModalVisible?: boolean;
+  tablesSchema: Schema;
+  schemaFetching?: boolean;
+  onModalClose: () => void;
   data?: object[];
   validationError?: string;
   isConsoleOpen?: boolean;
   toggleConsole?: () => void;
+  onTabChange?: (name: string) => void;
+  onGenSubmit: (values: object, format?: string) => void;
 }
 
 const { Title } = Typography;
@@ -98,6 +105,11 @@ export const Models: React.FC<ModelsProps> = ({
   isConsoleOpen,
   toggleConsole,
   data,
+  tablesSchema,
+  schemaFetching,
+  onModalClose,
+  onTabChange,
+  onGenSubmit,
 }) => {
   const {
     editTab,
@@ -164,7 +176,10 @@ export const Models: React.FC<ModelsProps> = ({
           <CodeEditor
             schemas={openedSchemas}
             onClose={(id) => editTab(id, "remove")}
-            onTabChange={changeActiveTab}
+            onTabChange={(id) => {
+              changeActiveTab(id);
+              onTabChange?.(dataschemas?.find((s) => s.id === id)?.name || "");
+            }}
             active={activeTab}
             onRunSQL={onRunSQL}
             onCodeSave={onCodeSave}
@@ -179,6 +194,22 @@ export const Models: React.FC<ModelsProps> = ({
               errors={validationError}
             />
           </div>
+        )}
+
+        {dataSource && (
+          <Modal
+            open={genSchemaModalVisible}
+            onClose={onModalClose}
+            width={1004}
+          >
+            <DataModelGeneration
+              dataSource={dataSource!}
+              schema={tablesSchema}
+              isOnboarding={false}
+              loading={schemaFetching}
+              onSubmit={onGenSubmit}
+            />
+          </Modal>
         )}
       </Spin>
     </SidebarLayout>
@@ -235,7 +266,13 @@ const ModelsWrapper: React.FC = () => {
     `${dataSourceId}:currentBranch`
   );
 
-  const onModalClose = () => setLocation(`${basePath}/${dataSourceId}`);
+  const onModalClose = () => {
+    if (history.state) {
+      history.back();
+    } else {
+      setLocation(`${basePath}/${dataSourceId}`);
+    }
+  };
   const dataSchemaName = (reservedSlugs.indexOf(slug) === -1 && slug) || null;
 
   const {
@@ -453,7 +490,7 @@ const ModelsWrapper: React.FC = () => {
     inputFile.current?.click();
   };
 
-  const onGenSubmit = async (format?: string, values?: any) => {
+  const onGenSubmit = async (values: object, format?: string) => {
     const tables = getTables(values);
 
     await execGenSchemaMutation({
@@ -758,6 +795,11 @@ const ModelsWrapper: React.FC = () => {
       validationError={validationError}
       isConsoleOpen={isConsoleOpen}
       toggleConsole={() => toggleConsole(false)}
+      tablesSchema={tablesSchema}
+      schemaFetching={tablesData?.fetching}
+      onModalClose={onModalClose}
+      onTabChange={(name) => setLocation(`${basePath}/${dataSourceId}/${name}`)}
+      onGenSubmit={onGenSubmit}
     />
   );
 };

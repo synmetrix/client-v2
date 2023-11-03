@@ -53,6 +53,11 @@ const MONACO_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
   },
 };
 
+const languages = {
+  js: "javascript",
+  yml: "yaml",
+};
+
 const CodeEditor: FC<CodeEditorProps> = ({
   schemas = [],
   active,
@@ -87,7 +92,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   );
 
   useEffect(() => {
-    // monacoRef.current?.layout();
+    monacoRef.current?.layout();
   }, [monacoHeight]);
 
   const defaultButtons = [
@@ -178,8 +183,16 @@ const CodeEditor: FC<CodeEditorProps> = ({
       {active && active !== "sqlrunner" ? (
         <Editor
           className={cn(styles.monaco, styles.monacoHeight)}
-          language={files[active]?.name.split(".")[0]}
-          defaultLanguage={files[active]?.name.split(".")[0]}
+          language={
+            languages[
+              files[active]?.name.split(".")[0] as keyof typeof languages
+            ]
+          }
+          defaultLanguage={
+            languages[
+              files[active]?.name.split(".")[0] as keyof typeof languages
+            ]
+          }
           defaultValue={files[active]?.code}
           value={content}
           onChange={(val) => setContent(val || "")}

@@ -211,69 +211,74 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
             .filter((f) =>
               f.name.toLowerCase().includes(searchValue.toLowerCase())
             )
-            .map((f) => (
-              <div
-                key={f.id}
-                className={styles.fileBtn}
-                onClick={() => onSelectFile(f)}
-              >
-                <Row justify={"space-between"}>
-                  <Col>{icons[f.name.split(".")[1] as keyof typeof icons]}</Col>
+            .map((f) => {
+              return (
+                <div
+                  key={f.id}
+                  className={styles.fileBtn}
+                  onClick={() => onSelectFile(f)}
+                >
+                  <Row justify={"space-between"}>
+                    <Col>
+                      {icons[f.name.split(".")[1] as keyof typeof icons]}{" "}
+                      {f.name}
+                    </Col>
 
-                  <Col>
-                    <Space size={5}>
-                      <PopoverButton
-                        trigger={["click"]}
-                        icon={<EditOutlined />}
-                        isVisible={
-                          editPopover?.id === f.id &&
-                          editPopover?.type === "edit"
-                        }
-                        onVisibleChange={onPopoverChange(f, "edit")}
-                        content={
-                          <DataSchemaForm
-                            defaultValues={f}
-                            onSubmit={(d) =>
-                              onSchemaUpdate(f.id, {
-                                ...f,
-                                ...d,
-                              })
-                            }
-                          />
-                        }
-                        buttonProps={{
-                          size: "small",
-                          type: "text",
-                        }}
-                      />
+                    <Col>
+                      <Space size={5}>
+                        <PopoverButton
+                          trigger={["click"]}
+                          icon={<EditOutlined />}
+                          isVisible={
+                            editPopover?.id === f.id &&
+                            editPopover?.type === "edit"
+                          }
+                          onVisibleChange={onPopoverChange(f, "edit")}
+                          content={
+                            <DataSchemaForm
+                              defaultValues={f}
+                              onSubmit={(d) =>
+                                onSchemaUpdate(f.id, {
+                                  ...f,
+                                  ...d,
+                                })
+                              }
+                            />
+                          }
+                          buttonProps={{
+                            size: "small",
+                            type: "text",
+                          }}
+                        />
 
-                      <PopoverButton
-                        popoverType="popconfirm"
-                        title="Are you sure delete this data schema?"
-                        buttonProps={{
-                          size: "small",
-                          type: "text",
-                        }}
-                        isVisible={
-                          editPopover?.id === f.id &&
-                          editPopover?.type === "remove"
-                        }
-                        onVisibleChange={onPopoverChange(f, "remove")}
-                        trigger={"click"}
-                        onConfirm={(e) => {
-                          e?.preventDefault();
-                          e?.stopPropagation();
-                          onSchemaDelete(f.id);
-                        }}
-                        okText={"Remove"}
-                        cancelText={"Cancel"}
-                        icon={<DeleteOutlined />}
-                      />
-                    </Space>
-                  </Col>
-                </Row>
-              </div>
-            ))}
+                        <PopoverButton
+                          popoverType="popconfirm"
+                          title="Are you sure delete this data schema?"
+                          buttonProps={{
+                            size: "small",
+                            type: "text",
+                          }}
+                          isVisible={
+                            editPopover?.id === f.id &&
+                            editPopover?.type === "remove"
+                          }
+                          onVisibleChange={onPopoverChange(f, "remove")}
+                          trigger={"click"}
+                          onConfirm={(e) => {
+                            e?.preventDefault();
+                            e?.stopPropagation();
+                            onSchemaDelete(f.id);
+                          }}
+                          okText={"Remove"}
+                          cancelText={"Cancel"}
+                          icon={<DeleteOutlined />}
+                        />
+                      </Space>
+                    </Col>
+                  </Row>
+                </div>
+              );
+            })}
         </Space>
       </div>
     </Space>

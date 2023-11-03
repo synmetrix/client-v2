@@ -17,7 +17,9 @@
     "bad_archive": "Bad archive.",
     "format_is_unsupported": "Format is unsupported.",
     "checksum_of_file": "Checksum of file",
-    "do_not_match": "do not match. Skipped."
+    "do_not_match": "do not match. Skipped.",
+    "deleting_a_file": "Deleting a file.",
+    "renaming_a_file": "Renmaing a file."
   },
   "ide_menu": {
     "import_models": "Import data models",

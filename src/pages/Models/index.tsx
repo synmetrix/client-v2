@@ -673,6 +673,8 @@ const ModelsWrapper: React.FC = () => {
       return false;
     }
 
+    message.info(t("alerts.renaming_a_file"));
+
     await createNewVersion(checksum, newDataschemas);
 
     return newDataschemas;
@@ -686,6 +688,8 @@ const ModelsWrapper: React.FC = () => {
     newDataschemas.splice(deleteSchemaIndex, 1);
 
     const checksum = calcChecksum(newDataschemas);
+
+    message.info(t("alerts.deleting_a_file"));
 
     await createNewVersion(checksum, newDataschemas);
   };

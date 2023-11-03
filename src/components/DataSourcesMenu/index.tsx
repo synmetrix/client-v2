@@ -32,7 +32,9 @@ const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
 
   return (
     <div className={s.wrapper}>
-      <span>{entities[selectedIdx]?.name || "Select datasource"}</span>
+      <div className={s.value}>
+        {entities[selectedIdx]?.name || "Select datasource"}
+      </div>
       <PopoverButton
         icon={<DownOutlined />}
         popoverType="dropdown"

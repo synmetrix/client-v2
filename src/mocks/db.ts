@@ -1,4 +1,6 @@
-export const dbMock = [
+import type { DataSourceInfo } from "@/types/dataSource";
+
+export const dbMock: DataSourceInfo[] = [
   {
     id: "7d7eea55-ad47-4456-8a1b-badef7cf7270",
     name: "Ecom (demo db)",

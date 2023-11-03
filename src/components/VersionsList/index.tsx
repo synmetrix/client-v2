@@ -41,7 +41,9 @@ const VersionsList: FC<VersionsListProps> = ({ versions, onSave }) => {
       key: "author",
       render: (value?: User) => (
         <Space className={styles.author} size={10}>
-          <Avatar img={value?.avatarUrl} username={value?.displayName} />
+          {value && (
+            <Avatar img={value?.avatarUrl} username={value?.displayName} />
+          )}
           {value?.email}
         </Space>
       ),

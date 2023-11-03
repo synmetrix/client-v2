@@ -19,7 +19,7 @@
     "checksum_of_file": "Checksum of file",
     "do_not_match": "do not match. Skipped."
   },
-  "id_menu": {
+  "ide_menu": {
     "import_models": "Import data models",
     "export_models": "Export data models",
     "generate_schema": "Generate Schema"

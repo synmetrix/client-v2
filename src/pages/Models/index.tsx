@@ -401,10 +401,10 @@ const ModelsWrapper: React.FC = () => {
       if (res) {
         execAllData();
       }
+    },
+    {
+      successMessage: t("alerts.schema_generated"),
     }
-    // {
-    //   successMessage: t("alerts.schema_generated"),
-    // }
   );
 
   useCheckResponse(

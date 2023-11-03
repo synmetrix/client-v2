@@ -21,6 +21,7 @@ import type { Dataschema } from "@/types/dataschema";
 import BranchIcon from "@/assets/branch.svg";
 import VerticalDots from "@/assets/dots-vertical.svg";
 import YMLIcon from "@/assets/yml-flie.svg";
+import JSIcon from "@/assets/js-file.svg";
 
 import styles from "./index.module.less";
 
@@ -46,6 +47,11 @@ export interface ModelsSidebarProps {
   dataSources: DataSourceInfo[];
   onDataSourceChange: (id: string) => void;
 }
+
+const icons = {
+  js: <JSIcon className={styles.fileIcon} />,
+  yml: <YMLIcon className={styles.fileIcon} />,
+};
 
 const ModelsSidebar: FC<ModelsSidebarProps> = ({
   branches,
@@ -212,9 +218,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 onClick={() => onSelectFile(f)}
               >
                 <Row justify={"space-between"}>
-                  <Col>
-                    <YMLIcon className={styles.fileIcon} /> {f.name}
-                  </Col>
+                  <Col>{icons[f.name.split(".")[1] as keyof typeof icons]}</Col>
 
                   <Col>
                     <Space size={5}>

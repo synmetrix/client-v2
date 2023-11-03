@@ -720,9 +720,13 @@ const ModelsWrapper: React.FC = () => {
       },
     } as unknown as Branches_Insert_Input;
 
-    await execCreateBranchMutation({
+    const newBranch = await execCreateBranchMutation({
       object: branchData,
     });
+
+    if (newBranch.data?.insert_branches_one?.id) {
+      setCurrentBranchId(newBranch.data.insert_branches_one.id);
+    }
   };
 
   const onSetDefault = (branchId?: string) => {

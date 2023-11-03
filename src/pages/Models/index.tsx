@@ -228,7 +228,7 @@ export const Models: React.FC<ModelsProps> = ({
             open={versionsModalVisible}
             onClose={onModalClose}
           >
-            <VersionsList versions={versions} onSave={onSaveVersion} />
+            <VersionsList versions={versions} onRestore={onSaveVersion} />
           </Modal>
         )}
       </Spin>

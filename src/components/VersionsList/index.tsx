@@ -20,13 +20,11 @@ const { Title } = Typography;
 
 interface VersionsListProps {
   versions: Version[];
-  onSave: (checksum: string, dataschemas: Dataschema[]) => void;
+  onRestore: (checksum: string, dataschemas: Dataschema[]) => void;
 }
 
-const VersionsList: FC<VersionsListProps> = ({ versions, onSave }) => {
+const VersionsList: FC<VersionsListProps> = ({ versions, onRestore }) => {
   const { t } = useTranslation(["models", "common"]);
-
-  const [selectedVersion, setSelectedVersion] = useState<Version>();
 
   const columns: TableProps<Version>["columns"] = [
     {
@@ -63,7 +61,7 @@ const VersionsList: FC<VersionsListProps> = ({ versions, onSave }) => {
           <Button
             className={styles.restore}
             icon={<DocsIcon className={styles.restoreIcon} />}
-            onClick={() => setSelectedVersion(record)}
+            onClick={() => onRestore(record.checksum, record.dataschemas)}
           >
             {t("common:words.restore")}
           </Button>
@@ -111,18 +109,6 @@ const VersionsList: FC<VersionsListProps> = ({ versions, onSave }) => {
         pagination={false}
         expandable={{ expandedRowRender }}
       />
-
-      <Button
-        className={styles.save}
-        type="primary"
-        size="large"
-        onClick={() =>
-          selectedVersion &&
-          onSave(selectedVersion.checksum, selectedVersion.dataschemas)
-        }
-      >
-        {t("common:words.save")}
-      </Button>
     </Space>
   );
 };

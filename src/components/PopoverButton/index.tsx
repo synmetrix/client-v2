@@ -73,9 +73,9 @@ const PopoverButton: FC<PopoverButtonProps> = ({
   if (popoverType === "popconfirm") {
     return (
       <Popconfirm
+        {...(restProps as PopconfirmProps)}
         open={visibleState}
         onOpenChange={onVisChange}
-        {...(restProps as PopconfirmProps)}
       >
         {actionButton}
       </Popconfirm>
@@ -84,7 +84,9 @@ const PopoverButton: FC<PopoverButtonProps> = ({
 
   if (popoverType === "dropdown") {
     return (
-      <Dropdown {...(restProps as DropdownProps)}>{actionButton}</Dropdown>
+      <Dropdown disabled={disabled} {...(restProps as DropdownProps)}>
+        {actionButton}
+      </Dropdown>
     );
   }
 

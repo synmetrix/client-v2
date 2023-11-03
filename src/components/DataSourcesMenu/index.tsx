@@ -37,6 +37,7 @@ const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
         icon={<DownOutlined />}
         popoverType="dropdown"
         trigger={["hover"]}
+        disabled={!items || items.length < 2}
         menu={{
           items,
           onClick: ({ key }) => onChange?.(key),

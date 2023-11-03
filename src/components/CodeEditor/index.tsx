@@ -87,7 +87,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   );
 
   useEffect(() => {
-    monacoRef.current?.layout();
+    // monacoRef.current?.layout();
   }, [monacoHeight]);
 
   const defaultButtons = [
@@ -178,7 +178,8 @@ const CodeEditor: FC<CodeEditorProps> = ({
       {active && active !== "sqlrunner" ? (
         <Editor
           className={cn(styles.monaco, styles.monacoHeight)}
-          defaultLanguage={"yml"}
+          language={files[active]?.name.split(".")[0]}
+          defaultLanguage={files[active]?.name.split(".")[0]}
           defaultValue={files[active]?.code}
           value={content}
           onChange={(val) => setContent(val || "")}

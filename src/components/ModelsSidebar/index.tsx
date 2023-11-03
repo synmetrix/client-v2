@@ -112,7 +112,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               suffixIcon={<DownOutlined />}
               options={branches.map((b) => ({
                 value: b.id,
-                label: b.name,
+                label: b.status === "active" ? b.name + " - default" : b.name,
               }))}
               onChange={onChangeBranch}
               dropdownRender={(menu) => (

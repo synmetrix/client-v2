@@ -28,7 +28,7 @@ interface DataModelGenerationProps {
   dataSource: DataSource | DataSourceInfo;
   schema: Schema | undefined;
   isOnboarding: boolean;
-  onSubmit: (data: DynamicForm) => void;
+  onSubmit: (data: DynamicForm, format: string) => void;
   onGoBack?: () => void;
   onSkip?: () => void;
   initialValue?: DynamicForm;
@@ -167,7 +167,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                   size="large"
                   htmlType="submit"
                   form="data-model-generation"
-                  onClick={handleSubmit(onSubmit)}
+                  onClick={handleSubmit((data) => onSubmit(data, data.type))}
                 >
                   {t("common:words.generate")}
                 </Button>

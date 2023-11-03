@@ -69,7 +69,7 @@ const TableSelection: FC<TableSelectionProps> = ({
         <div key={tb}>
           <div className={cn(styles.field)}>
             <Checkbox
-              checked={value?.[`${path}.${tb}`]}
+              checked={value?.[tb]}
               onChange={(e) =>
                 onChange({ ...value, [`${path}.${tb}`]: e.target.checked })
               }

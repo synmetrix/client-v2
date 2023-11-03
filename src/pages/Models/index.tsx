@@ -73,7 +73,7 @@ interface ModelsProps {
       user_id?: string;
     } & Partial<Dataschema>)[]
   ) => void;
-  onGenSubmit: (values: object, format?: string) => void;
+  onGenSubmit: (values: object, format: string) => void;
   onDataSourceChange: (id: string) => void;
   sqlError?: object;
 }
@@ -244,7 +244,7 @@ const getTables = (obj: object, prefix: string = "") => {
     const newPath = prefix ? `${prefix}.${key}` : key;
 
     if (value === true) {
-      const lastSlashIndex = newPath.lastIndexOf("/");
+      const lastSlashIndex = newPath.lastIndexOf(".");
       const formattedPath = `${newPath.slice(
         0,
         lastSlashIndex
@@ -273,7 +273,7 @@ const ModelsWrapper: React.FC = () => {
   const [error, setError] = useState(null);
 
   const params = useParams();
-  const [dataSourceId, slug] = useMemo(
+  const [dataSourceId, slug] = useMemo<[string, string]>(
     () => [getOr("", "dataSourceId", params), getOr("", "slug", params)],
     [params]
   );
@@ -282,7 +282,7 @@ const ModelsWrapper: React.FC = () => {
     [dataSourceId, currentUser]
   );
 
-  const [currentBranchId, setCurrentBranchId] = useLocalStorageState(
+  const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
     `${dataSourceId}:currentBranch`
   );
 
@@ -510,10 +510,10 @@ const ModelsWrapper: React.FC = () => {
     inputFile.current?.click();
   };
 
-  const onGenSubmit = async (values: object, format?: string) => {
+  const onGenSubmit = async (values: object, format: string) => {
     const tables = getTables(values);
 
-    await execGenSchemaMutation({
+    execGenSchemaMutation({
       datasource_id: dataSourceId,
       branch_id: currentBranchId,
       tables,
@@ -816,7 +816,7 @@ const ModelsWrapper: React.FC = () => {
       onSetDefault={onSetDefault}
       onCreateBranch={onCreateBranch}
       currentVersion={currentVersion}
-      dataSchemaName={dataSchemaName}
+      dataSchemaName={dataSchemaName || ""}
       onRunSQL={onRunSQL}
       onCodeSave={onCodeSave}
       genSchemaModalVisible={genSchemaModalVisible}

@@ -98,31 +98,35 @@ const CodeEditor: FC<CodeEditorProps> = ({
     >
       {t("common:words.sql_runner")}
     </Button>,
-    <Button
-      className={styles.run}
-      type="primary"
-      key="run"
-      onClick={() => onRunSQL(query, limit)}
-    >
-      {t("common:words.run")}
-    </Button>,
-    <PopoverButton
-      key="settings"
-      trigger={["click"]}
-      icon={<SettingOutlined />}
-      content={
-        <Form layout="vertical">
-          <Form.Item label="Rows limit:">
-            <InputNumber
-              width={300}
-              value={limit}
-              onChange={(val) => setLimit(val || 0)}
-            />
-          </Form.Item>
-        </Form>
-      }
-      buttonProps={{ className: styles.settings, type: "ghost" }}
-    />,
+    active === "sqlrunner" ? (
+      <Button
+        className={styles.run}
+        type="primary"
+        key="run"
+        onClick={() => onRunSQL(query, limit)}
+      >
+        {t("common:words.run")}
+      </Button>
+    ) : null,
+    active === "sqlrunner" ? (
+      <PopoverButton
+        key="settings"
+        trigger={["click"]}
+        icon={<SettingOutlined />}
+        content={
+          <Form layout="vertical">
+            <Form.Item label="Rows limit:">
+              <InputNumber
+                width={300}
+                value={limit}
+                onChange={(val) => setLimit(val || 0)}
+              />
+            </Form.Item>
+          </Form>
+        }
+        buttonProps={{ className: styles.settings, type: "ghost" }}
+      />
+    ) : null,
   ];
 
   return (

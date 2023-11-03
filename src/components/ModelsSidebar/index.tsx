@@ -135,15 +135,17 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
             />
           </Space>
 
-          <PopoverButton
-            className={styles.dropdown}
-            popoverType="dropdown"
-            buttonProps={{ type: "ghost" }}
-            menu={{ items: branchMenu }}
-            icon={<VerticalDots />}
-            trigger={["click"]}
-            arrow
-          />
+          {branchMenu && (
+            <PopoverButton
+              className={styles.dropdown}
+              popoverType="dropdown"
+              buttonProps={{ type: "ghost" }}
+              menu={{ items: branchMenu }}
+              icon={<VerticalDots />}
+              trigger={["click"]}
+              arrow
+            />
+          )}
         </Space>
 
         <Space className={styles.space} size={10} direction="vertical">
@@ -186,15 +188,17 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               content={<DataSchemaForm onSubmit={onCreateFile} />}
             />
 
-            <PopoverButton
-              className={styles.dropdown}
-              popoverType="dropdown"
-              buttonProps={{ type: "ghost" }}
-              menu={{ items: ideMenu }}
-              icon={<VerticalDots />}
-              trigger={["click"]}
-              arrow
-            />
+            {ideMenu && (
+              <PopoverButton
+                className={styles.dropdown}
+                popoverType="dropdown"
+                buttonProps={{ type: "ghost" }}
+                menu={{ items: ideMenu }}
+                icon={<VerticalDots />}
+                trigger={["click"]}
+                arrow
+              />
+            )}
           </Space>
 
           {files

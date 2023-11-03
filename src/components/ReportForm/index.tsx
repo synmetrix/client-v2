@@ -27,6 +27,7 @@ interface ReportFormProps {
   onTest: (data: ReportFormType) => void;
   type?: AlertType;
   initialValue?: ReportFormType;
+  isSendTestLoading?: boolean;
 }
 
 const { Title } = Typography;
@@ -37,6 +38,7 @@ const ReportForm: FC<ReportFormProps> = ({
   initialValue,
   onSubmit,
   onTest,
+  isSendTestLoading,
 }) => {
   const {
     t,
@@ -164,6 +166,8 @@ const ReportForm: FC<ReportFormProps> = ({
                 <Button
                   className={styles.sendTest}
                   onClick={() => onTest(getValues())}
+                  loading={isSendTestLoading}
+                  disabled={isSendTestLoading}
                 >
                   <SendIcon /> {t("common:words.send_test")}
                 </Button>

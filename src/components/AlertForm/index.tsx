@@ -42,6 +42,7 @@ interface AlertFormProps {
   onTest: (data: AlertFormType) => void;
   type?: AlertType;
   initialValue?: AlertFormType;
+  isSendTestLoading?: boolean;
 }
 
 const AlertForm: FC<AlertFormProps> = ({
@@ -50,6 +51,7 @@ const AlertForm: FC<AlertFormProps> = ({
   initialValue,
   onSubmit,
   onTest,
+  isSendTestLoading,
 }) => {
   const {
     t,
@@ -294,6 +296,8 @@ const AlertForm: FC<AlertFormProps> = ({
                 <Button
                   className={styles.sendTest}
                   onClick={() => onTest(getValues())}
+                  loading={isSendTestLoading}
+                  disabled={isSendTestLoading}
                 >
                   <SendIcon /> {t("common:words.send_test")}
                 </Button>

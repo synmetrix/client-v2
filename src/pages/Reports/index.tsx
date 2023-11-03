@@ -15,11 +15,13 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
   Reports_Pk_Columns_Input,
   Reports_Set_Input,
+  SendTestAlertMutationVariables,
 } from "@/graphql/generated";
 import {
   useCreateReportMutation,
   useDeleteReportMutation,
   useUpdateReportMutation,
+  useSendTestAlertMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
@@ -58,6 +60,8 @@ const Reports: React.FC<ReportsProps> = ({
   const [insertMutationData, execInsertMutation] = useCreateReportMutation();
   const [updateMutationData, execUpdateMutation] = useUpdateReportMutation();
   const [deleteMutationData, execDeleteMutation] = useDeleteReportMutation();
+  const [sendTestMutationData, execSendTestMutation] =
+    useSendTestAlertMutation();
 
   const reports = useMemo(
     () => (initialReports?.length ? initialReports : currentUser.reports || []),
@@ -94,6 +98,10 @@ const Reports: React.FC<ReportsProps> = ({
 
   useCheckResponse(deleteMutationData, () => {}, {
     successMessage: t("report_deleted"),
+  });
+
+  useCheckResponse(sendTestMutationData, () => {}, {
+    successMessage: t("test_report_sent"),
   });
 
   const createReport = useCallback(
@@ -142,6 +150,19 @@ const Reports: React.FC<ReportsProps> = ({
     createReport(values);
   };
 
+  const onSendTest = (values: ReportFormType) => {
+    const { deliveryConfig, exploration, type, name } = values;
+
+    const mutationPayload: SendTestAlertMutationVariables = {
+      explorationId: exploration.id,
+      deliveryType: type,
+      deliveryConfig,
+      name,
+    };
+
+    execSendTestMutation(mutationPayload);
+  };
+
   return (
     <AppLayout divider title={t("pages:reports")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
@@ -177,8 +198,9 @@ const Reports: React.FC<ReportsProps> = ({
             query={query || initialQuery}
             type={selectedReport?.type || selectedType}
             onSubmit={onSubmit}
-            onTest={console.log}
+            onTest={onSendTest}
             initialValue={selectedReport}
+            isSendTestLoading={sendTestMutationData.fetching}
           />
         ) : (
           <AlertTypeSelection

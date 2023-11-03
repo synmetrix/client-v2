@@ -28,5 +28,6 @@
   },
   "alert_created": "Alert created",
   "alert_updated": "Alert updated",
-  "alert_deleted": "Alert deleted"
+  "alert_deleted": "Alert deleted",
+  "test_alert_sent": "Test alert has been sent"
 }

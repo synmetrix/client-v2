@@ -18,3 +18,20 @@ mutation DeleteAlert($id: uuid!) {
     id
   }
 }
+
+mutation SendTestAlert(
+  $deliveryConfig: json!
+  $deliveryType: String!
+  $explorationId: uuid
+  $name: String
+) {
+  send_test_alert(
+    deliveryConfig: $deliveryConfig
+    deliveryType: $deliveryType
+    name: $name
+    explorationId: $explorationId
+  ) {
+    error
+    result
+  }
+}

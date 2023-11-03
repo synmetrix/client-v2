@@ -14,11 +14,13 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
   Alerts_Set_Input,
   Alerts_Pk_Columns_Input,
+  SendTestAlertMutationVariables,
 } from "@/graphql/generated";
 import {
   useDeleteAlertMutation,
   useCreateAlertMutation,
   useUpdateAlertMutation,
+  useSendTestAlertMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
@@ -62,6 +64,8 @@ const Alerts: React.FC<AlertsProps> = ({
   const [createMutationData, execInsertMutation] = useCreateAlertMutation();
   const [updateMutationData, execUpdateMutation] = useUpdateAlertMutation();
   const [deleteMutationData, execDeleteMutation] = useDeleteAlertMutation();
+  const [sendTestMutationData, execSendTestMutation] =
+    useSendTestAlertMutation();
 
   const onEdit = (alert: Alert) => {
     setSelectedAlert(alert);
@@ -83,6 +87,19 @@ const Alerts: React.FC<AlertsProps> = ({
     setIsOpen(false);
   };
 
+  const onSendTest = (values: AlertFormType) => {
+    const { deliveryConfig, exploration, type, name } = values;
+
+    const mutationPayload: SendTestAlertMutationVariables = {
+      explorationId: exploration.id,
+      deliveryType: type,
+      deliveryConfig,
+      name,
+    };
+
+    execSendTestMutation(mutationPayload);
+  };
+
   useCheckResponse(createMutationData, () => onClose(), {
     successMessage: t("alert_created"),
   });
@@ -93,6 +110,10 @@ const Alerts: React.FC<AlertsProps> = ({
 
   useCheckResponse(deleteMutationData, () => {}, {
     successMessage: t("alert_deleted"),
+  });
+
+  useCheckResponse(sendTestMutationData, () => {}, {
+    successMessage: t("test_alert_sent"),
   });
 
   const createAlert = useCallback(
@@ -176,10 +197,11 @@ const Alerts: React.FC<AlertsProps> = ({
         {selectedAlert || selectedType ? (
           <AlertForm
             query={query || initialQuery}
-            onTest={console.log}
+            onTest={onSendTest}
             type={selectedAlert?.type}
             onSubmit={onSubmit}
             initialValue={selectedAlert}
+            isSendTestLoading={sendTestMutationData.fetching}
           />
         ) : (
           <AlertTypeSelection

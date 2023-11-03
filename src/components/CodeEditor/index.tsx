@@ -198,28 +198,30 @@ const CodeEditor: FC<CodeEditorProps> = ({
               setMonacoHeight(editor.size.height);
             }}
           >
-            {(Object.keys(sqlError).length && (
-              <div>
-                <Alert
-                  style={{ borderRadius: 0 }}
-                  type="error"
-                  message={sqlError.toString()}
-                  closable
-                />
-              </div>
-            )) ||
-              null}
-            <Editor
-              className={styles.monaco}
-              defaultLanguage={"sql"}
-              wrapperProps={{ styles: { minHeight: monacoHeight } }}
-              height={monacoHeight}
-              defaultValue={query}
-              onChange={(val) => setQuery(val || "")}
-              path={"sql"}
-              options={MONACO_OPTIONS}
-              onMount={(editor) => (monacoRef.current = editor)}
-            />
+            <div>
+              {(Object.keys(sqlError).length && (
+                <div>
+                  <Alert
+                    style={{ borderRadius: 0 }}
+                    type="error"
+                    message={sqlError.toString()}
+                    closable
+                  />
+                </div>
+              )) ||
+                null}
+              <Editor
+                className={styles.monaco}
+                defaultLanguage={"sql"}
+                wrapperProps={{ styles: { minHeight: monacoHeight } }}
+                height={monacoHeight}
+                defaultValue={query}
+                onChange={(val) => setQuery(val || "")}
+                path={"sql"}
+                options={MONACO_OPTIONS}
+                onMount={(editor) => (monacoRef.current = editor)}
+              />
+            </div>
           </ResizableBox>
           <div>
             <VirtualTable

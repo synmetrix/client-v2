@@ -363,14 +363,10 @@ const ModelsWrapper: React.FC = () => {
     }
   });
 
-  const currentBranch = useMemo(() => {
-    if (!currentBranchId) {
-      setCurrentBranchId(
-        all?.find((b) => b.name === "main")?.id || all?.[0]?.id
-      );
-    }
-    return (all || []).find((branch) => branch.id === currentBranchId);
-  }, [all, currentBranchId, setCurrentBranchId]);
+  const currentBranch = useMemo(
+    () => (all || []).find((branch) => branch.id === currentBranchId),
+    [all, currentBranchId]
+  );
   const currentVersion = useMemo(
     () => currentBranch?.versions?.[0] || ({} as Version),
     [currentBranch]
@@ -405,10 +401,10 @@ const ModelsWrapper: React.FC = () => {
       if (res) {
         execAllData();
       }
-    },
-    {
-      successMessage: t("alerts.schema_generated"),
     }
+    // {
+    //   successMessage: t("alerts.schema_generated"),
+    // }
   );
 
   useCheckResponse(
@@ -488,7 +484,19 @@ const ModelsWrapper: React.FC = () => {
     if (!dataSourceId && currentUser?.dataSources?.length) {
       setLocation(`${basePath}/${currentUser.dataSources[0].id}`);
     }
-  }, [dataSourceId, currentUser, basePath, setLocation]);
+
+    if (!currentBranch) {
+      setCurrentBranchId(dataSource?.branch.id);
+    }
+  }, [
+    dataSourceId,
+    currentUser,
+    basePath,
+    setLocation,
+    currentBranch,
+    setCurrentBranchId,
+    dataSource?.branch.id,
+  ]);
 
   const exportData = () => {
     execExportMutation({

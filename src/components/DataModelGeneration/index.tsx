@@ -36,8 +36,8 @@ interface DataModelGenerationProps {
 }
 
 const options = [
-  { label: "JS", value: "js", disabled: false },
   { label: "YAML", value: "yaml", disabled: false },
+  { label: "JS", value: "js", disabled: false },
 ];
 
 const DataModelGeneration: FC<DataModelGenerationProps> = ({

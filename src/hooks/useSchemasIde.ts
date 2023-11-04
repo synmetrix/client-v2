@@ -3,11 +3,15 @@ import { useCallback } from "react";
 import useLocation from "@/hooks/useLocation";
 import useTabs from "@/hooks/useTabs";
 import useAppSettings from "@/hooks/useAppSettings";
-import type { Dataschema } from "@/types/dataschema";
 
 interface Props {
   dataSourceId: string;
   branchId: string;
+}
+
+interface Tab {
+  name: string;
+  id: string;
 }
 
 export default ({ dataSourceId, branchId }: Props) => {
@@ -40,7 +44,7 @@ export default ({ dataSourceId, branchId }: Props) => {
     [withAuthPrefix, dataSourceId, branchId, location.pathname, setLocation]
   );
 
-  const changeTab = (dataschema?: Dataschema) => {
+  const changeTab = (dataschema?: Tab) => {
     changePath(dataschema?.name || "sqlrunner");
     changeActiveTab(dataschema?.id || "sqlrunner");
   };

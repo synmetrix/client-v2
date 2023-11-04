@@ -11,7 +11,7 @@ import type { MenuProps } from "antd";
 interface DataSourcesMenuProps {
   entities: DataSourceInfo[];
   selectedId?: string | null;
-  onChange?: (id: string) => void;
+  onChange?: (dataSource: DataSourceInfo | null) => void;
 }
 
 const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
@@ -42,7 +42,8 @@ const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
         disabled={!items || items.length < 2}
         menu={{
           items,
-          onClick: ({ key }) => onChange?.(key),
+          onClick: ({ key }) =>
+            onChange?.(entities.find((e) => e.id === key) || null),
         }}
         buttonProps={{
           type: "text",

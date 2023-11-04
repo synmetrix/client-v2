@@ -45,7 +45,7 @@ export interface ModelsSidebarProps {
   onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
   onCreateFile: (values: Partial<Dataschema>) => void;
   dataSources: DataSourceInfo[];
-  onDataSourceChange: (id: string) => void;
+  onDataSourceChange: (dataSource: DataSourceInfo | null) => void;
 }
 
 const icons = {

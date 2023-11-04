@@ -671,7 +671,11 @@ const ModelsWrapper: React.FC = () => {
     return newSchemas;
   };
 
-  const onClickUpdate = async (editId: string, values: Partial<Dataschema>) => {
+  const onClickUpdate = async (
+    editId: string,
+    values: Partial<Dataschema>,
+    compareChecksum?: boolean
+  ) => {
     const newDataschemas = [...dataschemas];
     const editSchemaIndex = newDataschemas.findIndex(
       (schema) => schema.id === editId
@@ -684,9 +688,11 @@ const ModelsWrapper: React.FC = () => {
 
     const checksum = calcChecksum(newDataschemas);
 
-    if (currentVersion.checksum === checksum) {
-      message.info(t("alerts.no_changes"));
-      return false;
+    if (compareChecksum) {
+      if (currentVersion.checksum === checksum) {
+        message.info(t("alerts.no_changes"));
+        return false;
+      }
     }
 
     message.info(t("alerts.file_change"));
@@ -711,7 +717,7 @@ const ModelsWrapper: React.FC = () => {
   };
 
   const onCodeSave = (id: string, code: string) => {
-    onClickUpdate(id, { code });
+    onClickUpdate(id, { code }, true);
     execValidateMutation({ id: dataSourceId });
     execAllData();
   };

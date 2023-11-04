@@ -97,7 +97,9 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   const defaultButtons = [
     <Button
-      className={styles.btn}
+      className={cn(styles.btn, {
+        [styles.active]: active === "sqlrunner",
+      })}
       key="sqlrunner"
       onClick={() => onTabChange()}
     >

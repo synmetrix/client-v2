@@ -253,7 +253,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
                         <PopoverButton
                           popoverType="popconfirm"
-                          title="Are you sure delete this data schema?"
+                          title={t("sure_delete")}
                           buttonProps={{
                             size: "small",
                             type: "text",
@@ -269,8 +269,8 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                             e?.stopPropagation();
                             onSchemaDelete(f.id);
                           }}
-                          okText={"Remove"}
-                          cancelText={"Cancel"}
+                          okText={t("common:words.remove")}
+                          cancelText={t("common:words.cancel")}
                           icon={<DeleteOutlined />}
                         />
                       </Space>

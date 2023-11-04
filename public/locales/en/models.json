@@ -21,6 +21,7 @@
     "deleting_a_file": "Deleting a file.",
     "file_change": "File change."
   },
+  "sure_delete": "Are you sure delete this data schema?",
   "ide_menu": {
     "import_models": "Import data models",
     "export_models": "Export data models",

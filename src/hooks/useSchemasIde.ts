@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import useLocation from "@/hooks/useLocation";
 import useTabs from "@/hooks/useTabs";
 import useAppSettings from "@/hooks/useAppSettings";
-import { Dataschema } from "@/types/dataschema";
+import type { Dataschema } from "@/types/dataschema";
 
 interface Props {
   dataSourceId: string;

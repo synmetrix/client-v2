@@ -133,6 +133,10 @@
       "password": "Minimum 6 characters"
     }
   },
+  "alerts": {
+    "default_success": "Succefully finished",
+    "default_failure": "Something went wrong"
+  },
   "operators": {
     "set": "is set",
     "notSet": "is not set",

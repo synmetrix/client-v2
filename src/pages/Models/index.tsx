@@ -353,7 +353,9 @@ const ModelsWrapper: React.FC = () => {
         setError(err);
       }
     },
-    {}
+    {
+      successMessage: null,
+    }
   );
 
   useCheckResponse(exportMutation, (res) => {

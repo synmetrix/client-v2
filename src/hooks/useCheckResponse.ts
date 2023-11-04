@@ -1,15 +1,14 @@
 import { history } from "@vitjs/runtime";
 import { message } from "antd";
 import { useDeepCompareEffect } from "ahooks";
+import { useTranslation } from "react-i18next";
 
 import type { UseMutationState } from "urql";
 
 const noop = () => {};
-const DEFAULT_SUCCESS = "Succefully finished";
-const DEFAULT_FAILURE = "Something went wrong";
 
 type Meta = {
-  successMessage?: string;
+  successMessage?: string | null;
   errorMessage?: string;
 };
 
@@ -20,8 +19,11 @@ const useCheckResponse = (
   cb: Callback = noop,
   meta: Meta = {}
 ) => {
-  const { successMessage = DEFAULT_SUCCESS, errorMessage = DEFAULT_FAILURE } =
-    meta;
+  const { t } = useTranslation(["common"]);
+  const {
+    successMessage = t("common:alerts.default_success"),
+    errorMessage = t("common:alerts.default_failure"),
+  } = meta;
 
   useDeepCompareEffect(() => {
     if (response.data) {

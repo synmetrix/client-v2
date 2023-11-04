@@ -23,7 +23,7 @@ import type { editor } from "monaco-editor";
 interface CodeEditorProps {
   schemas?: Dataschema[];
   active?: string | null;
-  onTabChange: (id: string) => void;
+  onTabChange: (dataschema?: Dataschema) => void;
   onClose: (fileName: string) => void;
   onRunSQL: (query: string, limit: number) => void;
   onCodeSave: (id: string, code: string) => void;
@@ -99,7 +99,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
     <Button
       className={styles.btn}
       key="sqlrunner"
-      onClick={() => onTabChange("sqlrunner")}
+      onClick={() => onTabChange()}
     >
       {t("common:words.sql_runner")}
     </Button>,
@@ -152,7 +152,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
                   className={cn(styles.btn, {
                     [styles.active]: active && id === files[active]?.id,
                   })}
-                  onClick={() => onTabChange(id)}
+                  onClick={() => onTabChange(files[id])}
                 >
                   {files[id].name}
                   <Tooltip title={t("common:words.close")}>

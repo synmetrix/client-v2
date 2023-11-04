@@ -66,7 +66,6 @@ interface ModelsProps {
   validationError?: string;
   isConsoleOpen?: boolean;
   toggleConsole?: () => void;
-  onTabChange?: (name: string) => void;
   onSaveVersion: (
     checksum: string,
     data: ({
@@ -108,7 +107,6 @@ export const Models: React.FC<ModelsProps> = ({
   tablesSchema,
   schemaFetching,
   onModalClose,
-  onTabChange,
   onGenSubmit,
   onSaveVersion,
   onDataSourceChange,
@@ -124,7 +122,10 @@ export const Models: React.FC<ModelsProps> = ({
     openTab,
     openedTabs,
     openSchema,
-  } = useSchemasIde({ dataSourceId: dataSource?.id || "" });
+  } = useSchemasIde({
+    dataSourceId: dataSource?.id || "",
+    branchId: currentBranch?.id,
+  });
 
   const openedSchemas = useMemo(
     () =>
@@ -142,10 +143,9 @@ export const Models: React.FC<ModelsProps> = ({
 
       if (schemaObj && !Object.keys(openedTabs).includes(schemaObj.id)) {
         openTab(schemaObj);
-        onTabChange?.(schemaObj.name);
       }
     }
-  }, [dataschemas, dataSchemaName, openTab, openedTabs, onTabChange]);
+  }, [dataschemas, dataSchemaName, openTab, openedTabs]);
 
   return (
     <SidebarLayout
@@ -175,10 +175,7 @@ export const Models: React.FC<ModelsProps> = ({
           files={dataschemas}
           onCreateBranch={onCreateBranch}
           onCreateFile={onSchemaCreate}
-          onSelectFile={(schema) => {
-            openSchema(schema);
-            onTabChange?.(schema.name);
-          }}
+          onSelectFile={openSchema}
           dataSources={dataSources}
           dataSourceId={dataSource?.id}
         />
@@ -189,9 +186,8 @@ export const Models: React.FC<ModelsProps> = ({
           <CodeEditor
             schemas={openedSchemas}
             onClose={(id) => editTab(id, "remove")}
-            onTabChange={(id) => {
-              changeActiveTab(id);
-              onTabChange?.(dataschemas?.find((s) => s.id === id)?.name || id);
+            onTabChange={(dataschema) => {
+              changeActiveTab(dataschema);
             }}
             active={activeTab}
             onRunSQL={onRunSQL}
@@ -853,9 +849,6 @@ const ModelsWrapper: React.FC = () => {
       tablesSchema={tablesSchema}
       schemaFetching={tablesData?.fetching}
       onModalClose={onModalClose}
-      onTabChange={(name) =>
-        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/${name}`)
-      }
       onGenSubmit={onGenSubmit}
       onSaveVersion={createNewVersion}
       onDataSourceChange={(ds) =>

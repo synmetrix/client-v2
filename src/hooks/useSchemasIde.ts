@@ -3,12 +3,14 @@ import { useCallback } from "react";
 import useLocation from "@/hooks/useLocation";
 import useTabs from "@/hooks/useTabs";
 import useAppSettings from "@/hooks/useAppSettings";
+import { Dataschema } from "@/types/dataschema";
 
 interface Props {
   dataSourceId: string;
+  branchId: string;
 }
 
-export default ({ dataSourceId }: Props) => {
+export default ({ dataSourceId, branchId }: Props) => {
   const [location, setLocation] = useLocation();
   const { withAuthPrefix } = useAppSettings();
   const defaultTabId = "sqlrunner";
@@ -22,7 +24,12 @@ export default ({ dataSourceId }: Props) => {
 
   const changePath = useCallback(
     (activeKey?: string) => {
-      const basePath = [withAuthPrefix("/models"), dataSourceId, activeKey]
+      const basePath = [
+        withAuthPrefix("/models"),
+        dataSourceId,
+        branchId,
+        activeKey,
+      ]
         .filter((v) => !!v)
         .join("/");
 
@@ -30,8 +37,13 @@ export default ({ dataSourceId }: Props) => {
         setLocation(basePath);
       }
     },
-    [withAuthPrefix, dataSourceId, location.pathname, setLocation]
+    [withAuthPrefix, dataSourceId, branchId, location.pathname, setLocation]
   );
+
+  const changeTab = (dataschema?: Dataschema) => {
+    changePath(dataschema?.name || "sqlrunner");
+    changeActiveTab(dataschema?.id || "sqlrunner");
+  };
 
   const openSchema = useCallback(
     (
@@ -96,7 +108,7 @@ export default ({ dataSourceId }: Props) => {
     openSchema,
     openedTabs: tabsState.tabs,
     activeTab: tabsState.activeTab,
-    changeActiveTab,
+    changeActiveTab: changeTab,
     getTabId,
     editTab,
     closeTab,

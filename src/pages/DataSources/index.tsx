@@ -58,12 +58,17 @@ export const DataSources = ({
   onGenerate = () => {},
 }: DataSourcesProps) => {
   const { t } = useTranslation(["settings", "pages"]);
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const { setStep, editId, clean, setIsOnboarding } = DataSourceStore();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const isConnect = location.pathname.includes("/connect");
+  const [isOpen, setIsOpen] = useState<boolean>(isConnect);
+
   const onOpen = () => {
     setIsOnboarding(true);
     setIsOpen(true);
+    if (isConnect) {
+      setLocation("/settings/sources");
+    }
   };
 
   const onClose = useCallback(() => {

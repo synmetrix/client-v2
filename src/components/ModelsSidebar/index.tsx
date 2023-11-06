@@ -121,6 +121,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 label: b.status === "active" ? b.name + " - default" : b.name,
               }))}
               onChange={onChangeBranch}
+              disabled={!branches?.length}
               dropdownRender={(menu) => (
                 <>
                   {menu}
@@ -150,22 +151,25 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               icon={<VerticalDots />}
               trigger={["click"]}
               arrow
+              disabled={!branches?.length}
             />
           )}
         </Space>
 
         <Space className={styles.space} size={10} direction="vertical">
-          <div>
-            <span> {t("sidebar.version")}:</span>{" "}
-            <Button
-              className={styles.docsLink}
-              type="link"
-              href={docs}
-              target="_blank"
-            >
-              {t("sidebar.open_docs")}
-            </Button>
-          </div>
+          {branches?.length ? (
+            <div>
+              <span> {t("sidebar.version")}:</span>{" "}
+              <Button
+                className={styles.docsLink}
+                type="link"
+                href={docs}
+                target="_blank"
+              >
+                {t("sidebar.open_docs")}
+              </Button>
+            </div>
+          ) : null}
           <div className={styles.version}>{version}</div>
           {currentBranch && currentBranch.status !== "active" && (
             <Button
@@ -190,6 +194,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               icon={<PlusOutlined className={styles.plusIcon} />}
               buttonProps={{
                 className: styles.addFile,
+                disabled: !branches?.length,
               }}
               content={<DataSchemaForm onSubmit={onCreateFile} />}
             />
@@ -203,6 +208,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 icon={<VerticalDots />}
                 trigger={["click"]}
                 arrow
+                disabled={!branches?.length}
               />
             )}
           </Space>

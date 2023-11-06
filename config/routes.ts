@@ -17,10 +17,6 @@ export default [
         ],
       },
       {
-        path: "/models",
-        component: "./pages/Models",
-      },
-      {
         path: "/models/:dataSourceId?/:branch?/:slug?",
         component: "./pages/Models",
       },
@@ -42,6 +38,10 @@ export default [
           },
           {
             path: "/settings/sources",
+            component: "./pages/DataSources",
+          },
+          {
+            path: "/settings/sources/connect",
             component: "./pages/DataSources",
           },
           {

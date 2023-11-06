@@ -15,6 +15,7 @@ import Console from "@/components/Console";
 import Modal from "@/components/Modal";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import VersionsList from "@/components/VersionsList";
+import NoDataSource from "@/components/NoDataSource";
 import useUserData from "@/hooks/useUserData";
 import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
@@ -77,6 +78,7 @@ interface ModelsProps {
   onGenSubmit: (values: object, format: string) => void;
   onDataSourceChange: (dataSource: DataSourceInfo | null) => void;
   sqlError?: object;
+  onConnect: () => void;
 }
 
 const { Title } = Typography;
@@ -114,6 +116,7 @@ export const Models: React.FC<ModelsProps> = ({
   onDataSourceChange,
   dataSources,
   sqlError,
+  onConnect,
 }) => {
   const { t } = useTranslation(["pages"]);
 
@@ -183,57 +186,63 @@ export const Models: React.FC<ModelsProps> = ({
         />
       }
     >
-      <Spin spinning={fetching}>
-        <div className={styles.editor}>
-          <CodeEditor
-            schemas={openedSchemas}
-            onClose={(id) => editTab(id, "remove")}
-            onTabChange={(dataschema) => {
-              changeActiveTab(dataschema);
-            }}
-            active={activeTab}
-            onRunSQL={onRunSQL}
-            onCodeSave={onCodeSave}
-            data={data}
-            sqlError={sqlError}
-          />
-        </div>
+      {!dataSources?.length ? (
+        <NoDataSource onConnect={onConnect} />
+      ) : (
+        <Spin spinning={fetching}>
+          <>
+            <div className={styles.editor}>
+              <CodeEditor
+                schemas={openedSchemas}
+                onClose={(id) => editTab(id, "remove")}
+                onTabChange={(dataschema) => {
+                  changeActiveTab(dataschema);
+                }}
+                active={activeTab}
+                onRunSQL={onRunSQL}
+                onCodeSave={onCodeSave}
+                data={data}
+                sqlError={sqlError}
+              />
+            </div>
 
-        {isConsoleOpen && activeTab !== "sqlrunner" && (
-          <div className={styles.console}>
-            <Console
-              onClose={() => toggleConsole?.()}
-              errors={validationError}
-            />
-          </div>
-        )}
+            {isConsoleOpen && activeTab !== "sqlrunner" && (
+              <div className={styles.console}>
+                <Console
+                  onClose={() => toggleConsole?.()}
+                  errors={validationError}
+                />
+              </div>
+            )}
+          </>
 
-        {dataSource && (
-          <Modal
-            open={genSchemaModalVisible}
-            onClose={onModalClose}
-            width={1004}
-          >
-            <DataModelGeneration
-              dataSource={dataSource!}
-              schema={tablesSchema}
-              isOnboarding={false}
-              loading={schemaFetching}
-              onSubmit={onGenSubmit}
-            />
-          </Modal>
-        )}
+          {dataSource && (
+            <Modal
+              open={genSchemaModalVisible}
+              onClose={onModalClose}
+              width={1004}
+            >
+              <DataModelGeneration
+                dataSource={dataSource!}
+                schema={tablesSchema}
+                isOnboarding={false}
+                loading={schemaFetching}
+                onSubmit={onGenSubmit}
+              />
+            </Modal>
+          )}
 
-        {versions && (
-          <Modal
-            width={1004}
-            open={versionsModalVisible}
-            onClose={onModalClose}
-          >
-            <VersionsList versions={versions} onRestore={onSaveVersion} />
-          </Modal>
-        )}
-      </Spin>
+          {versions && (
+            <Modal
+              width={1004}
+              open={versionsModalVisible}
+              onClose={onModalClose}
+            >
+              <VersionsList versions={versions} onRestore={onSaveVersion} />
+            </Modal>
+          )}
+        </Spin>
+      )}
     </SidebarLayout>
   );
 };
@@ -475,19 +484,11 @@ const ModelsWrapper: React.FC = () => {
     }
   }, [sourceTablesSchema]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!dataSourceId && currentUser?.dataSources?.length) {
       setLocation(`${basePath}/${currentUser.dataSources[0].id}`);
     }
-  }, [
-    dataSourceId,
-    currentUser,
-    basePath,
-    setLocation,
-    currentBranch,
-    setCurrentBranchId,
-    dataSource?.branch.id,
-  ]);
+  }, [dataSourceId, currentUser, basePath, setLocation, dataSource?.branch.id]);
 
   const exportData = () => {
     execExportMutation({
@@ -531,10 +532,6 @@ const ModelsWrapper: React.FC = () => {
     exportMutation.fetching;
 
   if (error) {
-    return <ErrorFound status={404} />;
-  }
-
-  if (!all.length && !dataSourceId) {
     return <ErrorFound status={404} />;
   }
 
@@ -837,6 +834,7 @@ const ModelsWrapper: React.FC = () => {
       }
       dataSources={currentUser?.dataSources || []}
       sqlError={runQueryMutation?.error}
+      onConnect={() => setLocation("/settings/sources/connect")}
     />
   );
 };

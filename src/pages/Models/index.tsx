@@ -18,8 +18,8 @@ import VersionsList from "@/components/VersionsList";
 import useUserData from "@/hooks/useUserData";
 import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
-import useSchemasIde from "@/hooks/useSchemasIde";
-import useSchemas from "@/hooks/useSchemas";
+import useModelsIde from "@/hooks/useModelsIde";
+import useModels from "@/hooks/useModels";
 import useSources from "@/hooks/useSources";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import usePermissions from "@/hooks/usePermissions";
@@ -122,7 +122,7 @@ export const Models: React.FC<ModelsProps> = ({
     openTab,
     openedTabs,
     openSchema,
-  } = useSchemasIde({
+  } = useModelsIde({
     dataSourceId: dataSource?.id || "",
     branchId: currentBranch?.id,
   });
@@ -323,7 +323,7 @@ const ModelsWrapper: React.FC = () => {
       setDefaultMutation,
       execSetDefaultMutation,
     },
-  } = useSchemas({
+  } = useModels({
     params: {
       dataSourceId,
     },

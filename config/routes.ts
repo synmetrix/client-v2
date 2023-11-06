@@ -21,7 +21,7 @@ export default [
         component: "./pages/Models",
       },
       {
-        path: "/models/:dataSourceId/:branch?/:slug?",
+        path: "/models/:dataSourceId?/:branch?/:slug?",
         component: "./pages/Models",
       },
       {

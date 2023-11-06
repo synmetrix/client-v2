@@ -75,6 +75,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   const [limit, setLimit] = useState<number>(1000);
   const [query, setQuery] = useState<string>("SELECT id FROM users");
   const [monacoHeight, setMonacoHeight] = useState(100);
+  const [showData, setShowData] = useState<boolean>(false);
   const monacoRef: MutableRefObject<editor.IStandaloneCodeEditor | null> =
     useRef(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -91,6 +92,14 @@ const CodeEditor: FC<CodeEditorProps> = ({
     active ? files[active]?.code : "active"
   );
 
+  const onRun = () => {
+    if (!showData) {
+      setShowData(true);
+    }
+
+    onRunSQL(query, limit);
+  };
+
   useEffect(() => {
     monacoRef.current?.layout();
   }, [monacoHeight]);
@@ -106,12 +115,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
       {t("common:words.sql_runner")}
     </Button>,
     active === "sqlrunner" ? (
-      <Button
-        className={styles.run}
-        type="primary"
-        key="run"
-        onClick={() => onRunSQL(query, limit)}
-      >
+      <Button className={styles.run} type="primary" key="run" onClick={onRun}>
         {t("common:words.run")}
       </Button>
     ) : null,
@@ -243,13 +247,15 @@ const CodeEditor: FC<CodeEditorProps> = ({
               />
             </div>
           </ResizableBox>
-          <div>
-            <VirtualTable
-              data={data || []}
-              loading={false}
-              loadingProgress={{}}
-            />
-          </div>
+          {showData && (
+            <div>
+              <VirtualTable
+                data={data || []}
+                loading={false}
+                loadingProgress={{}}
+              />
+            </div>
+          )}
         </Space>
       )}
     </div>

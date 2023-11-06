@@ -770,7 +770,8 @@ const ModelsWrapper: React.FC = () => {
     {
       key: "gen",
       label: t("ide_menu.generate_schema"),
-      onClick: () => setLocation(`${basePath}/${dataSourceId}/genschema`),
+      onClick: () =>
+        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/genschema`),
     },
     {
       key: "import",
@@ -805,7 +806,8 @@ const ModelsWrapper: React.FC = () => {
     {
       key: "versions",
       label: t("branch_menu.show_versions"),
-      onClick: () => setLocation(`${basePath}/${dataSourceId}/versions`),
+      onClick: () =>
+        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/versions`),
     },
     all.length > 1 && {
       key: "remove",

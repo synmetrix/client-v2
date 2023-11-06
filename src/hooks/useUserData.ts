@@ -16,6 +16,8 @@ import type { User } from "@/types/user";
 import type { DataSourceInfo } from "@/types/dataSource";
 import { dbTiles } from "@/mocks/dataSources";
 import type { Team } from "@/types/team";
+import type { Alert, RawAlert } from "@/types/alert";
+import type { Report, RawReport } from "@/types/report";
 
 export const prepareDataSourceData = (data: Datasources[] | undefined) => {
   if (!data?.length) return [];
@@ -31,6 +33,53 @@ export const prepareDataSourceData = (data: Datasources[] | undefined) => {
         type: dbTiles.find((tile) => tile.value === d.db_type.toLowerCase()),
         branch: d.branches?.[0],
       } as DataSourceInfo)
+  );
+};
+
+const prepareAlertData = (data: RawAlert[] | undefined) => {
+  if (!data?.length) return [];
+
+  return data.map(
+    (d) =>
+      ({
+        id: d.id,
+        name: d.name,
+        type: d.delivery_type,
+        schedule: d.schedule,
+        creator: {
+          displayName: d.user.display_name,
+          avatarUrl: d.user.avatar_url,
+          email: d.user.account?.email,
+        },
+        exploration: d.exploration,
+        updatedAt: d.updated_at,
+        createdAt: d.created_at,
+        triggerConfig: d.trigger_config,
+        deliveryConfig: d.delivery_config,
+      } as Alert)
+  );
+};
+
+const prepareReportData = (data: RawReport[] | undefined) => {
+  if (!data?.length) return [];
+
+  return data.map(
+    (d) =>
+      ({
+        id: d.id,
+        name: d.name,
+        type: d.delivery_type,
+        schedule: d.schedule,
+        creator: {
+          displayName: d.user.display_name,
+          avatarUrl: d.user.avatar_url,
+          email: d.user.account?.email,
+        },
+        exploration: d.exploration,
+        updatedAt: d.updated_at,
+        createdAt: d.created_at,
+        deliveryConfig: d.delivery_config,
+      } as Report)
   );
 };
 
@@ -71,6 +120,9 @@ const prepareUserData = (
     rawUserData?.datasources as Datasources[]
   );
 
+  const alerts = prepareAlertData(rawUserData?.alerts as RawAlert[]);
+  const reports = prepareReportData(rawUserData?.reports as RawReport[]);
+
   return {
     id: rawUserData?.id,
     email: rawUserData?.account?.email,
@@ -78,6 +130,8 @@ const prepareUserData = (
     avatarUrl: rawUserData?.avatar_url,
     teams,
     dataSources,
+    alerts,
+    reports,
   };
 };
 

@@ -1,5 +1,7 @@
 import type { DataSourceInfo } from "./dataSource";
 import type { Team } from "./team";
+import type { Alert } from "./alert";
+import type { Report } from "./report";
 
 export interface User {
   id: string;
@@ -8,4 +10,16 @@ export interface User {
   avatarUrl?: string | null;
   teams: Team[];
   dataSources: DataSourceInfo[];
+  alerts: Alert[];
+  reports: Report[];
+}
+
+export interface RawUser {
+  id: string;
+  email: string;
+  avatar_url: string;
+  display_name?: string | null;
+  account: {
+    email: string;
+  };
 }

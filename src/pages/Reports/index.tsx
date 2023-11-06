@@ -9,8 +9,22 @@ import AlertTypeSelection from "@/components/AlertTypeSelection";
 import { alertTypes } from "@/mocks/alertTypes";
 import type { Alert, AlertType } from "@/types/alert";
 import type { Report, ReportFormType } from "@/types/report";
-import type { QueryPreview } from "@/types/queryPreview";
+import type { QueryState } from "@/types/queryState";
 import AppLayout from "@/layouts/AppLayout";
+import CurrentUserStore from "@/stores/CurrentUserStore";
+import type {
+  Reports_Pk_Columns_Input,
+  Reports_Set_Input,
+  SendTestAlertMutationVariables,
+} from "@/graphql/generated";
+import {
+  useCreateReportMutation,
+  useDeleteReportMutation,
+  useUpdateReportMutation,
+  useSendTestAlertMutation,
+} from "@/graphql/generated";
+import useCheckResponse from "@/hooks/useCheckResponse";
+import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -18,10 +32,13 @@ import styles from "./index.module.less";
 
 interface ReportsProps {
   alerts: Alert[];
-  query: QueryPreview;
+  query: QueryState;
 }
 
-const Reports: React.FC<ReportsProps> = ({ alerts, query }) => {
+const Reports: React.FC<ReportsProps> = ({
+  alerts: initialReports,
+  query: initialQuery,
+}) => {
   const { t } = useTranslation(["reports", "pages"]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -30,9 +47,34 @@ const Reports: React.FC<ReportsProps> = ({ alerts, query }) => {
     ReportFormType | undefined
   >();
 
+  const { currentUser, currentTeamId } = CurrentUserStore();
+
+  const query = useMemo(() => {
+    if (selectedReport) {
+      return selectedReport?.exploration?.playground_state;
+    }
+
+    return initialQuery || SAMPLE_EXPLORATION.playground_state;
+  }, [selectedReport, initialQuery]);
+
+  const [insertMutationData, execInsertMutation] = useCreateReportMutation();
+  const [updateMutationData, execUpdateMutation] = useUpdateReportMutation();
+  const [deleteMutationData, execDeleteMutation] = useDeleteReportMutation();
+  const [sendTestMutationData, execSendTestMutation] =
+    useSendTestAlertMutation();
+
+  const reports = useMemo(
+    () => (initialReports?.length ? initialReports : currentUser.reports || []),
+    [initialReports, currentUser]
+  ) as Alert[];
+
   const onEdit = (report: Report) => {
     setSelectedReport(report);
     setIsOpen(true);
+  };
+
+  const onDelete = (report: Report) => {
+    execDeleteMutation({ id: report.id });
   };
 
   const onCreate = () => {
@@ -44,6 +86,81 @@ const Reports: React.FC<ReportsProps> = ({ alerts, query }) => {
     setSelectedReport(undefined);
     setSelectedType(undefined);
     setIsOpen(false);
+  };
+
+  useCheckResponse(insertMutationData, () => onClose(), {
+    successMessage: t("report_created"),
+  });
+
+  useCheckResponse(updateMutationData, () => onClose(), {
+    successMessage: t("report_updated"),
+  });
+
+  useCheckResponse(deleteMutationData, () => {}, {
+    successMessage: t("report_deleted"),
+  });
+
+  useCheckResponse(sendTestMutationData, () => {}, {
+    successMessage: t("test_report_sent"),
+  });
+
+  const createReport = useCallback(
+    (values: ReportFormType) => {
+      const newReportWithExplorationPayload = {
+        name: values.name,
+        schedule: values.schedule,
+        delivery_type: values.type,
+        delivery_config: values.deliveryConfig,
+        exploration_id: SAMPLE_EXPLORATION.id,
+        team_id: currentTeamId,
+      };
+
+      execInsertMutation({ object: newReportWithExplorationPayload });
+    },
+    [execInsertMutation, currentTeamId]
+  );
+
+  const updateReport = useCallback(
+    (values: ReportFormType) => {
+      const updateAlerPayload = {
+        name: values.name,
+        schedule: values.schedule,
+        delivery_type: values.type,
+        delivery_config: values.deliveryConfig,
+      };
+
+      const payload = {
+        pk_columns: { id: selectedReport?.id } as Reports_Pk_Columns_Input,
+        _set: updateAlerPayload as Reports_Set_Input,
+      };
+
+      execUpdateMutation(payload);
+    },
+    [execUpdateMutation, selectedReport]
+  );
+
+  const onSubmit = (values: ReportFormType) => {
+    const doesReportExist = Boolean(selectedReport?.id);
+
+    if (doesReportExist) {
+      updateReport(values);
+      return;
+    }
+
+    createReport(values);
+  };
+
+  const onSendTest = (values: ReportFormType) => {
+    const { deliveryConfig, exploration, type, name } = values;
+
+    const mutationPayload: SendTestAlertMutationVariables = {
+      explorationId: exploration.id,
+      deliveryType: type,
+      deliveryConfig,
+      name,
+    };
+
+    execSendTestMutation(mutationPayload);
   };
 
   return (
@@ -65,7 +182,7 @@ const Reports: React.FC<ReportsProps> = ({ alerts, query }) => {
           onClick={onCreate}
         />
         <div className={styles.body}>
-          <AlertsTable alerts={alerts} onEdit={onEdit} onRemove={console.log} />
+          <AlertsTable alerts={reports} onEdit={onEdit} onRemove={onDelete} />
         </div>
       </Space>
 
@@ -78,11 +195,12 @@ const Reports: React.FC<ReportsProps> = ({ alerts, query }) => {
       >
         {selectedReport || selectedType ? (
           <ReportForm
-            query={query}
+            query={query || initialQuery}
             type={selectedReport?.type || selectedType}
-            onSubmit={console.log}
-            onTest={console.log}
+            onSubmit={onSubmit}
+            onTest={onSendTest}
             initialValue={selectedReport}
+            isSendTestLoading={sendTestMutationData.fetching}
           />
         ) : (
           <AlertTypeSelection

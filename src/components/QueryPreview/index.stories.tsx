@@ -1,5 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
-import { queryPreviewMock } from "@/mocks/queryPreview";
+import { queryStateMock } from "@/mocks/queryState";
 
 import QueryPreview from ".";
 
@@ -18,4 +18,4 @@ const Template: StoryFn<typeof QueryPreview> = (args) => (
 
 export const Default = Template.bind({});
 
-Default.args = queryPreviewMock;
+Default.args = queryStateMock;

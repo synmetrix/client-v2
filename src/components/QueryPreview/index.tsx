@@ -6,7 +6,7 @@ import { useResponsive } from "ahooks";
 
 import Button from "@/components/Button";
 import QueryTags from "@/components/QueryTags";
-import type { QueryPreview as QueryPreviewProps } from "@/types/queryPreview";
+import type { QueryState } from "@/types/queryState";
 
 import styles from "./index.module.less";
 
@@ -14,7 +14,7 @@ import type { FC } from "react";
 
 const { Panel } = Collapse;
 
-const QueryPreview: FC<QueryPreviewProps & { withButton?: boolean }> = ({
+const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
   measures,
   dimensions,
   segments,

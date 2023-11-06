@@ -1,5 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
-import { queryPreviewMock } from "@/mocks/queryPreview";
+import { queryStateMock } from "@/mocks/queryState";
 
 import QueryTags from ".";
 
@@ -19,6 +19,6 @@ const Template: StoryFn<typeof QueryTags> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  content: queryPreviewMock.measures,
+  content: queryStateMock.measures,
   type: "measure",
 };

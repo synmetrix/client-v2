@@ -105,6 +105,10 @@ const CodeEditor: FC<CodeEditorProps> = ({
     ) : null,
   ];
 
+  const language = active
+    ? languages[files[active]?.name.split(".")[0] as keyof typeof languages]
+    : "sql";
+
   return (
     <div className={styles.wrapper}>
       <Row
@@ -154,16 +158,8 @@ const CodeEditor: FC<CodeEditorProps> = ({
       {active && active !== "sqlrunner" ? (
         <Editor
           className={styles.monaco}
-          language={
-            languages[
-              files[active]?.name.split(".")[0] as keyof typeof languages
-            ]
-          }
-          defaultLanguage={
-            languages[
-              files[active]?.name.split(".")[0] as keyof typeof languages
-            ]
-          }
+          language={language}
+          defaultLanguage={language}
           defaultValue={files[active]?.code}
           value={content}
           onChange={(val) => setContent(val || "")}

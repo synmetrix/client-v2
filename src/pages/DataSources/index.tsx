@@ -37,6 +37,7 @@ import styles from "./index.module.less";
 interface DataSourcesProps {
   dataSources: DataSourceInfo[];
   loading?: boolean;
+  defaultOpen?: boolean;
   onFinish: () => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
@@ -49,6 +50,7 @@ interface DataSourcesProps {
 export const DataSources = ({
   dataSources = [],
   loading = false,
+  defaultOpen = false,
   onTestConnection = () => {},
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
@@ -58,17 +60,13 @@ export const DataSources = ({
   onGenerate = () => {},
 }: DataSourcesProps) => {
   const { t } = useTranslation(["settings", "pages"]);
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const { setStep, editId, clean, setIsOnboarding } = DataSourceStore();
-  const isConnect = location.pathname.includes("/connect");
-  const [isOpen, setIsOpen] = useState<boolean>(isConnect);
+  const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
 
   const onOpen = () => {
     setIsOnboarding(true);
     setIsOpen(true);
-    if (isConnect) {
-      setLocation("/settings/sources");
-    }
   };
 
   const onClose = useCallback(() => {
@@ -154,7 +152,7 @@ const DataSourcesWrapper = ({
   const { t } = useTranslation(["dataSourceStepForm"]);
   const { currentUser, currentTeamId } = CurrentUserStore();
   const [location, setLocation] = useLocation();
-  const { id: curId } = location.query;
+  const { id: curId, connect } = location.query;
   const {
     editId,
     formState: { step0: dataSource, step1: dataSourceSetup },
@@ -409,6 +407,7 @@ const DataSourcesWrapper = ({
 
   return (
     <DataSources
+      defaultOpen={!!connect}
       dataSources={datasources}
       onEdit={onEdit}
       onDelete={onDelete}

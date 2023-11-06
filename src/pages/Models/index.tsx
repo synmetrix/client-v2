@@ -834,7 +834,7 @@ const ModelsWrapper: React.FC = () => {
       }
       dataSources={currentUser?.dataSources || []}
       sqlError={runQueryMutation?.error}
-      onConnect={() => setLocation("/settings/sources/connect")}
+      onConnect={() => setLocation("/settings/sources?connect=true")}
     />
   );
 };

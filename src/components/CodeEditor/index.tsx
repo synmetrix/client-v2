@@ -1,10 +1,5 @@
-import { Alert, Col, Form, InputNumber, Row, Space, Tooltip } from "antd";
-import { ResizableBox } from "react-resizable";
-import {
-  CloseOutlined,
-  SettingOutlined,
-  VerticalAlignMiddleOutlined,
-} from "@ant-design/icons";
+import { Col, Form, InputNumber, Row, Space, Tooltip } from "antd";
+import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
@@ -12,13 +7,13 @@ import cn from "classnames";
 
 import Button from "@/components/Button";
 import PopoverButton from "@/components/PopoverButton";
-import VirtualTable from "@/components/VirtualTable";
+import SQLRunner from "@/components/SQLRunner";
+import { MONACO_OPTIONS } from "@/utils/constants/monaco";
 import type { Dataschema } from "@/types/dataschema";
 
 import styles from "./index.module.less";
 
-import type { FC, MutableRefObject } from "react";
-import type { editor } from "monaco-editor";
+import type { FC } from "react";
 
 interface CodeEditorProps {
   schemas?: Dataschema[];
@@ -30,28 +25,6 @@ interface CodeEditorProps {
   data?: object[];
   sqlError?: object;
 }
-
-const MONACO_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
-  autoIndent: "full",
-  automaticLayout: true,
-  contextmenu: true,
-  fontFamily: "monospace",
-  lineHeight: 24,
-  hideCursorInOverviewRuler: true,
-  matchBrackets: "always",
-  fontLigatures: "",
-  detectIndentation: true,
-  insertSpaces: true,
-  tabSize: 3,
-  minimap: {
-    enabled: false,
-  },
-  readOnly: false,
-  scrollbar: {
-    horizontalSliderSize: 4,
-    verticalSliderSize: 4,
-  },
-};
 
 const languages = {
   js: "javascript",
@@ -74,11 +47,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   const [limit, setLimit] = useState<number>(1000);
   const [query, setQuery] = useState<string>("SELECT id FROM users");
-  const [monacoHeight, setMonacoHeight] = useState(100);
   const [showData, setShowData] = useState<boolean>(false);
-  const monacoRef: MutableRefObject<editor.IStandaloneCodeEditor | null> =
-    useRef(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const files = schemas?.reduce(
     (res, schema) => ({
@@ -99,10 +68,6 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
     onRunSQL(query, limit);
   };
-
-  useEffect(() => {
-    monacoRef.current?.layout();
-  }, [monacoHeight]);
 
   const defaultButtons = [
     <Button
@@ -141,7 +106,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   ];
 
   return (
-    <div className={styles.wrapper} ref={wrapperRef}>
+    <div className={styles.wrapper}>
       <Row
         className={styles.nav}
         justify="space-between"
@@ -188,7 +153,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
       </Row>
       {active && active !== "sqlrunner" ? (
         <Editor
-          className={cn(styles.monaco, styles.monacoHeight)}
+          className={styles.monaco}
           language={
             languages[
               files[active]?.name.split(".")[0] as keyof typeof languages
@@ -206,57 +171,13 @@ const CodeEditor: FC<CodeEditorProps> = ({
           options={MONACO_OPTIONS}
         />
       ) : (
-        <Space className={styles.sqlRunner} direction="vertical" size={25}>
-          <ResizableBox
-            height={100}
-            handle={
-              <div className={styles.resizeIcon}>
-                <VerticalAlignMiddleOutlined />
-              </div>
-            }
-            axis="y"
-            resizeHandles={["s"]}
-            minConstraints={[100, 100]}
-            maxConstraints={[1000, 1000]}
-            onResize={(_w, editor) => {
-              setMonacoHeight(editor.size.height);
-            }}
-          >
-            <div>
-              {(Object.keys(sqlError).length && (
-                <div>
-                  <Alert
-                    style={{ borderRadius: 0 }}
-                    type="error"
-                    message={sqlError.toString()}
-                    closable
-                  />
-                </div>
-              )) ||
-                null}
-              <Editor
-                className={styles.monaco}
-                defaultLanguage={"sql"}
-                wrapperProps={{ styles: { minHeight: monacoHeight } }}
-                height={monacoHeight}
-                defaultValue={query}
-                onChange={(val) => setQuery(val || "")}
-                path={"sql"}
-                options={MONACO_OPTIONS}
-                onMount={(editor) => (monacoRef.current = editor)}
-              />
-            </div>
-          </ResizableBox>
-          {showData && (
-            <div>
-              <VirtualTable
-                data={data || []}
-                loading={false}
-                loadingProgress={{}}
-              />
-            </div>
-          )}
-        </Space>
+        <SQLRunner
+          value={query}
+          onChange={setQuery}
+          showData={showData}
+          data={data}
+          sqlError={sqlError}
+        />
       )}
     </div>
   );

@@ -23,15 +23,28 @@ Default.args = {
   loading: false,
   meta,
   params: {
-    dataSourceId: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
-    explorationId: "b24d941c-94ac-4bca-8a3a-9e179a4fc06e",
     screenshotMode: false,
   },
   source: {
-    id: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
+    id: "1",
     name: "github.demo.altinity.cloud",
-    db_type: "CLICKHOUSE",
-    db_params: {
+    type: {
+      name: "Postgres",
+      value: "postgres",
+      icon: <></>,
+    },
+    branch: {
+      id: "1",
+      name: "main",
+      status: "active",
+      versions: [
+        {
+          id: "1",
+          dataSchemas: [],
+        },
+      ],
+    },
+    dbParams: {
       ssl: true,
       host: "github.demo.altinity.cloud",
       port: "8443",
@@ -39,12 +52,13 @@ Default.args = {
       database: "default",
       password: "demo",
     },
-    created_at: "2021-09-09T11:52:58.347143+00:00",
-    updated_at: "2023-08-25T07:04:44.238898+00:00",
+    createdAt: "2021-09-09T11:52:58.347143+00:00",
+    updatedAt: "2023-08-25T07:04:44.238898+00:00",
   },
   title: "Explore",
   header: (
     <DataSourcesMenu
+      selectedId="1"
       entities={[
         { id: "1", name: "datasource1" },
         { id: "2", name: "datasource2" },

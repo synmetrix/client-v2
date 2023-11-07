@@ -18,7 +18,7 @@ import type { ExploreWorkspaceState } from "@/hooks/useExploreWorkspace";
 import type { SortBySet } from "@/components/VirtualTable";
 import type { ErrorMessage } from "@/types/errorMessage";
 import type { CubeMember } from "@/types/cube";
-import type { ExplorationState } from "@/hooks/usePlayground";
+import type { ExplorationState } from "@/types/exploration";
 
 import CSVIcon from "@/assets/csv.svg";
 import AlertIcon from "@/assets/alert.svg";
@@ -41,7 +41,7 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   disabled: boolean;
   state: ExploreWorkspaceState;
   queryState: ExplorationState;
-  explorationRowId: string;
+  explorationRowId?: string;
   selectedQueryMembers: Record<string, CubeMember[]>;
   isActive: boolean;
   disableSectionChange?: boolean;
@@ -121,7 +121,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       section: t("data_section.query"),
       label: t("data_section.rows_limit"),
       type: "number",
-      defaultValue: 0,
+      defaultValue: 1000,
     },
     offset: {
       section: t("data_section.query"),
@@ -221,8 +221,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       <VirtualTable
         tableId={screenshotMode ? "explorationTable" : undefined}
         messages={messages}
-        loading={screenshotMode ? false : loading}
-        loadingProgress={progress}
+        loading={screenshotMode ? false : loading || progress?.loading}
         width={width}
         height={height}
         columns={columns}
@@ -319,7 +318,12 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 <Radio.Button value="sql">{t("data_section.sql")}</Radio.Button>
               </Radio.Group>
 
-              <Button className={s.run} type="primary" onClick={onExec}>
+              <Button
+                className={s.run}
+                type="primary"
+                onClick={onExec}
+                disabled={loading}
+              >
                 {t("data_section.run_query")}
                 <RightOutlined />
               </Button>
@@ -342,6 +346,14 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                         layout="vertical"
                         config={formConfig}
                         onSubmit={onSubmit}
+                        initialValues={
+                          {
+                            rows: limit,
+                            offset,
+                            hideCubeNames,
+                            hideIndexColumn,
+                          } as unknown as Record<string, string>
+                        }
                         autoSubmit
                       />
                     </div>

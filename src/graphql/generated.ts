@@ -11628,6 +11628,51 @@ export type GenDataSchemasMutation = {
   } | null;
 };
 
+export type CreateExplorationMutationVariables = Exact<{
+  object: Explorations_Insert_Input;
+}>;
+
+export type CreateExplorationMutation = {
+  __typename?: "mutation_root";
+  insert_explorations_one?: { __typename?: "explorations"; id: any } | null;
+};
+
+export type GenSqlMutationVariables = Exact<{
+  exploration_id: Scalars["uuid"];
+}>;
+
+export type GenSqlMutation = {
+  __typename?: "mutation_root";
+  gen_sql?: { __typename?: "GenSQLOutput"; result?: any | null } | null;
+};
+
+export type CurrentExplorationQueryVariables = Exact<{
+  id: Scalars["uuid"];
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type CurrentExplorationQuery = {
+  __typename?: "query_root";
+  explorations_by_pk?: {
+    __typename?: "explorations";
+    id: any;
+    datasource_id: any;
+    playground_state: any;
+    playground_settings: any;
+    created_at: any;
+    updated_at: any;
+  } | null;
+  fetch_dataset?: {
+    __typename?: "FetchDatasetOutput";
+    annotation?: any | null;
+    data?: any | null;
+    query?: any | null;
+    progress?: any | null;
+    hitLimit?: boolean | null;
+  } | null;
+};
+
 export type MembersQueryVariables = Exact<{
   offset?: InputMaybe<Scalars["Int"]>;
   limit?: InputMaybe<Scalars["Int"]>;
@@ -12519,6 +12564,61 @@ export function useGenDataSchemasMutation() {
     GenDataSchemasMutationVariables
   >(GenDataSchemasDocument);
 }
+export const CreateExplorationDocument = gql`
+  mutation CreateExploration($object: explorations_insert_input!) {
+    insert_explorations_one(object: $object) {
+      id
+    }
+  }
+`;
+
+export function useCreateExplorationMutation() {
+  return Urql.useMutation<
+    CreateExplorationMutation,
+    CreateExplorationMutationVariables
+  >(CreateExplorationDocument);
+}
+export const GenSqlDocument = gql`
+  mutation GenSQL($exploration_id: uuid!) {
+    gen_sql(exploration_id: $exploration_id) {
+      result
+    }
+  }
+`;
+
+export function useGenSqlMutation() {
+  return Urql.useMutation<GenSqlMutation, GenSqlMutationVariables>(
+    GenSqlDocument
+  );
+}
+export const CurrentExplorationDocument = gql`
+  query CurrentExploration($id: uuid!, $offset: Int, $limit: Int) {
+    explorations_by_pk(id: $id) {
+      id
+      datasource_id
+      playground_state
+      playground_settings
+      created_at
+      updated_at
+    }
+    fetch_dataset(exploration_id: $id, offset: $offset, limit: $limit) {
+      annotation
+      data
+      query
+      progress
+      hitLimit
+    }
+  }
+`;
+
+export function useCurrentExplorationQuery(
+  options: Omit<Urql.UseQueryArgs<CurrentExplorationQueryVariables>, "query">
+) {
+  return Urql.useQuery<
+    CurrentExplorationQuery,
+    CurrentExplorationQueryVariables
+  >({ query: CurrentExplorationDocument, ...options });
+}
 export const MembersDocument = gql`
   query Members(
     $offset: Int
@@ -12896,6 +12996,7 @@ export const namedOperations = {
     FetchTables: "FetchTables",
     FetchMeta: "FetchMeta",
     CurrentDataSource: "CurrentDataSource",
+    CurrentExploration: "CurrentExploration",
     Members: "Members",
     CurrentLog: "CurrentLog",
     AllLogs: "AllLogs",
@@ -12914,6 +13015,8 @@ export const namedOperations = {
     CheckConnection: "CheckConnection",
     DeleteDataSource: "DeleteDataSource",
     GenDataSchemas: "GenDataSchemas",
+    CreateExploration: "CreateExploration",
+    GenSQL: "GenSQL",
     UpdateMember: "UpdateMember",
     UpdateMemberRole: "UpdateMemberRole",
     DeleteMember: "DeleteMember",

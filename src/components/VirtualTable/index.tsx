@@ -121,8 +121,7 @@ interface VirtualTableProps {
   height?: number;
   headerHeight?: number;
   rowHeight?: number;
-  loading: boolean;
-  loadingProgress: LoadingProgress;
+  loading?: boolean;
   emptyDesc?: ReactNode;
   orderByFn?: OrderByFn<object>;
   footer?: (rows: object[]) => void;

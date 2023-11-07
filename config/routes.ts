@@ -50,6 +50,18 @@ export default [
             component: "./pages/Home",
           },
           {
+            path: "/explore",
+            component: "./pages/Explore",
+          },
+          {
+            path: "/explore/:dataSourceId",
+            component: "./pages/Explore",
+          },
+          {
+            path: "/explore/:dataSourceId/:explorationId",
+            component: "./pages/Explore",
+          },
+          {
             path: "/teams",
             component: "./pages/Teams",
           },

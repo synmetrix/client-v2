@@ -1,9 +1,10 @@
 import RootLayout from "@/layouts/RootLayout";
 import { meta, exploreMock } from "@/mocks/explore";
+import type { Explorations } from "@/graphql/generated";
 
 import CickHouseIcon from "@/assets/databases/click-house.svg";
 
-import { Explore } from ".";
+import { Explore, prepareExplorationData } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
@@ -21,25 +22,9 @@ const Template: StoryFn<typeof Explore> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   meta,
-  exploration: {
-    id: "ec5c3d03-ffed-414f-82b7-576f88f29956",
-    datasourceId: "65d47193-5242-4722-b2fc-f50a618642c3",
-    playgroundSettings: {},
-    playgroundState: {
-      page: 0,
-      limit: 1000,
-      order: [],
-      offset: 0,
-      filters: [],
-      measures: [],
-      segments: [],
-      timezone: "UTC",
-      dimensions: ["Animals.image", "Animals.type"],
-      timeDimensions: [],
-    },
-    createdAt: "2023-11-07T13:44:33.353289+00:00",
-    updatedAt: "2023-11-07T13:44:33.353289+00:00",
-  },
+  exploration: prepareExplorationData(
+    exploreMock.exploration.data.explorations_by_pk as Explorations
+  ),
   rawSql: exploreMock.sql.data.gen_sql.result,
   dataSet: exploreMock.exploration.data.fetch_dataset,
   dataSchemaValidation: {

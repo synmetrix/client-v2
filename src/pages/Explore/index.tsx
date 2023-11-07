@@ -84,7 +84,7 @@ export const Explore = ({
   );
 };
 
-const prepareExplorationData = (
+export const prepareExplorationData = (
   exp: Explorations | undefined
 ): Exploration | undefined => {
   if (!exp) return;

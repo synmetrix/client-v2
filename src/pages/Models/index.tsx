@@ -275,17 +275,8 @@ const ModelsWrapper: React.FC = () => {
   );
 
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
-    `${dataSourceId}:currentBranch`,
-    {
-      defaultValue: branch,
-    }
+    `${dataSourceId}:currentBranch`
   );
-
-  useEffect(() => {
-    if (branch && branch !== currentBranchId) {
-      setCurrentBranchId(branch);
-    }
-  }, [branch, currentBranchId, setCurrentBranchId]);
 
   const onModalClose = () => {
     if (history.state) {
@@ -365,6 +356,26 @@ const ModelsWrapper: React.FC = () => {
       window.location.assign(url);
     }
   });
+
+  useEffect(() => {
+    if (!branch && !currentBranchId && dataSource) {
+      const currentId = dataSource?.branch.id || all?.[0]?.id;
+      setCurrentBranchId(currentId);
+      setLocation(`${basePath}/${dataSourceId}/${currentId}`);
+    } else if (branch !== currentBranchId) {
+      setCurrentBranchId(branch);
+    }
+  }, [
+    all,
+    basePath,
+    branch,
+    currentBranchId,
+    dataSource,
+    dataSource?.branch,
+    dataSourceId,
+    setCurrentBranchId,
+    setLocation,
+  ]);
 
   const currentBranch = useMemo(
     () =>

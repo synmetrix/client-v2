@@ -1,6 +1,7 @@
 import type { CubeMember } from "./cube";
 import type { LoadingProgress } from "./loading";
 import type { QuerySettings } from "./querySettings";
+import type { QueryState } from "./queryState";
 import type { SortBy } from "./sort";
 
 export interface RawSql {

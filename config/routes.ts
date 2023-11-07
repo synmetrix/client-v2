@@ -66,6 +66,14 @@ export default [
             component: "./pages/Teams",
           },
           {
+            path: "/alerts",
+            component: "./pages/Alerts",
+          },
+          {
+            path: "/reports",
+            component: "./pages/Reports",
+          },
+          {
             path: "/logs/query",
             component: "./pages/QueryLogs",
           },

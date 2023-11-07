@@ -2,6 +2,7 @@ import { Space, Table } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
+import dayjs from "dayjs";
 
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
@@ -45,11 +46,7 @@ const AlertsTable: FC<AlertTableProps> = ({ alerts, onEdit, onRemove }) => {
       title: t("common:words.schedule"),
       dataIndex: "schedule",
       key: "schedule",
-      render: (value) => (
-        <span className={styles.cell}>
-          {new Array(value.length).fill("*").join("")}
-        </span>
-      ),
+      render: (value) => <span className={styles.cell}>{value}</span>,
     },
     {
       title: t("common:words.creator"),
@@ -66,22 +63,30 @@ const AlertsTable: FC<AlertTableProps> = ({ alerts, onEdit, onRemove }) => {
       title: t("common:words.updated_at"),
       dataIndex: "updatedAt",
       key: "updatedAt",
-      render: (value) => <span className={styles.cell}>{value}</span>,
+      render: (value) => (
+        <span className={styles.cell}>
+          {dayjs(value).format("DD/MM/YYYY HH:mm")}
+        </span>
+      ),
     },
     {
       title: t("common:words.created_at"),
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (value) => <span className={styles.cell}>{value}</span>,
-    },
-    {
-      title: t("common:words.last_activity"),
-      dataIndex: "lastActivity",
-      key: "lastActivity",
-      render: (value, record) => (
-        <StatusBadge status={record.status}>{value}</StatusBadge>
+      render: (value) => (
+        <span className={styles.cell}>
+          {dayjs(value).format("DD/MM/YYYY HH:mm")}
+        </span>
       ),
     },
+    // {
+    //   title: t("common:words.last_activity"),
+    //   dataIndex: "lastActivity",
+    //   key: "lastActivity",
+    //   render: (value, record) => (
+    //     <StatusBadge status={record.status}>{value}</StatusBadge>
+    //   ),
+    // },
     {
       title: (
         <span className={styles.actionsCell}>{t("common:words.actions")}</span>
@@ -111,7 +116,7 @@ const AlertsTable: FC<AlertTableProps> = ({ alerts, onEdit, onRemove }) => {
     <Table
       className={styles.table}
       dataSource={alerts}
-      rowKey={(record) => record.id}
+      rowKey={(record) => record.id || record.createdAt}
       pagination={false}
       columns={columns}
     />

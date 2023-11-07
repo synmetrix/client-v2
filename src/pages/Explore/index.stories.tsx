@@ -1,10 +1,9 @@
 import RootLayout from "@/layouts/RootLayout";
 import { meta, exploreMock } from "@/mocks/explore";
-import type { Explorations } from "@/graphql/generated";
 
 import CickHouseIcon from "@/assets/databases/click-house.svg";
 
-import { Explore, prepareExplorationData } from ".";
+import { Explore } from ".";
 
 import type { StoryFn, Meta } from "@storybook/react";
 
@@ -22,9 +21,7 @@ const Template: StoryFn<typeof Explore> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   meta,
-  exploration: prepareExplorationData(
-    exploreMock.exploration.data.explorations_by_pk as Explorations
-  ),
+  exploration: exploreMock.exploration.data.explorations_by_pk,
   rawSql: exploreMock.sql.data.gen_sql.result,
   dataSet: exploreMock.exploration.data.fetch_dataset,
   dataSchemaValidation: {

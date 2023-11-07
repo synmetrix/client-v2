@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useParams } from "@vitjs/runtime";
 
-import type { Explorations, FetchDatasetOutput } from "@/graphql/generated";
+import type { FetchDatasetOutput } from "@/graphql/generated";
 import {
   useFetchMetaQuery,
   useCurrentExplorationQuery,
@@ -82,21 +82,6 @@ export const Explore = ({
       loading={loading}
     />
   );
-};
-
-export const prepareExplorationData = (
-  exp: Explorations | undefined
-): Exploration | undefined => {
-  if (!exp) return;
-
-  return {
-    id: exp.id,
-    datasourceId: exp.datasource_id,
-    playgroundSettings: exp.playground_settings,
-    playgroundState: exp.playground_state,
-    createdAt: exp.created_at,
-    updatedAt: exp.updated_at,
-  };
 };
 
 const ExploreWrapper = () => {
@@ -191,10 +176,7 @@ const ExploreWrapper = () => {
     [dataSourceId, datasources]
   );
   const exploration = useMemo(
-    () =>
-      prepareExplorationData(
-        currentExploration?.data?.explorations_by_pk as Explorations
-      ),
+    () => currentExploration?.data?.explorations_by_pk as Exploration,
     [currentExploration.data?.explorations_by_pk]
   );
   const dataSet = useMemo(

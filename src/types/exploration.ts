@@ -39,11 +39,11 @@ export interface ExplorationState extends PlaygroundState {
 
 export interface Exploration {
   id: string;
-  datasourceId: string;
-  playgroundSettings: PlaygroundState;
-  playgroundState: PlaygroundState;
-  createdAt: string;
-  updatedAt: string;
+  datasource_id: string;
+  playground_settings: PlaygroundState;
+  playground_state: QueryState;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface DataSchemaValidation {

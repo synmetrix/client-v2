@@ -221,7 +221,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       <VirtualTable
         tableId={screenshotMode ? "explorationTable" : undefined}
         messages={messages}
-        loading={screenshotMode ? false : loading || progress?.loading}
+        loading={screenshotMode ? false : loading}
         width={width}
         height={height}
         columns={columns}

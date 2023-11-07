@@ -94,7 +94,7 @@ export default ({ meta = [], exploration, rawSql, dataSet }: Props) => {
   const [settings, dispatchSettings] = useReducer(reducer, initialSettings);
 
   const playgroundSettings = useMemo(
-    () => exploration?.playgroundSettings || {},
+    () => exploration?.playground_settings || {},
     [exploration]
   );
 
@@ -160,7 +160,7 @@ export default ({ meta = [], exploration, rawSql, dataSet }: Props) => {
   const [isQueryChanged, setChangedStatus] = useState(false);
 
   useEffect(() => {
-    const playgroundState = exploration?.playgroundState || queryState;
+    const playgroundState = exploration?.playground_state || queryState;
 
     const isChanged = !equals(
       pickKeys(queryStateKeys, playgroundState),
@@ -173,12 +173,12 @@ export default ({ meta = [], exploration, rawSql, dataSet }: Props) => {
   }, [isQueryChanged, currPlaygroundState, exploration]);
 
   useEffect(() => {
-    const newState = exploration?.playgroundState;
+    const newState = exploration?.playground_state;
 
     if (newState) {
       doReset(newState as unknown as PlaygroundState);
     }
-  }, [exploration?.playgroundState, doReset]);
+  }, [exploration?.playground_state, doReset]);
 
   useEffect(() => {
     if (!exploration?.id) {

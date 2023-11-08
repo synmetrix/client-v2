@@ -12,6 +12,7 @@ import useLocation from "@/hooks/useLocation";
 import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
 import pickKeys from "@/utils/helpers/pickKeys";
+import useAppSettings from "@/hooks/useAppSettings";
 import type { DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
 import type {
@@ -67,6 +68,7 @@ const Explore: FC<ExploreProps> = (props) => {
     : document.querySelector("#data-view");
 
   const [, setLocation] = useLocation();
+  const { withAuthPrefix } = useAppSettings();
   const { size } = useDimensions(selector);
   const width = size?.width;
 
@@ -211,7 +213,9 @@ const Explore: FC<ExploreProps> = (props) => {
             {dataSection} {filtersSection}
           </div>
         ) : (
-          <NoDataSource onConnect={() => setLocation("/settings/sources")} />
+          <NoDataSource
+            onConnect={() => setLocation(withAuthPrefix("/settings/sources"))}
+          />
         )}
       </Spin>
     </Layout>

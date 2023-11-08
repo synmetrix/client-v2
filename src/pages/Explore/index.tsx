@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useParams } from "@vitjs/runtime";
+import { useTranslation } from "react-i18next";
+import { message } from "antd";
 
 import type { FetchDatasetOutput } from "@/graphql/generated";
 import {
@@ -9,6 +11,7 @@ import {
   useValidateDataSourceMutation,
   useCreateExplorationMutation,
 } from "@/graphql/generated";
+import DataSourcesMenu from "@/components/DataSourcesMenu";
 import ExploreWorkspace from "@/components/ExploreWorkspace";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
@@ -16,12 +19,13 @@ import trackEvent from "@/utils/helpers/trackEvent";
 import type { DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
 import useAnalyticsQuery from "@/hooks/useAnalyticsQuery";
+import useCheckResponse from "@/hooks/useCheckResponse";
+import useAppSettings from "@/hooks/useAppSettings";
 import type {
   Exploration,
   RawSql,
   DataSchemaValidation,
 } from "@/types/exploration";
-import DataSourcesMenu from "@/components/DataSourcesMenu";
 
 interface ExploreProps {
   loading?: boolean;
@@ -85,12 +89,14 @@ export const Explore = ({
 };
 
 const ExploreWrapper = () => {
+  const { t } = useTranslation(["explore"]);
   const { currentUser } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { screenshotMode } = location.query;
   const { dataSourceId, explorationId } = useParams();
 
   const { state: playgroundState } = useAnalyticsQuery();
+  const { withAuthPrefix } = useAppSettings();
   const [createData, execCreateMutation] = useCreateExplorationMutation();
   const [validateData, execValidateMutation] = useValidateDataSourceMutation();
   const [sqlData, execSqlGenMutation] = useGenSqlMutation();
@@ -116,8 +122,23 @@ const ExploreWrapper = () => {
     pause: true,
   });
 
+  const dataSourcePath = `/explore/${dataSourceId}`;
+  useCheckResponse(
+    currentExploration,
+    (res, err) => {
+      if (!res?.explorations_by_pk || err) {
+        message.error(t("errors.exploration_not_found"));
+        setLocation(withAuthPrefix(dataSourcePath));
+      }
+    },
+    {
+      successMessage: "",
+      errorMessage: "",
+    }
+  );
+
   const onSelectDataSource = (id: string) => {
-    setLocation(`/explore/${id}`);
+    setLocation(withAuthPrefix(`/explore/${id}`));
   };
 
   const runQuery = (explorationQueryState: any, settings: any) => {
@@ -136,13 +157,14 @@ const ExploreWrapper = () => {
     const newExplortionId = createData.data?.insert_explorations_one?.id;
     if (newExplortionId) {
       delete createData.data;
-      setLocation(`/explore/${dataSourceId}/${newExplortionId}`);
+      setLocation(withAuthPrefix(`${dataSourcePath}/${newExplortionId}`));
     }
   }, [
     createData.data,
     createData.data?.insert_explorations_one?.id,
-    dataSourceId,
+    dataSourcePath,
     setLocation,
+    withAuthPrefix,
   ]);
 
   useEffect(() => {
@@ -200,10 +222,15 @@ const ExploreWrapper = () => {
   }, [currentProgress, execCurrentExploration]);
 
   useEffect(() => {
-    if (datasources.length && ((dataSourceId && !curSource) || !dataSourceId)) {
-      setLocation(`/explore/${datasources?.[0]?.id}`);
+    const noCurSource = dataSourceId && !curSource;
+    if (datasources.length && (noCurSource || !dataSourceId)) {
+      if (noCurSource) {
+        message.error(t("errors.data_source_not_found"));
+      }
+
+      setLocation(withAuthPrefix(`/explore/${datasources?.[0]?.id}`));
     }
-  }, [curSource, dataSourceId, datasources, setLocation]);
+  }, [curSource, dataSourceId, datasources, setLocation, t, withAuthPrefix]);
 
   const loading =
     currentExploration.fetching ||

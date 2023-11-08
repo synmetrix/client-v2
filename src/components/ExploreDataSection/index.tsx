@@ -322,7 +322,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 className={s.run}
                 type="primary"
                 onClick={onExec}
-                disabled={loading}
+                disabled={!queryState?.columns?.length || loading}
               >
                 {t("data_section.run_query")}
                 <RightOutlined />

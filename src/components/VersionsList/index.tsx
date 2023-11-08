@@ -37,17 +37,14 @@ const VersionsList: FC<VersionsListProps> = ({ versions, onRestore }) => {
       title: t("common:words.author"),
       dataIndex: "user",
       key: "user",
-      render: (value) => {
-        console.log(value);
-        return (
-          <Space className={styles.author} size={10}>
-            {value && (
-              <Avatar img={value?.avatarUrl} username={value?.display_name} />
-            )}
-            {value?.display_name}
-          </Space>
-        );
-      },
+      render: (value) => (
+        <Space className={styles.author} size={10}>
+          {value && (
+            <Avatar img={value?.avatarUrl} username={value?.display_name} />
+          )}
+          {value?.display_name}
+        </Space>
+      ),
     },
     {
       title: t("common:words.created_at"),

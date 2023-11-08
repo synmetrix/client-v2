@@ -41,7 +41,7 @@ export interface ModelsSidebarProps {
   onSelectFile: (schema: Dataschema, hash?: string) => void;
   onSetDefault: (branchId?: string) => void;
   onCreateBranch: (name: string) => Promise<void>;
-  onSchemaDelete: (id: string) => void;
+  onSchemaDelete: (schema: string) => void;
   onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
   onCreateFile: (values: Partial<Dataschema>) => void;
   dataSources: DataSourceInfo[];

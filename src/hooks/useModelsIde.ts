@@ -104,6 +104,7 @@ export default ({ dataSourceId, branchId }: Props) => {
           changePath(activeTabName);
         }
       }
+      console.log(tabsState.tabs);
     },
     [changeActiveTab, changePath, closeTab, openSchema, tabsState]
   );

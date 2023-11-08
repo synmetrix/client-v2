@@ -58,7 +58,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   ) as Record<string, Dataschema>;
 
   const [content, setContent] = useState<string>(
-    active ? files[active]?.code : "active"
+    active ? files[active]?.code : ""
   );
 
   const onRun = () => {

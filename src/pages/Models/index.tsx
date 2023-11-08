@@ -127,6 +127,7 @@ export const Models: React.FC<ModelsProps> = ({
     openTab,
     openedTabs,
     openSchema,
+    closeTab,
   } = useModelsIde({
     dataSourceId: dataSource?.id || "",
     branchId: currentBranch?.id,
@@ -141,16 +142,30 @@ export const Models: React.FC<ModelsProps> = ({
   ) as Dataschema[];
 
   useEffect(() => {
+    Object.keys(openedTabs).forEach((id) => {
+      if (openedSchemas.findIndex((s) => s.id === id) === -1) {
+        closeTab(id);
+      }
+    });
+
     if (dataSchemaName) {
       const schemaObj = dataschemas.find(
         (schema) => schema.name === dataSchemaName
       );
 
-      if (schemaObj && !Object.keys(openedTabs).includes(schemaObj.id)) {
+      if (schemaObj) {
         openTab(schemaObj);
       }
     }
-  }, [dataschemas, dataSchemaName, openTab, openedTabs]);
+  }, [
+    dataschemas,
+    dataSchemaName,
+    openTab,
+    openedTabs,
+    openedSchemas,
+    editTab,
+    closeTab,
+  ]);
 
   return (
     <SidebarLayout
@@ -165,25 +180,32 @@ export const Models: React.FC<ModelsProps> = ({
       }
       divider
       items={
-        <ModelsSidebar
-          onDataSourceChange={onDataSourceChange}
-          onSchemaDelete={onSchemaDelete}
-          onSchemaUpdate={onSchemaUpdate}
-          version={currentVersion?.checksum}
-          branchMenu={branchMenu}
-          ideMenu={ideMenu}
-          branches={branches}
-          currentBranch={currentBranch}
-          onChangeBranch={onChangeBranch}
-          onSetDefault={onSetDefault}
-          docs={`/docs/${currentVersion?.id}`}
-          files={dataschemas}
-          onCreateBranch={onCreateBranch}
-          onCreateFile={onSchemaCreate}
-          onSelectFile={openSchema}
-          dataSources={dataSources}
-          dataSourceId={dataSource?.id}
-        />
+        <Spin spinning={fetching}>
+          <ModelsSidebar
+            onDataSourceChange={onDataSourceChange}
+            onSchemaDelete={(id) => {
+              if (openedTabs[id]) {
+                editTab(id, "remove");
+              }
+              onSchemaDelete(id);
+            }}
+            onSchemaUpdate={onSchemaUpdate}
+            version={currentVersion?.checksum}
+            branchMenu={branchMenu}
+            ideMenu={ideMenu}
+            branches={branches}
+            currentBranch={currentBranch}
+            onChangeBranch={onChangeBranch}
+            onSetDefault={onSetDefault}
+            docs={`/docs/${currentVersion?.id}`}
+            files={dataschemas}
+            onCreateBranch={onCreateBranch}
+            onCreateFile={onSchemaCreate}
+            onSelectFile={openSchema}
+            dataSources={dataSources}
+            dataSourceId={dataSource?.id}
+          />
+        </Spin>
       }
     >
       {!dataSources?.length ? (

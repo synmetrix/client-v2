@@ -265,9 +265,9 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   ]);
 
   const Sql = useMemo(() => {
-    const { rawSql = { sql: "" } } = queryState;
+    const { rawSql } = queryState;
 
-    return <PrismCode lang="sql" code={rawSql.sql} />;
+    return <PrismCode lang="sql" code={rawSql?.sql || ""} />;
   }, [queryState]);
 
   const onSubmit = (values: any) => {

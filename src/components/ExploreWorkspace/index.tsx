@@ -205,7 +205,7 @@ const Explore: FC<ExploreProps> = (props) => {
 
   return (
     <Layout title={title} divider={false} subTitle={subTitle} items={sidebar}>
-      <Spin spinning={loading && !metaLoading}>
+      <Spin spinning={loading && !explorationState.loading}>
         {dataSource?.id ? (
           <div id="data-view">
             {dataSection} {filtersSection}

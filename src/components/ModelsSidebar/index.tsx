@@ -76,6 +76,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [newBranchName, setNewBranchName] = useState<string>("");
   const [editPopover, setEditPopover] = useState<{
@@ -191,12 +192,21 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
             <PopoverButton
               trigger={["click"]}
+              open={isCreateFormOpen}
+              onOpenChange={setIsCreateFormOpen}
               icon={<PlusOutlined className={styles.plusIcon} />}
               buttonProps={{
                 className: styles.addFile,
                 disabled: !branches?.length,
               }}
-              content={<DataSchemaForm onSubmit={onCreateFile} />}
+              content={
+                <DataSchemaForm
+                  onSubmit={(data) => {
+                    setIsCreateFormOpen(false);
+                    onCreateFile(data);
+                  }}
+                />
+              }
             />
 
             {ideMenu && (

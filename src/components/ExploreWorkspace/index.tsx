@@ -8,6 +8,7 @@ import usePlayground, { queryStateKeys } from "@/hooks/usePlayground";
 import usePermissions from "@/hooks/usePermissions";
 import useExploreWorkspace from "@/hooks/useExploreWorkspace";
 import useDimensions from "@/hooks/useDimensions";
+import useLocation from "@/hooks/useLocation";
 import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
 import pickKeys from "@/utils/helpers/pickKeys";
@@ -65,6 +66,7 @@ const Explore: FC<ExploreProps> = (props) => {
     ? document.querySelector(".ant-layout-content")
     : document.querySelector("#data-view");
 
+  const [, setLocation] = useLocation();
   const { size } = useDimensions(selector);
   const width = size?.width;
 
@@ -203,13 +205,13 @@ const Explore: FC<ExploreProps> = (props) => {
 
   return (
     <Layout title={title} divider={false} subTitle={subTitle} items={sidebar}>
-      <Spin spinning={loading}>
+      <Spin spinning={loading && !metaLoading}>
         {dataSource?.id ? (
           <div id="data-view">
             {dataSection} {filtersSection}
           </div>
         ) : (
-          <NoDataSource onConnect={() => {}} />
+          <NoDataSource onConnect={() => setLocation("/settings/sources")} />
         )}
       </Spin>
     </Layout>

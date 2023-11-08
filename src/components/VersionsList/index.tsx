@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
 import Copy from "@/components/Copy";
-import type { User } from "@/types/user";
+import formatTime from "@/utils/helpers/formatTime";
 import type { Dataschema } from "@/types/dataschema";
 import type { Version } from "@/types/version";
 
@@ -35,22 +35,27 @@ const VersionsList: FC<VersionsListProps> = ({ versions, onRestore }) => {
     },
     {
       title: t("common:words.author"),
-      dataIndex: "author",
-      key: "author",
-      render: (value?: User) => (
-        <Space className={styles.author} size={10}>
-          {value && (
-            <Avatar img={value?.avatarUrl} username={value?.displayName} />
-          )}
-          {value?.email}
-        </Space>
-      ),
+      dataIndex: "user",
+      key: "user",
+      render: (value) => {
+        console.log(value);
+        return (
+          <Space className={styles.author} size={10}>
+            {value && (
+              <Avatar img={value?.avatarUrl} username={value?.display_name} />
+            )}
+            {value?.display_name}
+          </Space>
+        );
+      },
     },
     {
       title: t("common:words.created_at"),
-      dataIndex: "createdAt",
-      key: "createdAt",
-      render: (value) => <span className={styles.createdAt}>{value}</span>,
+      dataIndex: "created_at",
+      key: "created_at",
+      render: (value) => (
+        <span className={styles.createdAt}>{formatTime(value)}</span>
+      ),
     },
     {
       title: <div className={styles.actions}>{t("common:words.actions")}</div>,

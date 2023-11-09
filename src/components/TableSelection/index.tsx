@@ -55,8 +55,6 @@ const TableSelection: FC<TableSelectionProps> = ({
     onChange(newVal);
   };
 
-  console.log(value);
-
   return (
     <div>
       <div className={styles.header}>

@@ -21,6 +21,10 @@ export default [
         component: "./pages/Models",
       },
       {
+        path: "/export/:dataSourceId",
+        component: "./pages/ExportModels",
+      },
+      {
         path: "/settings",
         component: "./layouts/SettingsLayout",
         routes: [

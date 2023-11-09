@@ -301,7 +301,6 @@ const ModelsWrapper: React.FC = () => {
       deleteMutation,
       execDeleteMutation,
       exportMutation,
-      execExportMutation,
       createBranchMutation,
       execCreateBranchMutation,
       createVersionMutation,
@@ -356,13 +355,6 @@ const ModelsWrapper: React.FC = () => {
       successMessage: null,
     }
   );
-
-  useCheckResponse(exportMutation, (res) => {
-    if (res) {
-      const url = res?.export_data_models?.download_url;
-      window.location.assign(url);
-    }
-  });
 
   useEffect(() => {
     if (!branch && !currentBranchId && dataSource) {
@@ -507,12 +499,6 @@ const ModelsWrapper: React.FC = () => {
       setLocation(`${basePath}/${currentUser.dataSources[0].id}`);
     }
   }, [dataSourceId, currentUser, basePath, setLocation, dataSource?.branch.id]);
-
-  const exportData = () => {
-    execExportMutation({
-      branch_id: currentBranchId as string,
-    });
-  };
 
   const inputFile = useRef<HTMLInputElement>(null);
 
@@ -781,18 +767,12 @@ const ModelsWrapper: React.FC = () => {
           />
         </>
       ),
-      onClick: () => {
-        setLocation(`${basePath}/${dataSourceId}`);
-        uploadFile();
-      },
+      onClick: () => uploadFile(),
     },
     {
       key: "export",
       label: t("ide_menu.export_models"),
-      onClick: () => {
-        setLocation(`${basePath}/${dataSourceId}`);
-        exportData();
-      },
+      onClick: () => window.open(`/export/${dataSourceId}`),
     },
   ] as MenuProps["items"];
 

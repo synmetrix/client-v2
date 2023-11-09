@@ -50,7 +50,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   initialValue = {
     type: "js",
   },
-  loading,
+  loading = false,
 }) => {
   const { t } = useTranslation(["dataModelGeneration", "common"]);
 
@@ -87,7 +87,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
         <SearchInput
           placeholder="Placeholder"
           value={searchValue}
-          onChange={setSearchValue}
+          onChange={(val) => setSearchValue(val.toLowerCase())}
         />
         <Spin spinning={loading}>
           <Form id="data-model-generation">
@@ -99,9 +99,9 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                 {Object.keys(schema)
                   .filter(
                     (s) =>
-                      s.includes(searchValue) ||
+                      s.toLowerCase().includes(searchValue) ||
                       Object.keys(schema[s]).some((tb) =>
-                        tb.includes(searchValue)
+                        tb.toLowerCase().includes(searchValue)
                       )
                   )
                   .map((s) => {

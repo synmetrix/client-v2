@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { getOr } from "unchanged";
 import cn from "classnames";
-import { Alert, Empty, Tooltip, message } from "antd";
+import { Alert, Empty, Tooltip, Typography, message } from "antd";
 import { useTable, useSortBy } from "react-table";
 import copy from "copy-to-clipboard";
 import {
@@ -24,6 +24,8 @@ import type { SortBy } from "@/types/sort";
 import type { LoadingProgress } from "@/types/loading";
 import type { QuerySettings } from "@/types/querySettings";
 
+const { Paragraph } = Typography;
+
 import styles from "./index.module.less";
 
 import type { OrderByFn } from "react-table";
@@ -38,6 +40,7 @@ import type { FC, ReactNode } from "react";
 import type { MenuProps } from "antd";
 
 const COL_WIDTH = 200;
+const INDEX_COL_WIDTH = 50;
 
 // set with unique ids inside https://stackoverflow.com/a/49821454
 export class SortBySet extends Set {
@@ -204,7 +207,9 @@ const VirtualTable: FC<VirtualTableProps> = ({
         key="label"
         title={typeof humanLabel === "string" ? humanLabel : null}
       >
-        <span className={"headerColumn"}>{humanLabel}</span>
+        <Paragraph ellipsis className={styles.headerParagraph}>
+          {humanLabel}
+        </Paragraph>
       </Tooltip>,
     ];
 
@@ -355,7 +360,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
         <Table
           id={tableId}
           className={cn(styles.table, tableId && styles.minWidth)}
-          width={tableWidth}
+          width={hideIndexColumn ? tableWidth : tableWidth + INDEX_COL_WIDTH}
           height={height}
           headerHeight={headerHeight}
           rowHeight={rowHeight}
@@ -373,7 +378,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
               label="Index"
               cellDataGetter={({ rowData }) => rowData.index + 1}
               dataKey="index"
-              width={60}
+              width={INDEX_COL_WIDTH}
             />
           )}
           {flatHeaders.map((col) => {

@@ -128,6 +128,7 @@ export const Models: React.FC<ModelsProps> = ({
     openedTabs,
     openSchema,
     closeTab,
+    replaceTabs,
   } = useModelsIde({
     dataSourceId: dataSource?.id || "",
     branchId: currentBranch?.id,
@@ -142,11 +143,12 @@ export const Models: React.FC<ModelsProps> = ({
   ) as Dataschema[];
 
   useEffect(() => {
-    Object.keys(openedTabs).forEach((id) => {
-      if (openedSchemas.findIndex((s) => s.id === id) === -1) {
-        closeTab(id);
-      }
-    });
+    replaceTabs(
+      openedSchemas.reduce((res: Record<string, string>, schema) => {
+        res[schema.id] = schema.name;
+        return res;
+      }, {})
+    );
 
     if (dataSchemaName) {
       const schemaObj = dataschemas.find(
@@ -165,6 +167,7 @@ export const Models: React.FC<ModelsProps> = ({
     openedSchemas,
     editTab,
     closeTab,
+    replaceTabs,
   ]);
 
   return (

@@ -33,7 +33,17 @@ interface CloseAction {
   fallbackId?: string;
 }
 
-type Action = OpenAction | ChangeTabAction | ChangeAction | CloseAction;
+interface ReplaceAction {
+  type: "replace";
+  value: Record<string, string>;
+}
+
+type Action =
+  | OpenAction
+  | ChangeTabAction
+  | ChangeAction
+  | CloseAction
+  | ReplaceAction;
 
 const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
@@ -57,6 +67,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
 
       return { tabs, activeTab } as State;
     }
+
+    case "replace":
+      return set("tabs", action.value, state) as State;
 
     default:
       return state as State;
@@ -87,11 +100,17 @@ export default (defaultState = {}) => {
     (id: string) => dispatch({ type: "changeTab", id }),
     [dispatch]
   );
+  const replaceTabs = useCallback(
+    (tabs: Record<string, string>) =>
+      dispatch({ type: "replace", value: tabs }),
+    [dispatch]
+  );
 
   return {
     state,
     openTab,
     closeTab,
     changeActiveTab,
+    replaceTabs,
   };
 };

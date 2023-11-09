@@ -122,12 +122,21 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       label: t("data_section.rows_limit"),
       type: "number",
       defaultValue: 1000,
+      min: 1,
+      max: 10000,
+      rules: {
+        validate: (val: number) => !isNaN(val) && val > 0 && val <= 10000,
+      },
     },
     offset: {
       section: t("data_section.query"),
       label: t("data_section.additional_offset"),
       type: "number",
+      min: 0,
       defaultValue: 0,
+      rules: {
+        validate: (val: number) => !isNaN(val) && val >= 0,
+      },
     },
     hideCubeNames: {
       section: t("data_section.settings"),

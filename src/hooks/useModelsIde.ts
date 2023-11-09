@@ -24,7 +24,6 @@ export default ({ dataSourceId, branchId }: Props) => {
     openTab,
     closeTab,
     changeActiveTab,
-    replaceTabs,
   } = useTabs({ activeTab: defaultTabId });
 
   const changePath = useCallback(
@@ -47,25 +46,20 @@ export default ({ dataSourceId, branchId }: Props) => {
 
   const changeTab = (dataschema?: Tab) => {
     changePath(dataschema?.name || "sqlrunner");
-    changeActiveTab(dataschema?.id || "sqlrunner");
+    changeActiveTab(dataschema?.name || "sqlrunner");
   };
 
   const openSchema = useCallback(
-    (
-      schema: {
-        id: string;
-        name: string;
-      },
-      hash?: string
-    ) => {
-      openTab(schema);
-      changePath(schema.name);
+    (name: string, hash?: string) => {
+      openTab(name);
+
+      changePath(name);
 
       if (hash) {
         window.location.hash = hash;
       }
     },
-    [openTab, changePath]
+    [changePath, openTab]
   );
 
   const getTabId = (schema: { id: string }) => schema && schema.id;
@@ -73,15 +67,13 @@ export default ({ dataSourceId, branchId }: Props) => {
   const editTab = useCallback(
     (id: string, action: string) => {
       if (action === "remove") {
-        const { activeTab } = tabsState;
+        const { activeTab, tabs: tabsSet } = tabsState;
+        const tabs = Array.from(tabsSet);
+        const tabIdx = tabs.indexOf(id);
         closeTab(id);
 
-        const anyOtherTab = Object.keys(tabsState.tabs).find(
-          (tabId) => tabId !== id
-        );
-        const anyOtherTabName = anyOtherTab
-          ? tabsState.tabs[anyOtherTab]
-          : defaultTabId;
+        const anyOtherTabIdx = tabIdx > 0 ? tabIdx - 1 : tabIdx + 1;
+        const anyOtherTabName = tabs[anyOtherTabIdx] || defaultTabId;
 
         // if we're closing the active tab and there are any other tabs
         if (activeTab === id && anyOtherTabName) {
@@ -89,23 +81,17 @@ export default ({ dataSourceId, branchId }: Props) => {
 
           // if other tab is not the default one then open it
           if (anyOtherTabName !== defaultTabId) {
-            openSchema({
-              id: anyOtherTab!,
-              name: anyOtherTabName,
-            });
+            openSchema(anyOtherTabName);
             // else change path only
           } else {
             changePath(anyOtherTabName);
           }
           // else move to active
         } else {
-          const activeTabName = activeTab
-            ? tabsState.tabs[activeTab]
-            : undefined;
+          const activeTabName = activeTab ? activeTab : undefined;
           changePath(activeTabName);
         }
       }
-      console.log(tabsState.tabs);
     },
     [changeActiveTab, changePath, closeTab, openSchema, tabsState]
   );
@@ -119,6 +105,5 @@ export default ({ dataSourceId, branchId }: Props) => {
     editTab,
     closeTab,
     openTab,
-    replaceTabs,
   };
 };

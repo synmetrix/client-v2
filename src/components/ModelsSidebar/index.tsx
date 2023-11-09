@@ -38,10 +38,10 @@ export interface ModelsSidebarProps {
   docs: string;
   version?: string;
   files: Dataschema[];
-  onSelectFile: (schema: Dataschema, hash?: string) => void;
+  onSelectFile: (schema: string, hash?: string) => void;
   onSetDefault: (branchId?: string) => void;
   onCreateBranch: (name: string) => Promise<void>;
-  onSchemaDelete: (schema: string) => void;
+  onSchemaDelete: (schema: Dataschema) => void;
   onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
   onCreateFile: (values: Partial<Dataschema>) => void;
   dataSources: DataSourceInfo[];
@@ -232,7 +232,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 <div
                   key={f.id}
                   className={styles.fileBtn}
-                  onClick={() => onSelectFile(f)}
+                  onClick={() => onSelectFile(f.name)}
                 >
                   <Row justify={"space-between"}>
                     <Col>

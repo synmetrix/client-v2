@@ -1,19 +1,16 @@
 import { useCallback, useReducer } from "react";
-import { set, remove } from "unchanged";
+import { set } from "unchanged";
 
 import type { Reducer } from "react";
 
 interface State {
-  tabs: Record<string, string>;
+  tabs: Set<string>;
   activeTab: string | null;
 }
 
 interface OpenAction {
   type: "open";
-  data: {
-    id: string;
-    name: string;
-  };
+  data: string;
 }
 
 interface ChangeTabAction {
@@ -50,22 +47,19 @@ const reducer: Reducer<State, Action> = (state, action) => {
     case "open":
       return {
         ...state,
-        activeTab: action.data.id,
-        tabs: { ...state.tabs, [action.data.id]: action.data.name },
+        activeTab: action.data,
+        tabs: new Set([...state.tabs, action.data]),
       } as State;
 
     case "changeTab":
       return set("activeTab", action.id, state) as State;
 
-    case "change":
-      return set(["tabs", action.id], action.value, state) as State;
-
     case "close": {
-      const tabs = remove(action.id, state.tabs);
+      const tabs = Array.from(state.tabs).filter((t) => t !== action.id);
       const activeTab =
         action.id === state.activeTab ? action.fallbackId : state.activeTab;
 
-      return { tabs, activeTab } as State;
+      return { tabs: new Set(tabs), activeTab } as State;
     }
 
     case "replace":
@@ -77,18 +71,18 @@ const reducer: Reducer<State, Action> = (state, action) => {
 };
 
 const initialState = {
-  tabs: {},
+  tabs: new Set([]),
   activeTab: null,
 };
 
-export default (defaultState = {}) => {
+export default (defaultState: Partial<State> = {}) => {
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     ...defaultState,
   });
 
   const openTab = useCallback(
-    (data: { id: string; name: string }) => dispatch({ type: "open", data }),
+    (data: string) => dispatch({ type: "open", data }),
     [dispatch]
   );
   const closeTab = useCallback(
@@ -100,17 +94,11 @@ export default (defaultState = {}) => {
     (id: string) => dispatch({ type: "changeTab", id }),
     [dispatch]
   );
-  const replaceTabs = useCallback(
-    (tabs: Record<string, string>) =>
-      dispatch({ type: "replace", value: tabs }),
-    [dispatch]
-  );
 
   return {
     state,
     openTab,
     closeTab,
     changeActiveTab,
-    replaceTabs,
   };
 };

@@ -127,8 +127,6 @@ export const Models: React.FC<ModelsProps> = ({
     openTab,
     openedTabs,
     openSchema,
-    closeTab,
-    replaceTabs,
   } = useModelsIde({
     dataSourceId: dataSource?.id || "",
     branchId: currentBranch?.id,
@@ -136,39 +134,23 @@ export const Models: React.FC<ModelsProps> = ({
 
   const openedSchemas = useMemo(
     () =>
-      Object.keys(openedTabs)
-        .map((id) => dataschemas.find((schema) => schema.id === id))
+      Array.from(openedTabs)
+        .map((id) => dataschemas.find((schema) => schema.name === id))
         .filter(Boolean),
     [dataschemas, openedTabs]
   ) as Dataschema[];
 
   useEffect(() => {
-    replaceTabs(
-      openedSchemas.reduce((res: Record<string, string>, schema) => {
-        res[schema.id] = schema.name;
-        return res;
-      }, {})
-    );
-
     if (dataSchemaName) {
       const schemaObj = dataschemas.find(
         (schema) => schema.name === dataSchemaName
       );
 
       if (schemaObj) {
-        openTab(schemaObj);
+        openTab(schemaObj.name);
       }
     }
-  }, [
-    dataschemas,
-    dataSchemaName,
-    openTab,
-    openedTabs,
-    openedSchemas,
-    editTab,
-    closeTab,
-    replaceTabs,
-  ]);
+  }, [dataschemas, dataSchemaName, openTab]);
 
   return (
     <SidebarLayout
@@ -186,11 +168,11 @@ export const Models: React.FC<ModelsProps> = ({
         <Spin spinning={fetching}>
           <ModelsSidebar
             onDataSourceChange={onDataSourceChange}
-            onSchemaDelete={(id) => {
-              if (openedTabs[id]) {
-                editTab(id, "remove");
+            onSchemaDelete={(schema) => {
+              if (openedTabs.has(schema.name)) {
+                editTab(schema.name, "remove");
               }
-              onSchemaDelete(id);
+              onSchemaDelete(schema.id);
             }}
             onSchemaUpdate={onSchemaUpdate}
             version={currentVersion?.checksum}
@@ -211,7 +193,7 @@ export const Models: React.FC<ModelsProps> = ({
         </Spin>
       }
     >
-      {!dataSources?.length ? (
+      {!dataSources?.length && !fetching ? (
         <NoDataSource onConnect={onConnect} />
       ) : (
         <Spin spinning={fetching}>

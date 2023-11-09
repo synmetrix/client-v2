@@ -52,7 +52,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   const files = schemas?.reduce(
     (res, schema) => ({
       ...res,
-      [schema.id]: schema,
+      [schema.name]: schema,
     }),
     {}
   ) as Record<string, Dataschema>;
@@ -106,7 +106,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   ];
 
   const language = active
-    ? languages[files[active]?.name.split(".")[0] as keyof typeof languages]
+    ? languages[active.split(".")[0] as keyof typeof languages]
     : "sql";
 
   return (
@@ -120,23 +120,23 @@ const CodeEditor: FC<CodeEditorProps> = ({
         <Col className={styles.navBtns} order={isMobile ? 1 : -1}>
           <Space size={16} align="center">
             {files &&
-              Object.keys(files).map((id) => (
+              Object.keys(files).map((name) => (
                 <Button
                   type="default"
-                  key={id}
+                  key={name}
                   className={cn(styles.btn, {
-                    [styles.active]: active && id === files[active]?.id,
+                    [styles.active]: active && name === active,
                   })}
-                  onClick={() => onTabChange(files[id])}
+                  onClick={() => onTabChange(files[name])}
                 >
-                  {files[id].name}
+                  {files[name].name}
                   <Tooltip title={t("common:words.close")}>
                     <CloseOutlined
                       className={styles.closeIcon}
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        onClose(id);
+                        onClose(name);
                       }}
                     />
                   </Tooltip>
@@ -149,7 +149,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
         <Col order={isMobile ? -1 : 1}>
           <Button
             className={styles.save}
-            onClick={() => active && onCodeSave(active, content)}
+            onClick={() => active && onCodeSave(files[active].id, content)}
           >
             {t("common:words.save")}
           </Button>

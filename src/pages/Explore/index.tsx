@@ -59,20 +59,23 @@ export const Explore = ({
   runQuery = () => {},
   onSelectDataSource = () => {},
 }: ExploreProps) => {
-  const header = () => (
-    <DataSourcesMenu
-      selectedId={dataSource?.id as string}
-      entities={(dataSources || []).map((d) => ({
-        id: d.id as string,
-        name: d.name,
-      }))}
-      onChange={onSelectDataSource}
-    />
+  const header = useMemo(
+    () => (
+      <DataSourcesMenu
+        selectedId={dataSource?.id as string}
+        entities={(dataSources || []).map((d) => ({
+          id: d.id as string,
+          name: d.name,
+        }))}
+        onChange={onSelectDataSource}
+      />
+    ),
+    [dataSource?.id, dataSources, onSelectDataSource]
   );
 
   return (
     <ExploreWorkspace
-      header={header()}
+      header={header}
       rawSql={rawSql}
       exploration={exploration}
       params={params}

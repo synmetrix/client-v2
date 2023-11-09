@@ -23,6 +23,8 @@ import type {
 
 import NoDataSource from "../NoDataSource";
 
+import styles from "./index.module.less";
+
 import type { FC, ReactNode } from "react";
 
 const DEFAULT_ROW_HEIGHT = 20;
@@ -180,7 +182,7 @@ const Explore: FC<ExploreProps> = (props) => {
   const sidebar = (
     <>
       {header}
-      <Spin spinning={metaLoading}>
+      <Spin spinning={metaLoading} wrapperClassName={styles.spinWrapper}>
         <ExploreCubes
           availableQueryMembers={availableQueryMembers}
           selectedQueryMembers={selectedQueryMembers}

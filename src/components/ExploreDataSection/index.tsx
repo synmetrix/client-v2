@@ -29,6 +29,8 @@ import s from "./index.module.less";
 import type { FC, ReactNode } from "react";
 import type { CollapsePanelProps, RadioChangeEvent } from "antd";
 
+const MAX_ROWS_LIMIT = 10000;
+
 type SortUpdater = (nextSortBy: SortBySet[]) => void;
 
 interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
@@ -50,6 +52,7 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   screenshotMode?: boolean;
   emptyDesc?: ReactNode;
   className?: string;
+  loading?: boolean;
 }
 
 const { Panel } = Collapse;
@@ -72,6 +75,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     emptyDesc,
     screenshotMode,
     rowHeight,
+    loading = false,
     ...restProps
   } = props;
 
@@ -123,9 +127,10 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       type: "number",
       defaultValue: 1000,
       min: 1,
-      max: 10000,
+      max: MAX_ROWS_LIMIT,
       rules: {
-        validate: (val: number) => !isNaN(val) && val > 0 && val <= 10000,
+        validate: (val: number) =>
+          !isNaN(val) && val > 0 && val <= MAX_ROWS_LIMIT,
       },
     },
     offset: {
@@ -157,7 +162,6 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     error,
     rows,
     columns,
-    loading,
     progress,
     settings,
     skippedMembers = [],
@@ -226,11 +230,18 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       });
     }
 
+    const loadingTip = progress?.timeElapsed
+      ? `${progress?.stage} ${(
+          parseFloat(progress?.timeElapsed as unknown as string) / 1000
+        ).toFixed(2)} secs...`
+      : progress?.stage;
+
     return (
       <VirtualTable
         tableId={screenshotMode ? "explorationTable" : undefined}
         messages={messages}
         loading={screenshotMode ? false : loading}
+        loadingTip={loadingTip}
         width={width}
         height={height}
         columns={columns}

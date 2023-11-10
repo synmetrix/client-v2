@@ -165,6 +165,7 @@ const Explore: FC<ExploreProps> = (props) => {
       onQueryChange={onQueryChange}
       disabled={!isQueryChanged}
       state={state}
+      loading={loading}
       queryState={explorationState}
       explorationRowId={explorationRowId}
       screenshotMode={screenshotMode}
@@ -205,21 +206,24 @@ const Explore: FC<ExploreProps> = (props) => {
     />
   ) : null;
 
-  const Layout = cubesFallback ? AppLayout : SidebarLayout;
+  const Layout = cubesFallback || !dataSource?.id ? AppLayout : SidebarLayout;
 
   return (
-    <Layout title={title} divider={false} subTitle={subTitle} items={sidebar}>
-      <Spin spinning={loading && !explorationState.loading}>
-        {dataSource?.id ? (
-          <div id="data-view">
-            {dataSection} {filtersSection}
-          </div>
-        ) : (
-          <NoDataSource
-            onConnect={() => setLocation(withAuthPrefix("/settings/sources"))}
-          />
-        )}
-      </Spin>
+    <Layout
+      title={dataSource?.name}
+      divider={false}
+      subTitle={subTitle}
+      items={sidebar}
+    >
+      {dataSource?.id ? (
+        <div id="data-view">
+          {dataSection} {filtersSection}
+        </div>
+      ) : (
+        <NoDataSource
+          onConnect={() => setLocation(withAuthPrefix("/settings/sources"))}
+        />
+      )}
     </Layout>
   );
 };

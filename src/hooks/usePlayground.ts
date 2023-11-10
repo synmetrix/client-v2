@@ -135,7 +135,6 @@ export default ({ meta = [], exploration, rawSql, dataSet }: Props) => {
 
   const explorationState: ExplorationState = useMemo(
     () => ({
-      loading: dataSet?.progress?.loading,
       progress: dataSet?.progress,
       hitLimit,
       columns,

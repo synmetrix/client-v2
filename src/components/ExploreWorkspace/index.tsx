@@ -45,14 +45,12 @@ interface ExploreProps {
   runQuery: (state: object, settings: QuerySettings) => void;
   header?: ReactNode;
   subTitle?: ReactNode;
-  title?: ReactNode;
 }
 
 const Explore: FC<ExploreProps> = (props) => {
   const {
     header = null,
     subTitle = <span style={{ fontSize: 20, fontWeight: 600 }}>Explore</span>,
-    title = null,
     source: dataSource,
     meta,
     exploration,

@@ -200,10 +200,11 @@ const ExploreWrapper = () => {
     () => (datasources || []).find((d) => d.id === dataSourceId),
     [dataSourceId, datasources]
   );
-  const exploration = useMemo(
-    () => currentExploration?.data?.explorations_by_pk as Exploration,
-    [currentExploration.data?.explorations_by_pk]
-  );
+  const exploration = useMemo(() => {
+    if (explorationId && currentExploration?.data) {
+      return currentExploration?.data?.explorations_by_pk as Exploration;
+    }
+  }, [currentExploration?.data, explorationId]);
   const dataSet = useMemo(
     () => currentExploration.data?.fetch_dataset as FetchDatasetOutput,
     [currentExploration.data?.fetch_dataset]

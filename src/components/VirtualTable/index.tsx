@@ -374,7 +374,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
               label="Index"
               cellDataGetter={({ rowData }) => rowData.index + 1}
               dataKey="index"
-              width={60}
+              width={COL_WIDTH}
             />
           )}
           {flatHeaders.map((col) => {

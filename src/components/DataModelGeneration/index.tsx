@@ -99,9 +99,9 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                 {Object.keys(schema)
                   .filter(
                     (s) =>
-                      s.toLowerCase().includes(searchValue) ||
+                      s.toString().toLowerCase().includes(searchValue) ||
                       Object.keys(schema[s]).some((tb) =>
-                        tb.toLowerCase().includes(searchValue)
+                        tb.toString().toLowerCase().includes(searchValue)
                       )
                   )
                   .map((s) => {
@@ -123,6 +123,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                           schema={schema}
                           path={s}
                           initialValue={initialValue}
+                          searchValue={searchValue}
                         />
                       </Panel>
                     );

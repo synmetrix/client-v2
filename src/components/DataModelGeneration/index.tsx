@@ -10,6 +10,7 @@ import type {
   DataSourceInfo,
   DynamicForm,
   Schema,
+  Table,
 } from "@/types/dataSource";
 import SearchInput from "@/components/SearchInput";
 import TableSelection from "@/components/TableSelection";
@@ -71,6 +72,26 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
     }
   };
 
+  const filteredSchema =
+    schema &&
+    Object.keys(schema).reduce((res, s) => {
+      if (s.toLowerCase().includes(searchValue)) {
+        res[s] = schema[s];
+      } else {
+        const filteredTables = Object.keys(schema[s]).reduce((r, tb) => {
+          if (tb.toLowerCase().includes(searchValue)) {
+            r[tb] = schema[s][tb];
+          }
+          return r;
+        }, {} as Table);
+
+        if (Object.keys(filteredTables).length > 0) {
+          res[s] = filteredTables;
+        }
+      }
+      return res;
+    }, {} as Schema);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.head}>
@@ -91,43 +112,34 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
         />
         <Spin spinning={loading}>
           <Form id="data-model-generation">
-            {schema ? (
+            {filteredSchema ? (
               <Collapse
                 className={styles.collapse}
                 expandIcon={() => <TableIcon />}
               >
-                {Object.keys(schema)
-                  .filter(
-                    (s) =>
-                      s.toString().toLowerCase().includes(searchValue) ||
-                      Object.keys(schema[s]).some((tb) =>
-                        tb.toString().toLowerCase().includes(searchValue)
-                      )
-                  )
-                  .map((s) => {
-                    const count = getCount(watch(), s);
+                {Object.keys(filteredSchema).map((s) => {
+                  const count = getCount(watch(), s);
 
-                    return (
-                      <Panel
-                        className={styles.collapse}
-                        header={
-                          <span className={styles.collapseHeader}>
-                            {s} {count > 0 && <span>({count})</span>}
-                          </span>
-                        }
-                        key={s}
-                      >
-                        <TableSelection
-                          control={control}
-                          type={watch("type")}
-                          schema={schema}
-                          path={s}
-                          initialValue={initialValue}
-                          searchValue={searchValue}
-                        />
-                      </Panel>
-                    );
-                  })}
+                  return (
+                    <Panel
+                      className={styles.collapse}
+                      header={
+                        <span className={styles.collapseHeader}>
+                          {s} {count > 0 && <span>({count})</span>}
+                        </span>
+                      }
+                      key={s}
+                    >
+                      <TableSelection
+                        control={control}
+                        type={watch("type")}
+                        schema={filteredSchema}
+                        path={s}
+                        initialValue={initialValue}
+                      />
+                    </Panel>
+                  );
+                })}
               </Collapse>
             ) : (
               <Empty />

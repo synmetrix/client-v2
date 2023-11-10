@@ -19,7 +19,6 @@ interface TableSelectionProps {
   type: string;
   control: Control<DynamicForm>;
   initialValue?: DynamicForm;
-  searchValue?: string;
 }
 
 const TableSelection: FC<TableSelectionProps> = ({
@@ -28,7 +27,6 @@ const TableSelection: FC<TableSelectionProps> = ({
   control,
   initialValue,
   type,
-  searchValue = "",
 }) => {
   const windowSize = useResponsive();
   const { t } = useTranslation(["common"]);
@@ -67,39 +65,37 @@ const TableSelection: FC<TableSelectionProps> = ({
           {t("common:words.clear")}
         </Button>
       </div>
-      {Object.keys(schema[path])
-        .filter((tb) => tb.toLowerCase().includes(searchValue))
-        .map((tb) => (
-          <div key={tb}>
-            <div className={cn(styles.field)}>
-              <Checkbox
-                checked={value?.[tb]}
-                onChange={(e) => {
-                  onChange({ ...value, [tb]: e.target.checked });
-                }}
-              >
-                <span
-                  className={cn(styles.table, {
-                    [styles.column]: !windowSize.md,
-                  })}
-                >
-                  <span>{tb}</span>
-                  <span className={styles.separator}>→</span>
-                  <span>
-                    {tb}.{type}
-                  </span>
-                </span>
-              </Checkbox>
+      {Object.keys(schema[path]).map((tb) => (
+        <div key={tb}>
+          <div className={cn(styles.field)}>
+            <Checkbox
+              checked={value?.[tb]}
+              onChange={(e) => {
+                onChange({ ...value, [tb]: e.target.checked });
+              }}
+            >
               <span
-                className={cn(styles.columns, {
-                  [styles.block]: !windowSize.md,
+                className={cn(styles.table, {
+                  [styles.column]: !windowSize.md,
                 })}
               >
-                ({schema[path][tb].length}) {t("common:words.columns")}
+                <span>{tb}</span>
+                <span className={styles.separator}>→</span>
+                <span>
+                  {tb}.{type}
+                </span>
               </span>
-            </div>
+            </Checkbox>
+            <span
+              className={cn(styles.columns, {
+                [styles.block]: !windowSize.md,
+              })}
+            >
+              ({schema[path][tb].length}) {t("common:words.columns")}
+            </span>
           </div>
-        ))}
+        </div>
+      ))}
     </div>
   );
 };

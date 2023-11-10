@@ -326,9 +326,9 @@ const VirtualTable: FC<VirtualTableProps> = ({
     };
 
     return (
-      <Tooltip title={cellData?.toString()}>
-        <span onDoubleClick={onDoubleClick}>{defaultCellRenderer(args)}</span>
-      </Tooltip>
+      <span title={cellData?.toString()} onDoubleClick={onDoubleClick}>
+        {defaultCellRenderer(args)}
+      </span>
     );
   };
 

@@ -1,132 +1,119 @@
+import { Spin } from "antd";
+
 import SidebarLayout from "@/layouts/SidebarLayout";
 import ExploreDataSection from "@/components/ExploreDataSection";
 import ErrorFound from "@/components/ErrorFound";
 import ExploreCubes from "@/components/ExploreCubes";
-import usePlayground from "@/hooks/usePlayground";
+import usePlayground, { queryStateKeys } from "@/hooks/usePlayground";
 import usePermissions from "@/hooks/usePermissions";
 import useExploreWorkspace from "@/hooks/useExploreWorkspace";
 import useDimensions from "@/hooks/useDimensions";
+import useLocation from "@/hooks/useLocation";
 import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
+import pickKeys from "@/utils/helpers/pickKeys";
+import useAppSettings from "@/hooks/useAppSettings";
+import type { DataSourceInfo } from "@/types/dataSource";
+import type { QuerySettings } from "@/types/querySettings";
+import type {
+  Exploration,
+  RawSql,
+  DataSchemaValidation,
+} from "@/types/exploration";
+
+import NoDataSource from "../NoDataSource";
+
+import styles from "./index.module.less";
 
 import type { FC, ReactNode } from "react";
 
 const DEFAULT_ROW_HEIGHT = 20;
 
-interface ExploreWorkSpaceProps {
+interface ExploreProps {
   loading: boolean;
   meta: Record<string, any>[];
+  metaLoading?: boolean;
   params: {
-    explorationId: string;
     screenshotMode: boolean;
-    dataSourceId: string;
   };
-  source: {
-    id: string;
-    name: string;
-    db_type: string;
-    db_params: {
-      ssl: boolean;
-      host: string;
-      port: string;
-      user: string;
-      database: string;
-      password: string;
-    };
-    created_at: "2021-09-09T11:52:58.347143+00:00";
-    updated_at: string;
-  };
+  source?: DataSourceInfo;
+  dataSources?: DataSourceInfo[];
+  exploration?: Exploration;
+  rawSql?: RawSql;
+  dataSet: any;
+  dataSchemaValidation?: DataSchemaValidation;
+  runQuery: (state: object, settings: QuerySettings) => void;
   header?: ReactNode;
   subTitle?: ReactNode;
-  title?: ReactNode;
 }
 
-const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
+const Explore: FC<ExploreProps> = (props) => {
   const {
     header = null,
     subTitle = <span style={{ fontSize: 20, fontWeight: 600 }}>Explore</span>,
-    title = null,
     source: dataSource,
     meta,
-    params: { explorationId, screenshotMode },
+    exploration,
+    rawSql,
+    dataSet,
+    dataSchemaValidation,
+    runQuery = () => {},
+    loading = false,
+    metaLoading = false,
+    params: { screenshotMode } = {},
   } = props;
 
   const selector = screenshotMode
     ? document.querySelector(".ant-layout-content")
     : document.querySelector("#data-view");
 
+  const [, setLocation] = useLocation();
+  const { withAuthPrefix } = useAppSettings();
   const { size } = useDimensions(selector);
   const width = size?.width;
 
   const {
     selectedQueryMembers = {},
     availableQueryMembers = {},
-    exploration,
     state: explorationState,
     analyticsQuery: {
+      state: playgroundState,
       updateMember,
       isQueryChanged,
-      runQuery,
       setLimit,
       setOffset,
       setPage,
       setOrderBy,
     },
+    settings,
     dispatchSettings,
   } = usePlayground({
-    dataSourceId: dataSource.id as string,
-    editId: explorationId as string,
+    exploration,
     meta,
+    rawSql,
+    dataSet,
   });
+
   const explorationRowId = useMemo(() => exploration?.id, [exploration]);
 
-  const { collapseState, state, onDataSectionChange, onToggleSection } =
-    useExploreWorkspace({ selectedQueryMembers });
-
-  // const {
-  //   mutations: { validateMutation, execValidateMutation },
-  // } = useSources({
-  //   pauseQueryAll: true,
-  // });
-
-  // TODO use graphQL API
-  const validateMutation: any = () => {};
+  const { collapseState, state, onToggleSection } = useExploreWorkspace({
+    selectedQueryMembers,
+  });
 
   const tableHeight = useMemo(
     () => DEFAULT_ROW_HEIGHT * explorationState.rows.length + 30,
     [explorationState.rows.length]
   );
 
-  // useTrackedEffect((changes, previousDeps, currentDeps) => {
-  //   const prevData = previousDeps?.[0];
-  //   const currData = currentDeps?.[0];
-
-  //   let dataDiff = false;
-  //   if (!prevData || !currData) {
-  //     dataDiff = false;
-  //   } else {
-  //     dataDiff = !equals(prevData, currData);
-  //   }
-
-  //   if (dataDiff) {
-  //     execValidateMutation({ id: dataSource.id });
-  //   }
-  // }, [currentUser.dataschemas, execValidateMutation]);
-
-  // useEffect(() => {
-  //   if (dataSource.id) {
-  //     execValidateMutation({ id: dataSource.id });
-  //   }
-  // }, [dataSource.id, execValidateMutation]);
-
   const onRunQuery = useCallback(
     (e: Event) => {
-      runQuery();
+      const curExplorationState = pickKeys(queryStateKeys, playgroundState);
+      runQuery(curExplorationState, settings);
 
       e.preventDefault();
       e.stopPropagation();
     },
-    [runQuery]
+    [playgroundState, runQuery, settings]
   );
   const onQueryChange = useCallback(
     (type: string, ...args: any) => {
@@ -162,7 +149,7 @@ const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
     scope: "explore/workspace/filters",
   });
 
-  if (Object.keys(dataSource).length && !availableQueryMembers) {
+  if (Object.keys(dataSource || {}).length && !availableQueryMembers) {
     return <ErrorFound status={500} />;
   }
 
@@ -176,6 +163,7 @@ const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
       onQueryChange={onQueryChange}
       disabled={!isQueryChanged}
       state={state}
+      loading={loading}
       queryState={explorationState}
       explorationRowId={explorationRowId}
       screenshotMode={screenshotMode}
@@ -193,12 +181,14 @@ const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
   const sidebar = (
     <>
       {header}
-      <ExploreCubes
-        availableQueryMembers={availableQueryMembers}
-        selectedQueryMembers={selectedQueryMembers}
-        onMemberSelect={updateMember}
-        dataSchemaValidation={validateMutation}
-      />
+      <Spin spinning={metaLoading} wrapperClassName={styles.spinWrapper}>
+        <ExploreCubes
+          availableQueryMembers={availableQueryMembers}
+          selectedQueryMembers={selectedQueryMembers}
+          onMemberSelect={updateMember}
+          dataSchemaValidation={dataSchemaValidation}
+        />
+      </Spin>
     </>
   );
 
@@ -214,15 +204,26 @@ const ExploreWorkSpace: FC<ExploreWorkSpaceProps> = (props) => {
     />
   ) : null;
 
-  const Layout = cubesFallback ? AppLayout : SidebarLayout;
+  const Layout = cubesFallback || !dataSource?.id ? AppLayout : SidebarLayout;
 
   return (
-    <Layout title={title} divider={false} subTitle={subTitle} items={sidebar}>
-      <div id="data-view">
-        {dataSection} {filtersSection}
-      </div>
+    <Layout
+      title={dataSource?.name}
+      divider={false}
+      subTitle={subTitle}
+      items={sidebar}
+    >
+      {dataSource?.id ? (
+        <div id="data-view">
+          {dataSection} {filtersSection}
+        </div>
+      ) : (
+        <NoDataSource
+          onConnect={() => setLocation(withAuthPrefix("/settings/sources"))}
+        />
+      )}
     </Layout>
   );
 };
 
-export default ExploreWorkSpace;
+export default Explore;

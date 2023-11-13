@@ -18,7 +18,7 @@ import type { ExploreWorkspaceState } from "@/hooks/useExploreWorkspace";
 import type { SortBySet } from "@/components/VirtualTable";
 import type { ErrorMessage } from "@/types/errorMessage";
 import type { CubeMember } from "@/types/cube";
-import type { ExplorationState } from "@/hooks/usePlayground";
+import type { ExplorationState } from "@/types/exploration";
 
 import CSVIcon from "@/assets/csv.svg";
 import AlertIcon from "@/assets/alert.svg";
@@ -28,6 +28,8 @@ import s from "./index.module.less";
 
 import type { FC, ReactNode } from "react";
 import type { CollapsePanelProps, RadioChangeEvent } from "antd";
+
+const MAX_ROWS_LIMIT = 10000;
 
 type SortUpdater = (nextSortBy: SortBySet[]) => void;
 
@@ -41,7 +43,7 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   disabled: boolean;
   state: ExploreWorkspaceState;
   queryState: ExplorationState;
-  explorationRowId: string;
+  explorationRowId?: string;
   selectedQueryMembers: Record<string, CubeMember[]>;
   isActive: boolean;
   disableSectionChange?: boolean;
@@ -50,6 +52,7 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   screenshotMode?: boolean;
   emptyDesc?: ReactNode;
   className?: string;
+  loading?: boolean;
 }
 
 const { Panel } = Collapse;
@@ -72,6 +75,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     emptyDesc,
     screenshotMode,
     rowHeight,
+    loading = false,
     ...restProps
   } = props;
 
@@ -121,13 +125,23 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       section: t("data_section.query"),
       label: t("data_section.rows_limit"),
       type: "number",
-      defaultValue: 0,
+      defaultValue: 1000,
+      min: 1,
+      max: MAX_ROWS_LIMIT,
+      rules: {
+        validate: (val: number) =>
+          !isNaN(val) && val > 0 && val <= MAX_ROWS_LIMIT,
+      },
     },
     offset: {
       section: t("data_section.query"),
       label: t("data_section.additional_offset"),
       type: "number",
+      min: 0,
       defaultValue: 0,
+      rules: {
+        validate: (val: number) => !isNaN(val) && val >= 0,
+      },
     },
     hideCubeNames: {
       section: t("data_section.settings"),
@@ -148,7 +162,6 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     error,
     rows,
     columns,
-    loading,
     progress,
     settings,
     skippedMembers = [],
@@ -217,12 +230,18 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       });
     }
 
+    const loadingTip = progress?.timeElapsed
+      ? `${progress?.stage} ${(
+          parseFloat(progress?.timeElapsed as unknown as string) / 1000
+        ).toFixed(2)} secs...`
+      : progress?.stage;
+
     return (
       <VirtualTable
         tableId={screenshotMode ? "explorationTable" : undefined}
         messages={messages}
         loading={screenshotMode ? false : loading}
-        loadingProgress={progress}
+        loadingTip={loadingTip}
         width={width}
         height={height}
         columns={columns}
@@ -266,9 +285,9 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   ]);
 
   const Sql = useMemo(() => {
-    const { rawSql = { sql: "" } } = queryState;
+    const { rawSql } = queryState;
 
-    return <PrismCode lang="sql" code={rawSql.sql} />;
+    return <PrismCode lang="sql" code={rawSql?.sql || ""} />;
   }, [queryState]);
 
   const onSubmit = (values: any) => {
@@ -319,7 +338,12 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 <Radio.Button value="sql">{t("data_section.sql")}</Radio.Button>
               </Radio.Group>
 
-              <Button className={s.run} type="primary" onClick={onExec}>
+              <Button
+                className={s.run}
+                type="primary"
+                onClick={onExec}
+                disabled={!queryState?.columns?.length || loading}
+              >
                 {t("data_section.run_query")}
                 <RightOutlined />
               </Button>
@@ -342,6 +366,14 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                         layout="vertical"
                         config={formConfig}
                         onSubmit={onSubmit}
+                        initialValues={
+                          {
+                            rows: limit,
+                            offset,
+                            hideCubeNames,
+                            hideIndexColumn,
+                          } as unknown as Record<string, string>
+                        }
                         autoSubmit
                       />
                     </div>

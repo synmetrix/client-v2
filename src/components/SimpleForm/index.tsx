@@ -136,7 +136,10 @@ const SimpleForm: (props: SimpleFormProps) => JSX.Element = (props) => {
                   className={cx(cls, s.subSectionInput)}
                   key={itemKey}
                   control={control}
+                  min={item?.min}
+                  max={item?.max}
                   name={itemKey}
+                  rules={item?.rules}
                   label={item.label}
                   defaultValue={item.defaultValue}
                   fieldType={item.type}
@@ -232,6 +235,11 @@ interface FormItem {
   defaultValue?: any;
   type?: string;
   size?: "small" | "middle" | "large";
+  min?: number;
+  max?: number;
+  rules?: {
+    validate: (val: any) => boolean;
+  };
 }
 
 interface SimpleFormProps {

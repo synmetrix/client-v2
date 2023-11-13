@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import useCubesList from "@/hooks/useCubesList";
 import ExploreCubesSection from "@/components//ExploreCubesSection";
 import type { Cube, CubeMember } from "@/types/cube";
+import type { DataSchemaValidation } from "@/types/exploration";
 
 import SearchIcon from "@/assets/search.svg";
 
@@ -27,17 +28,10 @@ interface ExploreCubesProps {
     Record<string, Record<string, CubeMember>>
   >;
   selectedQueryMembers: Record<string, CubeMember[]>;
-  dataSchemaValidation: {
-    code: string;
-    message: string;
-    error?: {
-      message: string;
-    };
-  };
+  dataSchemaValidation?: DataSchemaValidation;
   header?: ReactNode;
 }
 
-// const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
 export const SHOWN_CATEGORIES = ["dimensions", "measures", "segments"];
@@ -77,12 +71,11 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
             (m) =>
               (m.name || "").split(".")[0].toLowerCase() === cube.toLowerCase()
           );
+
         const cubeSelectedCount = cubeSelectedItems.reduce(
           (acc: CubeMember[], item: CubeMember) => {
             const isMemberExists = !!acc.find(
-              (accItem: CubeMember) =>
-                accItem.dimension === item.dimension &&
-                accItem.granularity == item.granularity
+              (accItem: CubeMember) => accItem.name === item.name
             );
 
             if (isMemberExists) {

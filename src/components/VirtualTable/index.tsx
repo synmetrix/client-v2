@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { getOr } from "unchanged";
 import cn from "classnames";
-import { Alert, Empty, Tooltip, message } from "antd";
+import { Alert, Empty, Spin, Tooltip, Typography, message } from "antd";
 import { useTable, useSortBy } from "react-table";
 import copy from "copy-to-clipboard";
 import {
@@ -17,12 +17,12 @@ import {
 } from "react-virtualized";
 import "react-virtualized/styles.css";
 
-import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import PopoverButton from "@/components/PopoverButton";
 import type { ErrorMessage } from "@/types/errorMessage";
 import type { SortBy } from "@/types/sort";
-import type { LoadingProgress } from "@/types/loading";
 import type { QuerySettings } from "@/types/querySettings";
+
+const { Paragraph } = Typography;
 
 import styles from "./index.module.less";
 
@@ -38,6 +38,7 @@ import type { FC, ReactNode } from "react";
 import type { MenuProps } from "antd";
 
 const COL_WIDTH = 200;
+const INDEX_COL_WIDTH = 50;
 
 // set with unique ids inside https://stackoverflow.com/a/49821454
 export class SortBySet extends Set {
@@ -121,8 +122,8 @@ interface VirtualTableProps {
   height?: number;
   headerHeight?: number;
   rowHeight?: number;
-  loading: boolean;
-  loadingProgress: LoadingProgress;
+  loading?: boolean;
+  loadingTip?: string;
   emptyDesc?: ReactNode;
   orderByFn?: OrderByFn<object>;
   footer?: (rows: object[]) => void;
@@ -158,6 +159,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
   footer,
   orderByFn,
   loading,
+  loadingTip,
 }) => {
   const defaultColumns = useMemo(
     () =>
@@ -205,7 +207,9 @@ const VirtualTable: FC<VirtualTableProps> = ({
         key="label"
         title={typeof humanLabel === "string" ? humanLabel : null}
       >
-        <span className={"headerColumn"}>{humanLabel}</span>
+        <Paragraph ellipsis className={styles.headerParagraph}>
+          {humanLabel}
+        </Paragraph>
       </Tooltip>,
     ];
 
@@ -322,98 +326,102 @@ const VirtualTable: FC<VirtualTableProps> = ({
     };
 
     return (
-      <Tooltip title={cellData?.toString()}>
-        <span onDoubleClick={onDoubleClick}>{defaultCellRenderer(args)}</span>
-      </Tooltip>
+      <span title={cellData?.toString()} onDoubleClick={onDoubleClick}>
+        {defaultCellRenderer(args)}
+      </span>
     );
   };
 
-  if (loading) return <BouncingDotsLoader loading />;
-
-  if (!columns.length && !rows.length)
-    return (
-      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={emptyDesc} />
-    );
+  const isEmpty = !columns.length && !rows.length;
 
   return (
-    <>
-      {messages.map((msg) => (
-        <Alert
-          className={styles.alert}
-          key={msg.text}
-          type={msg.type}
-          message={msg.text}
-        />
-      ))}
-      <div
-        className={cn(className)}
-        style={{
-          width: `min(100%, ${width})`,
-          height: height + 50,
-          overflow: "auto",
-        }}
-      >
-        <Table
-          id={tableId}
-          className={cn(styles.table, tableId && styles.minWidth)}
-          width={tableWidth}
-          height={height}
-          headerHeight={headerHeight}
-          rowHeight={rowHeight}
-          rowCount={rows.length}
-          rowGetter={({ index }) => rows[index]}
-          noRowsRenderer={noRowsRenderer}
-          overscanRowCount={3}
-          onScroll={(values) => onScroll?.({ ...values, rowHeight })}
-          scrollToAlignment="start"
-          scrollToIndex={scrollToIndex}
-        >
-          {!hideIndexColumn && (
-            <Column
-              className={styles.indexColumn}
-              label="Index"
-              cellDataGetter={({ rowData }) => rowData.index + 1}
-              dataKey="index"
-              width={60}
+    <Spin spinning={loading} tip={loadingTip}>
+      {isEmpty ? (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={emptyDesc} />
+      ) : (
+        <>
+          {messages.map((msg) => (
+            <Alert
+              className={styles.alert}
+              key={msg.text}
+              type={msg.type}
+              message={msg.text}
             />
-          )}
-          {flatHeaders.map((col) => {
-            const [cube, field, granularity] = col.id.split(".");
-            const columnMemberId = `${cube}.${field}`;
+          ))}
+          <div
+            className={cn(className)}
+            style={{
+              width: `min(100%, ${width})`,
+              height: height + 50,
+              overflow: "auto",
+            }}
+          >
+            <Table
+              id={tableId}
+              className={cn(styles.table, tableId && styles.minWidth)}
+              width={
+                hideIndexColumn ? tableWidth : tableWidth + INDEX_COL_WIDTH
+              }
+              height={height}
+              headerHeight={headerHeight}
+              rowHeight={rowHeight}
+              rowCount={rows.length}
+              rowGetter={({ index }) => rows[index]}
+              noRowsRenderer={noRowsRenderer}
+              overscanRowCount={3}
+              onScroll={(values) => onScroll?.({ ...values, rowHeight })}
+              scrollToAlignment="start"
+              scrollToIndex={scrollToIndex}
+            >
+              {!hideIndexColumn && (
+                <Column
+                  className={styles.indexColumn}
+                  label="Index"
+                  cellDataGetter={({ rowData }) => rowData.index + 1}
+                  dataKey="index"
+                  width={INDEX_COL_WIDTH}
+                />
+              )}
+              {flatHeaders.map((col) => {
+                const [cube, field, granularity] = col.id.split(".");
+                const columnMemberId = `${cube}.${field}`;
 
-            const value = col.render("Header");
+                const value = col.render("Header");
 
-            const colSortConfig = sortBy.find(
-              (sortItem) => sortItem.id === col.id
-            );
+                const colSortConfig = sortBy.find(
+                  (sortItem) => sortItem.id === col.id
+                );
 
-            const sortDirection =
-              !!colSortConfig &&
-              ((colSortConfig.desc && SortDirection.DESC) || SortDirection.ASC);
+                const sortDirection =
+                  !!colSortConfig &&
+                  ((colSortConfig.desc && SortDirection.DESC) ||
+                    SortDirection.ASC);
 
-            return (
-              <Column
-                key={col.id}
-                label={value}
-                dataKey={col.id}
-                width={COL_WIDTH}
-                headerRenderer={headerRenderer}
-                cellDataGetter={cellDataGetter}
-                cellRenderer={internalCellRenderer}
-                columnData={{
-                  memberId: columnMemberId,
-                  columnId: col.id,
-                  onSortChange,
-                  sortDirection,
-                  granularity,
-                }}
-              />
-            );
-          })}
-        </Table>
-      </div>
-      {footer?.(rows)}
-    </>
+                return (
+                  <Column
+                    key={col.id}
+                    label={value}
+                    dataKey={col.id}
+                    width={COL_WIDTH}
+                    headerRenderer={headerRenderer}
+                    cellDataGetter={cellDataGetter}
+                    cellRenderer={internalCellRenderer}
+                    columnData={{
+                      memberId: columnMemberId,
+                      columnId: col.id,
+                      onSortChange,
+                      sortDirection,
+                      granularity,
+                    }}
+                  />
+                );
+              })}
+            </Table>
+          </div>
+          {footer?.(rows)}
+        </>
+      )}
+    </Spin>
   );
 };
 

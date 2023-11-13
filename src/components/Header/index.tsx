@@ -44,6 +44,7 @@ const Header: React.FC<HeaderProps> = ({
             )}
             {title && (
               <Title
+                ellipsis
                 className={cx(isMobile && styles.title)}
                 level={isMobile ? 5 : 4}
               >

@@ -198,11 +198,13 @@ const useAnalyticsQuery = () => {
   );
 
   const setLimit = useCallback(
-    (rowsLimit: string | number) => dispatch({ type: "setLimit", rowsLimit }),
+    (rowsLimit: string | number) =>
+      dispatch({ type: "setLimit", rowsLimit: rowsLimit || 1 }),
     [dispatch]
   );
   const setOffset = useCallback(
-    (value: string | number) => dispatch({ type: "setOffset", value }),
+    (value: string | number) =>
+      dispatch({ type: "setOffset", value: value || 0 }),
     [dispatch]
   );
   const setPage = useCallback(

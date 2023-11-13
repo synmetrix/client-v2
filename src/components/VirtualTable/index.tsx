@@ -192,8 +192,6 @@ const VirtualTable: FC<VirtualTableProps> = ({
     useSortBy
   );
 
-  const tableWidth = flatHeaders.length * COL_WIDTH;
-
   const headerRenderer: TableHeaderRenderer = ({ label, columnData }) => {
     const { sortDirection, onSortChange, columnId, granularity } = columnData;
     let humanLabel = label;
@@ -333,6 +331,15 @@ const VirtualTable: FC<VirtualTableProps> = ({
   };
 
   const isEmpty = !columns.length && !rows.length;
+  const tableWidth = useMemo(() => {
+    let tw = flatHeaders.length * COL_WIDTH;
+
+    if (!hideIndexColumn) {
+      tw += INDEX_COL_WIDTH;
+    }
+
+    return tw;
+  }, [flatHeaders.length, hideIndexColumn]);
 
   return (
     <Spin spinning={loading} tip={loadingTip}>
@@ -359,14 +366,13 @@ const VirtualTable: FC<VirtualTableProps> = ({
             <Table
               id={tableId}
               className={cn(styles.table, tableId && styles.minWidth)}
-              width={
-                hideIndexColumn ? tableWidth : tableWidth + INDEX_COL_WIDTH
-              }
+              width={tableWidth}
               height={height}
               headerHeight={headerHeight}
               rowHeight={rowHeight}
               rowCount={rows.length}
               rowGetter={({ index }) => rows[index]}
+              rowStyle={{ width: tableWidth }}
               noRowsRenderer={noRowsRenderer}
               overscanRowCount={3}
               onScroll={(values) => onScroll?.({ ...values, rowHeight })}

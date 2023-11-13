@@ -75,6 +75,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     emptyDesc,
     screenshotMode,
     rowHeight,
+    disabled,
     loading = false,
     ...restProps
   } = props;
@@ -342,7 +343,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 className={s.run}
                 type="primary"
                 onClick={onExec}
-                disabled={!queryState?.columns?.length || loading}
+                disabled={!queryState?.columns?.length || disabled || loading}
               >
                 {t("data_section.run_query")}
                 <RightOutlined />

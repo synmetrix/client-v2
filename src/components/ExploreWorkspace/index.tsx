@@ -1,4 +1,5 @@
 import { Spin } from "antd";
+import { useDeepCompareEffect } from "ahooks";
 
 import SidebarLayout from "@/layouts/SidebarLayout";
 import ExploreDataSection from "@/components/ExploreDataSection";
@@ -106,15 +107,22 @@ const Explore: FC<ExploreProps> = (props) => {
   );
 
   const onRunQuery = useCallback(
-    (e: Event) => {
+    (e?: Event) => {
       const curExplorationState = pickKeys(queryStateKeys, playgroundState);
       runQuery(curExplorationState, settings);
 
-      e.preventDefault();
-      e.stopPropagation();
+      e?.preventDefault();
+      e?.stopPropagation();
     },
     [playgroundState, runQuery, settings]
   );
+
+  useDeepCompareEffect(() => {
+    if (playgroundState?.order) {
+      onRunQuery();
+    }
+  }, [playgroundState?.order]);
+
   const onQueryChange = useCallback(
     (type: string, ...args: any) => {
       switch (type) {

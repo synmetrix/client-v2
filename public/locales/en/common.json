@@ -79,7 +79,9 @@
     "empty_default": "No Data",
     "logs": "Logs",
     "select_branch": "Select branch",
-    "filename": "Filename"
+    "filename": "Filename",
+    "loading": "Loading",
+    "no_docs": "Documentation has not been generated yet."
   },
   "form": {
     "labels": {

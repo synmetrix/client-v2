@@ -25,6 +25,10 @@ export default [
         component: "./pages/ExportModels",
       },
       {
+        path: "/docs/:versionId",
+        component: "./pages/Docs",
+      },
+      {
         path: "/settings",
         component: "./layouts/SettingsLayout",
         routes: [

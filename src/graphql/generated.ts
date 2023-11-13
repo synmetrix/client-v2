@@ -12039,6 +12039,18 @@ export type GetUsersQuery = {
   users: { __typename?: "users"; id: any }[];
 };
 
+export type VersionDocSubscriptionVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type VersionDocSubscription = {
+  __typename?: "subscription_root";
+  versions_by_pk?: {
+    __typename?: "versions";
+    markdown_doc?: string | null;
+  } | null;
+};
+
 export const BranchesFieldsFragmentDoc = gql`
   fragment BranchesFields on branches {
     id
@@ -13183,6 +13195,27 @@ export function useGetUsersQuery(
     ...options,
   });
 }
+export const VersionDocDocument = gql`
+  subscription VersionDoc($id: uuid!) {
+    versions_by_pk(id: $id) {
+      markdown_doc
+    }
+  }
+`;
+
+export function useVersionDocSubscription<TData = VersionDocSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<VersionDocSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<VersionDocSubscription, TData>
+) {
+  return Urql.useSubscription<
+    VersionDocSubscription,
+    TData,
+    VersionDocSubscriptionVariables
+  >({ query: VersionDocDocument, ...options }, handler);
+}
 export const namedOperations = {
   Query: {
     AllAccessLists: "AllAccessLists",
@@ -13234,6 +13267,7 @@ export const namedOperations = {
     SubAllLogs: "SubAllLogs",
     AllSchemas: "AllSchemas",
     SubCredentials: "SubCredentials",
+    VersionDoc: "VersionDoc",
   },
   Fragment: {
     BranchesFields: "BranchesFields",

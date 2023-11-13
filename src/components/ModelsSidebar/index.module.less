@@ -59,18 +59,22 @@
 }
 
 .fileBtn {
-  display: block;
   min-width: 100%;
   padding: 3px;
   font-weight: 600;
   font-size: 14px;
-  text-align: left;
   border-radius: 5px;
   cursor: pointer;
   transition: 0.25s ease-in-out;
   &:hover {
     background-color: var(--color-dimgray-300);
   }
+}
+
+.filename {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .fileIcon {

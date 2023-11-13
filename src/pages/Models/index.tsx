@@ -197,7 +197,7 @@ export const Models: React.FC<ModelsProps> = ({
         <NoDataSource onConnect={onConnect} />
       ) : (
         <Spin spinning={fetching}>
-          <>
+          <div className={styles.wrapper}>
             <div className={styles.editor}>
               <CodeEditor
                 schemas={openedSchemas}
@@ -221,7 +221,7 @@ export const Models: React.FC<ModelsProps> = ({
                 />
               </div>
             )}
-          </>
+          </div>
 
           {dataSource && (
             <Modal

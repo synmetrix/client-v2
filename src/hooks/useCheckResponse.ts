@@ -37,15 +37,14 @@ const useCheckResponse = (
 
   useDeepCompareEffect(() => {
     if (response.error) {
+      console.log(response.error);
       const responseMessage = response.error?.message;
 
       if (responseMessage?.includes("JWSInvalidSignature")) {
         history.push("/403");
       }
 
-      if (errorMessage !== "") {
-        message.error(responseMessage || errorMessage);
-      }
+      message.error(responseMessage || errorMessage);
       cb(null, response.error);
     }
   }, [response.error]);

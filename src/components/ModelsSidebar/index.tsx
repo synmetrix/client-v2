@@ -234,15 +234,16 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                   className={styles.fileBtn}
                   onClick={() => onSelectFile(f.name)}
                 >
-                  <Row justify={"space-between"}>
-                    <Col>
+                  <Row justify={"space-between"} wrap={false}>
+                    <Col className={styles.filename} span={18}>
                       {icons[f.name.split(".")[1] as keyof typeof icons]}{" "}
                       {f.name}
                     </Col>
 
-                    <Col>
-                      <Space size={5}>
+                    <Col span={6}>
+                      <Space align="center" size={5}>
                         <PopoverButton
+                          className={styles.edit}
                           trigger={["click"]}
                           icon={<EditOutlined />}
                           isVisible={

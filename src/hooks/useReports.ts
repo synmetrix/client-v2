@@ -65,7 +65,7 @@ export default ({ report, explorationId }: Props) => {
     const { deliveryConfig, exploration, type, name } = values;
 
     const mutationPayload: SendTestAlertMutationVariables = {
-      explorationId: exploration.id,
+      explorationId: exploration?.id || explorationId,
       deliveryType: type,
       deliveryConfig,
       name,

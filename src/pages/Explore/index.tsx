@@ -206,19 +206,19 @@ const ExploreWrapper = () => {
   });
 
   useCheckResponse(createAlertMutationData, () => {}, {
-    successMessage: t("alert_created"),
+    successMessage: t("alerts:alert_created"),
   });
 
   useCheckResponse(testAlertMutationData, () => {}, {
-    successMessage: t("test_alert_sent"),
+    successMessage: t("alerts:test_alert_sent"),
   });
 
   useCheckResponse(createReportMutationData, () => {}, {
-    successMessage: t("report_created"),
+    successMessage: t("reports:report_created"),
   });
 
   useCheckResponse(testReportMutationData, () => {}, {
-    successMessage: t("test_report_sent"),
+    successMessage: t("reports:test_report_sent"),
   });
 
   const datasources = useMemo(
@@ -238,7 +238,7 @@ const ExploreWrapper = () => {
     currentExploration,
     (res, err) => {
       if (!res?.explorations_by_pk || err) {
-        message.error(t("errors.exploration_not_found"));
+        message.error(t("explore:errors.exploration_not_found"));
         setLocation(withAuthPrefix(dataSourcePath));
       }
     },
@@ -337,7 +337,7 @@ const ExploreWrapper = () => {
     const noCurSource = dataSourceId && !curSource;
     if (datasources.length && (noCurSource || !dataSourceId)) {
       if (noCurSource) {
-        message.error(t("errors.data_source_not_found"));
+        message.error(t("explore:errors.data_source_not_found"));
       }
 
       setLocation(withAuthPrefix(`/explore/${datasources?.[0]?.id}`));

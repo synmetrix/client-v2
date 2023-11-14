@@ -245,6 +245,7 @@ export const Models: React.FC<ModelsProps> = ({
                 isOnboarding={false}
                 loading={schemaFetching}
                 onSubmit={onGenSubmit}
+                resetOnSubmit
               />
             </Modal>
           )}

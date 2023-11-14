@@ -34,6 +34,7 @@ interface DataModelGenerationProps {
   onSkip?: () => void;
   initialValue?: DynamicForm;
   loading?: boolean;
+  resetOnSubmit?: boolean;
 }
 
 const options = [
@@ -52,10 +53,11 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
     type: "js",
   },
   loading = false,
+  resetOnSubmit = false,
 }) => {
   const { t } = useTranslation(["dataModelGeneration", "common"]);
 
-  const { control, handleSubmit, watch } = useForm<DynamicForm>({
+  const { control, handleSubmit, watch, reset } = useForm<DynamicForm>({
     values: initialValue,
   });
 
@@ -70,6 +72,11 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
     } else {
       return 0;
     }
+  };
+
+  const onFormSubmit = (data: DynamicForm, type: string) => {
+    onSubmit(data, type);
+    if (resetOnSubmit) reset();
   };
 
   const filteredSchema =
@@ -180,7 +187,9 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                   size="large"
                   htmlType="submit"
                   form="data-model-generation"
-                  onClick={handleSubmit((data) => onSubmit(data, data.type))}
+                  onClick={handleSubmit((data) =>
+                    onFormSubmit(data, data.type)
+                  )}
                 >
                   {t("common:words.generate")}
                 </Button>

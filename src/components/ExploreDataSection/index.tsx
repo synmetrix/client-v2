@@ -118,15 +118,15 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         <Space className={s.popoverItem} align="center">
           <ReportIcon />
           <div className={s.popoverBtns}>
-            <Button className={s.popoverLink} type="link">
-              {t("data_section.create_report")}
-            </Button>
             <Button
-              className={cn(s.popoverLink, s.guideLink)}
+              className={s.popoverLink}
               type="link"
               onClick={onNewReport}
               disabled={!explorationRowId}
             >
+              {t("data_section.create_report")}
+            </Button>
+            <Button className={cn(s.popoverLink, s.guideLink)} type="link">
               {t("data_section.how_to_create_report")}
             </Button>
           </div>

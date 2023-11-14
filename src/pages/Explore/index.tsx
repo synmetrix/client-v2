@@ -5,6 +5,7 @@ import { message } from "antd";
 
 import type {
   CreateAlertMutation,
+  CreateReportMutation,
   FetchDatasetOutput,
 } from "@/graphql/generated";
 import {
@@ -17,6 +18,7 @@ import {
 import DataSourcesMenu from "@/components/DataSourcesMenu";
 import ExploreWorkspace from "@/components/ExploreWorkspace";
 import AlertModal from "@/components/AlertModal";
+import ReportModal from "@/components/ReportModal";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
 import trackEvent from "@/utils/helpers/trackEvent";
@@ -25,6 +27,7 @@ import type { QuerySettings } from "@/types/querySettings";
 import useAnalyticsQuery from "@/hooks/useAnalyticsQuery";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useAppSettings from "@/hooks/useAppSettings";
+import useReports from "@/hooks/useReports";
 import useAlerts from "@/hooks/useAlerts";
 import type {
   Exploration,
@@ -45,6 +48,7 @@ interface ExploreProps {
   metaLoading?: boolean;
   dataSchemaValidation?: DataSchemaValidation;
   alertData?: CreateAlertMutation;
+  reportData?: CreateReportMutation;
   runQuery?: (state: object, settings: QuerySettings) => void;
   onSelectDataSource?: (id: string) => void;
   onCreateAlert?: (values: AlertFormType) => void;
@@ -68,6 +72,7 @@ export const Explore = ({
   dataSchemaValidation,
   params,
   alertData,
+  reportData,
   runQuery = () => {},
   onSelectDataSource = () => {},
   onCreateAlert = () => {},
@@ -79,7 +84,7 @@ export const Explore = ({
   const [isReportOpen, setIsReportOpen] = useState<boolean>(false);
 
   const query = useMemo(
-    () => exploration?.playground_state,
+    () => exploration?.playground_state || {},
     [exploration?.playground_state]
   );
 
@@ -110,6 +115,12 @@ export const Explore = ({
     }
   }, [alertData]);
 
+  useEffect(() => {
+    if (reportData) {
+      setIsReportOpen(false);
+    }
+  }, [reportData]);
+
   return (
     <>
       <ExploreWorkspace
@@ -137,12 +148,21 @@ export const Explore = ({
         onSubmit={onCreateAlert}
         loading={false}
       />
+
+      <ReportModal
+        isOpen={isReportOpen}
+        onClose={() => setIsReportOpen(false)}
+        query={query}
+        onSendTest={onTestReport}
+        onSubmit={onCreateReport}
+        loading={false}
+      />
     </>
   );
 };
 
 const ExploreWrapper = () => {
-  const { t } = useTranslation(["explore", "alerts"]);
+  const { t } = useTranslation(["explore", "alerts", "reports"]);
   const { currentUser } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { screenshotMode } = location.query;
@@ -165,14 +185,40 @@ const ExploreWrapper = () => {
 
   const {
     createAlert,
-    onSendTest,
-    mutations: { createMutationData },
+    onSendTest: onTestAlert,
+    mutations: {
+      createMutationData: createAlertMutationData,
+      sendTestMutationData: testAlertMutationData,
+    },
   } = useAlerts({
     explorationId,
   });
 
-  useCheckResponse(createMutationData, () => {}, {
+  const {
+    createReport,
+    onSendTest: onTestReport,
+    mutations: {
+      createMutationData: createReportMutationData,
+      sendTestMutationData: testReportMutationData,
+    },
+  } = useReports({
+    explorationId,
+  });
+
+  useCheckResponse(createAlertMutationData, () => {}, {
     successMessage: t("alert_created"),
+  });
+
+  useCheckResponse(testAlertMutationData, () => {}, {
+    successMessage: t("test_alert_sent"),
+  });
+
+  useCheckResponse(createReportMutationData, () => {}, {
+    successMessage: t("report_created"),
+  });
+
+  useCheckResponse(testReportMutationData, () => {}, {
+    successMessage: t("test_report_sent"),
   });
 
   const datasources = useMemo(
@@ -219,10 +265,10 @@ const ExploreWrapper = () => {
   };
 
   useEffect(() => {
-    const newExplortionId = createData.data?.insert_explorations_one?.id;
-    if (newExplortionId) {
+    const newExplorationId = createData.data?.insert_explorations_one?.id;
+    if (newExplorationId) {
       delete createData.data;
-      setLocation(withAuthPrefix(`${dataSourcePath}/${newExplortionId}`));
+      setLocation(withAuthPrefix(`${dataSourcePath}/${newExplorationId}`));
     }
   }, [
     createData.data,
@@ -320,10 +366,11 @@ const ExploreWrapper = () => {
       dataSchemaValidation={dataSchemaValidation}
       onSelectDataSource={onSelectDataSource}
       onCreateAlert={createAlert}
-      onTestAlert={onSendTest}
-      alertData={createMutationData.data}
-      onCreateReport={() => {}}
-      onTestReport={() => {}}
+      onTestAlert={onTestAlert}
+      alertData={createAlertMutationData?.data}
+      onCreateReport={createReport}
+      onTestReport={onTestReport}
+      reportData={createReportMutationData?.data}
       params={{
         screenshotMode: isScreenshotMode,
       }}

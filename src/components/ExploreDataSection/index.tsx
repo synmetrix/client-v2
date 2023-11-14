@@ -38,6 +38,8 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   height?: number;
   onToggleSection: (section: string) => void;
   onSectionChange: (radioEvent: RadioChangeEvent) => void;
+  onNewAlert: () => void;
+  onNewReport: () => void;
   onExec: any;
   onQueryChange: (query: string, ...args: any) => void | SortUpdater;
   disabled: boolean;
@@ -63,6 +65,8 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     height,
     onToggleSection = () => {},
     onSectionChange = () => {},
+    onNewAlert = () => {},
+    onNewReport = () => {},
     onExec = () => {},
     onQueryChange = () => {},
     state: workspaceState,
@@ -77,9 +81,9 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     rowHeight,
     disabled,
     loading = false,
+    explorationRowId,
     ...restProps
   } = props;
-
   const { t } = useTranslation(["explore", "common"]);
 
   const [currState, updateState] = useSetState({
@@ -93,7 +97,12 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         <Space className={s.popoverItem} align="center">
           <AlertIcon />
           <div>
-            <Button className={s.popoverLink} type="link">
+            <Button
+              className={s.popoverLink}
+              type="link"
+              onClick={onNewAlert}
+              disabled={!explorationRowId}
+            >
               {t("data_section.create_alert")}
             </Button>
             <Button className={cn(s.popoverLink, s.guideLink)} type="link">
@@ -112,7 +121,12 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
             <Button className={s.popoverLink} type="link">
               {t("data_section.create_report")}
             </Button>
-            <Button className={cn(s.popoverLink, s.guideLink)} type="link">
+            <Button
+              className={cn(s.popoverLink, s.guideLink)}
+              type="link"
+              onClick={onNewReport}
+              disabled={!explorationRowId}
+            >
               {t("data_section.how_to_create_report")}
             </Button>
           </div>

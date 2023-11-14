@@ -44,6 +44,8 @@ interface ExploreProps {
   dataSet: any;
   dataSchemaValidation?: DataSchemaValidation;
   runQuery: (state: object, settings: QuerySettings) => void;
+  onNewAlert: () => void;
+  onNewReport: () => void;
   header?: ReactNode;
   subTitle?: ReactNode;
 }
@@ -59,6 +61,8 @@ const Explore: FC<ExploreProps> = (props) => {
     dataSet,
     dataSchemaValidation,
     runQuery = () => {},
+    onNewAlert = () => {},
+    onNewReport = () => {},
     loading = false,
     metaLoading = false,
     params: { screenshotMode } = {},
@@ -169,6 +173,8 @@ const Explore: FC<ExploreProps> = (props) => {
       selectedQueryMembers={selectedQueryMembers}
       onExec={onRunQuery}
       onQueryChange={onQueryChange}
+      onNewAlert={onNewAlert}
+      onNewReport={onNewReport}
       disabled={!isQueryChanged}
       state={state}
       loading={loading}

@@ -3,25 +3,12 @@ import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
 import AlertsTable from "@/components/AlertsTable";
-import Modal from "@/components/Modal";
-import AlertForm from "@/components/AlertForm";
-import AlertTypeSelection from "@/components/AlertTypeSelection";
-import { alertTypes } from "@/mocks/alertTypes";
-import type { Alert, AlertFormType, AlertType } from "@/types/alert";
+import AlertModal from "@/components/AlertModal";
+import type { Alert, AlertFormType } from "@/types/alert";
 import type { QueryState } from "@/types/queryState";
 import AppLayout from "@/layouts/AppLayout";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import type {
-  Alerts_Set_Input,
-  Alerts_Pk_Columns_Input,
-  SendTestAlertMutationVariables,
-} from "@/graphql/generated";
-import {
-  useDeleteAlertMutation,
-  useCreateAlertMutation,
-  useUpdateAlertMutation,
-  useSendTestAlertMutation,
-} from "@/graphql/generated";
+import useAlerts from "@/hooks/useAlerts";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 
@@ -41,12 +28,24 @@ const Alerts: React.FC<AlertsProps> = ({
   const { t } = useTranslation(["alerts", "pages"]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedType, setSelectedType] = useState<AlertType | undefined>();
   const [selectedAlert, setSelectedAlert] = useState<
     AlertFormType | undefined
   >();
 
-  const { currentUser, currentTeamId } = CurrentUserStore();
+  const {
+    updateAlert,
+    onSendTest,
+    mutations: {
+      updateMutationData,
+      deleteMutationData,
+      execDeleteMutation,
+      sendTestMutationData,
+    },
+  } = useAlerts({
+    alert: selectedAlert,
+  });
+
+  const { currentUser } = CurrentUserStore();
 
   const alerts = useMemo(
     () => (initialAlerts?.length ? initialAlerts : currentUser.alerts || []),
@@ -60,12 +59,6 @@ const Alerts: React.FC<AlertsProps> = ({
 
     return initialQuery || SAMPLE_EXPLORATION.playground_state;
   }, [selectedAlert, initialQuery]);
-
-  const [createMutationData, execInsertMutation] = useCreateAlertMutation();
-  const [updateMutationData, execUpdateMutation] = useUpdateAlertMutation();
-  const [deleteMutationData, execDeleteMutation] = useDeleteAlertMutation();
-  const [sendTestMutationData, execSendTestMutation] =
-    useSendTestAlertMutation();
 
   const onEdit = (alert: Alert) => {
     setSelectedAlert(alert);
@@ -83,26 +76,8 @@ const Alerts: React.FC<AlertsProps> = ({
 
   const onClose = () => {
     setSelectedAlert(undefined);
-    setSelectedType(undefined);
     setIsOpen(false);
   };
-
-  const onSendTest = (values: AlertFormType) => {
-    const { deliveryConfig, exploration, type, name } = values;
-
-    const mutationPayload: SendTestAlertMutationVariables = {
-      explorationId: exploration.id,
-      deliveryType: type,
-      deliveryConfig,
-      name,
-    };
-
-    execSendTestMutation(mutationPayload);
-  };
-
-  useCheckResponse(createMutationData, () => onClose(), {
-    successMessage: t("alert_created"),
-  });
 
   useCheckResponse(updateMutationData, () => onClose(), {
     successMessage: t("alert_updated"),
@@ -116,43 +91,6 @@ const Alerts: React.FC<AlertsProps> = ({
     successMessage: t("test_alert_sent"),
   });
 
-  const createAlert = useCallback(
-    (values: AlertFormType) => {
-      const newAlertWithExplorationPayload = {
-        name: values.name,
-        schedule: values.schedule,
-        trigger_config: values.triggerConfig,
-        delivery_type: values.type,
-        delivery_config: values.deliveryConfig,
-        exploration_id: SAMPLE_EXPLORATION.id,
-        team_id: currentTeamId,
-      };
-
-      execInsertMutation({ object: newAlertWithExplorationPayload });
-    },
-    [execInsertMutation, currentTeamId]
-  );
-
-  const updateAlert = useCallback(
-    (values: AlertFormType) => {
-      const updateAlerPayload = {
-        name: values.name,
-        schedule: values.schedule,
-        trigger_config: values.triggerConfig,
-        delivery_type: values.type,
-        delivery_config: values.deliveryConfig,
-      };
-
-      const payload = {
-        pk_columns: { id: selectedAlert?.id } as Alerts_Pk_Columns_Input,
-        _set: updateAlerPayload as Alerts_Set_Input,
-      };
-
-      execUpdateMutation(payload);
-    },
-    [execUpdateMutation, selectedAlert]
-  );
-
   const onSubmit = (values: AlertFormType) => {
     const doesAlertExist = Boolean(selectedAlert?.id);
 
@@ -160,8 +98,6 @@ const Alerts: React.FC<AlertsProps> = ({
       updateAlert(values);
       return;
     }
-
-    createAlert(values);
   };
 
   return (
@@ -187,30 +123,15 @@ const Alerts: React.FC<AlertsProps> = ({
         </div>
       </Space>
 
-      <Modal
-        open={isOpen}
-        closable
+      <AlertModal
+        alert={selectedAlert}
+        query={query || initialQuery}
+        isOpen={isOpen}
+        loading={sendTestMutationData.fetching}
         onClose={onClose}
-        className={styles.modal}
-        width={"100%"}
-      >
-        {selectedAlert || selectedType ? (
-          <AlertForm
-            query={query || initialQuery}
-            onTest={onSendTest}
-            type={selectedAlert?.type}
-            onSubmit={onSubmit}
-            initialValue={selectedAlert}
-            isSendTestLoading={sendTestMutationData.fetching}
-          />
-        ) : (
-          <AlertTypeSelection
-            type="alert"
-            options={alertTypes}
-            onSubmit={(v) => setSelectedType(v.value)}
-          />
-        )}
-      </Modal>
+        onSendTest={onSendTest}
+        onSubmit={onSubmit}
+      />
     </AppLayout>
   );
 };

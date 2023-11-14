@@ -3,7 +3,10 @@ import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { message } from "antd";
 
-import type { FetchDatasetOutput } from "@/graphql/generated";
+import type {
+  CreateAlertMutation,
+  FetchDatasetOutput,
+} from "@/graphql/generated";
 import {
   useFetchMetaQuery,
   useCurrentExplorationQuery,
@@ -13,6 +16,7 @@ import {
 } from "@/graphql/generated";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
 import ExploreWorkspace from "@/components/ExploreWorkspace";
+import AlertModal from "@/components/AlertModal";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
 import trackEvent from "@/utils/helpers/trackEvent";
@@ -21,11 +25,14 @@ import type { QuerySettings } from "@/types/querySettings";
 import useAnalyticsQuery from "@/hooks/useAnalyticsQuery";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useAppSettings from "@/hooks/useAppSettings";
+import useAlerts from "@/hooks/useAlerts";
 import type {
   Exploration,
   RawSql,
   DataSchemaValidation,
 } from "@/types/exploration";
+import type { AlertFormType } from "@/types/alert";
+import type { ReportFormType } from "@/types/report";
 
 interface ExploreProps {
   loading?: boolean;
@@ -36,10 +43,14 @@ interface ExploreProps {
   dataSet?: FetchDatasetOutput;
   rawSql?: RawSql;
   metaLoading?: boolean;
-  explorationId?: string;
   dataSchemaValidation?: DataSchemaValidation;
+  alertData?: CreateAlertMutation;
   runQuery?: (state: object, settings: QuerySettings) => void;
   onSelectDataSource?: (id: string) => void;
+  onCreateAlert?: (values: AlertFormType) => void;
+  onTestAlert?: (values: AlertFormType) => void;
+  onCreateReport?: (values: ReportFormType) => void;
+  onTestReport?: (values: ReportFormType) => void;
   params: {
     screenshotMode: boolean;
   };
@@ -56,9 +67,29 @@ export const Explore = ({
   dataSet,
   dataSchemaValidation,
   params,
+  alertData,
   runQuery = () => {},
   onSelectDataSource = () => {},
+  onCreateAlert = () => {},
+  onTestAlert = () => {},
+  onCreateReport = () => {},
+  onTestReport = () => {},
 }: ExploreProps) => {
+  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
+  const [isReportOpen, setIsReportOpen] = useState<boolean>(false);
+
+  const query = useMemo(
+    () => exploration?.playground_state,
+    [exploration?.playground_state]
+  );
+
+  const onNewAlert = () => {
+    setIsAlertOpen(true);
+  };
+  const onNewReport = () => {
+    setIsReportOpen(true);
+  };
+
   const header = useMemo(
     () => (
       <DataSourcesMenu
@@ -73,26 +104,45 @@ export const Explore = ({
     [dataSource?.id, dataSources, onSelectDataSource]
   );
 
+  useEffect(() => {
+    if (alertData) {
+      setIsAlertOpen(false);
+    }
+  }, [alertData]);
+
   return (
-    <ExploreWorkspace
-      header={header}
-      rawSql={rawSql}
-      exploration={exploration}
-      params={params}
-      runQuery={runQuery}
-      source={dataSource}
-      dataSources={dataSources}
-      dataSchemaValidation={dataSchemaValidation}
-      meta={meta}
-      metaLoading={metaLoading}
-      dataSet={dataSet}
-      loading={loading}
-    />
+    <>
+      <ExploreWorkspace
+        header={header}
+        rawSql={rawSql}
+        exploration={exploration}
+        params={params}
+        runQuery={runQuery}
+        onNewAlert={onNewAlert}
+        onNewReport={onNewReport}
+        source={dataSource}
+        dataSources={dataSources}
+        dataSchemaValidation={dataSchemaValidation}
+        meta={meta}
+        metaLoading={metaLoading}
+        dataSet={dataSet}
+        loading={loading}
+      />
+
+      <AlertModal
+        isOpen={isAlertOpen}
+        onClose={() => setIsAlertOpen(false)}
+        query={query}
+        onSendTest={onTestAlert}
+        onSubmit={onCreateAlert}
+        loading={false}
+      />
+    </>
   );
 };
 
 const ExploreWrapper = () => {
-  const { t } = useTranslation(["explore"]);
+  const { t } = useTranslation(["explore", "alerts"]);
   const { currentUser } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { screenshotMode } = location.query;
@@ -112,6 +162,18 @@ const ExploreWrapper = () => {
       },
       pause: true,
     });
+
+  const {
+    createAlert,
+    onSendTest,
+    mutations: { createMutationData },
+  } = useAlerts({
+    explorationId,
+  });
+
+  useCheckResponse(createMutationData, () => {}, {
+    successMessage: t("alert_created"),
+  });
 
   const datasources = useMemo(
     () => currentUser.dataSources || [],
@@ -257,6 +319,11 @@ const ExploreWrapper = () => {
       runQuery={runQuery}
       dataSchemaValidation={dataSchemaValidation}
       onSelectDataSource={onSelectDataSource}
+      onCreateAlert={createAlert}
+      onTestAlert={onSendTest}
+      alertData={createMutationData.data}
+      onCreateReport={() => {}}
+      onTestReport={() => {}}
       params={{
         screenshotMode: isScreenshotMode,
       }}

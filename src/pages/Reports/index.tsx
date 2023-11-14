@@ -12,6 +12,7 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useReports from "@/hooks/useReports";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
+import { DOCS_CREATE_REPORT_LINK } from "@/utils/constants/links";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -70,11 +71,6 @@ const Reports: React.FC<ReportsProps> = ({
     execDeleteMutation({ id: report.id });
   };
 
-  const onCreate = () => {
-    setSelectedReport(undefined);
-    setIsOpen(true);
-  };
-
   const onClose = () => {
     setSelectedReport(undefined);
     setIsOpen(false);
@@ -117,7 +113,8 @@ const Reports: React.FC<ReportsProps> = ({
           actionProps={{
             className: styles.action,
           }}
-          onClick={onCreate}
+          target="_blank"
+          href={DOCS_CREATE_REPORT_LINK}
         />
         <div className={styles.body}>
           <AlertsTable alerts={reports} onEdit={onEdit} onRemove={onDelete} />
@@ -127,7 +124,7 @@ const Reports: React.FC<ReportsProps> = ({
       <ReportModal
         report={selectedReport}
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={onClose}
         query={query}
         onSendTest={onSendTest}
         onSubmit={onSubmit}

@@ -11,6 +11,7 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import useAlerts from "@/hooks/useAlerts";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
+import { DOCS_CREATE_ALERT_LINK } from "@/utils/constants/links";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -69,11 +70,6 @@ const Alerts: React.FC<AlertsProps> = ({
     execDeleteMutation({ id: alert.id });
   };
 
-  const onCreate = () => {
-    setSelectedAlert(undefined);
-    setIsOpen(true);
-  };
-
   const onClose = () => {
     setSelectedAlert(undefined);
     setIsOpen(false);
@@ -116,7 +112,8 @@ const Alerts: React.FC<AlertsProps> = ({
           actionProps={{
             className: styles.action,
           }}
-          onClick={onCreate}
+          target="_blank"
+          href={DOCS_CREATE_ALERT_LINK}
         />
         <div className={styles.body}>
           <AlertsTable alerts={alerts} onEdit={onEdit} onRemove={onDelete} />
@@ -125,7 +122,7 @@ const Alerts: React.FC<AlertsProps> = ({
 
       <AlertModal
         alert={selectedAlert}
-        query={query || initialQuery}
+        query={query}
         isOpen={isOpen}
         loading={sendTestMutationData.fetching}
         onClose={onClose}

@@ -19,6 +19,10 @@ import type { SortBySet } from "@/components/VirtualTable";
 import type { ErrorMessage } from "@/types/errorMessage";
 import type { CubeMember } from "@/types/cube";
 import type { ExplorationState } from "@/types/exploration";
+import {
+  DOCS_CREATE_ALERT_LINK,
+  DOCS_CREATE_REPORT_LINK,
+} from "@/utils/constants/links";
 
 import CSVIcon from "@/assets/csv.svg";
 import AlertIcon from "@/assets/alert.svg";
@@ -105,7 +109,12 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
             >
               {t("data_section.create_alert")}
             </Button>
-            <Button className={cn(s.popoverLink, s.guideLink)} type="link">
+            <Button
+              className={cn(s.popoverLink, s.guideLink)}
+              type="link"
+              target="_blank"
+              href={DOCS_CREATE_ALERT_LINK}
+            >
               {t("data_section.how_to_create_alert")}
             </Button>
           </div>
@@ -126,7 +135,12 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
             >
               {t("data_section.create_report")}
             </Button>
-            <Button className={cn(s.popoverLink, s.guideLink)} type="link">
+            <Button
+              className={cn(s.popoverLink, s.guideLink)}
+              type="link"
+              target="_blank"
+              href={DOCS_CREATE_REPORT_LINK}
+            >
               {t("data_section.how_to_create_report")}
             </Button>
           </div>

@@ -127,6 +127,7 @@ export const Models: React.FC<ModelsProps> = ({
     openTab,
     openedTabs,
     openSchema,
+    resetTabs,
   } = useModelsIde({
     dataSourceId: dataSource?.id || "",
     branchId: currentBranch?.id,
@@ -139,6 +140,15 @@ export const Models: React.FC<ModelsProps> = ({
         .filter(Boolean),
     [dataschemas, openedTabs]
   ) as Dataschema[];
+
+  useTrackedEffect(
+    (changes, prevDeps, currDeps) => {
+      if (prevDeps?.[0]?.id !== currDeps?.[0]?.id) {
+        resetTabs();
+      }
+    },
+    [currentVersion]
+  );
 
   useEffect(() => {
     if (dataSchemaName) {
@@ -285,8 +295,8 @@ const ModelsWrapper: React.FC = () => {
     `${dataSourceId}:currentBranch`
   );
 
-  const onModalClose = () => {
-    if (history.state) {
+  const onModalClose = (goBack: boolean = false) => {
+    if (history.state && goBack) {
       history.back();
     } else {
       setLocation(`${basePath}/${dataSourceId}`);
@@ -517,7 +527,7 @@ const ModelsWrapper: React.FC = () => {
       overwrite: true,
     });
 
-    onModalClose();
+    onModalClose(true);
   };
 
   const { fallback } = usePermissions({ scope: "dataschemas" });
@@ -824,7 +834,7 @@ const ModelsWrapper: React.FC = () => {
       toggleConsole={() => toggleConsole(false)}
       tablesSchema={tablesSchema}
       schemaFetching={tablesData?.fetching}
-      onModalClose={onModalClose}
+      onModalClose={() => onModalClose(true)}
       onGenSubmit={onGenSubmit}
       onSaveVersion={createNewVersion}
       onDataSourceChange={(ds) =>

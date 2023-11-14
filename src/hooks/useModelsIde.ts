@@ -24,6 +24,7 @@ export default ({ dataSourceId, branchId }: Props) => {
     openTab,
     closeTab,
     changeActiveTab,
+    reset,
   } = useTabs({ activeTab: defaultTabId });
 
   const changePath = useCallback(
@@ -44,10 +45,13 @@ export default ({ dataSourceId, branchId }: Props) => {
     [withAuthPrefix, dataSourceId, branchId, location.pathname, setLocation]
   );
 
-  const changeTab = (dataschema?: Tab) => {
-    changePath(dataschema?.name || "sqlrunner");
-    changeActiveTab(dataschema?.name || "sqlrunner");
-  };
+  const changeTab = useCallback(
+    (dataschema?: Tab) => {
+      changePath(dataschema?.name || "sqlrunner");
+      changeActiveTab(dataschema?.name || "sqlrunner");
+    },
+    [changeActiveTab, changePath]
+  );
 
   const openSchema = useCallback(
     (name: string, hash?: string) => {
@@ -96,6 +100,10 @@ export default ({ dataSourceId, branchId }: Props) => {
     [changeActiveTab, changePath, closeTab, openSchema, tabsState]
   );
 
+  const resetTabs = useCallback(() => {
+    reset({ activeTab: defaultTabId });
+  }, [reset]);
+
   return {
     openSchema,
     openedTabs: tabsState.tabs,
@@ -105,5 +113,6 @@ export default ({ dataSourceId, branchId }: Props) => {
     editTab,
     closeTab,
     openTab,
+    resetTabs,
   };
 };

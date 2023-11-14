@@ -32,7 +32,12 @@ interface CloseAction {
 
 interface ReplaceAction {
   type: "replace";
-  value: Record<string, string>;
+  value: Set<string>;
+}
+
+interface ResetAction {
+  type: "reset";
+  state: Partial<State>;
 }
 
 type Action =
@@ -40,7 +45,13 @@ type Action =
   | ChangeTabAction
   | ChangeAction
   | CloseAction
-  | ReplaceAction;
+  | ReplaceAction
+  | ResetAction;
+
+const initialState = {
+  tabs: new Set([]),
+  activeTab: null,
+};
 
 const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {
@@ -65,14 +76,12 @@ const reducer: Reducer<State, Action> = (state, action) => {
     case "replace":
       return set("tabs", action.value, state) as State;
 
+    case "reset":
+      return { ...initialState, ...action.state };
+
     default:
       return state as State;
   }
-};
-
-const initialState = {
-  tabs: new Set([]),
-  activeTab: null,
 };
 
 export default (defaultState: Partial<State> = {}) => {
@@ -95,10 +104,17 @@ export default (defaultState: Partial<State> = {}) => {
     [dispatch]
   );
 
+  const reset = useCallback(
+    (newState: Partial<State> = {}) =>
+      dispatch({ type: "reset", state: newState }),
+    [dispatch]
+  );
+
   return {
     state,
     openTab,
     closeTab,
     changeActiveTab,
+    reset,
   };
 };

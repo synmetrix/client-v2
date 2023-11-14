@@ -108,7 +108,6 @@ const VersionsList: FC<VersionsListProps> = ({ versions, onRestore }) => {
         columns={columns}
         dataSource={versions}
         rowKey={(record) => record.id}
-        pagination={false}
         expandable={{ expandedRowRender }}
       />
     </Space>

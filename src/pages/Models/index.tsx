@@ -420,6 +420,10 @@ const ModelsWrapper: React.FC = () => {
     [currentUser, execAllData]
   );
 
+  useEffect(() => {
+    execValidateMutation({ id: dataSourceId });
+  }, [dataSourceId, execValidateMutation]);
+
   useCheckResponse(
     genSchemaMutation,
     (res) => {
@@ -481,6 +485,11 @@ const ModelsWrapper: React.FC = () => {
       successMessage: t("alerts.branch_removed"),
     }
   );
+
+  useCheckResponse(validateMutation, undefined, {
+    errorMessage: t("alerts.compilation_error"),
+    showResponseMessage: false,
+  });
 
   const validationError = useMemo(
     () => validateMutation?.error?.message,
@@ -591,7 +600,6 @@ const ModelsWrapper: React.FC = () => {
         code: "",
       },
     ];
-
     const checksum = calcChecksum(newSchemas);
     await createNewVersion(checksum, newSchemas);
   };
@@ -706,7 +714,6 @@ const ModelsWrapper: React.FC = () => {
   const onCodeSave = async (id: string, code: string) => {
     const res = await execValidateMutation({ id: dataSourceId });
     if (res.error) {
-      message.error(t("alerts.compilation_error"));
       return;
     }
     onClickUpdate(id, { code }, true);

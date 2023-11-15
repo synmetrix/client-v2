@@ -703,9 +703,13 @@ const ModelsWrapper: React.FC = () => {
     await createNewVersion(checksum, newDataschemas);
   };
 
-  const onCodeSave = (id: string, code: string) => {
+  const onCodeSave = async (id: string, code: string) => {
+    const res = await execValidateMutation({ id: dataSourceId });
+    if (res.error) {
+      message.error(t("alerts.compilation_error"));
+      return;
+    }
     onClickUpdate(id, { code }, true);
-    execValidateMutation({ id: dataSourceId });
     execAllData();
   };
 

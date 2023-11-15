@@ -20,6 +20,8 @@ export type AppLayoutProps = {
   divider?: boolean;
 };
 
+const { Sider } = Layout;
+
 const AppLayout: React.FC<AppLayoutProps> = ({
   title = "App",
   divider = false,
@@ -42,11 +44,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   );
 
   return (
-    <Layout className={styles.root}>
-      <div style={{ display: "flex" }}>
+    <div className={styles.root}>
+      {responsive.lg ? (
+        <div style={{ display: "flex", minHeight: "100%" }}>
+          <SideMenu />
+          {sidebar}
+        </div>
+      ) : (
         <SideMenu />
-        {sidebar}
-      </div>
+      )}
       <Layout>
         <Header
           title={title}
@@ -54,9 +60,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           content={isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
         />
         <div className={styles.main}>{children}</div>
+        {!responsive.lg && sidebar}
         <Footer />
       </Layout>
-    </Layout>
+    </div>
   );
 };
 

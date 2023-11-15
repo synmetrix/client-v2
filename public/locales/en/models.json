@@ -20,7 +20,8 @@
     "do_not_match": "do not match. Skipped.",
     "deleting_a_file": "Deleting a file.",
     "file_change": "File change.",
-    "compilation_error": "Compilation error."
+    "compilation_error": "Compilation error.",
+    "compilation_success": "Compilation was successful."
   },
   "sure_delete": "Are you sure delete this data schema?",
   "ide_menu": {

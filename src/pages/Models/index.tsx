@@ -420,10 +420,6 @@ const ModelsWrapper: React.FC = () => {
     [currentUser, execAllData]
   );
 
-  useEffect(() => {
-    execValidateMutation({ id: dataSourceId });
-  }, [dataSourceId, execValidateMutation]);
-
   useCheckResponse(
     genSchemaMutation,
     (res) => {
@@ -487,6 +483,7 @@ const ModelsWrapper: React.FC = () => {
   );
 
   useCheckResponse(validateMutation, undefined, {
+    successMessage: t("alerts.compilation_success"),
     errorMessage: t("alerts.compilation_error"),
     showResponseMessage: false,
   });
@@ -712,11 +709,8 @@ const ModelsWrapper: React.FC = () => {
   };
 
   const onCodeSave = async (id: string, code: string) => {
-    const res = await execValidateMutation({ id: dataSourceId });
-    if (res.error) {
-      return;
-    }
-    onClickUpdate(id, { code }, true);
+    await onClickUpdate(id, { code }, true);
+    await execValidateMutation({ id: dataSourceId });
     execAllData();
   };
 

@@ -337,6 +337,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             <WrapperComponent {...wrapperProps}>
               <BasicInput
                 {...props}
+                type={fieldType}
                 size={size}
                 className={cn(styles.input, props.className)}
                 value={value}

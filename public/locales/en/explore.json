@@ -27,5 +27,9 @@
   },
   "filters": {
     "filter_name": "Filter name"
+  },
+  "errors": {
+    "exploration_not_found": "Exploration not found",
+    "data_source_not_found": "Data source not found"
   }
 }

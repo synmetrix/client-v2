@@ -64,6 +64,51 @@ query CurrentUser($id: uuid!) {
       }
     }
 
+    alerts(order_by: { created_at: desc }) {
+      id
+      name
+      delivery_type
+      delivery_config
+      trigger_config
+      created_at
+      updated_at
+      schedule
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+      exploration {
+        id
+        playground_state
+      }
+    }
+
+    reports(order_by: { created_at: desc }) {
+      id
+      name
+      schedule
+      delivery_type
+      delivery_config
+      created_at
+      updated_at
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+      exploration {
+        id
+        playground_state
+      }
+    }
+
     members(order_by: { created_at: desc }) {
       member_roles {
         id
@@ -112,6 +157,51 @@ subscription SubCurrentUser($id: uuid!) {
           id
           display_name
         }
+      }
+    }
+
+    alerts(order_by: { created_at: desc }) {
+      id
+      name
+      delivery_type
+      delivery_config
+      trigger_config
+      created_at
+      updated_at
+      schedule
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+      exploration {
+        id
+        playground_state
+      }
+    }
+
+    reports(order_by: { created_at: desc }) {
+      id
+      name
+      schedule
+      delivery_type
+      delivery_config
+      created_at
+      updated_at
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+      exploration {
+        id
+        playground_state
       }
     }
 

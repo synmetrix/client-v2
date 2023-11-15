@@ -17,5 +17,9 @@
   "form": {
     "report_name": "Report Name:",
     "type": "Type:"
-  }
+  },
+  "report_created": "Report created",
+  "report_updated": "Report updated",
+  "report_deleted": "Report deleted",
+  "test_report_sent": "Test report has been sent"
 }

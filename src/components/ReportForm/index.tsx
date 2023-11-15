@@ -11,7 +11,7 @@ import StepFormHeader from "@/components/StepFormHeader";
 import { capitalize } from "@/utils/helpers/capitalize";
 import validate from "@/utils/validations";
 import type { AlertType } from "@/types/alert";
-import type { QueryPreview as QueryPreviewType } from "@/types/queryPreview";
+import type { QueryState } from "@/types/queryState";
 import type { ReportFormType } from "@/types/report";
 
 import InfoIcon from "@/assets/info.svg";
@@ -22,21 +22,23 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface ReportFormProps {
-  query: QueryPreviewType;
+  query: QueryState;
   onSubmit: (data: ReportFormType) => void;
   onTest: (data: ReportFormType) => void;
   type?: AlertType;
   initialValue?: ReportFormType;
+  isSendTestLoading?: boolean;
 }
 
 const { Title } = Typography;
 
 const ReportForm: FC<ReportFormProps> = ({
   query,
-  type = "webhook",
+  type = "WEBHOOK",
   initialValue,
   onSubmit,
   onTest,
+  isSendTestLoading,
 }) => {
   const {
     t,
@@ -101,8 +103,16 @@ const ReportForm: FC<ReportFormProps> = ({
                 starColor="#A31BCB"
                 label={`${capitalize(type)}:`}
                 control={control}
-                name={type}
-                defaultValue={initialValue?.[type]}
+                name={
+                  type === "EMAIL"
+                    ? "deliveryConfig.address"
+                    : "deliveryConfig.url"
+                }
+                defaultValue={
+                  type === "EMAIL"
+                    ? initialValue?.deliveryConfig?.address
+                    : initialValue?.deliveryConfig?.url
+                }
               />
             </Space>
           </Col>
@@ -156,6 +166,8 @@ const ReportForm: FC<ReportFormProps> = ({
                 <Button
                   className={styles.sendTest}
                   onClick={() => onTest(getValues())}
+                  loading={isSendTestLoading}
+                  disabled={isSendTestLoading}
                 >
                   <SendIcon /> {t("common:words.send_test")}
                 </Button>

@@ -78,8 +78,20 @@ export default [
             component: "./pages/Home",
           },
           {
+            path: "/explore/:dataSourceId?/:explorationId?",
+            component: "./pages/Explore",
+          },
+          {
             path: "/teams",
             component: "./pages/Teams",
+          },
+          {
+            path: "/alerts",
+            component: "./pages/Alerts",
+          },
+          {
+            path: "/reports",
+            component: "./pages/Reports",
           },
           {
             path: "/logs/query",

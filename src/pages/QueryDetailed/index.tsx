@@ -8,7 +8,7 @@ import QueryDetails from "@/components/QueryDetails";
 import PageLoading from "@/components/PageLoading";
 import AppLayout from "@/layouts/AppLayout";
 import useLogs from "@/hooks/useLogs";
-import type { QueryPreview } from "@/types/queryPreview";
+import type { QueryState } from "@/types/queryState";
 import type {
   Maybe,
   Request_Event_Logs,
@@ -21,7 +21,7 @@ import styles from "./index.module.less";
 
 interface QueryDetailedProps {
   request: Partial<Request_Logs>;
-  query: Maybe<QueryPreview>;
+  query: Maybe<QueryState>;
   SQLString?: Maybe<string>;
   events: Request_Event_Logs[];
   queryKey?: Maybe<string>;

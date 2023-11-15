@@ -1,6 +1,6 @@
-import type { Sort } from "./sort";
+import type { SortBy } from "./sort";
 
-export interface QueryPreview {
+export interface QueryState {
   measures?: string[];
   dimensions?: string[];
   segments?: string[];
@@ -8,5 +8,5 @@ export interface QueryPreview {
     dimension: string;
     granularity: string;
   }[];
-  order?: Record<string, Sort>;
+  order?: SortBy[];
 }

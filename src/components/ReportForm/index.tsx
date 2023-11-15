@@ -1,4 +1,4 @@
-import { Alert, Col, Form, Row, Space, Typography } from "antd";
+import { Alert, Col, Form, Row, Space, Popover } from "antd";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
@@ -10,7 +10,6 @@ import QueryPreview from "@/components/QueryPreview";
 import StepFormHeader from "@/components/StepFormHeader";
 import { capitalize } from "@/utils/helpers/capitalize";
 import validate from "@/utils/validations";
-import type { AlertType } from "@/types/alert";
 import type { QueryState } from "@/types/queryState";
 import type { ReportFormType } from "@/types/report";
 
@@ -25,12 +24,11 @@ interface ReportFormProps {
   query: QueryState;
   onSubmit: (data: ReportFormType) => void;
   onTest: (data: ReportFormType) => void;
-  type?: AlertType;
+  onChangeStep: (step: number) => void;
+  type?: string;
   initialValue?: ReportFormType;
   isSendTestLoading?: boolean;
 }
-
-const { Title } = Typography;
 
 const ReportForm: FC<ReportFormProps> = ({
   query,
@@ -38,25 +36,27 @@ const ReportForm: FC<ReportFormProps> = ({
   initialValue,
   onSubmit,
   onTest,
+  onChangeStep,
   isSendTestLoading,
 }) => {
   const {
     t,
     i18n: { language: locale },
   } = useTranslation(["reports", "common"]);
+  const [step, setStep] = useState(0);
   const { control, handleSubmit, watch, getValues } = useForm<ReportFormType>({
     values: initialValue,
   });
 
   const schedule = watch("schedule");
 
+  useEffect(() => {
+    if (type) setStep(1);
+  }, [type]);
+
   return (
     <Form layout="vertical">
       <Space className={cn(styles.space, styles.body)} size={16}>
-        <Title className={styles.title} level={3}>
-          {initialValue ? t("edit_report") : t("new_report")}
-        </Title>
-
         {!initialValue && (
           <div className={styles.header}>
             <StepFormHeader
@@ -66,7 +66,8 @@ const ReportForm: FC<ReportFormProps> = ({
                 t("common:words.new"),
                 capitalize(type),
               ]}
-              currentStep={0}
+              onChange={onChangeStep}
+              currentStep={step}
             />
           </div>
         )}
@@ -76,6 +77,7 @@ const ReportForm: FC<ReportFormProps> = ({
               label={t("form.report_name")}
               control={control}
               name="name"
+              placeholder={t("common:form.placeholders.name")}
               defaultValue={initialValue?.name}
             />
           </Col>
@@ -103,6 +105,11 @@ const ReportForm: FC<ReportFormProps> = ({
                 starColor="#A31BCB"
                 label={`${capitalize(type)}:`}
                 control={control}
+                placeholder={
+                  type === "EMAIL"
+                    ? t("common:form.placeholders.email")
+                    : t("URL")
+                }
                 name={
                   type === "EMAIL"
                     ? "deliveryConfig.address"
@@ -143,8 +150,13 @@ const ReportForm: FC<ReportFormProps> = ({
                 }
                 control={control}
                 name="schedule"
-                defaultValue={initialValue?.schedule}
-                suffix={<InfoIcon />}
+                placeholder="* * * * *"
+                defaultValue={initialValue?.schedule || "* * * * *"}
+                suffix={
+                  <Popover content={t("common:words.in_utc_timezone")}>
+                    <InfoIcon />
+                  </Popover>
+                }
               />
             </Space>
           </Col>

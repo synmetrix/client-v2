@@ -1,4 +1,5 @@
-import { Space } from "antd";
+import { Space, message } from "antd";
+import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
@@ -10,7 +11,10 @@ import type { QueryState } from "@/types/queryState";
 import AppLayout from "@/layouts/AppLayout";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useCheckResponse from "@/hooks/useCheckResponse";
+import useAlerts from "@/hooks/useAlerts";
 import useReports from "@/hooks/useReports";
+import useLocation from "@/hooks/useLocation";
+import useAppSettings from "@/hooks/useAppSettings";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 import { DOCS_CREATE_REPORT_LINK } from "@/utils/constants/links";
 
@@ -28,43 +32,44 @@ const Reports: React.FC<ReportsProps> = ({
   query: initialQuery,
 }) => {
   const { t } = useTranslation(["reports", "pages"]);
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedReport, setSelectedReport] = useState<
-    ReportFormType | undefined
-  >();
-
-  const {
-    mutations: {
-      updateMutationData,
-      deleteMutationData,
-      execDeleteMutation,
-      sendTestMutationData,
-    },
-    updateReport,
-    onSendTest,
-  } = useReports({
-    report: selectedReport,
-  });
-
+  const { withAuthPrefix } = useAppSettings();
+  const [, setLocation] = useLocation();
+  const basePath = withAuthPrefix("/reports");
   const { currentUser } = CurrentUserStore();
-
-  const query = useMemo(() => {
-    if (selectedReport) {
-      return selectedReport?.exploration?.playground_state;
-    }
-
-    return initialQuery || SAMPLE_EXPLORATION.playground_state;
-  }, [selectedReport, initialQuery]);
+  const { reportId } = useParams();
 
   const reports = useMemo(
     () => (initialReports?.length ? initialReports : currentUser.reports || []),
     [initialReports, currentUser]
   ) as Alert[];
 
+  const curReport = useMemo(
+    () => reports.find((r) => r.id === reportId),
+    [reportId, reports]
+  );
+
+  const {
+    mutations: { sendTestMutationData },
+    onSendTest,
+  } = useAlerts({});
+
+  const {
+    mutations: { updateMutationData, deleteMutationData, execDeleteMutation },
+    updateReport,
+  } = useReports({
+    reportId,
+  });
+
+  const query = useMemo(() => {
+    if (curReport) {
+      return curReport?.exploration?.playground_state;
+    }
+
+    return initialQuery || SAMPLE_EXPLORATION.playground_state;
+  }, [curReport, initialQuery]);
+
   const onEdit = (report: Report) => {
-    setSelectedReport(report);
-    setIsOpen(true);
+    setLocation(`${basePath}/${report.id}`);
   };
 
   const onDelete = (report: Report) => {
@@ -72,8 +77,7 @@ const Reports: React.FC<ReportsProps> = ({
   };
 
   const onClose = () => {
-    setSelectedReport(undefined);
-    setIsOpen(false);
+    setLocation(basePath);
   };
 
   useCheckResponse(updateMutationData, () => onClose(), {
@@ -89,13 +93,20 @@ const Reports: React.FC<ReportsProps> = ({
   });
 
   const onSubmit = (values: ReportFormType) => {
-    const doesReportExist = Boolean(selectedReport?.id);
+    const doesReportExist = Boolean(curReport?.id);
 
     if (doesReportExist) {
       updateReport(values);
       return;
     }
   };
+
+  useEffect(() => {
+    if (reports?.length && reportId && !curReport) {
+      message.error(t("not_found"));
+      setLocation(basePath);
+    }
+  }, [reportId, reports?.length, basePath, curReport, setLocation, t]);
 
   return (
     <AppLayout divider title={t("pages:reports")}>
@@ -122,8 +133,8 @@ const Reports: React.FC<ReportsProps> = ({
       </Space>
 
       <ReportModal
-        report={selectedReport}
-        isOpen={isOpen}
+        report={curReport}
+        isOpen={!!curReport}
         onClose={onClose}
         query={query}
         onSendTest={onSendTest}

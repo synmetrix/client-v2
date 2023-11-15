@@ -1,8 +1,8 @@
 {
   "data_section": {
-    "create_alert": "Create new alert",
+    "create_alert": "Add Alert",
     "how_to_create_alert": "How to create Alerts?",
-    "create_report": "Create new report",
+    "create_report": "Add Report",
     "how_to_create_report": "How to create Reports?",
     "query": "Query",
     "rows_limit": "Rows Limit",

@@ -11,13 +11,14 @@ import {
   useSendTestAlertMutation,
 } from "@/graphql/generated";
 import CurrentUserStore from "@/stores/CurrentUserStore";
+import type { ReportFormType } from "@/types/report";
 
 interface Props {
-  alert?: AlertFormType;
+  alertId?: string;
   explorationId?: string;
 }
 
-export default ({ alert, explorationId }: Props) => {
+export default ({ alertId, explorationId }: Props) => {
   const { currentTeamId } = CurrentUserStore();
 
   const [createMutationData, execInsertMutation] = useCreateAlertMutation();
@@ -54,16 +55,16 @@ export default ({ alert, explorationId }: Props) => {
       };
 
       const payload = {
-        pk_columns: { id: alert?.id } as Alerts_Pk_Columns_Input,
+        pk_columns: { id: alertId } as Alerts_Pk_Columns_Input,
         _set: updateAlerPayload as Alerts_Set_Input,
       };
 
       execUpdateMutation(payload);
     },
-    [alert?.id, execUpdateMutation]
+    [alertId, execUpdateMutation]
   );
 
-  const onSendTest = (values: AlertFormType) => {
+  const onSendTest = (values: AlertFormType | ReportFormType) => {
     const { deliveryConfig, exploration, type, name } = values;
 
     const mutationPayload: SendTestAlertMutationVariables = {

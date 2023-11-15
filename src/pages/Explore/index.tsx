@@ -3,11 +3,7 @@ import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { message } from "antd";
 
-import type {
-  CreateAlertMutation,
-  CreateReportMutation,
-  FetchDatasetOutput,
-} from "@/graphql/generated";
+import type { FetchDatasetOutput } from "@/graphql/generated";
 import {
   useFetchMetaQuery,
   useCurrentExplorationQuery,
@@ -37,6 +33,12 @@ import type {
 import type { AlertFormType } from "@/types/alert";
 import type { ReportFormType } from "@/types/report";
 
+export interface Params {
+  screenshotMode: boolean;
+  modalType?: string;
+  delivery?: string;
+}
+
 interface ExploreProps {
   loading?: boolean;
   dataSources?: DataSourceInfo[];
@@ -46,18 +48,18 @@ interface ExploreProps {
   dataSet?: FetchDatasetOutput;
   rawSql?: RawSql;
   metaLoading?: boolean;
+  testLoading?: boolean;
   dataSchemaValidation?: DataSchemaValidation;
-  alertData?: CreateAlertMutation;
-  reportData?: CreateReportMutation;
+  onOpenModal?: (type: string) => void;
+  onCloseModal?: () => void;
+  onChangeStep?: (step: number) => void;
+  onSelectDelivery?: (del: string) => void;
   runQuery?: (state: object, settings: QuerySettings) => void;
   onSelectDataSource?: (id: string) => void;
   onCreateAlert?: (values: AlertFormType) => void;
-  onTestAlert?: (values: AlertFormType) => void;
+  onSendTest?: (values: AlertFormType | ReportFormType) => void;
   onCreateReport?: (values: ReportFormType) => void;
-  onTestReport?: (values: ReportFormType) => void;
-  params: {
-    screenshotMode: boolean;
-  };
+  params: Params;
 }
 
 export const Explore = ({
@@ -71,29 +73,23 @@ export const Explore = ({
   dataSet,
   dataSchemaValidation,
   params,
-  alertData,
-  reportData,
+  testLoading = false,
+  onChangeStep = () => {},
+  onOpenModal = () => {},
+  onCloseModal = () => {},
+  onSelectDelivery = () => {},
   runQuery = () => {},
   onSelectDataSource = () => {},
   onCreateAlert = () => {},
-  onTestAlert = () => {},
+  onSendTest = () => {},
   onCreateReport = () => {},
-  onTestReport = () => {},
 }: ExploreProps) => {
-  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
-  const [isReportOpen, setIsReportOpen] = useState<boolean>(false);
+  const { modalType } = params;
 
   const query = useMemo(
     () => exploration?.playground_state || {},
     [exploration?.playground_state]
   );
-
-  const onNewAlert = () => {
-    setIsAlertOpen(true);
-  };
-  const onNewReport = () => {
-    setIsReportOpen(true);
-  };
 
   const header = useMemo(
     () => (
@@ -109,17 +105,8 @@ export const Explore = ({
     [dataSource?.id, dataSources, onSelectDataSource]
   );
 
-  useEffect(() => {
-    if (alertData) {
-      setIsAlertOpen(false);
-    }
-  }, [alertData]);
-
-  useEffect(() => {
-    if (reportData) {
-      setIsReportOpen(false);
-    }
-  }, [reportData]);
+  const isAlertOpen = modalType === "alert";
+  const isReportOpen = modalType === "report";
 
   return (
     <>
@@ -129,8 +116,7 @@ export const Explore = ({
         exploration={exploration}
         params={params}
         runQuery={runQuery}
-        onNewAlert={onNewAlert}
-        onNewReport={onNewReport}
+        onOpenModal={onOpenModal}
         source={dataSource}
         dataSources={dataSources}
         dataSchemaValidation={dataSchemaValidation}
@@ -142,20 +128,26 @@ export const Explore = ({
 
       <AlertModal
         isOpen={isAlertOpen}
-        onClose={() => setIsAlertOpen(false)}
+        onClose={onCloseModal}
         query={query}
-        onSendTest={onTestAlert}
+        onChangeStep={onChangeStep}
+        onSelectDelivery={onSelectDelivery}
+        onSendTest={onSendTest}
         onSubmit={onCreateAlert}
-        loading={false}
+        loading={testLoading}
+        params={params}
       />
 
       <ReportModal
         isOpen={isReportOpen}
-        onClose={() => setIsReportOpen(false)}
+        onClose={onCloseModal}
         query={query}
-        onSendTest={onTestReport}
+        onChangeStep={onChangeStep}
+        onSelectDelivery={onSelectDelivery}
+        onSendTest={onSendTest}
         onSubmit={onCreateReport}
-        loading={false}
+        loading={testLoading}
+        params={params}
       />
     </>
   );
@@ -166,7 +158,7 @@ const ExploreWrapper = () => {
   const { currentUser } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { screenshotMode } = location.query;
-  const { dataSourceId, explorationId } = useParams();
+  const { dataSourceId, explorationId, modalType, delivery } = useParams();
 
   const { state: playgroundState } = useAnalyticsQuery();
   const { withAuthPrefix } = useAppSettings();
@@ -185,10 +177,10 @@ const ExploreWrapper = () => {
 
   const {
     createAlert,
-    onSendTest: onTestAlert,
+    onSendTest,
     mutations: {
       createMutationData: createAlertMutationData,
-      sendTestMutationData: testAlertMutationData,
+      sendTestMutationData,
     },
   } = useAlerts({
     explorationId,
@@ -196,29 +188,35 @@ const ExploreWrapper = () => {
 
   const {
     createReport,
-    onSendTest: onTestReport,
-    mutations: {
-      createMutationData: createReportMutationData,
-      sendTestMutationData: testReportMutationData,
-    },
+    mutations: { createMutationData: createReportMutationData },
   } = useReports({
     explorationId,
   });
 
-  useCheckResponse(createAlertMutationData, () => {}, {
-    successMessage: t("alerts:alert_created"),
-  });
+  const dataSourcePath = `/explore/${dataSourceId}`;
+  const explorePath = `${dataSourcePath}/${explorationId}`;
+  useCheckResponse(
+    createAlertMutationData,
+    () => {
+      setLocation(explorePath);
+    },
+    {
+      successMessage: t("alerts:alert_created"),
+    }
+  );
 
-  useCheckResponse(testAlertMutationData, () => {}, {
+  useCheckResponse(
+    createReportMutationData,
+    () => {
+      setLocation(explorePath);
+    },
+    {
+      successMessage: t("reports:report_created"),
+    }
+  );
+
+  useCheckResponse(sendTestMutationData, () => {}, {
     successMessage: t("alerts:test_alert_sent"),
-  });
-
-  useCheckResponse(createReportMutationData, () => {}, {
-    successMessage: t("reports:report_created"),
-  });
-
-  useCheckResponse(testReportMutationData, () => {}, {
-    successMessage: t("reports:test_report_sent"),
   });
 
   const datasources = useMemo(
@@ -233,7 +231,6 @@ const ExploreWrapper = () => {
     pause: true,
   });
 
-  const dataSourcePath = `/explore/${dataSourceId}`;
   useCheckResponse(
     currentExploration,
     (res, err) => {
@@ -262,6 +259,24 @@ const ExploreWrapper = () => {
     };
 
     return execCreateMutation({ object: newExplorationObj });
+  };
+
+  const onOpenModal = (type: string) => {
+    setLocation(`${explorePath}/${type}`);
+  };
+
+  const onCloseModal = () => {
+    setLocation(`${explorePath}`);
+  };
+
+  const onSelectDelivery = (del: string) => {
+    setLocation(`${explorePath}/${modalType}/${del}`);
+  };
+
+  const onChangeStep = (step: number) => {
+    if (step === 1) {
+      setLocation(`${explorePath}/${modalType}`);
+    }
   };
 
   useEffect(() => {
@@ -357,22 +372,26 @@ const ExploreWrapper = () => {
       loading={loading}
       meta={metaData?.data?.fetch_meta?.cubes || []}
       metaLoading={metaData.fetching}
+      testLoading={sendTestMutationData.fetching}
       dataSources={datasources}
       dataSource={curSource}
       exploration={exploration}
       rawSql={rawSql}
       dataSet={dataSet}
       runQuery={runQuery}
+      onOpenModal={onOpenModal}
+      onCloseModal={onCloseModal}
+      onChangeStep={onChangeStep}
+      onSelectDelivery={onSelectDelivery}
       dataSchemaValidation={dataSchemaValidation}
       onSelectDataSource={onSelectDataSource}
       onCreateAlert={createAlert}
-      onTestAlert={onTestAlert}
-      alertData={createAlertMutationData?.data}
+      onSendTest={onSendTest}
       onCreateReport={createReport}
-      onTestReport={onTestReport}
-      reportData={createReportMutationData?.data}
       params={{
         screenshotMode: isScreenshotMode,
+        modalType,
+        delivery,
       }}
     />
   );

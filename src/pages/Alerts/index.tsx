@@ -1,5 +1,6 @@
-import { Space } from "antd";
+import { Space, message } from "antd";
 import { useTranslation } from "react-i18next";
+import { useParams } from "@vitjs/runtime";
 
 import PageHeader from "@/components/PageHeader";
 import AlertsTable from "@/components/AlertsTable";
@@ -8,6 +9,8 @@ import type { Alert, AlertFormType } from "@/types/alert";
 import type { QueryState } from "@/types/queryState";
 import AppLayout from "@/layouts/AppLayout";
 import CurrentUserStore from "@/stores/CurrentUserStore";
+import useLocation from "@/hooks/useLocation";
+import useAppSettings from "@/hooks/useAppSettings";
 import useAlerts from "@/hooks/useAlerts";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
@@ -27,11 +30,21 @@ const Alerts: React.FC<AlertsProps> = ({
   query: initialQuery,
 }) => {
   const { t } = useTranslation(["alerts", "pages"]);
+  const { withAuthPrefix } = useAppSettings();
+  const [, setLocation] = useLocation();
+  const basePath = withAuthPrefix("/alerts");
+  const { currentUser } = CurrentUserStore();
+  const { alertId } = useParams();
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedAlert, setSelectedAlert] = useState<
-    AlertFormType | undefined
-  >();
+  const alerts = useMemo(
+    () => (initialAlerts?.length ? initialAlerts : currentUser.alerts || []),
+    [initialAlerts, currentUser]
+  ) as Alert[];
+
+  const curAlert = useMemo(
+    () => alerts.find((a) => a.id === alertId),
+    [alertId, alerts]
+  );
 
   const {
     updateAlert,
@@ -43,27 +56,19 @@ const Alerts: React.FC<AlertsProps> = ({
       sendTestMutationData,
     },
   } = useAlerts({
-    alert: selectedAlert,
+    alertId,
   });
 
-  const { currentUser } = CurrentUserStore();
-
-  const alerts = useMemo(
-    () => (initialAlerts?.length ? initialAlerts : currentUser.alerts || []),
-    [initialAlerts, currentUser]
-  ) as Alert[];
-
   const query = useMemo(() => {
-    if (selectedAlert) {
-      return selectedAlert?.exploration?.playground_state;
+    if (curAlert) {
+      return curAlert?.exploration?.playground_state;
     }
 
     return initialQuery || SAMPLE_EXPLORATION.playground_state;
-  }, [selectedAlert, initialQuery]);
+  }, [curAlert, initialQuery]);
 
   const onEdit = (alert: Alert) => {
-    setSelectedAlert(alert);
-    setIsOpen(true);
+    setLocation(`${basePath}/${alert.id}`);
   };
 
   const onDelete = (alert: Alert) => {
@@ -71,8 +76,7 @@ const Alerts: React.FC<AlertsProps> = ({
   };
 
   const onClose = () => {
-    setSelectedAlert(undefined);
-    setIsOpen(false);
+    setLocation(basePath);
   };
 
   useCheckResponse(updateMutationData, () => onClose(), {
@@ -88,13 +92,20 @@ const Alerts: React.FC<AlertsProps> = ({
   });
 
   const onSubmit = (values: AlertFormType) => {
-    const doesAlertExist = Boolean(selectedAlert?.id);
+    const doesAlertExist = Boolean(curAlert?.id);
 
     if (doesAlertExist) {
       updateAlert(values);
       return;
     }
   };
+
+  useEffect(() => {
+    if (alerts?.length && alertId && !curAlert) {
+      message.error(t("not_found.wrong_id"));
+      setLocation(basePath);
+    }
+  }, [alertId, alerts?.length, basePath, curAlert, setLocation, t]);
 
   return (
     <AppLayout divider title={t("pages:alerts")}>
@@ -121,9 +132,9 @@ const Alerts: React.FC<AlertsProps> = ({
       </Space>
 
       <AlertModal
-        alert={selectedAlert}
+        alert={curAlert}
         query={query}
-        isOpen={isOpen}
+        isOpen={!!curAlert}
         loading={sendTestMutationData.fetching}
         onClose={onClose}
         onSendTest={onSendTest}

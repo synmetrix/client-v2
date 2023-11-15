@@ -1,13 +1,4 @@
-import {
-  Col,
-  Collapse,
-  Form,
-  Row,
-  Space,
-  Typography,
-  Table,
-  Alert,
-} from "antd";
+import { Col, Collapse, Form, Row, Space, Table, Alert, Popover } from "antd";
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
@@ -33,14 +24,14 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 import type { TableProps } from "antd";
 
-const { Title } = Typography;
 const { Panel } = Collapse;
 
 interface AlertFormProps {
   query: QueryState;
   onSubmit: (data: AlertFormType) => void;
   onTest: (data: AlertFormType) => void;
-  type?: AlertType;
+  onChangeStep: (step: number) => void;
+  type?: string;
   initialValue?: AlertFormType;
   isSendTestLoading?: boolean;
 }
@@ -50,6 +41,7 @@ const AlertForm: FC<AlertFormProps> = ({
   query,
   initialValue,
   onSubmit,
+  onChangeStep,
   onTest,
   isSendTestLoading,
 }) => {
@@ -57,9 +49,14 @@ const AlertForm: FC<AlertFormProps> = ({
     t,
     i18n: { language: locale },
   } = useTranslation(["alerts", "common"]);
+  const [step, setStep] = useState(0);
   const { control, handleSubmit, getValues, watch } = useForm<AlertFormType>({
     values: initialValue,
   });
+
+  useEffect(() => {
+    if (type) setStep(1);
+  }, [type]);
 
   const schedule = watch("schedule");
 
@@ -91,10 +88,11 @@ const AlertForm: FC<AlertFormProps> = ({
             ".",
             ":"
           )}.lowerBound`}
+          placeholder="0"
           defaultValue={
             initialValue?.triggerConfig?.measures?.[
               record.name.replace(".", ":")
-            ]?.lowerBound
+            ]?.lowerBound || 0
           }
         />
       ),
@@ -109,10 +107,11 @@ const AlertForm: FC<AlertFormProps> = ({
             ".",
             ":"
           )}.upperBound`}
+          placeholder="100"
           defaultValue={
             initialValue?.triggerConfig?.measures?.[
               record.name.replace(".", ":")
-            ]?.upperBound
+            ]?.upperBound || 100
           }
         />
       ),
@@ -121,10 +120,6 @@ const AlertForm: FC<AlertFormProps> = ({
 
   return (
     <Form className={styles.space} layout="vertical" id="alert-form">
-      <Title className={styles.title} level={3}>
-        {initialValue ? t("edit_alert") : t("new_alert")}
-      </Title>
-
       {!initialValue && (
         <div className={styles.header}>
           <StepFormHeader
@@ -134,7 +129,8 @@ const AlertForm: FC<AlertFormProps> = ({
               t("common:words.new"),
               capitalize(type),
             ]}
-            currentStep={0}
+            onChange={onChangeStep}
+            currentStep={step}
           />
         </div>
       )}
@@ -146,6 +142,7 @@ const AlertForm: FC<AlertFormProps> = ({
               label={t("form.alert_name")}
               control={control}
               name="name"
+              placeholder={t("common:form.placeholders.name")}
               defaultValue={initialValue?.name}
             />
           </Col>
@@ -188,6 +185,11 @@ const AlertForm: FC<AlertFormProps> = ({
                 starColor="#A31BCB"
                 label={`${capitalize(type)}:`}
                 control={control}
+                placeholder={
+                  type === "EMAIL"
+                    ? t("common:form.placeholders.email")
+                    : t("URL")
+                }
                 name={
                   type === "EMAIL"
                     ? "deliveryConfig.address"
@@ -225,8 +227,13 @@ const AlertForm: FC<AlertFormProps> = ({
                 }
                 control={control}
                 name="schedule"
-                defaultValue={initialValue?.schedule}
-                suffix={<InfoIcon />}
+                placeholder="* * * * *"
+                defaultValue={initialValue?.schedule || "* * * * *"}
+                suffix={
+                  <Popover content={t("common:words.in_utc_timezone")}>
+                    <InfoIcon />
+                  </Popover>
+                }
               />
             </Space>
           </Col>
@@ -261,6 +268,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   control={control}
                   name="triggerConfig.requestTimeout"
                   fieldType="number"
+                  placeholder="0"
                 />
               </Col>
 
@@ -274,6 +282,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   control={control}
                   name="triggerConfig.timeoutOnFire"
                   fieldType="number"
+                  placeholder="0"
                 />
               </Col>
             </Row>

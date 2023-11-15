@@ -1,4 +1,4 @@
-import { Col, Row, Space, Typography } from "antd";
+import { Col, Row, Space } from "antd";
 import { useTranslation } from "react-i18next";
 
 import FormTile from "@/components/FormTile";
@@ -10,21 +10,17 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface AlertTypeSelectionProps {
-  type: "alert" | "report";
   options: Tile[];
   onSubmit: (value: Tile) => void;
   initialValue?: Tile;
 }
 
-const { Title } = Typography;
-
 const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
-  type = "alert",
   options,
   initialValue,
   onSubmit,
 }) => {
-  const { t } = useTranslation(["alerts", "common"]);
+  const { t } = useTranslation(["common"]);
 
   const [activeTile, setActiveTile] = useState<Tile | undefined>(initialValue);
 
@@ -35,16 +31,11 @@ const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
 
   return (
     <Space className={styles.wrapper} direction="vertical" size={24}>
-      <Title className={styles.title} level={3}>
-        {type === "report"
-          ? t("common:words.new_report")
-          : t("common:words.new_alert")}
-      </Title>
       <Row>
         <div className={styles.header}>
           <StepFormHeader
             numbers={false}
-            steps={[t("common:words.alerts"), t("common:words.new")]}
+            steps={[t("words.alerts"), t("words.new")]}
             currentStep={0}
           />
         </div>

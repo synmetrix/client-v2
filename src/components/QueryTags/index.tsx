@@ -13,9 +13,10 @@ import type { FC } from "react";
 interface QueryTagsProps {
   content?: QueryState[keyof QueryState];
   type: keyof typeof QUERY_COLORS;
+  wrap?: boolean;
 }
 
-const QueryTags: FC<QueryTagsProps> = ({ content, type }) => {
+const QueryTags: FC<QueryTagsProps> = ({ content, type, wrap = false }) => {
   const detectIcon = (title: string) => {
     switch (title) {
       case "asc":
@@ -30,7 +31,7 @@ const QueryTags: FC<QueryTagsProps> = ({ content, type }) => {
   if (!content) return null;
 
   return (
-    <Space size={10}>
+    <Space size={10} wrap={wrap}>
       {Array.isArray(content)
         ? content?.map((tag) => {
             let tagSplited: string[] = [];

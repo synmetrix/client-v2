@@ -1,5 +1,7 @@
 {
   "words": {
+    "how_to_create": "How to create",
+    "in_utc_timezone": "In UTC timezone",
     "delete_datasource": "Delete Data Source",
     "are_you_sure": "Are you sure?",
     "ok": "Ok",

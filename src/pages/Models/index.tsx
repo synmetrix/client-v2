@@ -483,7 +483,7 @@ const ModelsWrapper: React.FC = () => {
   );
 
   useCheckResponse(validateMutation, undefined, {
-    successMessage: t("alerts.compilation_success"),
+    successMessage: null,
     errorMessage: t("alerts.compilation_error"),
     showResponseMessage: false,
   });

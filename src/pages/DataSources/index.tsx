@@ -18,8 +18,8 @@ import {
   useFetchTablesQuery,
   useGenDataSchemasMutation,
   useInsertSqlCredentialsMutation,
-  useUpdateDataSourceMutation,
   Branch_Statuses_Enum,
+  useUpdateDataSourceMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
@@ -37,6 +37,7 @@ import styles from "./index.module.less";
 interface DataSourcesProps {
   dataSources: DataSourceInfo[];
   loading?: boolean;
+  defaultOpen?: boolean;
   onFinish: () => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
@@ -49,6 +50,7 @@ interface DataSourcesProps {
 export const DataSources = ({
   dataSources = [],
   loading = false,
+  defaultOpen = false,
   onTestConnection = () => {},
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
@@ -60,7 +62,8 @@ export const DataSources = ({
   const { t } = useTranslation(["settings", "pages"]);
   const [, setLocation] = useLocation();
   const { setStep, editId, clean, setIsOnboarding } = DataSourceStore();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
+
   const onOpen = () => {
     setIsOnboarding(true);
     setIsOpen(true);
@@ -149,7 +152,7 @@ const DataSourcesWrapper = ({
   const { t } = useTranslation(["dataSourceStepForm"]);
   const { currentUser, currentTeamId } = CurrentUserStore();
   const [location, setLocation] = useLocation();
-  const { id: curId } = location.query;
+  const { id: curId, connect } = location.query;
   const {
     editId,
     formState: { step0: dataSource, step1: dataSourceSetup },
@@ -404,6 +407,7 @@ const DataSourcesWrapper = ({
 
   return (
     <DataSources
+      defaultOpen={!!connect}
       dataSources={datasources}
       onEdit={onEdit}
       onDelete={onDelete}

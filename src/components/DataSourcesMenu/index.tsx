@@ -1,6 +1,7 @@
 import { DownOutlined } from "@ant-design/icons";
 
 import PopoverButton from "@/components/PopoverButton";
+import type { DataSourceInfo } from "@/types/dataSource";
 
 import s from "./index.module.less";
 
@@ -8,12 +9,9 @@ import type { FC } from "react";
 import type { MenuProps } from "antd";
 
 interface DataSourcesMenuProps {
-  entities: {
-    id: string;
-    name: string;
-  }[];
-  selectedId?: string;
-  onChange?: (id: string) => void;
+  entities: DataSourceInfo[];
+  selectedId?: string | null;
+  onChange?: (dataSource: DataSourceInfo | null) => void;
 }
 
 const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
@@ -22,7 +20,7 @@ const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
   onChange,
 }) => {
   const items: MenuProps["items"] = entities.map((d) => ({
-    key: d.id,
+    key: d.id || d.name,
     label: d.name,
   }));
 
@@ -34,14 +32,18 @@ const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
 
   return (
     <div className={s.wrapper}>
-      <span>{entities[selectedIdx]?.name || "Select datasource"}</span>
+      <div className={s.value}>
+        {entities[selectedIdx]?.name || "Select datasource"}
+      </div>
       <PopoverButton
         icon={<DownOutlined />}
         popoverType="dropdown"
         trigger={["hover"]}
+        disabled={!items || items.length < 1}
         menu={{
           items,
-          onClick: ({ key }) => onChange?.(key),
+          onClick: ({ key }) =>
+            onChange?.(entities.find((e) => e.id === key) || null),
         }}
         buttonProps={{
           type: "text",

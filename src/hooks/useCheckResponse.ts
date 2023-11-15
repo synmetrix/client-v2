@@ -1,16 +1,17 @@
 import { history } from "@vitjs/runtime";
 import { message } from "antd";
 import { useDeepCompareEffect } from "ahooks";
+import { useTranslation } from "react-i18next";
 
 import type { UseMutationState } from "urql";
 
 const noop = () => {};
-const DEFAULT_SUCCESS = "Succefully finished";
-const DEFAULT_FAILURE = "Something went wrong";
 
 type Meta = {
-  successMessage?: string;
+  successMessage?: string | null;
   errorMessage?: string;
+  showMessage?: boolean;
+  showResponseMessage?: boolean;
 };
 
 type Callback = (data: any, error?: any) => void;
@@ -18,14 +19,22 @@ type Callback = (data: any, error?: any) => void;
 const useCheckResponse = (
   response: UseMutationState,
   cb: Callback = noop,
-  meta: Meta = {}
+  meta: Meta = {
+    showMessage: true,
+    showResponseMessage: true,
+  }
 ) => {
-  const { successMessage = DEFAULT_SUCCESS, errorMessage = DEFAULT_FAILURE } =
-    meta;
+  const { t } = useTranslation(["common"]);
+  const {
+    successMessage = t("common:alerts.default_success"),
+    errorMessage = t("common:alerts.default_failure"),
+    showMessage = true,
+    showResponseMessage = true,
+  } = meta;
 
   useDeepCompareEffect(() => {
     if (response.data) {
-      if (successMessage) {
+      if (showMessage && successMessage) {
         message.success(successMessage);
       }
 
@@ -35,14 +44,17 @@ const useCheckResponse = (
 
   useDeepCompareEffect(() => {
     if (response.error) {
+      console.log(response.error);
       const responseMessage = response.error?.message;
 
       if (responseMessage?.includes("JWSInvalidSignature")) {
         history.push("/403");
       }
 
-      if (errorMessage !== "") {
-        message.error(responseMessage || errorMessage);
+      if (showMessage) {
+        message.error(
+          showResponseMessage ? responseMessage || errorMessage : errorMessage
+        );
       }
       cb(null, response.error);
     }

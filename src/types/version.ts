@@ -1,10 +1,4 @@
-import type { File } from "./file";
-import type { User } from "./user";
+import type { AllDataSchemasQuery } from "@/graphql/generated";
 
-export interface Version {
-  id: string;
-  checksum: string;
-  author: User;
-  createdAt: string;
-  files: File[];
-}
+export type Version =
+  AllDataSchemasQuery["branches"][number]["versions"][number];

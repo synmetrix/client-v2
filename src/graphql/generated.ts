@@ -11641,6 +11641,50 @@ export type SendTestAlertMutation = {
   } | null;
 };
 
+export type SetDefaultBranchMutationVariables = Exact<{
+  branch_id: Scalars["uuid"];
+  datasource_id: Scalars["uuid"];
+}>;
+
+export type SetDefaultBranchMutation = {
+  __typename?: "mutation_root";
+  update_branches?: {
+    __typename?: "branches_mutation_response";
+    affected_rows: number;
+  } | null;
+  update_branches_by_pk?: { __typename?: "branches"; id: any } | null;
+};
+
+export type ExportDataMutationVariables = Exact<{
+  branch_id?: InputMaybe<Scalars["String"]>;
+}>;
+
+export type ExportDataMutation = {
+  __typename?: "mutation_root";
+  export_data_models?: {
+    __typename?: "ExportDataModelsOutput";
+    download_url: string;
+  } | null;
+};
+
+export type CreateBranchMutationVariables = Exact<{
+  object: Branches_Insert_Input;
+}>;
+
+export type CreateBranchMutation = {
+  __typename?: "mutation_root";
+  insert_branches_one?: { __typename?: "branches"; id: any } | null;
+};
+
+export type CreateVersionMutationVariables = Exact<{
+  object: Versions_Insert_Input;
+}>;
+
+export type CreateVersionMutation = {
+  __typename?: "mutation_root";
+  insert_versions_one?: { __typename?: "versions"; id: any } | null;
+};
+
 export type BranchesFieldsFragment = {
   __typename?: "branches";
   id: any;
@@ -12015,14 +12059,14 @@ export type DatasourcesQuery = {
   };
 };
 
-export type AllDatasourcesSubscriptionVariables = Exact<{
+export type AllDataSourcesSubscriptionVariables = Exact<{
   offset?: InputMaybe<Scalars["Int"]>;
   limit?: InputMaybe<Scalars["Int"]>;
   where?: InputMaybe<Datasources_Bool_Exp>;
   order_by?: InputMaybe<Array<Datasources_Order_By> | Datasources_Order_By>;
 }>;
 
-export type AllDatasourcesSubscription = {
+export type AllDataSourcesSubscription = {
   __typename?: "subscription_root";
   datasources: Array<{
     __typename?: "datasources";
@@ -12141,6 +12185,20 @@ export type GenDataSchemasMutation = {
     __typename?: "GenSourceSchemaOutput";
     code: string;
     message?: string | null;
+  } | null;
+};
+
+export type RunSourceSqlQueryMutationVariables = Exact<{
+  datasource_id: Scalars["uuid"];
+  query: Scalars["String"];
+  limit: Scalars["Int"];
+}>;
+
+export type RunSourceSqlQueryMutation = {
+  __typename?: "mutation_root";
+  run_query?: {
+    __typename?: "RunSourceQueryOutput";
+    result?: any | null;
   } | null;
 };
 
@@ -12396,6 +12454,68 @@ export type DeleteReportMutation = {
   delete_reports_by_pk?: { __typename?: "reports"; id: any } | null;
 };
 
+export type AllSchemasSubscriptionVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Dataschemas_Bool_Exp>;
+  order_by?: InputMaybe<Array<Dataschemas_Order_By> | Dataschemas_Order_By>;
+}>;
+
+export type AllSchemasSubscription = {
+  __typename?: "subscription_root";
+  dataschemas: Array<{
+    __typename?: "dataschemas";
+    id: any;
+    user_id: any;
+    name: string;
+    checksum?: string | null;
+    datasource: { __typename?: "datasources"; team_id?: any | null };
+  }>;
+};
+
+export type AllDataSchemasQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars["Int"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<Branches_Bool_Exp>;
+  order_by?: InputMaybe<Array<Branches_Order_By> | Branches_Order_By>;
+}>;
+
+export type AllDataSchemasQuery = {
+  __typename?: "query_root";
+  branches: Array<{
+    __typename?: "branches";
+    id: any;
+    name: string;
+    status: Branch_Statuses_Enum;
+    versions: Array<{
+      __typename?: "versions";
+      id: any;
+      checksum: string;
+      created_at: any;
+      updated_at: any;
+      user: { __typename?: "users"; display_name?: string | null };
+      dataschemas: Array<{
+        __typename?: "dataschemas";
+        id: any;
+        name: string;
+        code: string;
+        created_at: any;
+        updated_at: any;
+        datasource_id: any;
+      }>;
+    }>;
+  }>;
+};
+
+export type DeleteSchemaMutationVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type DeleteSchemaMutation = {
+  __typename?: "mutation_root";
+  update_branches_by_pk?: { __typename?: "branches"; id: any } | null;
+};
+
 export type CredentialsQueryVariables = Exact<{
   teamId: Scalars["uuid"];
 }>;
@@ -12506,6 +12626,18 @@ export type GetUsersQueryVariables = Exact<Record<string, never>>;
 export type GetUsersQuery = {
   __typename?: "query_root";
   users: Array<{ __typename?: "users"; id: any }>;
+};
+
+export type VersionDocSubscriptionVariables = Exact<{
+  id: Scalars["uuid"];
+}>;
+
+export type VersionDocSubscription = {
+  __typename?: "subscription_root";
+  versions_by_pk?: {
+    __typename?: "versions";
+    markdown_doc?: string | null;
+  } | null;
 };
 
 export const BranchesFieldsFragmentDoc = gql`
@@ -12760,6 +12892,69 @@ export function useSendTestAlertMutation() {
     SendTestAlertMutation,
     SendTestAlertMutationVariables
   >(SendTestAlertDocument);
+}
+export const SetDefaultBranchDocument = gql`
+  mutation SetDefaultBranch($branch_id: uuid!, $datasource_id: uuid!) {
+    update_branches(
+      _set: { status: created }
+      where: { datasource_id: { _eq: $datasource_id }, status: { _eq: active } }
+    ) {
+      affected_rows
+    }
+    update_branches_by_pk(
+      _set: { status: active }
+      pk_columns: { id: $branch_id }
+    ) {
+      id
+    }
+  }
+`;
+
+export function useSetDefaultBranchMutation() {
+  return Urql.useMutation<
+    SetDefaultBranchMutation,
+    SetDefaultBranchMutationVariables
+  >(SetDefaultBranchDocument);
+}
+export const ExportDataDocument = gql`
+  mutation ExportData($branch_id: String) {
+    export_data_models(branch_id: $branch_id) {
+      download_url
+    }
+  }
+`;
+
+export function useExportDataMutation() {
+  return Urql.useMutation<ExportDataMutation, ExportDataMutationVariables>(
+    ExportDataDocument
+  );
+}
+export const CreateBranchDocument = gql`
+  mutation CreateBranch($object: branches_insert_input!) {
+    insert_branches_one(object: $object) {
+      id
+    }
+  }
+`;
+
+export function useCreateBranchMutation() {
+  return Urql.useMutation<CreateBranchMutation, CreateBranchMutationVariables>(
+    CreateBranchDocument
+  );
+}
+export const CreateVersionDocument = gql`
+  mutation CreateVersion($object: versions_insert_input!) {
+    insert_versions_one(object: $object) {
+      id
+    }
+  }
+`;
+
+export function useCreateVersionMutation() {
+  return Urql.useMutation<
+    CreateVersionMutation,
+    CreateVersionMutationVariables
+  >(CreateVersionDocument);
 }
 export const CurrentUserDocument = gql`
   query CurrentUser($id: uuid!) {
@@ -13070,8 +13265,8 @@ export function useDatasourcesQuery(
     ...options,
   });
 }
-export const AllDatasourcesDocument = gql`
-  subscription AllDatasources(
+export const AllDataSourcesDocument = gql`
+  subscription AllDataSources(
     $offset: Int
     $limit: Int
     $where: datasources_bool_exp
@@ -13106,20 +13301,20 @@ export const AllDatasourcesDocument = gql`
   }
 `;
 
-export function useAllDatasourcesSubscription<
-  TData = AllDatasourcesSubscription
+export function useAllDataSourcesSubscription<
+  TData = AllDataSourcesSubscription
 >(
   options: Omit<
-    Urql.UseSubscriptionArgs<AllDatasourcesSubscriptionVariables>,
+    Urql.UseSubscriptionArgs<AllDataSourcesSubscriptionVariables>,
     "query"
   > = {},
-  handler?: Urql.SubscriptionHandler<AllDatasourcesSubscription, TData>
+  handler?: Urql.SubscriptionHandler<AllDataSourcesSubscription, TData>
 ) {
   return Urql.useSubscription<
-    AllDatasourcesSubscription,
+    AllDataSourcesSubscription,
     TData,
-    AllDatasourcesSubscriptionVariables
-  >({ query: AllDatasourcesDocument, ...options }, handler);
+    AllDataSourcesSubscriptionVariables
+  >({ query: AllDataSourcesDocument, ...options }, handler);
 }
 export const ValidateDataSourceDocument = gql`
   mutation ValidateDataSource($id: uuid!) {
@@ -13260,6 +13455,24 @@ export function useGenDataSchemasMutation() {
     GenDataSchemasMutation,
     GenDataSchemasMutationVariables
   >(GenDataSchemasDocument);
+}
+export const RunSourceSqlQueryDocument = gql`
+  mutation RunSourceSQLQuery(
+    $datasource_id: uuid!
+    $query: String!
+    $limit: Int!
+  ) {
+    run_query(datasource_id: $datasource_id, query: $query, limit: $limit) {
+      result
+    }
+  }
+`;
+
+export function useRunSourceSqlQueryMutation() {
+  return Urql.useMutation<
+    RunSourceSqlQueryMutation,
+    RunSourceSqlQueryMutationVariables
+  >(RunSourceSqlQueryDocument);
 }
 export const CreateExplorationDocument = gql`
   mutation CreateExploration($object: explorations_insert_input!) {
@@ -13561,6 +13774,101 @@ export function useDeleteReportMutation() {
     DeleteReportDocument
   );
 }
+export const AllSchemasDocument = gql`
+  subscription AllSchemas(
+    $offset: Int
+    $limit: Int
+    $where: dataschemas_bool_exp
+    $order_by: [dataschemas_order_by!]
+  ) {
+    dataschemas(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+      user_id
+      name
+      checksum
+      datasource {
+        team_id
+      }
+    }
+  }
+`;
+
+export function useAllSchemasSubscription<TData = AllSchemasSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<AllSchemasSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<AllSchemasSubscription, TData>
+) {
+  return Urql.useSubscription<
+    AllSchemasSubscription,
+    TData,
+    AllSchemasSubscriptionVariables
+  >({ query: AllSchemasDocument, ...options }, handler);
+}
+export const AllDataSchemasDocument = gql`
+  query AllDataSchemas(
+    $offset: Int
+    $limit: Int
+    $where: branches_bool_exp
+    $order_by: [branches_order_by!]
+  ) {
+    branches(
+      offset: $offset
+      limit: $limit
+      where: $where
+      order_by: $order_by
+    ) {
+      id
+      name
+      status
+      versions(order_by: { created_at: desc }) {
+        id
+        checksum
+        created_at
+        updated_at
+        user {
+          display_name
+        }
+        dataschemas {
+          id
+          name
+          code
+          created_at
+          updated_at
+          datasource_id
+        }
+      }
+    }
+  }
+`;
+
+export function useAllDataSchemasQuery(
+  options?: Omit<Urql.UseQueryArgs<AllDataSchemasQueryVariables>, "query">
+) {
+  return Urql.useQuery<AllDataSchemasQuery, AllDataSchemasQueryVariables>({
+    query: AllDataSchemasDocument,
+    ...options,
+  });
+}
+export const DeleteSchemaDocument = gql`
+  mutation DeleteSchema($id: uuid!) {
+    update_branches_by_pk(_set: { status: archived }, pk_columns: { id: $id }) {
+      id
+    }
+  }
+`;
+
+export function useDeleteSchemaMutation() {
+  return Urql.useMutation<DeleteSchemaMutation, DeleteSchemaMutationVariables>(
+    DeleteSchemaDocument
+  );
+}
 export const CredentialsDocument = gql`
   query Credentials($teamId: uuid!) {
     sql_credentials(
@@ -13726,6 +14034,27 @@ export function useGetUsersQuery(
     ...options,
   });
 }
+export const VersionDocDocument = gql`
+  subscription VersionDoc($id: uuid!) {
+    versions_by_pk(id: $id) {
+      markdown_doc
+    }
+  }
+`;
+
+export function useVersionDocSubscription<TData = VersionDocSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<VersionDocSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<VersionDocSubscription, TData>
+) {
+  return Urql.useSubscription<
+    VersionDocSubscription,
+    TData,
+    VersionDocSubscriptionVariables
+  >({ query: VersionDocDocument, ...options }, handler);
+}
 export const namedOperations = {
   Query: {
     AllAccessLists: "AllAccessLists",
@@ -13739,6 +14068,7 @@ export const namedOperations = {
     Members: "Members",
     CurrentLog: "CurrentLog",
     AllLogs: "AllLogs",
+    AllDataSchemas: "AllDataSchemas",
     Credentials: "Credentials",
     CurrentTeam: "CurrentTeam",
     GetUsers: "GetUsers",
@@ -13751,6 +14081,10 @@ export const namedOperations = {
     UpdateAlert: "UpdateAlert",
     DeleteAlert: "DeleteAlert",
     SendTestAlert: "SendTestAlert",
+    SetDefaultBranch: "SetDefaultBranch",
+    ExportData: "ExportData",
+    CreateBranch: "CreateBranch",
+    CreateVersion: "CreateVersion",
     UpdateUserInfo: "UpdateUserInfo",
     CreateDataSource: "CreateDataSource",
     ValidateDataSource: "ValidateDataSource",
@@ -13758,6 +14092,7 @@ export const namedOperations = {
     CheckConnection: "CheckConnection",
     DeleteDataSource: "DeleteDataSource",
     GenDataSchemas: "GenDataSchemas",
+    RunSourceSQLQuery: "RunSourceSQLQuery",
     CreateExploration: "CreateExploration",
     GenSQL: "GenSQL",
     UpdateMember: "UpdateMember",
@@ -13767,6 +14102,7 @@ export const namedOperations = {
     CreateReport: "CreateReport",
     UpdateReport: "UpdateReport",
     DeleteReport: "DeleteReport",
+    DeleteSchema: "DeleteSchema",
     InsertSqlCredentials: "InsertSqlCredentials",
     DeleteCredentials: "DeleteCredentials",
     CreateTeam: "CreateTeam",
@@ -13776,9 +14112,11 @@ export const namedOperations = {
   Subscription: {
     SubAccessLists: "SubAccessLists",
     SubCurrentUser: "SubCurrentUser",
-    AllDatasources: "AllDatasources",
+    AllDataSources: "AllDataSources",
     SubAllLogs: "SubAllLogs",
+    AllSchemas: "AllSchemas",
     SubCredentials: "SubCredentials",
+    VersionDoc: "VersionDoc",
   },
   Fragment: {
     BranchesFields: "BranchesFields",

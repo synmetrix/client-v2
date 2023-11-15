@@ -1,4 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
+import { dbMock } from "@/mocks/db";
 
 import DataSourcesMenu from ".";
 
@@ -21,8 +22,5 @@ const Template: StoryFn<typeof DataSourcesMenu> = (args) => {
 export const Default = Template.bind({});
 
 Default.args = {
-  entities: [
-    { id: "1", name: "datasource1" },
-    { id: "2", name: "datasource2" },
-  ],
+  entities: dbMock,
 };

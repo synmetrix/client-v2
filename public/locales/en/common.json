@@ -77,7 +77,11 @@
     "restore": "Restore",
     "all": "all",
     "empty_default": "No Data",
-    "logs": "Logs"
+    "logs": "Logs",
+    "select_branch": "Select branch",
+    "filename": "Filename",
+    "loading": "Loading",
+    "no_docs": "Documentation has not been generated yet."
   },
   "form": {
     "labels": {
@@ -130,6 +134,10 @@
       "email": "Enter a valid e-mail",
       "password": "Minimum 6 characters"
     }
+  },
+  "alerts": {
+    "default_success": "Succefully finished",
+    "default_failure": "Something went wrong"
   },
   "operators": {
     "set": "is set",

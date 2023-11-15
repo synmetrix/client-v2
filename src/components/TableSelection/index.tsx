@@ -40,7 +40,7 @@ const TableSelection: FC<TableSelectionProps> = ({
   });
 
   const isAllSelected = () =>
-    Object.keys(schema[path]).every((tb) => value[`${path}.${tb}`] === true);
+    Object.keys(schema[path]).every((tb) => value[tb] === true);
 
   const onClear = () => {
     const newVal: DynamicForm = {};
@@ -51,7 +51,7 @@ const TableSelection: FC<TableSelectionProps> = ({
   const onSelectAll = (e: CheckboxChangeEvent) => {
     if (!e.target.checked) return onClear();
     const newVal: DynamicForm = {};
-    Object.keys(schema[path]).forEach((tb) => (newVal[`${path}.${tb}`] = true));
+    Object.keys(schema[path]).forEach((tb) => (newVal[tb] = true));
     onChange(newVal);
   };
 
@@ -69,10 +69,10 @@ const TableSelection: FC<TableSelectionProps> = ({
         <div key={tb}>
           <div className={cn(styles.field)}>
             <Checkbox
-              checked={value?.[`${path}.${tb}`]}
-              onChange={(e) =>
-                onChange({ ...value, [`${path}.${tb}`]: e.target.checked })
-              }
+              checked={value?.[tb]}
+              onChange={(e) => {
+                onChange({ ...value, [tb]: e.target.checked });
+              }}
             >
               <span
                 className={cn(styles.table, {

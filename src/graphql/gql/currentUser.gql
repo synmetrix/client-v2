@@ -2,7 +2,7 @@ fragment BranchesFields on branches {
   id
   name
   status
-  versions (limit: 1, order_by: {created_at: desc}) {
+  versions(limit: 1, order_by: { created_at: desc }) {
     id
     dataschemas_aggregate {
       aggregate {
@@ -49,7 +49,7 @@ query CurrentUser($id: uuid!) {
       db_type
       created_at
       updated_at
-      branches (where: { status: {_eq: active}}) {
+      branches(where: { status: { _eq: active } }) {
         ...BranchesFields
       }
       sql_credentials {
@@ -145,7 +145,7 @@ subscription SubCurrentUser($id: uuid!) {
       db_type
       created_at
       updated_at
-      branches (where: { status: {_eq: active}}) {
+      branches(where: { status: { _eq: active } }) {
         ...BranchesFields
       }
       sql_credentials {

@@ -452,7 +452,7 @@ const ModelsWrapper: React.FC = () => {
       }
     },
     {
-      successMessage: t("alerts.version_created"),
+      successMessage: null,
     }
   );
 
@@ -686,8 +686,6 @@ const ModelsWrapper: React.FC = () => {
         return false;
       }
     }
-
-    message.info(t("alerts.file_change"));
 
     await createNewVersion(checksum, newDataschemas);
 

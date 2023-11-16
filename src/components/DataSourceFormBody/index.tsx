@@ -116,6 +116,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
           onSubmit={onDataModelGeneration}
           onGoBack={onGoBack}
           onSkip={onSkip}
+          loading={false}
           initialValue={formState?.step2 || formData?.step2 || {}}
         />
       );

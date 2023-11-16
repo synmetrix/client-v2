@@ -4,5 +4,33 @@
     "version": "Version",
     "set_as_default": "Set as default"
   },
-  "versions_list": "Versions List"
+  "versions_list": "Versions List",
+  "alerts": {
+    "no_changes": "There is no changes.",
+    "branch_removed": "Branch removed",
+    "branch": "Branch",
+    "is_now_default": "is now default.",
+    "version_created": "Version created",
+    "branch_created": "Branch created",
+    "schema_generated": "Schema generated",
+    "wrong_archive": "Wrong archive.",
+    "bad_archive": "Bad archive.",
+    "format_is_unsupported": "Format is unsupported.",
+    "checksum_of_file": "Checksum of file",
+    "do_not_match": "do not match. Skipped.",
+    "deleting_a_file": "Deleting a file.",
+    "file_change": "File change.",
+    "compilation_error": "Compilation error.",
+    "compilation_success": "Compilation was successful."
+  },
+  "sure_delete": "Are you sure delete this data schema?",
+  "ide_menu": {
+    "import_models": "Import data models",
+    "export_models": "Export data models",
+    "generate_schema": "Generate Schema"
+  },
+  "branch_menu": {
+    "show_versions": "Show versions",
+    "remove_branch": "Remove branch"
+  }
 }

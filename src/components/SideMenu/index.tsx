@@ -29,15 +29,9 @@ const SideMenu: FC<SideMenuProps> = () => {
   };
 
   return (
-    <Sider
-      width={isMobile ? 55 : 70}
-      collapsedWidth={isMobile ? "100%" : 371}
-      className={styles.wrapper}
-      collapsible
-      trigger={null}
-    >
+    <div className={styles.wrapper}>
       <Space className={styles.inner} size={0} align="center">
-        <div className={cn(styles.menu, isMobile && styles.mobile)}>
+        <div className={cn(styles.menu)}>
           <img className={styles.logo} alt="" src="/logo_bg.png" />
 
           {items.map((i) => (
@@ -58,7 +52,7 @@ const SideMenu: FC<SideMenuProps> = () => {
           ))}
         </div>
       </Space>
-    </Sider>
+    </div>
   );
 };
 

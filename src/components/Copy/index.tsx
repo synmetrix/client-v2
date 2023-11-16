@@ -26,7 +26,7 @@ const Copy: FC<CopyProps> = ({ layout = "vertical", value, label }) => {
           style={{ resize: "none" }}
           autoSize
           value={value}
-          disabled
+          readOnly
         />
         <CopyIcon
           className={cn(styles.icon, styles.textareaCopy)}

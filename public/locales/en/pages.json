@@ -14,5 +14,6 @@
     "reports": "Reports Logs",
     "query": "Query Logs"
   },
+  "models": "Models",
   "explore": "Explore"
 }

@@ -2,7 +2,7 @@ fragment BranchesFields on branches {
   id
   name
   status
-  versions (limit: 1, order_by: {created_at: desc}) {
+  versions(limit: 1, order_by: { created_at: desc }) {
     id
     dataschemas_aggregate {
       aggregate {
@@ -17,7 +17,7 @@ fragment TeamFields on teams {
   name
   created_at
   updated_at
-  members {
+  members(order_by: { created_at: desc }) {
     member_roles {
       id
       team_role
@@ -42,14 +42,14 @@ query CurrentUser($id: uuid!) {
       email
     }
 
-    datasources {
+    datasources(order_by: { created_at: desc }) {
       id
       name
       db_params
       db_type
       created_at
       updated_at
-      branches (where: { status: {_eq: active}}) {
+      branches(where: { status: { _eq: active } }) {
         ...BranchesFields
       }
       sql_credentials {
@@ -138,14 +138,14 @@ subscription SubCurrentUser($id: uuid!) {
       email
     }
 
-    datasources {
+    datasources(order_by: { created_at: desc }) {
       id
       name
       db_params
       db_type
       created_at
       updated_at
-      branches (where: { status: {_eq: active}}) {
+      branches(where: { status: { _eq: active } }) {
         ...BranchesFields
       }
       sql_credentials {

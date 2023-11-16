@@ -17,11 +17,39 @@ export default [
         ],
       },
       {
+        path: "/models/:dataSourceId?/:branch?/:slug?",
+        component: "./pages/Models",
+      },
+      {
+        path: "/export/:dataSourceId",
+        component: "./pages/ExportModels",
+      },
+      {
+        path: "/docs/:versionId",
+        component: "./pages/Docs",
+      },
+      {
         path: "/settings",
         component: "./layouts/SettingsLayout",
         routes: [
           {
+            path: "/",
+            component: "./pages/Home",
+          },
+          {
+            path: "/models",
+            component: "./pages/Models",
+          },
+          {
+            path: "/teams",
+            component: "./pages/Teams",
+          },
+          {
             path: "/settings/sources",
+            component: "./pages/DataSources",
+          },
+          {
+            path: "/settings/sources/connect",
             component: "./pages/DataSources",
           },
           {

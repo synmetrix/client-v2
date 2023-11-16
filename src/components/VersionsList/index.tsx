@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import Avatar from "@/components/Avatar";
 import Button from "@/components/Button";
 import Copy from "@/components/Copy";
-import type { User } from "@/types/user";
-import type { File } from "@/types/file";
+import formatTime from "@/utils/helpers/formatTime";
+import type { Dataschema } from "@/types/dataschema";
 import type { Version } from "@/types/version";
 
 import DocsIcon from "@/assets/docs.svg";
@@ -20,15 +20,10 @@ const { Title } = Typography;
 
 interface VersionsListProps {
   versions: Version[];
-  onRestore: (versionId: string) => void;
-  onSave: () => void;
+  onRestore: (checksum: string, dataschemas: Dataschema[]) => void;
 }
 
-const VersionsList: FC<VersionsListProps> = ({
-  versions,
-  onRestore,
-  onSave,
-}) => {
+const VersionsList: FC<VersionsListProps> = ({ versions, onRestore }) => {
   const { t } = useTranslation(["models", "common"]);
 
   const columns: TableProps<Version>["columns"] = [
@@ -40,20 +35,24 @@ const VersionsList: FC<VersionsListProps> = ({
     },
     {
       title: t("common:words.author"),
-      dataIndex: "author",
-      key: "author",
-      render: (value: User) => (
+      dataIndex: "user",
+      key: "user",
+      render: (value) => (
         <Space className={styles.author} size={10}>
-          <Avatar img={value.avatarUrl} username={value.displayName} />
-          {value.email}
+          {value && (
+            <Avatar img={value?.avatarUrl} username={value?.display_name} />
+          )}
+          {value?.display_name}
         </Space>
       ),
     },
     {
       title: t("common:words.created_at"),
-      dataIndex: "createdAt",
-      key: "createdAt",
-      render: (value) => <span className={styles.createdAt}>{value}</span>,
+      dataIndex: "created_at",
+      key: "created_at",
+      render: (value) => (
+        <span className={styles.createdAt}>{formatTime(value)}</span>
+      ),
     },
     {
       title: <div className={styles.actions}>{t("common:words.actions")}</div>,
@@ -64,7 +63,7 @@ const VersionsList: FC<VersionsListProps> = ({
           <Button
             className={styles.restore}
             icon={<DocsIcon className={styles.restoreIcon} />}
-            onClick={() => onRestore(record.id)}
+            onClick={() => onRestore(record.checksum, record.dataschemas)}
           >
             {t("common:words.restore")}
           </Button>
@@ -73,12 +72,12 @@ const VersionsList: FC<VersionsListProps> = ({
     },
   ];
 
-  const renderFileValue = (record: File) => {
-    return <Copy value={record.value} />;
+  const renderFileValue = (record: Dataschema) => {
+    return <Copy value={record.code} />;
   };
 
   const expandedRowRender = (record: Version) => {
-    const expandedColums: TableProps<File>["columns"] = [
+    const expandedColumns: TableProps<Dataschema>["columns"] = [
       {
         key: "name",
         dataIndex: "name",
@@ -92,8 +91,8 @@ const VersionsList: FC<VersionsListProps> = ({
 
     return (
       <Table
-        columns={expandedColums}
-        dataSource={record.files}
+        columns={expandedColumns}
+        dataSource={record.dataschemas}
         rowKey={(rec) => rec.name}
         expandable={{ expandedRowRender: renderFileValue }}
         pagination={false}
@@ -109,18 +108,8 @@ const VersionsList: FC<VersionsListProps> = ({
         columns={columns}
         dataSource={versions}
         rowKey={(record) => record.id}
-        pagination={false}
         expandable={{ expandedRowRender }}
       />
-
-      <Button
-        className={styles.save}
-        type="primary"
-        size="large"
-        onClick={onSave}
-      >
-        {t("common:words.save")}
-      </Button>
     </Space>
   );
 };

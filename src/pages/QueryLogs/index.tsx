@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
 import QueryLogsTable from "@/components/QueryLogsTable";
-import SidebarLayout from "@/layouts/SidebarLayout";
+import AppLayout from "@/layouts/AppLayout";
 import useLogs from "@/hooks/useLogs";
 import useTableState from "@/hooks/useTableState";
 import useAppSettings from "@/hooks/useAppSettings";
@@ -14,12 +14,8 @@ import type { Request_Logs } from "@/graphql/generated";
 import QueryFilters from "@/components/QueryFilters";
 import useUserData from "@/hooks/useUserData";
 import type { QueryFiltersForm } from "@/types/queryFilter";
-import SidebarHeader from "@/components/SidebarHeader";
-import SidebarMenu from "@/components/SidebarMenu";
-import { logsMenuItems } from "@/mocks/sidebarMenu";
 import type { DataSourceInfo } from "@/types/dataSource";
 
-import LogsIcon from "@/assets/logs-active.svg";
 import DocsIcon from "@/assets/docs.svg";
 
 import styles from "./index.module.less";
@@ -61,14 +57,7 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
   const { t } = useTranslation(["logs", "pages", "common"]);
 
   return (
-    <SidebarLayout
-      divider
-      title={t("pages:logs.query")}
-      subTitle={
-        <SidebarHeader icon={<LogsIcon />} title={t("common:words.logs")} />
-      }
-      items={<SidebarMenu items={logsMenuItems} />}
-    >
+    <AppLayout divider title={t("pages:logs.query")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("query.title")}
@@ -107,7 +96,7 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
           </Space>
         </div>
       </Space>
-    </SidebarLayout>
+    </AppLayout>
   );
 };
 

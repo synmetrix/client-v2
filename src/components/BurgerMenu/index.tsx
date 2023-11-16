@@ -23,6 +23,7 @@ const BurgerMenu: FC<PropsWithChildren> = ({ children }) => {
         width={isMobile ? window.innerWidth : DRAWER_DEFAULT_WIDTH}
         open={isOpen}
         onClose={() => setIsOpen(false)}
+        style={{ background: "#f9f9f9" }}
       >
         <Suspense>{children}</Suspense>
       </Drawer>

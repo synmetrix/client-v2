@@ -1,4 +1,4 @@
-import { Col, Row, Space, Tooltip } from "antd";
+import { Col, Form, InputNumber, Row, Space, Tooltip } from "antd";
 import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
@@ -6,67 +6,108 @@ import { useResponsive } from "ahooks";
 import cn from "classnames";
 
 import Button from "@/components/Button";
-import type { File } from "@/types/file";
+import PopoverButton from "@/components/PopoverButton";
+import SQLRunner from "@/components/SQLRunner";
+import { MONACO_OPTIONS } from "@/utils/constants/monaco";
+import type { Dataschema } from "@/types/dataschema";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
-import type { editor } from "monaco-editor";
 
 interface CodeEditorProps {
-  files: Record<string, File> | null;
-  onRemove: (fileName: string) => void;
+  schemas?: Dataschema[];
+  active?: string | null;
+  onTabChange: (dataschema?: Dataschema) => void;
+  onClose: (fileName: string) => void;
+  onRunSQL: (query: string, limit: number) => void;
+  onCodeSave: (id: string, code: string) => void;
+  data?: object[];
+  sqlError?: object;
 }
 
-const MONACO_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
-  autoIndent: "full",
-  automaticLayout: true,
-  contextmenu: true,
-  fontFamily: "monospace",
-  lineHeight: 24,
-  hideCursorInOverviewRuler: true,
-  matchBrackets: "always",
-  fontLigatures: "",
-  detectIndentation: true,
-  insertSpaces: true,
-  tabSize: 3,
-  minimap: {
-    enabled: false,
-  },
-  readOnly: false,
-  scrollbar: {
-    horizontalSliderSize: 4,
-    verticalSliderSize: 4,
-  },
+const languages = {
+  js: "javascript",
+  yml: "yaml",
 };
 
-const CodeEditor: FC<CodeEditorProps> = ({ files, onRemove }) => {
+const CodeEditor: FC<CodeEditorProps> = ({
+  schemas = [],
+  active,
+  onClose,
+  onTabChange,
+  onRunSQL,
+  onCodeSave,
+  data,
+  sqlError = {},
+}) => {
   const { t } = useTranslation(["models", "common"]);
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
-  const [activeFile, setActiveFile] = useState<File | null>(null);
+  const [limit, setLimit] = useState<number>(1000);
+  const [query, setQuery] = useState<string>("SELECT id FROM users");
+  const [showData, setShowData] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fileNames = files ? Object.keys(files) : null;
-    if (fileNames) {
-      const lastFileName = fileNames.at(-1) || fileNames[0];
-      const lastFile = files?.[lastFileName] || null;
-      setActiveFile(lastFile);
+  const files = schemas?.reduce(
+    (res, schema) => ({
+      ...res,
+      [schema.name]: schema,
+    }),
+    {}
+  ) as Record<string, Dataschema>;
+
+  const [content, setContent] = useState<string>(
+    active ? files[active]?.code : ""
+  );
+
+  const onRun = () => {
+    if (!showData) {
+      setShowData(true);
     }
-  }, [files]);
+
+    onRunSQL(query, limit);
+  };
 
   const defaultButtons = [
-    <Button className={styles.btn} key="sqlrunner">
+    <Button
+      className={cn(styles.btn, {
+        [styles.active]: active === "sqlrunner",
+      })}
+      key="sqlrunner"
+      onClick={() => onTabChange()}
+    >
       {t("common:words.sql_runner")}
     </Button>,
-    <Button className={styles.run} type="primary" key="run">
-      {t("common:words.run")}
-    </Button>,
-    <Button className={styles.settings} type="ghost" key="settings">
-      <SettingOutlined />
-    </Button>,
+    active === "sqlrunner" ? (
+      <Button className={styles.run} type="primary" key="run" onClick={onRun}>
+        {t("common:words.run")}
+      </Button>
+    ) : null,
+    active === "sqlrunner" ? (
+      <PopoverButton
+        key="settings"
+        trigger={["click"]}
+        icon={<SettingOutlined />}
+        content={
+          <Form layout="vertical">
+            <Form.Item label="Rows limit:">
+              <InputNumber
+                width={300}
+                value={limit}
+                onChange={(val) => setLimit(val || 0)}
+              />
+            </Form.Item>
+          </Form>
+        }
+        buttonProps={{ className: styles.settings, type: "ghost" }}
+      />
+    ) : null,
   ];
+
+  const language = active
+    ? languages[active.split(".")[0] as keyof typeof languages]
+    : "sql";
 
   return (
     <div className={styles.wrapper}>
@@ -79,20 +120,24 @@ const CodeEditor: FC<CodeEditorProps> = ({ files, onRemove }) => {
         <Col className={styles.navBtns} order={isMobile ? 1 : -1}>
           <Space size={16} align="center">
             {files &&
-              Object.keys(files).map((fileName) => (
+              Object.keys(files).map((name) => (
                 <Button
                   type="default"
-                  key={fileName}
+                  key={name}
                   className={cn(styles.btn, {
-                    [styles.active]: fileName === activeFile?.name,
+                    [styles.active]: active && name === active,
                   })}
-                  onClick={() => setActiveFile(files[fileName])}
+                  onClick={() => onTabChange(files[name])}
                 >
-                  {fileName}
+                  {files[name].name}
                   <Tooltip title={t("common:words.close")}>
                     <CloseOutlined
                       className={styles.closeIcon}
-                      onClick={() => onRemove(fileName)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onClose(name);
+                      }}
                     />
                   </Tooltip>
                 </Button>
@@ -102,16 +147,32 @@ const CodeEditor: FC<CodeEditorProps> = ({ files, onRemove }) => {
         </Col>
 
         <Col order={isMobile ? -1 : 1}>
-          <Button className={styles.save}>{t("common:words.save")}</Button>
+          <Button
+            className={styles.save}
+            onClick={() => active && onCodeSave(files[active].id, content)}
+          >
+            {t("common:words.save")}
+          </Button>
         </Col>
       </Row>
-      {activeFile && (
+      {active && active !== "sqlrunner" ? (
         <Editor
           className={styles.monaco}
-          defaultLanguage={activeFile.language}
-          defaultValue={activeFile.value}
-          path={activeFile.name}
+          language={language}
+          defaultLanguage={language}
+          defaultValue={files[active]?.code}
+          value={content}
+          onChange={(val) => setContent(val || "")}
+          path={files[active]?.name}
           options={MONACO_OPTIONS}
+        />
+      ) : (
+        <SQLRunner
+          value={query}
+          onChange={setQuery}
+          showData={showData}
+          data={data}
+          sqlError={sqlError}
         />
       )}
     </div>

@@ -42,21 +42,36 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   );
 
   return (
-    <Layout className={styles.root}>
-      <div style={{ display: "flex" }}>
+    <div className={styles.root}>
+      {responsive.lg ? (
+        <div style={{ display: "flex", minHeight: "100%" }}>
+          <SideMenu />
+          {sidebar}
+        </div>
+      ) : (
         <SideMenu />
-        {sidebar}
-      </div>
+      )}
       <Layout>
         <Header
           title={title}
           bordered={divider}
-          content={isMobile ? <BurgerMenu>{content}</BurgerMenu> : content}
+          content={
+            isMobile ? (
+              <BurgerMenu>
+                <div style={{ height: 110 }}>{content}</div>
+                <div style={{ margin: "0 -20px" }}>
+                  {!responsive.lg && sidebar}
+                </div>
+              </BurgerMenu>
+            ) : (
+              content
+            )
+          }
         />
         <div className={styles.main}>{children}</div>
         <Footer />
       </Layout>
-    </Layout>
+    </div>
   );
 };
 

@@ -26,7 +26,7 @@ query Datasources(
     db_type
     created_at
     updated_at
-    branches(where: { status: {_eq: active}}) {
+    branches(where: { status: { _eq: active } }) {
       id
     }
     sql_credentials {
@@ -47,7 +47,7 @@ query Datasources(
   }
 }
 
-subscription AllDatasources(
+subscription AllDataSources(
   $offset: Int
   $limit: Int
   $where: datasources_bool_exp
@@ -65,7 +65,7 @@ subscription AllDatasources(
     db_type
     created_at
     updated_at
-    branches (where: { status: {_eq: active}}) {
+    branches(where: { status: { _eq: active } }) {
       id
     }
     sql_credentials {
@@ -149,5 +149,15 @@ mutation GenDataSchemas(
   ) {
     code
     message
+  }
+}
+
+mutation RunSourceSQLQuery(
+  $datasource_id: uuid!
+  $query: String!
+  $limit: Int!
+) {
+  run_query(datasource_id: $datasource_id, query: $query, limit: $limit) {
+    result
   }
 }

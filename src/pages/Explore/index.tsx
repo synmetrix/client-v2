@@ -55,7 +55,7 @@ interface ExploreProps {
   onChangeStep?: (step: number) => void;
   onSelectDelivery?: (del: string) => void;
   runQuery?: (state: object, settings: QuerySettings) => void;
-  onSelectDataSource?: (id: string) => void;
+  onSelectDataSource?: (dataSource: DataSourceInfo | null) => void;
   onCreateAlert?: (values: AlertFormType) => void;
   onSendTest?: (values: AlertFormType | ReportFormType) => void;
   onCreateReport?: (values: ReportFormType) => void;
@@ -95,10 +95,7 @@ export const Explore = ({
     () => (
       <DataSourcesMenu
         selectedId={dataSource?.id as string}
-        entities={(dataSources || []).map((d) => ({
-          id: d.id as string,
-          name: d.name,
-        }))}
+        entities={dataSources || []}
         onChange={onSelectDataSource}
       />
     ),
@@ -245,8 +242,8 @@ const ExploreWrapper = () => {
     }
   );
 
-  const onSelectDataSource = (id: string) => {
-    setLocation(withAuthPrefix(`/explore/${id}`));
+  const onSelectDataSource = (dataSource: DataSourceInfo | null) => {
+    setLocation(withAuthPrefix(`/explore/${dataSource?.id}`));
   };
 
   const runQuery = (explorationQueryState: any, settings: any) => {

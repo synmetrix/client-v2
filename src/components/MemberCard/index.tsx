@@ -79,17 +79,19 @@ const MemberCard: FC<MemberCardProps> = ({
         <li className={styles.item}>
           <span className={styles.label}>{t("common:words.role")}</span>
           <span>
-            {
+            {role.name === Roles.admin ? (
               <Select
                 className={styles.select}
                 onChange={(value) =>
                   onRoleChange(role.id, value as unknown as ChangeableRoles)
                 }
                 bordered={false}
-                value={role}
+                value={role.name}
                 options={createRoleOptions(ChangeableRoles)}
               />
-            }
+            ) : (
+              capitalize(role.name)
+            )}
           </span>
         </li>
         <li className={styles.item}>
@@ -118,7 +120,7 @@ const MemberCard: FC<MemberCardProps> = ({
               ]}
             />
           ) : (
-            role.name
+            capitalize(role.name)
           )}
         </li>
         {createdAt && (

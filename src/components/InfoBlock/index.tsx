@@ -23,7 +23,7 @@ const InfoBlock: React.FC<Props> = ({
     <div className={styles.howBlock}>
       {icon}
       <span>
-        {text && text}
+        {!!text && text}
         {href ? (
           <Button
             className={styles.link}

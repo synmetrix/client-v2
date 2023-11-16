@@ -29,6 +29,9 @@ export interface Member {
   id: string;
   accessList?: AccessList;
   displayName?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  avatarUrl?: string;
 }
 
 export interface Team {

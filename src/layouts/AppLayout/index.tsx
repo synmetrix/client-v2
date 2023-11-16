@@ -28,8 +28,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const responsive = useResponsive();
   const { currentUser } = useUserData();
-  console.log(responsive);
-
   const isMobile = responsive.md === false;
 
   const content = (

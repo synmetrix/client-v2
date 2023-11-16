@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 
 import type { Invite } from "@/components/MembersForm";
 import MembersForm from "@/components/MembersForm";
-import MembersTable from "@/components/MembersTable";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
+import MemberCard from "@/components/MemberCard";
 import type {
   AllAccessListsQuery,
   Members as MembersType,
@@ -67,14 +67,19 @@ export const Members: React.FC<MembersProps> = ({
           action={t("settings:members.action")}
           onClick={() => setIsOpen(true)}
         />
-        <MembersTable
-          members={members}
-          accessLists={accessLists}
-          currentRole={currentRole}
-          onRemove={onRemove}
-          onAccessListChange={onAccessListChange}
-          onRoleChange={onRoleChange}
-        />
+        <div className={styles.body}>
+          {members.map((m) => (
+            <MemberCard
+              key={m.id}
+              member={m}
+              accessLists={accessLists}
+              onAccessListChange={onAccessListChange}
+              onDelete={onRemove}
+              currentRole={currentRole}
+              onRoleChange={onRoleChange}
+            />
+          ))}
+        </div>
       </Space>
 
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>

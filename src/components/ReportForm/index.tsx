@@ -76,6 +76,7 @@ const ReportForm: FC<ReportFormProps> = ({
         <Row gutter={[16, 16]}>
           <Col span={24} md={12}>
             <Input
+              rules={{ required: true }}
               label={t("form.report_name")}
               control={control}
               name="name"
@@ -102,11 +103,19 @@ const ReportForm: FC<ReportFormProps> = ({
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>{t("delivery_settings")}</span>
               <Input
-                rules={{ required: true }}
                 starPosition="left"
                 starColor="#A31BCB"
                 label={`${capitalize(type)}:`}
                 control={control}
+                rules={{
+                  required: true,
+                  validate:
+                    type === "EMAIL"
+                      ? (v: string) =>
+                          validate.email(v) || t("common:form.errors.email")
+                      : (v: string) =>
+                          validate.url(v) || t("common:form.errors.url"),
+                }}
                 placeholder={
                   type === "EMAIL"
                     ? t("common:form.placeholders.email")
@@ -179,7 +188,7 @@ const ReportForm: FC<ReportFormProps> = ({
               <Col>
                 <Button
                   className={styles.sendTest}
-                  onClick={() => onTest(getValues())}
+                  onClick={handleSubmit(onTest)}
                   loading={isSendTestLoading}
                   disabled={isSendTestLoading}
                 >

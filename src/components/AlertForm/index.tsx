@@ -51,7 +51,7 @@ const AlertForm: FC<AlertFormProps> = ({
     i18n: { language: locale },
   } = useTranslation(["alerts", "common"]);
   const [step, setStep] = useState(0);
-  const { control, handleSubmit, getValues, watch } = useForm<AlertFormType>({
+  const { control, handleSubmit, watch } = useForm<AlertFormType>({
     values: initialValue,
   });
 
@@ -90,6 +90,9 @@ const AlertForm: FC<AlertFormProps> = ({
             ":"
           )}.lowerBound`}
           placeholder="0"
+          rules={{
+            validate: (val: number) => !isNaN(val),
+          }}
           defaultValue={
             initialValue?.triggerConfig?.measures?.[
               record.name.replace(".", ":")
@@ -109,6 +112,9 @@ const AlertForm: FC<AlertFormProps> = ({
             ":"
           )}.upperBound`}
           placeholder="100"
+          rules={{
+            validate: (val: number) => !isNaN(val),
+          }}
           defaultValue={
             initialValue?.triggerConfig?.measures?.[
               record.name.replace(".", ":")
@@ -140,6 +146,7 @@ const AlertForm: FC<AlertFormProps> = ({
         <Row gutter={[16, 16]}>
           <Col span={24} md={12}>
             <Input
+              rules={{ required: true }}
               label={t("form.alert_name")}
               control={control}
               name="name"
@@ -181,11 +188,19 @@ const AlertForm: FC<AlertFormProps> = ({
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>{t("delivery_settings")}</span>
               <Input
-                rules={{ required: true }}
                 starPosition="left"
                 starColor="#A31BCB"
                 label={`${capitalize(type)}:`}
                 control={control}
+                rules={{
+                  required: true,
+                  validate:
+                    type === "EMAIL"
+                      ? (v: string) =>
+                          validate.email(v) || t("common:form.errors.email")
+                      : (v: string) =>
+                          validate.url(v) || t("common:form.errors.url"),
+                }}
                 placeholder={
                   type === "EMAIL"
                     ? t("common:form.placeholders.email")
@@ -261,7 +276,10 @@ const AlertForm: FC<AlertFormProps> = ({
             <Row gutter={[16, 16]}>
               <Col span={24} md={12}>
                 <Input
-                  rules={{ required: true }}
+                  rules={{
+                    required: true,
+                    validate: (val: number) => !isNaN(val) && val >= 0,
+                  }}
                   starPosition="left"
                   starColor="#A31BCB"
                   className={styles.input}
@@ -270,12 +288,16 @@ const AlertForm: FC<AlertFormProps> = ({
                   name="triggerConfig.requestTimeout"
                   fieldType="number"
                   placeholder="0"
+                  defaultValue={0}
                 />
               </Col>
 
               <Col span={24} md={12}>
                 <Input
-                  rules={{ required: true }}
+                  rules={{
+                    required: true,
+                    validate: (val: number) => !isNaN(val) && val >= 0,
+                  }}
                   starPosition="left"
                   starColor="#A31BCB"
                   className={styles.input}
@@ -284,6 +306,7 @@ const AlertForm: FC<AlertFormProps> = ({
                   name="triggerConfig.timeoutOnFire"
                   fieldType="number"
                   placeholder="0"
+                  defaultValue={0}
                 />
               </Col>
             </Row>
@@ -305,7 +328,7 @@ const AlertForm: FC<AlertFormProps> = ({
               <Col>
                 <Button
                   className={styles.sendTest}
-                  onClick={() => onTest(getValues())}
+                  onClick={handleSubmit(onTest)}
                   loading={isSendTestLoading}
                   disabled={isSendTestLoading}
                 >

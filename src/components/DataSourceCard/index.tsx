@@ -31,93 +31,95 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
   const { t } = useTranslation(["common"]);
 
   return (
-    <Card
-      style={{ width: 260 }}
-      bodyStyle={{ padding: 16 }}
-      headStyle={{ padding: 16 }}
-      title={
-        <Button
-          block
-          type="link"
-          className={styles.btn}
-          style={{ textAlign: "left" }}
-          onClick={() => id && onEdit(id)}
-        >
-          <Paragraph
-            ellipsis
-            style={{ display: "inline-block", width: "95%" }}
-            className={cx(styles.paragraph, styles.btn)}
+    <div>
+      <Card
+        style={{ width: 260, position: "static" }}
+        bodyStyle={{ padding: 16 }}
+        headStyle={{ padding: 16 }}
+        title={
+          <Button
+            block
+            type="link"
+            className={styles.btn}
+            style={{ textAlign: "left" }}
+            onClick={() => id && onEdit(id)}
           >
-            {name}
-          </Paragraph>
-        </Button>
-      }
-      extra={
-        <Dropdown
-          className={styles.btn}
-          trigger={["click"]}
-          menu={{
-            items: [
-              {
-                key: "edit",
-                label: t("common:words.edit"),
-                onClick: () => id && onEdit(id),
-              },
-              {
-                key: "delete",
-                label: (
-                  <ConfirmModal
-                    title={t("common:words.delete_datasource")}
-                    onConfirm={() => id && onDelete(id)}
-                  >
-                    {t("common:words.delete")}
-                  </ConfirmModal>
-                ),
-              },
-              {
-                key: "generate",
-                label: t("common:words.generate_models"),
-                onClick: () => id && onGenerate(id),
-              },
-            ],
-          }}
-        >
-          <SettingOutlined key="setting" />
-        </Dropdown>
-      }
-    >
-      <ul className={styles.list}>
-        <li className={styles.listItem}>
-          <span className={styles.label}>{t("common:words.host")}</span>
-          <Paragraph
-            className={styles.paragraph}
-            style={{
-              display: "inline",
-              textAlign: "right",
-              width: "80%",
+            <Paragraph
+              ellipsis
+              style={{ display: "inline-block", width: "95%" }}
+              className={cx(styles.paragraph, styles.btn)}
+            >
+              {name}
+            </Paragraph>
+          </Button>
+        }
+        extra={
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => id && onEdit(id),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_datasource")}
+                      onConfirm={() => id && onDelete(id)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+                {
+                  key: "generate",
+                  label: t("common:words.generate_models"),
+                  onClick: () => id && onGenerate(id),
+                },
+              ],
             }}
-            ellipsis
           >
-            {dbParams.host}
-          </Paragraph>
-        </li>
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        }
+      >
+        <ul className={styles.list}>
+          <li className={styles.listItem}>
+            <span className={styles.label}>{t("common:words.host")}</span>
+            <Paragraph
+              className={styles.paragraph}
+              style={{
+                display: "inline",
+                textAlign: "right",
+                width: "80%",
+              }}
+              ellipsis
+            >
+              {dbParams.host}
+            </Paragraph>
+          </li>
 
-        <li className={styles.listItem}>
-          <span className={styles.label}>{t("common:words.type")}</span>
-          <DataSourceTag dataSource={type} />
-        </li>
+          <li className={styles.listItem}>
+            <span className={styles.label}>{t("common:words.type")}</span>
+            <DataSourceTag dataSource={type} />
+          </li>
 
-        <li className={styles.listItem}>
-          <span className={styles.label}>{t("common:words.updated_at")}</span>
-          <span className={styles.value}>{formatTime(updatedAt)}</span>
-        </li>
+          <li className={styles.listItem}>
+            <span className={styles.label}>{t("common:words.updated_at")}</span>
+            <span className={styles.value}>{formatTime(updatedAt)}</span>
+          </li>
 
-        <li className={styles.listItem}>
-          <span className={styles.label}>{t("common:words.created_at")}</span>
-          <span className={styles.value}>{formatTime(createdAt)}</span>
-        </li>
-      </ul>
-    </Card>
+          <li className={styles.listItem}>
+            <span className={styles.label}>{t("common:words.created_at")}</span>
+            <span className={styles.value}>{formatTime(createdAt)}</span>
+          </li>
+        </ul>
+      </Card>
+    </div>
   );
 };
 

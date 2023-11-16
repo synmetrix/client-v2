@@ -30,7 +30,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
         </Sidebar>
       }
     >
-      {children}
+      <main>{children}</main>
     </AppLayout>
   );
 };

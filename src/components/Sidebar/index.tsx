@@ -1,3 +1,6 @@
+import { useResponsive } from "ahooks";
+import cn from "classnames";
+
 import styles from "./index.module.less";
 
 import type { FC, ReactNode } from "react";
@@ -9,8 +12,10 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ icon, title, children }) => {
+  const responsive = useResponsive();
+
   return (
-    <div className={styles.wrapper}>
+    <div className={cn(styles.wrapper, !responsive.lg && styles.wrapperMobile)}>
       <div className={styles.header}>
         {icon && icon}
         <div>{title}</div>

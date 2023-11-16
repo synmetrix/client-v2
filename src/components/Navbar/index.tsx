@@ -1,3 +1,4 @@
+import { useResponsive } from "ahooks";
 import { useTranslation } from "react-i18next";
 import { Dropdown, Button, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
@@ -35,11 +36,12 @@ const Navbar: FC<NavbarProps> = ({
   username,
   userAvatar,
 }) => {
-  const [_, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const { currentTeam, setCurrentTeamId } = CurrentUserStore();
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
   const { t } = useTranslation(["common"]);
+  const responsive = useResponsive();
 
   const onSelectTeam = (id: string) => {
     setCurrentTeamId(id);
@@ -53,6 +55,31 @@ const Navbar: FC<NavbarProps> = ({
     setLocation(href);
   };
 
+  const docs = (
+    <Button className={styles.docs} href="/">
+      <Space size={10} align="start">
+        <span className={styles.docsIcon}>
+          <DocsIcon />
+        </span>
+        {t("common:words.docs")}
+      </Space>
+    </Button>
+  );
+
+  const account = (
+    <Dropdown
+      onOpenChange={setAccountOpen}
+      menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })), onClick }}
+    >
+      <Space className={styles.dropdownHeader} align="center">
+        <Avatar username={username} img={userAvatar} />
+        <span className={cn(styles.icon, { [styles.rotate]: accountOpen })}>
+          <DownOutlined />
+        </span>
+      </Space>
+    </Dropdown>
+  );
+
   return (
     <Space
       size={20}
@@ -60,14 +87,14 @@ const Navbar: FC<NavbarProps> = ({
       align="start"
       style={{ maxHeight: "60px" }}
     >
-      <Button className={styles.docs} href="/">
-        <Space size={10} align="start">
-          <span className={styles.docsIcon}>
-            <DocsIcon />
-          </span>
-          {t("common:words.docs")}
+      {!responsive.lg ? (
+        <Space size={30}>
+          {docs}
+          {account}
         </Space>
-      </Button>
+      ) : (
+        docs
+      )}
 
       {!!teams?.length && (
         <Dropdown
@@ -94,17 +121,7 @@ const Navbar: FC<NavbarProps> = ({
         </Dropdown>
       )}
 
-      <Dropdown
-        onOpenChange={setAccountOpen}
-        menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })), onClick }}
-      >
-        <Space className={styles.dropdownHeader} align="center">
-          <Avatar username={username} img={userAvatar} />
-          <span className={cn(styles.icon, { [styles.rotate]: accountOpen })}>
-            <DownOutlined />
-          </span>
-        </Space>
-      </Dropdown>
+      {responsive.lg && account}
     </Space>
   );
 };

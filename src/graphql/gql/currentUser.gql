@@ -17,7 +17,7 @@ fragment TeamFields on teams {
   name
   created_at
   updated_at
-  members {
+  members(order_by: { created_at: desc }) {
     member_roles {
       id
       team_role
@@ -42,7 +42,7 @@ query CurrentUser($id: uuid!) {
       email
     }
 
-    datasources {
+    datasources(order_by: { created_at: desc }) {
       id
       name
       db_params
@@ -138,7 +138,7 @@ subscription SubCurrentUser($id: uuid!) {
       email
     }
 
-    datasources {
+    datasources(order_by: { created_at: desc }) {
       id
       name
       db_params

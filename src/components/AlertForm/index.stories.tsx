@@ -1,6 +1,7 @@
 import RootLayout from "@/layouts/RootLayout";
 import { queryStateMock } from "@/mocks/queryState";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
+import { WEBHOOK_PLACEHOLDER } from "@/utils/constants/links";
 
 import AlertForm from ".";
 
@@ -27,7 +28,7 @@ Default.args = {
     type: "WEBHOOK",
     schedule: "test",
     deliveryConfig: {
-      url: "https://webhook.catch",
+      url: WEBHOOK_PLACEHOLDER,
     },
     exploration: SAMPLE_EXPLORATION,
     triggerConfig: {

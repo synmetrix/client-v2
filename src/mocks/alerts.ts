@@ -1,4 +1,5 @@
 import type { Alert } from "@/types/alert";
+import { WEBHOOK_PLACEHOLDER } from "@/utils/constants/links";
 
 import { SAMPLE_EXPLORATION } from "./exploration";
 
@@ -23,7 +24,7 @@ export const alerts: Alert[] = [
     status: "success",
     exploration: SAMPLE_EXPLORATION,
     deliveryConfig: {
-      url: "https://webhook.catch",
+      url: WEBHOOK_PLACEHOLDER,
     },
     triggerConfig: {
       lowerBound: 1,
@@ -58,7 +59,7 @@ export const alerts: Alert[] = [
     status: "error",
     exploration: SAMPLE_EXPLORATION,
     deliveryConfig: {
-      url: "https://webhook.catch",
+      url: WEBHOOK_PLACEHOLDER,
     },
     triggerConfig: {
       lowerBound: 1,

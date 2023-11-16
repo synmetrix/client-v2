@@ -58,8 +58,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
         </Title>
         <InfoBlock
           href={DOCS_CREATE_ALERT_LINK}
-          text={t("common:words.how_to_create")}
-          linkText={t("common:words.alerts") + "?"}
+          linkText={t("common:words.how_to_create_alerts")}
         />
       </div>
       {alert || delivery ? (

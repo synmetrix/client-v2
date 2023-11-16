@@ -22,10 +22,10 @@ interface ReportModalProps {
   loading: boolean;
   params?: Params;
   onClose: () => void;
-  onChangeStep: (step: number) => void;
   onSendTest: (values: ReportFormType) => void;
   onSubmit: (values: ReportFormType) => void;
-  onSelectDelivery: (type: string) => void;
+  onChangeStep?: (step: number) => void;
+  onSelectDelivery?: (type: string) => void;
 }
 
 const ReportModal: React.FC<ReportModalProps> = ({
@@ -58,8 +58,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
         </Title>
         <InfoBlock
           href={DOCS_CREATE_REPORT_LINK}
-          text={t("common:words.how_to_create")}
-          linkText={t("common:words.reports") + "?"}
+          linkText={t("common:words.how_to_create_reports")}
         />
       </div>
       {report || delivery ? (
@@ -74,8 +73,9 @@ const ReportModal: React.FC<ReportModalProps> = ({
         />
       ) : (
         <AlertTypeSelection
+          type="report"
           options={alertTypes}
-          onSubmit={(v) => onSelectDelivery(v.value)}
+          onSubmit={(v) => onSelectDelivery?.(v.value)}
         />
       )}
     </Modal>

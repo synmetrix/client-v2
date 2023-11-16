@@ -10,12 +10,14 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface AlertTypeSelectionProps {
+  type?: "alert" | "report";
   options: Tile[];
   onSubmit: (value: Tile) => void;
   initialValue?: Tile;
 }
 
 const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
+  type = "alert",
   options,
   initialValue,
   onSubmit,
@@ -35,7 +37,10 @@ const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
         <div className={styles.header}>
           <StepFormHeader
             numbers={false}
-            steps={[t("words.alerts"), t("words.new")]}
+            steps={[
+              type === "alert" ? t("words.alerts") : t("words.reports"),
+              t("words.new"),
+            ]}
             currentStep={0}
           />
         </div>

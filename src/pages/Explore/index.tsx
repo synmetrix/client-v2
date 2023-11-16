@@ -30,13 +30,13 @@ import type {
   RawSql,
   DataSchemaValidation,
 } from "@/types/exploration";
-import type { AlertFormType } from "@/types/alert";
+import type { AlertFormType, AlertType } from "@/types/alert";
 import type { ReportFormType } from "@/types/report";
 
 export interface Params {
   screenshotMode: boolean;
   modalType?: string;
-  delivery?: string;
+  delivery?: AlertType;
 }
 
 interface ExploreProps {
@@ -270,7 +270,7 @@ const ExploreWrapper = () => {
   };
 
   const onSelectDelivery = (del: string) => {
-    setLocation(`${explorePath}/${modalType}/${del}`);
+    setLocation(`${explorePath}/${modalType}/${del.toLowerCase()}`);
   };
 
   const onChangeStep = (step: number) => {
@@ -390,8 +390,8 @@ const ExploreWrapper = () => {
       onCreateReport={createReport}
       params={{
         screenshotMode: isScreenshotMode,
-        modalType,
-        delivery,
+        modalType: modalType?.toLowerCase(),
+        delivery: delivery?.toUpperCase() as AlertType,
       }}
     />
   );

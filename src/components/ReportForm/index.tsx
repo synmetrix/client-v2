@@ -12,6 +12,8 @@ import { capitalize } from "@/utils/helpers/capitalize";
 import validate from "@/utils/validations";
 import type { QueryState } from "@/types/queryState";
 import type { ReportFormType } from "@/types/report";
+import { WEBHOOK_PLACEHOLDER } from "@/utils/constants/links";
+import type { AlertType } from "@/types/alert";
 
 import InfoIcon from "@/assets/info.svg";
 import SendIcon from "@/assets/send.svg";
@@ -24,8 +26,8 @@ interface ReportFormProps {
   query: QueryState;
   onSubmit: (data: ReportFormType) => void;
   onTest: (data: ReportFormType) => void;
-  onChangeStep: (step: number) => void;
-  type?: string;
+  onChangeStep?: (step: number) => void;
+  type?: AlertType;
   initialValue?: ReportFormType;
   isSendTestLoading?: boolean;
 }
@@ -108,7 +110,7 @@ const ReportForm: FC<ReportFormProps> = ({
                 placeholder={
                   type === "EMAIL"
                     ? t("common:form.placeholders.email")
-                    : t("URL")
+                    : WEBHOOK_PLACEHOLDER
                 }
                 name={
                   type === "EMAIL"

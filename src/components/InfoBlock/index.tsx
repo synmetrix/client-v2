@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 
 interface Props {
   icon?: ReactNode;
-  text: string;
+  text?: string;
   href?: string;
   linkText?: string;
 }
@@ -23,7 +23,7 @@ const InfoBlock: React.FC<Props> = ({
     <div className={styles.howBlock}>
       {icon}
       <span>
-        {text}
+        {text && text}
         {href ? (
           <Button
             className={styles.link}

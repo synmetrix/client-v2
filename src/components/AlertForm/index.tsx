@@ -15,6 +15,7 @@ import validate from "@/utils/validations";
 import { QUERY_COLORS } from "@/utils/constants/colors";
 import type { QueryState } from "@/types/queryState";
 import type { AlertFormType, AlertType } from "@/types/alert";
+import { WEBHOOK_PLACEHOLDER } from "@/utils/constants/links";
 
 import InfoIcon from "@/assets/info.svg";
 import SendIcon from "@/assets/send.svg";
@@ -30,8 +31,8 @@ interface AlertFormProps {
   query: QueryState;
   onSubmit: (data: AlertFormType) => void;
   onTest: (data: AlertFormType) => void;
-  onChangeStep: (step: number) => void;
-  type?: string;
+  onChangeStep?: (step: number) => void;
+  type?: AlertType;
   initialValue?: AlertFormType;
   isSendTestLoading?: boolean;
 }
@@ -188,7 +189,7 @@ const AlertForm: FC<AlertFormProps> = ({
                 placeholder={
                   type === "EMAIL"
                     ? t("common:form.placeholders.email")
-                    : t("URL")
+                    : WEBHOOK_PLACEHOLDER
                 }
                 name={
                   type === "EMAIL"

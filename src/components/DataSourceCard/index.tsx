@@ -16,19 +16,22 @@ import type { FC } from "react";
 const { Paragraph } = Typography;
 
 interface DataSourceCardProps {
-  dataSource: DataSourceInfo;
+  dataSource: DataSourceInfo & { login?: string };
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  onGenerate: (id: string) => void;
+  onGenerate?: (id: string) => void;
+  withGeneration?: boolean;
 }
 
 const DataSourceCard: FC<DataSourceCardProps> = ({
-  dataSource: { id, name, dbParams, type, updatedAt, createdAt },
+  dataSource,
   onEdit = () => {},
   onDelete = () => {},
   onGenerate = () => {},
+  withGeneration = true,
 }) => {
   const { t } = useTranslation(["common"]);
+  const { id, name, dbParams, type, updatedAt, createdAt, login } = dataSource;
 
   return (
     <div>
@@ -75,11 +78,13 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
                     </ConfirmModal>
                   ),
                 },
-                {
-                  key: "generate",
-                  label: t("common:words.generate_models"),
-                  onClick: () => id && onGenerate(id),
-                },
+                withGeneration
+                  ? {
+                      key: "generate",
+                      label: t("common:words.generate_models"),
+                      onClick: () => id && onGenerate(id),
+                    }
+                  : null,
               ],
             }}
           >
@@ -88,20 +93,39 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
         }
       >
         <ul className={styles.list}>
-          <li className={styles.listItem}>
-            <span className={styles.label}>{t("common:words.host")}</span>
-            <Paragraph
-              className={styles.paragraph}
-              style={{
-                display: "inline",
-                textAlign: "right",
-                width: "80%",
-              }}
-              ellipsis
-            >
-              {dbParams.host}
-            </Paragraph>
-          </li>
+          {dbParams?.host && (
+            <li className={styles.listItem}>
+              <span className={styles.label}>{t("common:words.host")}</span>
+              <Paragraph
+                className={styles.paragraph}
+                style={{
+                  display: "inline",
+                  textAlign: "right",
+                  width: "80%",
+                }}
+                ellipsis
+              >
+                {dbParams.host}
+              </Paragraph>
+            </li>
+          )}
+
+          {login && (
+            <li className={styles.listItem}>
+              <span className={styles.label}>{t("common:words.login")}</span>
+              <Paragraph
+                className={styles.paragraph}
+                style={{
+                  display: "inline",
+                  textAlign: "right",
+                  width: "80%",
+                }}
+                ellipsis
+              >
+                {login}
+              </Paragraph>
+            </li>
+          )}
 
           <li className={styles.listItem}>
             <span className={styles.label}>{t("common:words.type")}</span>

@@ -7,7 +7,7 @@ import ApiSetup, {
   connectionUrls,
 } from "@/components/ApiSetup";
 import type { DataSourceCredentials } from "@/components/CredentialsTable";
-import CredentialsTable from "@/components/CredentialsTable";
+import DataSourceCard from "@/components/DataSourceCard";
 import Modal from "@/components/Modal";
 import NoCredentials from "@/components/NoCredentials";
 import PageHeader from "@/components/PageHeader";
@@ -94,13 +94,18 @@ export const SqlApi = ({
             }}
             onClick={onOpen}
           />
-          {credentials.length ? (
-            <CredentialsTable
-              credentials={credentials}
-              editPermission={editPermission}
-              onEdit={onEdit}
-              onRemove={onRemove}
-            />
+          {!!credentials?.length ? (
+            <Space size={16} wrap>
+              {credentials.map((c) => (
+                <DataSourceCard
+                  key={c.id}
+                  dataSource={{ ...c, ...c.dataSourceData }}
+                  onEdit={onEdit}
+                  onDelete={onRemove}
+                  withGeneration={false}
+                />
+              ))}
+            </Space>
           ) : (
             <NoCredentials editPermission={editPermission} onAttach={onOpen} />
           )}

@@ -27,7 +27,7 @@ export interface Member {
   email: string;
   role: TeamRole;
   id: string;
-  accessList?: AccessList;
+  accessList?: AccessList | null;
   displayName?: string;
   createdAt?: string;
   updatedAt?: string;

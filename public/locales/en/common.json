@@ -2,6 +2,7 @@
   "words": {
     "delete_datasource": "Delete Data Source",
     "delete_member": "Delete Member",
+    "no_permission": "No permission",
     "are_you_sure": "Are you sure?",
     "ok": "Ok",
     "cancel": "Cancel",

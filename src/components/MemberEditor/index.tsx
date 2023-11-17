@@ -29,16 +29,19 @@ const MemberEditor: FC<MemberEditorProps> = ({
 }) => {
   const { t } = useTranslation(["settings", "common"]);
 
-  if (member === null) {
-    return null;
-  }
-
   const hasRoleChangePermission =
     currentRole === Roles.owner ||
-    (currentRole === Roles.admin && member.role.name === Roles.member);
+    (currentRole === Roles.admin && member?.role.name === Roles.member);
 
   const hasAccessChangePermission =
-    member.role.name !== ("member" as unknown as Roles);
+    member?.role.name !== ("member" as unknown as Roles);
+
+  if (
+    member === null ||
+    (!hasAccessChangePermission && hasAccessChangePermission)
+  ) {
+    return <div>{t("common:words.no_permission")}</div>;
+  }
 
   return (
     <Form layout="vertical">

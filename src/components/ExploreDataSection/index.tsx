@@ -353,11 +353,8 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
 
             <Space>
               <CSVLink data={rows} filename={`exploration-${genName(5)}.csv`}>
-                <Button className={s.csvBtn}>
-                  <div className={s.csvText}>
-                    {t("data_section.export")} .CSV
-                  </div>{" "}
-                  <CSVIcon className={s.csvIcon} />
+                <Button className={s.csvBtn} disabled={!explorationRowId}>
+                  {t("data_section.export")} .CSV
                 </Button>
               </CSVLink>
 

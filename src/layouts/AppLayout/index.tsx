@@ -28,11 +28,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const responsive = useResponsive();
   const { currentUser } = useUserData();
-  const isMobile = responsive.md === false;
 
   const content = (
     <Navbar
-      direction={isMobile ? "vertical" : "horizontal"}
+      direction={!responsive.lg ? "vertical" : "horizontal"}
       username={currentUser.displayName}
       userAvatar={currentUser.avatarUrl}
       userMenu={userMenu}
@@ -55,9 +54,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           title={title}
           bordered={divider}
           content={
-            isMobile ? (
+            !responsive.lg ? (
               <BurgerMenu>
-                <div style={{ height: 110 }}>{content}</div>
+                <div style={{ height: 150 }}>{content}</div>
                 <div style={{ margin: "0 -20px" }}>
                   {!responsive.lg && sidebar}
                 </div>

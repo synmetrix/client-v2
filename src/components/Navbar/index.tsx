@@ -82,21 +82,8 @@ const Navbar: FC<NavbarProps> = ({
   );
 
   return (
-    <Space
-      size={20}
-      direction={direction}
-      align="start"
-      style={{ maxHeight: "60px" }}
-    >
-      {!responsive.lg ? (
-        <Space size={30}>
-          {docs}
-          {account}
-        </Space>
-      ) : (
-        docs
-      )}
-
+    <Space size={20} direction={direction} align="start">
+      {docs}
       {!!teams?.length && (
         <Dropdown
           trigger={["click"]}
@@ -122,6 +109,7 @@ const Navbar: FC<NavbarProps> = ({
           </Button>
         </Dropdown>
       )}
+      {account}
     </Space>
   );
 };

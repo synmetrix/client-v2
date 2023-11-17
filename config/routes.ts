@@ -14,6 +14,13 @@ export default [
             path: "/auth/signin",
             component: "./pages/SignIn",
           },
+          {
+            path: "/auth/logout",
+            component: "./pages/Logout",
+          },
+          {
+            redirect: "/auth/signin",
+          },
         ],
       },
       {

@@ -12,7 +12,7 @@
     "hide_index_column": "Hide Index Column",
     "epty_desc": "Select dimensions & measures from left menu and run query",
     "limit_error_1": "You hit the limit. Your dataset is more than",
-    "limit_error_2": "rows. Try to adjust your query.",
+    "limit_error_2": "rows. Try to adjust your query",
     "skipped": "Skipped",
     "shown": "Shown",
     "offset": "Offset",

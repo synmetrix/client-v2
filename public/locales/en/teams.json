@@ -3,10 +3,10 @@
   "create_team": "Create Team",
   "not_found": {
     "title": "You have no teams yet",
-    "text": "Please create team for manage roles.",
+    "text": "Please create team for manage roles",
     "btn": "Create New Team"
   },
-  "team_created": "Team created.",
-  "team_updated": "Team updated.",
-  "team_deleted": "Team deleted."
+  "team_created": "Team created",
+  "team_updated": "Team updated",
+  "team_deleted": "Team deleted"
 }

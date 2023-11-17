@@ -1,4 +1,4 @@
-import { Alert, Col, Form, Row, Space, Typography } from "antd";
+import { Alert, Col, Form, Row, Space, Popover } from "antd";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
@@ -10,9 +10,10 @@ import QueryPreview from "@/components/QueryPreview";
 import StepFormHeader from "@/components/StepFormHeader";
 import { capitalize } from "@/utils/helpers/capitalize";
 import validate from "@/utils/validations";
-import type { AlertType } from "@/types/alert";
 import type { QueryState } from "@/types/queryState";
 import type { ReportFormType } from "@/types/report";
+import { WEBHOOK_PLACEHOLDER } from "@/utils/constants/links";
+import type { AlertType } from "@/types/alert";
 
 import InfoIcon from "@/assets/info.svg";
 import SendIcon from "@/assets/send.svg";
@@ -25,12 +26,11 @@ interface ReportFormProps {
   query: QueryState;
   onSubmit: (data: ReportFormType) => void;
   onTest: (data: ReportFormType) => void;
+  onChangeStep?: (step: number) => void;
   type?: AlertType;
   initialValue?: ReportFormType;
   isSendTestLoading?: boolean;
 }
-
-const { Title } = Typography;
 
 const ReportForm: FC<ReportFormProps> = ({
   query,
@@ -38,25 +38,27 @@ const ReportForm: FC<ReportFormProps> = ({
   initialValue,
   onSubmit,
   onTest,
+  onChangeStep,
   isSendTestLoading,
 }) => {
   const {
     t,
     i18n: { language: locale },
   } = useTranslation(["reports", "common"]);
+  const [step, setStep] = useState(0);
   const { control, handleSubmit, watch, getValues } = useForm<ReportFormType>({
     values: initialValue,
   });
 
   const schedule = watch("schedule");
 
+  useEffect(() => {
+    if (type) setStep(1);
+  }, [type]);
+
   return (
     <Form layout="vertical">
       <Space className={cn(styles.space, styles.body)} size={16}>
-        <Title className={styles.title} level={3}>
-          {initialValue ? t("edit_report") : t("new_report")}
-        </Title>
-
         {!initialValue && (
           <div className={styles.header}>
             <StepFormHeader
@@ -66,16 +68,19 @@ const ReportForm: FC<ReportFormProps> = ({
                 t("common:words.new"),
                 capitalize(type),
               ]}
-              currentStep={0}
+              onChange={onChangeStep}
+              currentStep={step}
             />
           </div>
         )}
         <Row gutter={[16, 16]}>
           <Col span={24} md={12}>
             <Input
+              rules={{ required: true }}
               label={t("form.report_name")}
               control={control}
               name="name"
+              placeholder={t("common:form.placeholders.name")}
               defaultValue={initialValue?.name}
             />
           </Col>
@@ -98,11 +103,24 @@ const ReportForm: FC<ReportFormProps> = ({
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>{t("delivery_settings")}</span>
               <Input
-                rules={{ required: true }}
                 starPosition="left"
                 starColor="#A31BCB"
                 label={`${capitalize(type)}:`}
                 control={control}
+                rules={{
+                  required: true,
+                  validate:
+                    type === "EMAIL"
+                      ? (v: string) =>
+                          validate.email(v) || t("common:form.errors.email")
+                      : (v: string) =>
+                          validate.url(v) || t("common:form.errors.url"),
+                }}
+                placeholder={
+                  type === "EMAIL"
+                    ? t("common:form.placeholders.email")
+                    : WEBHOOK_PLACEHOLDER
+                }
                 name={
                   type === "EMAIL"
                     ? "deliveryConfig.address"
@@ -143,8 +161,13 @@ const ReportForm: FC<ReportFormProps> = ({
                 }
                 control={control}
                 name="schedule"
-                defaultValue={initialValue?.schedule}
-                suffix={<InfoIcon />}
+                placeholder="* * * * *"
+                defaultValue={initialValue?.schedule || "* * * * *"}
+                suffix={
+                  <Popover content={t("common:words.in_utc_timezone")}>
+                    <InfoIcon />
+                  </Popover>
+                }
               />
             </Space>
           </Col>
@@ -165,7 +188,7 @@ const ReportForm: FC<ReportFormProps> = ({
               <Col>
                 <Button
                   className={styles.sendTest}
-                  onClick={() => onTest(getValues())}
+                  onClick={handleSubmit(onTest)}
                   loading={isSendTestLoading}
                   disabled={isSendTestLoading}
                 >

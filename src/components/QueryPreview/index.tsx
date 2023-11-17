@@ -26,7 +26,7 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
 
-  const [activePanel, setActivePanel] = useState<string>("1");
+  const [activePanel, setActivePanel] = useState<string>();
 
   const isShown = (val?: any) => (Array.isArray(val) ? val.length > 0 : !!val);
 
@@ -34,10 +34,10 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
     return arr.reduce((res, a) => (a?.length ? res + a.length : res), 0);
   };
 
-  // const isCollapsible =
-  //   getCount([measures, dimensions, order, timeDimensions, segments]) <= 2;
+  const isCollapsible =
+    getCount([measures, dimensions, order, timeDimensions, segments]) >= 2;
 
-  const isCollapsible = false;
+  const wrapTags = activePanel === "1";
 
   return (
     <Collapse
@@ -51,7 +51,7 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
       bordered={false}
       className={cn(styles.collapse, !isCollapsible && styles.collapseDisabled)}
       activeKey={activePanel}
-      // onChange={(keys) => setActivePanel(keys[0])}
+      onChange={(keys) => setActivePanel(keys[0])}
     >
       <Panel
         className={cn(styles.panel)}
@@ -108,14 +108,22 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
           {(isShown(dimensions) || isShown(timeDimensions)) && (
             <Space size={9}>
               <span className={styles.tagLabel}>{t("common:words.by")}</span>
-              <QueryTags content={dimensions} type="dimension" />
-              <QueryTags content={timeDimensions} type="timeDimension" />
+              <QueryTags
+                content={dimensions}
+                type="dimension"
+                wrap={wrapTags}
+              />
+              <QueryTags
+                content={timeDimensions}
+                type="timeDimension"
+                wrap={wrapTags}
+              />
             </Space>
           )}
           {isShown(segments) && (
             <Space size={9}>
               <span className={styles.tagLabel}>{t("common:words.in")}</span>
-              <QueryTags content={segments} type="segment" />
+              <QueryTags content={segments} type="segment" wrap={wrapTags} />
             </Space>
           )}
 
@@ -124,7 +132,7 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
               <span className={styles.tagLabel}>
                 {t("common:words.ordered_by")}
               </span>
-              <QueryTags content={order} type="order" />
+              <QueryTags content={order} type="order" wrap={wrapTags} />
             </Space>
           )}
         </Space>

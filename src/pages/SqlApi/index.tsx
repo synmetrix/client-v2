@@ -13,6 +13,7 @@ import NoCredentials from "@/components/NoCredentials";
 import PageHeader from "@/components/PageHeader";
 import type { Datasources, Sql_Credentials } from "@/graphql/generated";
 import {
+  Order_By,
   useCredentialsQuery,
   useDatasourcesQuery,
   useDeleteCredentialsMutation,
@@ -191,6 +192,11 @@ const SqlApiWrapper = () => {
           _eq: currentTeamId,
         },
       },
+      order_by: [
+        {
+          created_at: Order_By.Desc,
+        },
+      ],
     },
     pause: true,
   });

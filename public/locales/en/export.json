@@ -1,9 +1,9 @@
 {
   "title": "Export data models",
-  "subtitle": "Models are being exported, please check your downloads.",
+  "subtitle": "Models are being exported, please check your downloads",
   "action": "Go back",
   "alerts": {
-    "success": "Models successfully exported.",
-    "fail": "Models are not exported. Something went wrong."
+    "success": "Models successfully exported",
+    "fail": "Models are not exported. Something went wrong"
   }
 }

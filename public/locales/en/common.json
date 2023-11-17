@@ -1,5 +1,8 @@
 {
   "words": {
+    "how_to_create_alerts": "How to create Alerts?",
+    "how_to_create_reports": "How to create Reports?",
+    "in_utc_timezone": "In UTC timezone",
     "delete_datasource": "Delete Data Source",
     "delete_role": "Delete Role",
     "delete_member": "Delete Member",
@@ -135,7 +138,8 @@
     },
     "errors": {
       "email": "Enter a valid e-mail",
-      "password": "Minimum 6 characters"
+      "password": "Minimum 6 characters",
+      "url": "Invalid URL"
     }
   },
   "alerts": {

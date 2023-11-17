@@ -68,6 +68,7 @@ const Navbar: FC<NavbarProps> = ({
 
   const account = (
     <Dropdown
+      trigger={["click"]}
       onOpenChange={setAccountOpen}
       menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })), onClick }}
     >
@@ -98,6 +99,7 @@ const Navbar: FC<NavbarProps> = ({
 
       {!!teams?.length && (
         <Dropdown
+          trigger={["click"]}
           onOpenChange={setTeamsOpen}
           menu={{
             items: teams.map((tm, i) => ({
@@ -120,8 +122,6 @@ const Navbar: FC<NavbarProps> = ({
           </Button>
         </Dropdown>
       )}
-
-      {responsive.lg && account}
     </Space>
   );
 };

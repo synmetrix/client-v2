@@ -14,6 +14,13 @@ export default [
             path: "/auth/signin",
             component: "./pages/SignIn",
           },
+          {
+            path: "/auth/logout",
+            component: "./pages/Logout",
+          },
+          {
+            redirect: "/auth/signin",
+          },
         ],
       },
       {
@@ -78,7 +85,7 @@ export default [
             component: "./pages/Home",
           },
           {
-            path: "/explore/:dataSourceId?/:explorationId?",
+            path: "/explore/:dataSourceId?/:explorationId?/:modalType?/:delivery?",
             component: "./pages/Explore",
           },
           {
@@ -86,11 +93,11 @@ export default [
             component: "./pages/Teams",
           },
           {
-            path: "/alerts",
+            path: "/alerts/:alertId?",
             component: "./pages/Alerts",
           },
           {
-            path: "/reports",
+            path: "/reports/:reportId?",
             component: "./pages/Reports",
           },
           {

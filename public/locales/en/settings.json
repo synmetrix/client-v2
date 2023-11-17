@@ -4,14 +4,14 @@
     "create_now": "Create now",
     "not_found": {
       "title": "You have no Data Sources yet",
-      "text": "Click \"Add Data Source\" to add one.",
+      "text": "Click \"Add Data Source\" to add one",
       "connect_btn": "Connect Data Source"
     }
   },
   "personal_info": {
     "title": "General Information",
-    "user_updated": "User updated.",
-    "password_updated": "Password updated.",
+    "user_updated": "User updated",
+    "password_updated": "Password updated",
     "general_info": {
       "title": "General Information",
       "update": "Update"
@@ -54,16 +54,16 @@
     "action": "Add new",
     "not_found": {
       "title": "You have no SQL API credentials",
-      "text": "Please set up your API credentials.",
+      "text": "Please set up your API credentials",
       "attach_btn": "Attach SQL API"
     }
   },
   "roles_and_access": {
     "manage_roles": "Manage roles",
     "create_role": "Create Role",
-    "access_list_created": "Access list created.",
-    "access_list_updated": "Access list updated.",
-    "access_list_removed": "Access list removed.",
+    "access_list_created": "Access list created",
+    "access_list_updated": "Access list updated",
+    "access_list_removed": "Access list removed",
     "models_not_found": "Models not found",
     "access_table": {
       "count": "Access to data sources"

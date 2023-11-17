@@ -163,6 +163,10 @@ export default () => {
       execQueryCurrentUser();
       useSubscription();
     }
+
+    if (!accessToken) {
+      window.location.href = "/auth/signin";
+    }
   }, [accessToken, userId]);
 
   useEffect(() => {

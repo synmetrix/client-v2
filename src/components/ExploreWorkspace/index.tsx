@@ -1,5 +1,5 @@
 import { Spin } from "antd";
-import { useDeepCompareEffect } from "ahooks";
+import { useTrackedEffect } from "ahooks";
 
 import SidebarLayout from "@/layouts/SidebarLayout";
 import ExploreDataSection from "@/components/ExploreDataSection";
@@ -13,6 +13,7 @@ import useLocation from "@/hooks/useLocation";
 import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
 import pickKeys from "@/utils/helpers/pickKeys";
+import equals from "@/utils/helpers/equals";
 import useAppSettings from "@/hooks/useAppSettings";
 import type { DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
@@ -44,6 +45,7 @@ interface ExploreProps {
   dataSet: any;
   dataSchemaValidation?: DataSchemaValidation;
   runQuery: (state: object, settings: QuerySettings) => void;
+  onOpenModal: (type: string) => void;
   header?: ReactNode;
   subTitle?: ReactNode;
 }
@@ -59,6 +61,7 @@ const Explore: FC<ExploreProps> = (props) => {
     dataSet,
     dataSchemaValidation,
     runQuery = () => {},
+    onOpenModal = () => {},
     loading = false,
     metaLoading = false,
     params: { screenshotMode } = {},
@@ -117,11 +120,24 @@ const Explore: FC<ExploreProps> = (props) => {
     [playgroundState, runQuery, settings]
   );
 
-  useDeepCompareEffect(() => {
-    if (playgroundState?.order) {
-      onRunQuery();
-    }
-  }, [playgroundState?.order]);
+  useTrackedEffect(
+    (changes, previousDeps, currentDeps) => {
+      const prevData = previousDeps?.[0];
+      const currData = currentDeps?.[0];
+
+      let dataDiff = false;
+      if (!prevData || !currData) {
+        dataDiff = false;
+      } else {
+        dataDiff = !equals(prevData, currData);
+      }
+
+      if (dataDiff) {
+        onRunQuery();
+      }
+    },
+    [playgroundState?.order]
+  );
 
   const onQueryChange = useCallback(
     (type: string, ...args: any) => {
@@ -169,6 +185,7 @@ const Explore: FC<ExploreProps> = (props) => {
       selectedQueryMembers={selectedQueryMembers}
       onExec={onRunQuery}
       onQueryChange={onQueryChange}
+      onOpenModal={onOpenModal}
       disabled={!isQueryChanged}
       state={state}
       loading={loading}

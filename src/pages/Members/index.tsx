@@ -1,5 +1,6 @@
 import { Col, Row, Space, message } from "antd";
 import { useTranslation } from "react-i18next";
+import { useResponsive } from "ahooks";
 
 import type { Invite } from "@/components/MembersForm";
 import MembersForm from "@/components/MembersForm";
@@ -51,6 +52,7 @@ export const Members: React.FC<MembersProps> = ({
   onAccessListChange = () => {},
 }) => {
   const { t } = useTranslation(["settings", "pages"]);
+  const responsive = useResponsive();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);

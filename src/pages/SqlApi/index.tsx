@@ -1,6 +1,8 @@
-import { Space, Spin, message } from "antd";
+import { Col, Row, Space, Spin, message } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useResponsive } from "ahooks";
 
 import ApiSetup, {
   CONNECTION_DEFAULT,
@@ -60,6 +62,7 @@ export const SqlApi = ({
   const [, setLocation] = useLocation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onOpen = () => setIsOpen(true);
+  const responsive = useResponsive();
 
   const onClose = () => {
     setLocation("/settings/sql-api");
@@ -88,28 +91,34 @@ export const SqlApi = ({
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
             title={t("settings:sql_api.title")}
-            action={action}
+            action={action && !responsive.sm ? <PlusCircleOutlined /> : action}
             actionProps={{
-              type: "primary",
+              type: !responsive.sm ? "ghost" : "primary",
               size: "large",
             }}
             onClick={onOpen}
           />
-          {!!credentials?.length ? (
-            <Space size={16} wrap>
-              {credentials.map((c) => (
-                <DataSourceCard
-                  key={c.id}
-                  dataSource={{ ...c, ...c.dataSourceData }}
-                  onEdit={onEdit}
-                  onDelete={onRemove}
-                  withGeneration={false}
-                />
-              ))}
-            </Space>
-          ) : (
-            <NoCredentials editPermission={editPermission} onAttach={onOpen} />
-          )}
+          <div className={styles.body}>
+            {!!credentials?.length ? (
+              <Row>
+                {credentials.map((c) => (
+                  <Col xs={24} sm={12} xl={8} key={c.id}>
+                    <DataSourceCard
+                      dataSource={{ ...c, ...c.dataSourceData }}
+                      onEdit={onEdit}
+                      onDelete={onRemove}
+                      withGeneration={false}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <NoCredentials
+                editPermission={editPermission}
+                onAttach={onOpen}
+              />
+            )}
+          </div>
         </Space>
       </Spin>
 

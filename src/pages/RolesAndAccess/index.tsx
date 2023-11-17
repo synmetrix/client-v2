@@ -76,7 +76,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
             title={t("settings:roles_and_access.manage_roles")}
-            action={t("settings:roles_and_access.create_role")}
+            action={t("settings:roles_and_access.create_now")}
             onClick={onOpen}
           />
           <div className={styles.body}>
@@ -84,19 +84,14 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
               columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 3 }}
             >
               <Masonry gutter="32px">
-                {accessLists
-                  .concat(accessLists)
-                  .concat(accessLists)
-                  .concat(accessLists)
-                  .concat(accessLists)
-                  .map((a) => (
-                    <RoleCard
-                      key={a.id}
-                      accessList={a}
-                      onEdit={onEdit}
-                      onRemove={onRemove}
-                    />
-                  ))}
+                {accessLists.map((a) => (
+                  <RoleCard
+                    key={a.id}
+                    accessList={a}
+                    onEdit={onEdit}
+                    onRemove={onRemove}
+                  />
+                ))}
               </Masonry>
             </ResponsiveMasonry>
           </div>

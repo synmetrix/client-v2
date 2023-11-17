@@ -1,4 +1,6 @@
 import { Col, Row, Space, Spin } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { useResponsive } from "ahooks";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -63,6 +65,7 @@ export const DataSources = ({
   const [, setLocation] = useLocation();
   const { setStep, editId, clean, setIsOnboarding } = DataSourceStore();
   const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
+  const responsive = useResponsive();
 
   const onOpen = () => {
     setIsOnboarding(true);
@@ -99,7 +102,11 @@ export const DataSources = ({
         {dataSources.length > 0 && (
           <Space className={styles.wrapper} direction="vertical" size={13}>
             <PageHeader
-              title={t("settings:data_sources.title")}
+              title={
+                !responsive.sm
+                  ? t("settings:data_sources.title_mobile")
+                  : t("settings:data_sources.title")
+              }
               action={t("settings:data_sources.create_now")}
               actionProps={{
                 type: "primary",

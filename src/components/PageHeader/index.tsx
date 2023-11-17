@@ -1,4 +1,5 @@
 import { Col, Row, Typography } from "antd";
+import { useResponsive } from "ahooks";
 import cn from "classnames";
 
 import Button from "@/components/Button";
@@ -27,10 +28,14 @@ const PageHeader: FC<PageHeaderProps> = ({
   target,
   actionProps,
 }) => {
+  const responsive = useResponsive();
   return (
     <Row className={styles.wrapper} justify="space-between" align="middle">
       <Col>
-        <Title level={5} className={styles.title}>
+        <Title
+          level={5}
+          className={cn(styles.title, !responsive.sm && styles.titleMobile)}
+        >
           {title}
         </Title>
       </Col>
@@ -45,6 +50,7 @@ const PageHeader: FC<PageHeaderProps> = ({
             target={target}
             href={href}
             onClick={onClick}
+            size={!responsive.sm ? "small" : actionProps?.size}
           >
             {action}
           </Button>

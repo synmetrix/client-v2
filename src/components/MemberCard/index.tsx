@@ -35,7 +35,7 @@ const MemberCard: FC<MemberCardProps> = ({
 
   return (
     <Card
-      style={{ width: 260, position: "static" }}
+      style={{ position: "static" }}
       bodyStyle={{ padding: 16 }}
       headStyle={{ padding: 16 }}
       title={
@@ -47,6 +47,7 @@ const MemberCard: FC<MemberCardProps> = ({
       extra={
         hasPermission && (
           <Dropdown
+            className={styles.btn}
             trigger={["click"]}
             menu={{
               items: [
@@ -74,29 +75,29 @@ const MemberCard: FC<MemberCardProps> = ({
         )
       }
     >
-      <ul>
+      <ul className={styles.info}>
         <li className={styles.item}>
           <span className={styles.label}>{t("common:words.email")}</span>
-          <span>{email}</span>
+          <span className={styles.value}>{email}</span>
         </li>
         <li className={styles.item}>
           <span className={styles.label}>{t("common:words.role")}</span>
-          <span>{capitalize(role.name)}</span>
+          <span className={styles.value}>{capitalize(role.name)}</span>
         </li>
         <li className={styles.item}>
           <span className={styles.label}>{t("common:words.access_list")}</span>
-          {capitalize(role.name)}
+          <span className={styles.value}>{capitalize(role.name)}</span>
         </li>
         {createdAt && (
           <li className={styles.item}>
             <span className={styles.label}>{t("common:words.createdAt")}</span>
-            <span>{formatTime(createdAt)}</span>
+            <span className={styles.value}>{formatTime(createdAt)}</span>
           </li>
         )}
         {updatedAt && (
           <li className={styles.item}>
             <span className={styles.label}>{t("common:words.updatedAt")}</span>
-            <span>{formatTime(updatedAt)}</span>
+            <span className={styles.value}>{formatTime(updatedAt)}</span>
           </li>
         )}
       </ul>

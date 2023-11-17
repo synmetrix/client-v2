@@ -1,3 +1,11 @@
+.btn {
+  padding: 0;
+  color: var(--color-primary);
+  span {
+    font-size: 12px;
+  }
+}
+
 .count {
   display: inline-block;
   padding: 12px 10px;
@@ -13,6 +21,24 @@
   padding-left: 10px !important;
 }
 
+.item {
+  &:not(:last-child) {
+    margin-bottom: 12px;
+  }
+}
+
 .label {
-  font-weight: 700;
+  font-weight: 500;
+  opacity: 0.5;
+}
+
+.value {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.info {
+  width: 100%;
+  font-size: 12px;
 }

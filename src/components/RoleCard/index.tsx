@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { AccessTypeWrapper } from "@/components/AccessType";
 import ConfirmModal from "@/components/ConfirmModal";
+import formatTime from "@/utils/helpers/formatTime";
 import type { AccessList } from "@/types/access";
 
 import styles from "./index.module.less";
@@ -22,9 +23,9 @@ const RoleCard: FC<RoleCardProps> = ({ accessList, onRemove, onEdit }) => {
   return (
     <Card
       title={accessList.name}
-      style={{ minWidth: 320, maxWidth: 330, position: "static" }}
-      bodyStyle={{ padding: 10 }}
-      headStyle={{ padding: 10 }}
+      style={{ position: "static" }}
+      bodyStyle={{ padding: 16 }}
+      headStyle={{ padding: 16 }}
       extra={
         <Dropdown
           className={styles.btn}
@@ -54,14 +55,14 @@ const RoleCard: FC<RoleCardProps> = ({ accessList, onRemove, onEdit }) => {
         </Dropdown>
       }
     >
-      <Space direction="vertical" size={14} style={{ width: "100%" }}>
-        <Row justify={"space-between"}>
+      <Space className={styles.info} direction="vertical" size={14}>
+        <Row className={styles.item} justify={"space-between"}>
           <Col className={styles.label}>{t("common:words.created_at")}</Col>
-          <Col>{accessList.createdAt}</Col>
+          <Col className={styles.value}>{formatTime(accessList.createdAt)}</Col>
         </Row>
-        <Row justify={"space-between"}>
+        <Row className={styles.item} justify={"space-between"}>
           <Col className={styles.label}>{t("common:words.updated_at")}</Col>
-          <Col>{accessList.updatedAt}</Col>
+          <Col className={styles.value}>{formatTime(accessList.updatedAt)}</Col>
         </Row>
         <Collapse ghost style={{ padding: 0 }} expandIcon={() => null}>
           <Collapse.Panel

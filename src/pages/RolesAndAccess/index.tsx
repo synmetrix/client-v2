@@ -1,4 +1,4 @@
-import { Space, Spin } from "antd";
+import { Col, Row, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 
 import Modal from "@/components/Modal";
@@ -77,14 +77,18 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
             action={t("settings:roles_and_access.create_role")}
             onClick={onOpen}
           />
-          {accessLists.map((a) => (
-            <RoleCard
-              key={a.id}
-              accessList={a}
-              onEdit={onEdit}
-              onRemove={onRemove}
-            />
-          ))}
+          <Row className={styles.body} justify={"start"} gutter={[32, 32]}>
+            {accessLists.map((a) => (
+              <Col xs={24} sm={12} xl={8} key={a.id}>
+                <RoleCard
+                  key={a.id}
+                  accessList={a}
+                  onEdit={onEdit}
+                  onRemove={onRemove}
+                />
+              </Col>
+            ))}
+          </Row>
         </Space>
       </Spin>
 

@@ -36,7 +36,7 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
   return (
     <div>
       <Card
-        style={{ width: 260, position: "static" }}
+        style={{ position: "static" }}
         bodyStyle={{ padding: 16 }}
         headStyle={{ padding: 16 }}
         title={

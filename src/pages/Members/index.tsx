@@ -1,4 +1,4 @@
-import { Space, message } from "antd";
+import { Col, Row, Space, message } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type { Invite } from "@/components/MembersForm";
@@ -69,16 +69,20 @@ export const Members: React.FC<MembersProps> = ({
           action={t("settings:members.action")}
           onClick={() => setIsOpen(true)}
         />
+
         <div className={styles.body}>
-          {members.map((m) => (
-            <MemberCard
-              key={m.id}
-              member={m}
-              onDelete={onRemove}
-              currentRole={currentRole}
-              onEdit={(member) => setSelectedMember(member)}
-            />
-          ))}
+          <Row justify={"start"} gutter={[32, 32]}>
+            {members.map((m) => (
+              <Col xs={24} sm={12} xl={8} key={m.id}>
+                <MemberCard
+                  member={m}
+                  onDelete={onRemove}
+                  currentRole={currentRole}
+                  onEdit={(member) => setSelectedMember(member)}
+                />
+              </Col>
+            ))}
+          </Row>
         </div>
       </Space>
 

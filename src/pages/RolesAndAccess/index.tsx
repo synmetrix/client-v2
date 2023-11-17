@@ -1,10 +1,10 @@
 import { Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 
-import AccessTable from "@/components/AccessTable";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import RoleForm from "@/components/RoleForm";
+import RoleCard from "@/components/RoleCard";
 import type { AllAccessListsQuery, Datasources } from "@/graphql/generated";
 import {
   useAllAccessListsQuery,
@@ -77,11 +77,14 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
             action={t("settings:roles_and_access.create_role")}
             onClick={onOpen}
           />
-          <AccessTable
-            accessLists={accessLists}
-            onRemove={onRemove}
-            onEdit={onEdit}
-          />
+          {accessLists.map((a) => (
+            <RoleCard
+              key={a.id}
+              accessList={a}
+              onEdit={onEdit}
+              onRemove={onRemove}
+            />
+          ))}
         </Space>
       </Spin>
 

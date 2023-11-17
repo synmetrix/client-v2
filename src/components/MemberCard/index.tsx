@@ -1,19 +1,13 @@
-import { Card, Select, Space } from "antd";
+import { Card, Dropdown, Space } from "antd";
 import { useTranslation } from "react-i18next";
+import { SettingOutlined } from "@ant-design/icons";
 
 import Avatar from "@/components/Avatar";
-import Button from "@/components/Button";
 import formatTime from "@/utils/helpers/formatTime";
-import {
-  Roles,
-  type AccessList,
-  type Member,
-  ChangeableRoles,
-} from "@/types/team";
-import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
+import ConfirmModal from "@/components/ConfirmModal";
+import { Roles } from "@/types/team";
+import type { Member } from "@/types/team";
 import { capitalize } from "@/utils/helpers/capitalize";
-
-import TrashIcon from "@/assets/trash.svg";
 
 import styles from "./index.module.less";
 
@@ -21,35 +15,22 @@ import type { FC } from "react";
 
 interface MemberCardProps {
   member: Member;
-  accessLists: AccessList[];
-  onAccessListChange: (id: string, accessListId: string | null) => void;
   onDelete: (member: Member) => void;
-  onRoleChange: (id: string, newRole: ChangeableRoles) => void;
+  onEdit: (member: Member) => void;
   currentRole?: Roles;
 }
 
 const MemberCard: FC<MemberCardProps> = ({
   member,
-  accessLists,
-  onAccessListChange,
   onDelete,
   currentRole,
-  onRoleChange,
+  onEdit,
 }) => {
-  const {
-    displayName,
-    email,
-    avatarUrl,
-    createdAt,
-    updatedAt,
-    role,
-
-    accessList,
-  } = member;
+  const { displayName, email, avatarUrl, createdAt, updatedAt, role } = member;
   const hasPermission =
-    role.name !== Roles.owner ||
-    (currentRole === Roles.admin && role.name !== Roles.owner);
-
+    currentRole === Roles.owner ||
+    (currentRole === Roles.admin && member.role.name === Roles.member) ||
+    member.role.name !== ("member" as unknown as Roles);
   const { t } = useTranslation(["settings", "common"]);
 
   return (
@@ -64,11 +45,33 @@ const MemberCard: FC<MemberCardProps> = ({
         </Space>
       }
       extra={
-        <Button
-          onClick={() => onDelete(member)}
-          icon={<TrashIcon />}
-          type="text"
-        />
+        hasPermission && (
+          <Dropdown
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => onEdit(member),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_member")}
+                      onConfirm={() => onDelete(member)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+              ],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        )
       }
     >
       <ul>
@@ -78,50 +81,11 @@ const MemberCard: FC<MemberCardProps> = ({
         </li>
         <li className={styles.item}>
           <span className={styles.label}>{t("common:words.role")}</span>
-          <span>
-            {role.name === Roles.admin ? (
-              <Select
-                className={styles.select}
-                onChange={(value) =>
-                  onRoleChange(role.id, value as unknown as ChangeableRoles)
-                }
-                bordered={false}
-                value={role.name}
-                options={createRoleOptions(ChangeableRoles)}
-              />
-            ) : (
-              capitalize(role.name)
-            )}
-          </span>
+          <span>{capitalize(role.name)}</span>
         </li>
         <li className={styles.item}>
           <span className={styles.label}>{t("common:words.access_list")}</span>
-          {!hasPermission ? (
-            <Select
-              className={styles.select}
-              onChange={(accessListId) => {
-                onAccessListChange(role.id, accessListId);
-              }}
-              bordered={false}
-              disabled={!accessLists?.length}
-              value={
-                accessList?.id ||
-                `* ${t("common:words.full_access").toUpperCase()} *`
-              }
-              options={[
-                {
-                  value: null,
-                  label: t("common:words.full_access").toUpperCase(),
-                },
-                ...(accessLists || []).map((al) => ({
-                  value: al.id,
-                  label: capitalize(al.name),
-                })),
-              ]}
-            />
-          ) : (
-            capitalize(role.name)
-          )}
+          {capitalize(role.name)}
         </li>
         {createdAt && (
           <li className={styles.item}>

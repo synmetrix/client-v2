@@ -6,6 +6,7 @@ import MembersForm from "@/components/MembersForm";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import MemberCard from "@/components/MemberCard";
+import MemberEditor from "@/components/MemberEditor";
 import type {
   AllAccessListsQuery,
   Members as MembersType,
@@ -52,6 +53,7 @@ export const Members: React.FC<MembersProps> = ({
   const { t } = useTranslation(["settings", "pages"]);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 
   const onSubmit = (data: Invite) => {
     setIsOpen(false);
@@ -72,11 +74,9 @@ export const Members: React.FC<MembersProps> = ({
             <MemberCard
               key={m.id}
               member={m}
-              accessLists={accessLists}
-              onAccessListChange={onAccessListChange}
               onDelete={onRemove}
               currentRole={currentRole}
-              onRoleChange={onRoleChange}
+              onEdit={(member) => setSelectedMember(member)}
             />
           ))}
         </div>
@@ -84,6 +84,20 @@ export const Members: React.FC<MembersProps> = ({
 
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
         <MembersForm onSubmit={onSubmit} />
+      </Modal>
+
+      <Modal
+        open={!!selectedMember}
+        closable
+        onClose={() => setSelectedMember(null)}
+      >
+        <MemberEditor
+          member={selectedMember}
+          accessLists={accessLists}
+          onRoleChange={onRoleChange}
+          onAccessListChange={onAccessListChange}
+          currentRole={currentRole}
+        />
       </Modal>
     </>
   );

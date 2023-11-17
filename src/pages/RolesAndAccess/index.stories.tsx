@@ -18,7 +18,7 @@ const Template: StoryFn<typeof RolesAndAccess> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  access: [
+  accessLists: [
     {
       id: "1",
       name: "Team manager",
@@ -27,11 +27,11 @@ Default.args = {
       updatedAt: "10 days ago",
       dataSources: [
         {
-          url: "gh-api.clickhouse.tech1",
+          name: "gh-api.clickhouse.tech1",
           type: "full",
         },
         {
-          url: "gh-api.clickhouse.tech2",
+          name: "gh-api.clickhouse.tech2",
           type: "partial",
         },
       ],
@@ -44,10 +44,11 @@ Default.args = {
       updatedAt: "10 days ago",
       dataSources: [
         {
-          url: "gh-api.clickhouse.tech2",
+          name: "gh-api.clickhouse.tech2",
           type: "partial",
         },
       ],
     },
   ],
+  loading: false,
 };

@@ -1,5 +1,5 @@
-import { Button, Card, Col, Collapse, Dropdown, Row, Space } from "antd";
-import { ArrowRightOutlined, SettingOutlined } from "@ant-design/icons";
+import { Card, Col, Dropdown, Row, Space } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 import { AccessTypeWrapper } from "@/components/AccessType";
@@ -64,31 +64,21 @@ const RoleCard: FC<RoleCardProps> = ({ accessList, onRemove, onEdit }) => {
           <Col className={styles.label}>{t("common:words.updated_at")}</Col>
           <Col className={styles.value}>{formatTime(accessList.updatedAt)}</Col>
         </Row>
-        <Collapse ghost style={{ padding: 0 }} expandIcon={() => null}>
-          <Collapse.Panel
-            className={styles.panel}
-            header={
-              <Button type="default" block icon={<ArrowRightOutlined />}>
-                {accessList.count} {t("common:words.data_sources")}
-              </Button>
-            }
-            key={"1"}
-          >
-            {accessList.dataSources.map((d) => {
-              const permissions =
-                accessList?.config?.datasources?.[d.id]?.cubes;
-              return (
-                <Space key={d.id} size={29}>
-                  <span>{d.name}</span>
-                  <AccessTypeWrapper
-                    dataSourceId={d.id}
-                    permissions={permissions}
-                  />
-                </Space>
-              );
-            })}
-          </Collapse.Panel>
-        </Collapse>
+        {accessList.dataSources.map((d) => {
+          const permissions: any =
+            accessList?.config?.datasources?.[d.id]?.cubes;
+          return (
+            <Row className={styles.item} justify={"space-between"} key={d.id}>
+              <Col className={styles.label}>{d.name}</Col>
+              <Col>
+                <AccessTypeWrapper
+                  dataSourceId={d.id}
+                  permissions={permissions}
+                />
+              </Col>
+            </Row>
+          );
+        })}
       </Space>
     </Card>
   );

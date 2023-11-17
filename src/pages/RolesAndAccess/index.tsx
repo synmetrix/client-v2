@@ -1,4 +1,5 @@
-import { Col, Row, Space, Spin } from "antd";
+import { Space, Spin } from "antd";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useTranslation } from "react-i18next";
 
 import Modal from "@/components/Modal";
@@ -46,6 +47,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   dataSourceAccess,
   onFinish = () => {},
 }) => {
+  console.log(accessLists);
   const { t } = useTranslation(["settings", "pages"]);
   const [, setLocation] = useLocation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -77,18 +79,27 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
             action={t("settings:roles_and_access.create_role")}
             onClick={onOpen}
           />
-          <Row className={styles.body} justify={"start"} gutter={[32, 32]}>
-            {accessLists.map((a) => (
-              <Col xs={24} sm={12} xl={8} key={a.id}>
-                <RoleCard
-                  key={a.id}
-                  accessList={a}
-                  onEdit={onEdit}
-                  onRemove={onRemove}
-                />
-              </Col>
-            ))}
-          </Row>
+          <div className={styles.body}>
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 3 }}
+            >
+              <Masonry gutter="32px">
+                {accessLists
+                  .concat(accessLists)
+                  .concat(accessLists)
+                  .concat(accessLists)
+                  .concat(accessLists)
+                  .map((a) => (
+                    <RoleCard
+                      key={a.id}
+                      accessList={a}
+                      onEdit={onEdit}
+                      onRemove={onRemove}
+                    />
+                  ))}
+              </Masonry>
+            </ResponsiveMasonry>
+          </div>
         </Space>
       </Spin>
 

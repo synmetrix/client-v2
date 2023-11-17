@@ -4,6 +4,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import { Suspense } from "react";
 
 import Button from "@/components/Button";
+import useLocation from "@/hooks/useLocation";
 
 import type { FC, PropsWithChildren } from "react";
 
@@ -13,6 +14,13 @@ const BurgerMenu: FC<PropsWithChildren> = ({ children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const windowSize = useResponsive();
   const isMobile = windowSize.sm === false;
+
+  const [location] = useLocation();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
   return (
     <>
       <Button onClick={() => setIsOpen(true)}>
@@ -25,7 +33,9 @@ const BurgerMenu: FC<PropsWithChildren> = ({ children }) => {
         onClose={() => setIsOpen(false)}
         style={{ background: "#f9f9f9" }}
       >
-        <Suspense>{children}</Suspense>
+        <Suspense>
+          <div>{children}</div>
+        </Suspense>
       </Drawer>
     </>
   );

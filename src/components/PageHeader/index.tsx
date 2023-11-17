@@ -14,6 +14,7 @@ interface PageHeaderProps {
   actionProps?: ButtonProps;
   onClick?: () => void;
   href?: string;
+  target?: string;
 }
 
 const { Title } = Typography;
@@ -23,6 +24,7 @@ const PageHeader: FC<PageHeaderProps> = ({
   action,
   onClick,
   href,
+  target,
   actionProps,
 }) => {
   return (
@@ -40,6 +42,7 @@ const PageHeader: FC<PageHeaderProps> = ({
               !actionProps?.type && styles.action,
               actionProps?.className
             )}
+            target={target}
             href={href}
             onClick={onClick}
           >

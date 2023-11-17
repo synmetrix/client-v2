@@ -7,4 +7,8 @@ export default {
   //   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value),
   password: (value: string): boolean => /^(.+){6,}$/.test(value),
   cronExp: (value: string): boolean => cron(value).isValid(),
+  url: (value: string): boolean =>
+    /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(
+      value
+    ),
 };

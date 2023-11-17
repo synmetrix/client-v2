@@ -21,8 +21,8 @@ import type { CubeMember } from "@/types/cube";
 import type { ExplorationState } from "@/types/exploration";
 
 import CSVIcon from "@/assets/csv.svg";
-import AlertIcon from "@/assets/alert.svg";
-import ReportIcon from "@/assets/report.svg";
+import AlertIcon from "@/assets/alert-logs.svg";
+import ReportIcon from "@/assets/report-logs.svg";
 
 import s from "./index.module.less";
 
@@ -38,6 +38,7 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   height?: number;
   onToggleSection: (section: string) => void;
   onSectionChange: (radioEvent: RadioChangeEvent) => void;
+  onOpenModal: (type: string) => void;
   onExec: any;
   onQueryChange: (query: string, ...args: any) => void | SortUpdater;
   disabled: boolean;
@@ -63,6 +64,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     height,
     onToggleSection = () => {},
     onSectionChange = () => {},
+    onOpenModal = () => {},
     onExec = () => {},
     onQueryChange = () => {},
     state: workspaceState,
@@ -77,49 +79,14 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     rowHeight,
     disabled,
     loading = false,
+    explorationRowId,
     ...restProps
   } = props;
-
   const { t } = useTranslation(["explore", "common"]);
 
   const [currState, updateState] = useSetState({
     section: workspaceState?.dataSection || "sql",
   });
-
-  const popoverItems = [
-    {
-      key: "alert",
-      label: (
-        <Space className={s.popoverItem} align="center">
-          <AlertIcon />
-          <div>
-            <Button className={s.popoverLink} type="link">
-              {t("data_section.create_alert")}
-            </Button>
-            <Button className={cn(s.popoverLink, s.guideLink)} type="link">
-              {t("data_section.how_to_create_alert")}
-            </Button>
-          </div>
-        </Space>
-      ),
-    },
-    {
-      key: "report",
-      label: (
-        <Space className={s.popoverItem} align="center">
-          <ReportIcon />
-          <div className={s.popoverBtns}>
-            <Button className={s.popoverLink} type="link">
-              {t("data_section.create_report")}
-            </Button>
-            <Button className={cn(s.popoverLink, s.guideLink)} type="link">
-              {t("data_section.how_to_create_report")}
-            </Button>
-          </div>
-        </Space>
-      ),
-    },
-  ];
 
   const formConfig = {
     rows: {
@@ -384,7 +351,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
               )}
             </div>
 
-            <div>
+            <Space>
               <CSVLink data={rows} filename={`exploration-${genName(5)}.csv`}>
                 <Button className={s.csvBtn}>
                   <div className={s.csvText}>
@@ -394,13 +361,25 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 </Button>
               </CSVLink>
 
-              <PopoverButton
-                popoverType="dropdown"
-                actionText={`+ ${t("data_section.new")}`}
-                buttonProps={{ type: "primary", size: "middle" }}
-                menu={{ items: popoverItems }}
-              />
-            </div>
+              <Button
+                icon={<AlertIcon />}
+                className={s.alertButton}
+                type="primary"
+                onClick={() => onOpenModal("alert")}
+                disabled={!explorationRowId}
+              >
+                {t("data_section.create_alert")}
+              </Button>
+              <Button
+                icon={<ReportIcon />}
+                className={s.alertButton}
+                type="primary"
+                onClick={() => onOpenModal("report")}
+                disabled={!explorationRowId}
+              >
+                {t("data_section.create_report")}
+              </Button>
+            </Space>
           </div>
         }
         key="dataSec"

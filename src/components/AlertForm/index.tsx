@@ -1,13 +1,4 @@
-import {
-  Col,
-  Collapse,
-  Form,
-  Row,
-  Space,
-  Typography,
-  Table,
-  Alert,
-} from "antd";
+import { Col, Collapse, Form, Row, Space, Table, Alert, Popover } from "antd";
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
@@ -24,6 +15,7 @@ import validate from "@/utils/validations";
 import { QUERY_COLORS } from "@/utils/constants/colors";
 import type { QueryState } from "@/types/queryState";
 import type { AlertFormType, AlertType } from "@/types/alert";
+import { WEBHOOK_PLACEHOLDER } from "@/utils/constants/links";
 
 import InfoIcon from "@/assets/info.svg";
 import SendIcon from "@/assets/send.svg";
@@ -33,13 +25,13 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 import type { TableProps } from "antd";
 
-const { Title } = Typography;
 const { Panel } = Collapse;
 
 interface AlertFormProps {
   query: QueryState;
   onSubmit: (data: AlertFormType) => void;
   onTest: (data: AlertFormType) => void;
+  onChangeStep?: (step: number) => void;
   type?: AlertType;
   initialValue?: AlertFormType;
   isSendTestLoading?: boolean;
@@ -50,6 +42,7 @@ const AlertForm: FC<AlertFormProps> = ({
   query,
   initialValue,
   onSubmit,
+  onChangeStep,
   onTest,
   isSendTestLoading,
 }) => {
@@ -57,9 +50,14 @@ const AlertForm: FC<AlertFormProps> = ({
     t,
     i18n: { language: locale },
   } = useTranslation(["alerts", "common"]);
-  const { control, handleSubmit, getValues, watch } = useForm<AlertFormType>({
+  const [step, setStep] = useState(0);
+  const { control, handleSubmit, watch } = useForm<AlertFormType>({
     values: initialValue,
   });
+
+  useEffect(() => {
+    if (type) setStep(1);
+  }, [type]);
 
   const schedule = watch("schedule");
 
@@ -91,10 +89,14 @@ const AlertForm: FC<AlertFormProps> = ({
             ".",
             ":"
           )}.lowerBound`}
+          placeholder="0"
+          rules={{
+            validate: (val: number) => !isNaN(val),
+          }}
           defaultValue={
             initialValue?.triggerConfig?.measures?.[
               record.name.replace(".", ":")
-            ]?.lowerBound
+            ]?.lowerBound || 0
           }
         />
       ),
@@ -109,10 +111,14 @@ const AlertForm: FC<AlertFormProps> = ({
             ".",
             ":"
           )}.upperBound`}
+          placeholder="100"
+          rules={{
+            validate: (val: number) => !isNaN(val),
+          }}
           defaultValue={
             initialValue?.triggerConfig?.measures?.[
               record.name.replace(".", ":")
-            ]?.upperBound
+            ]?.upperBound || 100
           }
         />
       ),
@@ -121,10 +127,6 @@ const AlertForm: FC<AlertFormProps> = ({
 
   return (
     <Form className={styles.space} layout="vertical" id="alert-form">
-      <Title className={styles.title} level={3}>
-        {initialValue ? t("edit_alert") : t("new_alert")}
-      </Title>
-
       {!initialValue && (
         <div className={styles.header}>
           <StepFormHeader
@@ -134,7 +136,8 @@ const AlertForm: FC<AlertFormProps> = ({
               t("common:words.new"),
               capitalize(type),
             ]}
-            currentStep={0}
+            onChange={onChangeStep}
+            currentStep={step}
           />
         </div>
       )}
@@ -143,9 +146,11 @@ const AlertForm: FC<AlertFormProps> = ({
         <Row gutter={[16, 16]}>
           <Col span={24} md={12}>
             <Input
+              rules={{ required: true }}
               label={t("form.alert_name")}
               control={control}
               name="name"
+              placeholder={t("common:form.placeholders.name")}
               defaultValue={initialValue?.name}
             />
           </Col>
@@ -183,11 +188,24 @@ const AlertForm: FC<AlertFormProps> = ({
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>{t("delivery_settings")}</span>
               <Input
-                rules={{ required: true }}
                 starPosition="left"
                 starColor="#A31BCB"
                 label={`${capitalize(type)}:`}
                 control={control}
+                rules={{
+                  required: true,
+                  validate:
+                    type === "EMAIL"
+                      ? (v: string) =>
+                          validate.email(v) || t("common:form.errors.email")
+                      : (v: string) =>
+                          validate.url(v) || t("common:form.errors.url"),
+                }}
+                placeholder={
+                  type === "EMAIL"
+                    ? t("common:form.placeholders.email")
+                    : WEBHOOK_PLACEHOLDER
+                }
                 name={
                   type === "EMAIL"
                     ? "deliveryConfig.address"
@@ -225,8 +243,13 @@ const AlertForm: FC<AlertFormProps> = ({
                 }
                 control={control}
                 name="schedule"
-                defaultValue={initialValue?.schedule}
-                suffix={<InfoIcon />}
+                placeholder="* * * * *"
+                defaultValue={initialValue?.schedule || "* * * * *"}
+                suffix={
+                  <Popover content={t("common:words.in_utc_timezone")}>
+                    <InfoIcon />
+                  </Popover>
+                }
               />
             </Space>
           </Col>
@@ -253,7 +276,10 @@ const AlertForm: FC<AlertFormProps> = ({
             <Row gutter={[16, 16]}>
               <Col span={24} md={12}>
                 <Input
-                  rules={{ required: true }}
+                  rules={{
+                    required: true,
+                    validate: (val: number) => !isNaN(val) && val >= 0,
+                  }}
                   starPosition="left"
                   starColor="#A31BCB"
                   className={styles.input}
@@ -261,12 +287,17 @@ const AlertForm: FC<AlertFormProps> = ({
                   control={control}
                   name="triggerConfig.requestTimeout"
                   fieldType="number"
+                  placeholder="0"
+                  defaultValue={0}
                 />
               </Col>
 
               <Col span={24} md={12}>
                 <Input
-                  rules={{ required: true }}
+                  rules={{
+                    required: true,
+                    validate: (val: number) => !isNaN(val) && val >= 0,
+                  }}
                   starPosition="left"
                   starColor="#A31BCB"
                   className={styles.input}
@@ -274,6 +305,8 @@ const AlertForm: FC<AlertFormProps> = ({
                   control={control}
                   name="triggerConfig.timeoutOnFire"
                   fieldType="number"
+                  placeholder="0"
+                  defaultValue={0}
                 />
               </Col>
             </Row>
@@ -295,7 +328,7 @@ const AlertForm: FC<AlertFormProps> = ({
               <Col>
                 <Button
                   className={styles.sendTest}
-                  onClick={() => onTest(getValues())}
+                  onClick={handleSubmit(onTest)}
                   loading={isSendTestLoading}
                   disabled={isSendTestLoading}
                 >

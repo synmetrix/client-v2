@@ -1,13 +1,11 @@
 import { Col, Row, Space, message } from "antd";
 import { useTranslation } from "react-i18next";
-import { useResponsive } from "ahooks";
 
 import type { Invite } from "@/components/MembersForm";
 import MembersForm from "@/components/MembersForm";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import MemberCard from "@/components/MemberCard";
-import MemberEditor from "@/components/MemberEditor";
 import type {
   AllAccessListsQuery,
   Members as MembersType,
@@ -52,10 +50,8 @@ export const Members: React.FC<MembersProps> = ({
   onAccessListChange = () => {},
 }) => {
   const { t } = useTranslation(["settings", "pages"]);
-  const responsive = useResponsive();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 
   const onSubmit = (data: Invite) => {
     setIsOpen(false);
@@ -77,10 +73,12 @@ export const Members: React.FC<MembersProps> = ({
             {members.map((m) => (
               <Col xs={24} sm={12} xl={8} key={m.id}>
                 <MemberCard
+                  accessLists={accessLists}
+                  onAccessListChange={onAccessListChange}
+                  onRoleChange={onRoleChange}
                   member={m}
                   onDelete={onRemove}
                   currentRole={currentRole}
-                  onEdit={(member) => setSelectedMember(member)}
                 />
               </Col>
             ))}
@@ -90,20 +88,6 @@ export const Members: React.FC<MembersProps> = ({
 
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
         <MembersForm onSubmit={onSubmit} />
-      </Modal>
-
-      <Modal
-        open={!!selectedMember}
-        closable
-        onClose={() => setSelectedMember(null)}
-      >
-        <MemberEditor
-          member={selectedMember}
-          accessLists={accessLists}
-          onRoleChange={onRoleChange}
-          onAccessListChange={onAccessListChange}
-          currentRole={currentRole}
-        />
       </Modal>
     </>
   );

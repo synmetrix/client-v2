@@ -52,6 +52,7 @@
   },
   "sql_api": {
     "title": "Manage SQL API Credentials",
+    "title_mobile": "Manage Credentials",
     "action": "Create now",
     "not_found": {
       "title": "You have no SQL API credentials",

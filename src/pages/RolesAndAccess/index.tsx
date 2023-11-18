@@ -47,7 +47,6 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   dataSourceAccess,
   onFinish = () => {},
 }) => {
-  console.log(accessLists);
   const { t } = useTranslation(["settings", "pages"]);
   const [, setLocation] = useLocation();
   const [isOpen, setIsOpen] = useState<boolean>(false);

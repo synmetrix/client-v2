@@ -1,5 +1,4 @@
 import { Col, Row, Space, Spin, message } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
@@ -30,6 +29,8 @@ import type { ApiSetupForm, DataSourceInfo } from "@/types/dataSource";
 import type { Member } from "@/types/team";
 import formatTime from "@/utils/helpers/formatTime";
 import genName from "@/utils/helpers/genName";
+
+import CickHouseIcon from "@/assets/databases/click-house.svg";
 
 import styles from "./index.module.less";
 
@@ -90,27 +91,34 @@ export const SqlApi = ({
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
-            title={t("settings:sql_api.title")}
-            action={action && !responsive.sm ? <PlusCircleOutlined /> : action}
+            title={
+              !responsive.sm
+                ? t("settings:sql_api.title_mobile")
+                : t("settings:sql_api.title")
+            }
+            action={action}
             actionProps={{
-              type: !responsive.sm ? "ghost" : "primary",
+              type: "primary",
               size: "large",
             }}
             onClick={onOpen}
           />
           <div className={styles.body}>
             {!!credentials?.length ? (
-              <Row>
-                {credentials.map((c) => (
-                  <Col xs={24} sm={12} xl={8} key={c.id}>
-                    <DataSourceCard
-                      dataSource={{ ...c, ...c.dataSourceData }}
-                      onEdit={onEdit}
-                      onDelete={onRemove}
-                      withGeneration={false}
-                    />
-                  </Col>
-                ))}
+              <Row gutter={[32, 32]}>
+                {credentials
+                  .concat(credentials)
+                  .concat(credentials)
+                  .map((c) => (
+                    <Col xs={24} sm={12} xl={8} key={c.id}>
+                      <DataSourceCard
+                        dataSource={{ ...c, ...c.dataSourceData }}
+                        onEdit={onEdit}
+                        onDelete={onRemove}
+                        withGeneration={false}
+                      />
+                    </Col>
+                  ))}
               </Row>
             ) : (
               <NoCredentials

@@ -49,7 +49,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       ) : (
         <SideMenu />
       )}
-      <Layout>
+      <Layout className={styles.content}>
         <Header
           title={title}
           bordered={divider}

@@ -11,8 +11,6 @@ import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-const { Sider } = Layout;
-
 interface SideMenuProps {}
 
 const SideMenu: FC<SideMenuProps> = () => {

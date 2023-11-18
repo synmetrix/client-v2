@@ -35,10 +35,11 @@ const MemberCard: FC<MemberCardProps> = ({
 }) => {
   const { displayName, email, avatarUrl, createdAt, updatedAt, role } = member;
   const hasRoleChangePermission =
-    currentRole === Roles.owner ||
-    (currentRole === Roles.admin && member?.role.name === Roles.member);
-
+    member?.role.name !== Roles.owner &&
+    (currentRole === Roles.owner ||
+      (currentRole === Roles.admin && member?.role.name === Roles.member));
   const hasAccessChangePermission =
+    member?.role.name !== Roles.owner &&
     member?.role.name !== ("member" as unknown as Roles);
 
   const hasDeletePermission = hasRoleChangePermission;

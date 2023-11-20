@@ -1,10 +1,10 @@
-import { Space, message } from "antd";
+import { Col, Row, Space, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
 import ReportModal from "@/components/ReportModal";
-import AlertsTable from "@/components/AlertsTable";
+import AlertCard from "@/components/AlertCard";
 import type { Alert } from "@/types/alert";
 import type { Report, ReportFormType } from "@/types/report";
 import type { QueryState } from "@/types/queryState";
@@ -128,7 +128,13 @@ const Reports: React.FC<ReportsProps> = ({
           href={DOCS_CREATE_REPORT_LINK}
         />
         <div className={styles.body}>
-          <AlertsTable alerts={reports} onEdit={onEdit} onRemove={onDelete} />
+          <Row justify={"start"} gutter={[32, 32]}>
+            {reports.map((a) => (
+              <Col xs={24} sm={12} xl={8} key={a.id}>
+                <AlertCard alert={a} onEdit={onEdit} onRemove={onDelete} />
+              </Col>
+            ))}
+          </Row>
         </div>
       </Space>
 

@@ -22,10 +22,10 @@ interface AlertModalProps {
   loading: boolean;
   params?: Params;
   onClose: () => void;
-  onChangeStep: (step: number) => void;
   onSendTest: (values: AlertFormType) => void;
   onSubmit: (values: AlertFormType) => void;
-  onSelectDelivery: (type: string) => void;
+  onSelectDelivery?: (type: string) => void;
+  onChangeStep?: (step: number) => void;
 }
 
 const AlertModal: React.FC<AlertModalProps> = ({
@@ -74,7 +74,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
       ) : (
         <AlertTypeSelection
           options={alertTypes}
-          onSubmit={(v) => onSelectDelivery(v.value)}
+          onSubmit={(v) => onSelectDelivery?.(v.value)}
         />
       )}
     </Modal>

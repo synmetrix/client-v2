@@ -1,13 +1,13 @@
-import { Space, message } from "antd";
+import { Col, Row, Space, message } from "antd";
 import { useTranslation } from "react-i18next";
 import { useParams } from "@vitjs/runtime";
 
 import PageHeader from "@/components/PageHeader";
-import AlertsTable from "@/components/AlertsTable";
 import AlertModal from "@/components/AlertModal";
 import type { Alert, AlertFormType } from "@/types/alert";
 import type { QueryState } from "@/types/queryState";
 import AppLayout from "@/layouts/AppLayout";
+import AlertCard from "@/components/AlertCard";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
 import useAppSettings from "@/hooks/useAppSettings";
@@ -127,7 +127,13 @@ const Alerts: React.FC<AlertsProps> = ({
           href={DOCS_CREATE_ALERT_LINK}
         />
         <div className={styles.body}>
-          <AlertsTable alerts={alerts} onEdit={onEdit} onRemove={onDelete} />
+          <Row justify={"start"} gutter={[32, 32]}>
+            {alerts.map((a) => (
+              <Col xs={24} sm={12} xl={8} key={a.id}>
+                <AlertCard alert={a} onEdit={onEdit} onRemove={onDelete} />
+              </Col>
+            ))}
+          </Row>
         </div>
       </Space>
 

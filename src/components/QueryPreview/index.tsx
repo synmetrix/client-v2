@@ -106,7 +106,7 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
       >
         <Space className={styles.collapseInner} direction="vertical" size={10}>
           {(isShown(dimensions) || isShown(timeDimensions)) && (
-            <Space size={9}>
+            <Space size={9} wrap>
               <span className={styles.tagLabel}>{t("common:words.by")}</span>
               <QueryTags
                 content={dimensions}
@@ -121,14 +121,14 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
             </Space>
           )}
           {isShown(segments) && (
-            <Space size={9}>
+            <Space size={9} wrap>
               <span className={styles.tagLabel}>{t("common:words.in")}</span>
               <QueryTags content={segments} type="segment" wrap={wrapTags} />
             </Space>
           )}
 
           {isShown(order) && (
-            <Space size={9}>
+            <Space size={9} wrap>
               <span className={styles.tagLabel}>
                 {t("common:words.ordered_by")}
               </span>

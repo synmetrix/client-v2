@@ -114,14 +114,16 @@ const AlertCard: FC<AlertCardProps> = ({ alert, onEdit, onRemove }) => {
             <span className={styles.value}>{formatTime(alert.createdAt)}</span>
           </li>
 
-          <li className={styles.listItem}>
-            <div className={styles.label}>{t("common:words.created_at")}</div>
-            <span className={styles.value}>
-              <StatusBadge status={alert.status}>
-                {alert.lastActivity}
-              </StatusBadge>
-            </span>
-          </li>
+          {alert.status && (
+            <li className={styles.listItem}>
+              <div className={styles.label}>{t("common:words.status")}</div>
+              <span className={styles.value}>
+                <StatusBadge status={alert.status}>
+                  {alert.lastActivity}
+                </StatusBadge>
+              </span>
+            </li>
+          )}
         </ul>
       </Card>
     </div>

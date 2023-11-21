@@ -54,7 +54,15 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         </Col>
         <Col span={8} md={12}>
-          <div className={cx(styles.col, styles.colRight)}>{content}</div>
+          <div
+            className={cx(
+              styles.col,
+              styles.colRight,
+              isMobile && styles.colRightMobile
+            )}
+          >
+            {content}
+          </div>
         </Col>
       </Row>
     </BasicHeader>

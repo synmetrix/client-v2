@@ -43,6 +43,7 @@ const PageHeader: FC<PageHeaderProps> = ({
         {action && (
           <Button
             {...actionProps}
+            block
             className={cn(
               !actionProps?.type && styles.action,
               actionProps?.className

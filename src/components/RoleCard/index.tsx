@@ -65,8 +65,7 @@ const RoleCard: FC<RoleCardProps> = ({ accessList, onRemove, onEdit }) => {
           <Col className={styles.value}>{formatTime(accessList.updatedAt)}</Col>
         </Row>
         {accessList.dataSources.map((d) => {
-          const permissions: any =
-            accessList?.config?.datasources?.[d.id]?.cubes;
+          const permissions = accessList?.config?.datasources?.[d.id]?.cubes;
           return (
             <Row className={styles.item} justify={"space-between"} key={d.id}>
               <Col className={styles.label}>{d.name}</Col>

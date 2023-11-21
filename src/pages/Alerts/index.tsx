@@ -1,5 +1,6 @@
 import { Col, Row, Space, message } from "antd";
 import { useTranslation } from "react-i18next";
+import { useResponsive } from "ahooks";
 import { useParams } from "@vitjs/runtime";
 
 import PageHeader from "@/components/PageHeader";
@@ -30,6 +31,7 @@ const Alerts: React.FC<AlertsProps> = ({
   query: initialQuery,
 }) => {
   const { t } = useTranslation(["alerts", "pages"]);
+  const responsive = useResponsive();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const basePath = withAuthPrefix("/alerts");
@@ -111,13 +113,13 @@ const Alerts: React.FC<AlertsProps> = ({
     <AppLayout divider title={t("pages:alerts")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
-          title={t("list_and_manage_your_alerts")}
+          title={!responsive.sm ? t("title_mobile") : t("title")}
           action={
-            <Space size={10} align="start">
+            <Space size={!responsive.sm ? 5 : 10} align="start">
               <span className={styles.actionIcon}>
                 <DocsIcon />
               </span>
-              {t("how_to_create_alert")}
+              {!responsive.sm ? t("action_mobile") : t("action")}
             </Space>
           }
           actionProps={{

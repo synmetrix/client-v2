@@ -30,8 +30,6 @@ import type { Member } from "@/types/team";
 import formatTime from "@/utils/helpers/formatTime";
 import genName from "@/utils/helpers/genName";
 
-import CickHouseIcon from "@/assets/databases/click-house.svg";
-
 import styles from "./index.module.less";
 
 interface SqlApiProps {

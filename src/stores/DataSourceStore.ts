@@ -18,7 +18,6 @@ export interface FormState {
 }
 
 export interface DataSourceData {
-  editId: string | null;
   step: number;
   isOnboarding: boolean;
   formState: FormState;
@@ -49,7 +48,6 @@ export const defaultFormState = {
 };
 
 const defaultState = {
-  editId: null,
   step: 0,
   isOnboarding: false,
   formState: defaultFormState,
@@ -61,7 +59,7 @@ const defaultState = {
 
 const dataSourceStore = create<DataSourceState>()(
   persist(
-    immer((set, _get) => ({
+    immer((set) => ({
       ...defaultState,
       setError: (error: string) =>
         set((prev) => ({ ...prev, error, message: null })),

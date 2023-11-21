@@ -1,5 +1,6 @@
 import { Col, Row, Space, Spin } from "antd";
 import { useEffect, useMemo } from "react";
+import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 
 import DataSourceCard from "@/components/DataSourceCard";
@@ -21,6 +22,7 @@ import {
   Branch_Statuses_Enum,
   useUpdateDataSourceMutation,
 } from "@/graphql/generated";
+import useAppSettings from "@/hooks/useAppSettings";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
 import { prepareInitValues } from "@/pages/SqlApi";
@@ -61,19 +63,16 @@ export const DataSources = ({
 }: DataSourcesProps) => {
   const { t } = useTranslation(["settings", "pages"]);
   const [, setLocation] = useLocation();
-  const { setStep, editId, clean, setIsOnboarding } = DataSourceStore();
-  const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
+  const { setStep, clean, setIsOnboarding } = DataSourceStore();
 
   const onOpen = () => {
     setIsOnboarding(true);
-    setIsOpen(true);
+    setLocation("/settings/sources/connect");
   };
 
   const onClose = useCallback(() => {
-    clean();
-    setIsOpen(false);
     setLocation("/settings/sources");
-  }, [clean, setLocation]);
+  }, [setLocation]);
 
   const onFormFinish = () => {
     onClose();
@@ -82,15 +81,8 @@ export const DataSources = ({
 
   const onGenerateModel = (id: string) => {
     onGenerate(id);
-    setIsOpen(true);
     setStep(2);
   };
-
-  useEffect(() => {
-    if (editId) {
-      setIsOpen(true);
-    }
-  }, [editId, setIsOpen]);
 
   return (
     <>
@@ -126,7 +118,8 @@ export const DataSources = ({
 
       <Modal
         width={1000}
-        open={isOpen}
+        afterClose={clean}
+        open={defaultOpen}
         onClose={onClose}
         destroyOnClose
         closable
@@ -144,19 +137,20 @@ export const DataSources = ({
   );
 };
 
-const DataSourcesWrapper = ({
-  dataSources = [],
-}: {
-  dataSources: DataSourceInfo[];
-}) => {
+const DataSourcesWrapper = () => {
   const { t } = useTranslation(["dataSourceStepForm"]);
   const { currentUser, currentTeamId } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
-  const { id: curId, connect } = location.query;
+  const { withAuthPrefix } = useAppSettings();
+  const [, setLocation] = useLocation();
+  const { slug, generate } = useParams();
+  const basePath = withAuthPrefix("/settings/sources");
+  const isGenerate = generate === "generate";
+  const connect = slug === "connect";
+  const curId = !connect && slug;
   const {
-    editId,
     formState: { step0: dataSource, step1: dataSourceSetup },
     schema,
+    step,
     isOnboarding,
     setSchema,
     setFormStateData,
@@ -164,6 +158,8 @@ const DataSourcesWrapper = ({
     setMessage,
     setError,
     nextStep,
+    setStep,
+    setIsOnboarding,
   } = DataSourceStore();
 
   const [createMutation, execCreateMutation] = useCreateDataSourceMutation();
@@ -176,7 +172,7 @@ const DataSourcesWrapper = ({
   const [, execInsertSqlCredentialsMutation] =
     useInsertSqlCredentialsMutation();
   const [fetchTablesQuery, execFetchTables] = useFetchTablesQuery({
-    variables: { id: dataSourceSetup?.id || editId },
+    variables: { id: dataSourceSetup?.id || slug },
     pause: true,
   });
 
@@ -188,23 +184,42 @@ const DataSourcesWrapper = ({
     successMessage: t("datasource_created"),
   });
 
-  const datasources = useMemo(
-    () => (dataSources.length ? dataSources : currentUser.dataSources || []),
-    [dataSources, currentUser]
+  const dataSources = useMemo(
+    () => currentUser?.dataSources || [],
+    [currentUser]
   ) as DataSourceInfo[];
   const curDataSource = useMemo(
     () =>
-      datasources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
-    [curId, dataSourceSetup?.id, datasources]
+      dataSources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
+    [curId, dataSources, dataSourceSetup]
   );
   const activeBranchId = useMemo(
     () => curDataSource?.branch?.id,
     [curDataSource?.branch?.id]
   );
 
+  const onTestConnection = async () => {
+    try {
+      const test = await execCheckConnection({ id: dataSourceSetup?.id });
+
+      if (!test.data?.check_connection) {
+        setError(t("connection_error"));
+        return null;
+      }
+      setMessage(t("connection_ok"));
+      return true;
+    } catch (error) {
+      setError(JSON.stringify(error));
+    }
+  };
+
+  const onFinish = () => {
+    setLocation(basePath);
+  };
+
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
     let dataSourceId;
-    if (!editId && !dataSourceSetup?.id) {
+    if (!curId && !dataSourceSetup?.id) {
       const newData = {
         ...data,
         db_type: dataSource?.value?.toUpperCase(),
@@ -230,58 +245,43 @@ const DataSourcesWrapper = ({
 
       dataSourceId = result?.data?.insert_datasources_one?.id;
     } else {
-      const id = editId || dataSourceSetup?.id;
-
       delete data.id;
       const newData = {
-        pk_columns: { id } as Datasources_Pk_Columns_Input,
+        pk_columns: { id: dataSourceSetup?.id } as Datasources_Pk_Columns_Input,
         _set: data as Datasources_Set_Input,
       };
 
       const result = await execUpdateMutation(newData);
 
       dataSourceId = result?.data?.update_datasources_by_pk?.id;
-
-      if (dataSourceId) {
-        setMessage(t("datasource_updated"));
-      } else {
-        setError(t("datasource_update_error"));
-      }
     }
 
-    setFormStateData(1, {
-      ...data,
-      id: dataSourceId,
-    });
+    if (dataSourceId) {
+      setMessage(t("datasource_updated"));
+      setFormStateData(1, {
+        ...data,
+        id: dataSourceId,
+      });
+    } else {
+      setError(t("datasource_update_error"));
+    }
+
     return dataSourceId;
   };
 
   const onDataSourceSetupSubmit = async (data: DataSourceSetupForm) => {
     await createOrUpdateDataSource(data);
 
-    if (!isOnboarding) {
+    const testResult = await onTestConnection();
+
+    if (!testResult) {
       return;
     }
 
-    nextStep();
-  };
-
-  const onFinish = () => {
-    setLocation("/settings/sources");
-  };
-
-  const onTestConnection = async (data: DataSourceSetupForm) => {
-    try {
-      const dataSourceId = await createOrUpdateDataSource(data);
-      const test = await execCheckConnection({ id: dataSourceId });
-
-      if (!test.data?.check_connection) {
-        setError(t("connection_error"));
-        return null;
-      }
-      setMessage(t("connection_ok"));
-    } catch (error) {
-      setError(JSON.stringify(error));
+    if (isOnboarding) {
+      nextStep();
+    } else {
+      onFinish();
     }
   };
 
@@ -337,6 +337,8 @@ const DataSourcesWrapper = ({
         } catch (error) {
           setError(JSON.stringify(error));
         }
+      } else {
+        setLocation(basePath);
       }
     }
   };
@@ -346,13 +348,12 @@ const DataSourcesWrapper = ({
   };
 
   const onEdit = (dataSourceId: string) => {
-    setLocation(`/settings/sources?id=${dataSourceId}`);
+    setLocation(`${basePath}/${dataSourceId}`);
   };
 
   useEffect(() => {
     if (curDataSource) {
       DataSourceStore.setState((prev) => ({
-        editId: curId,
         formState: {
           ...defaultFormState,
           ...prev.formState,
@@ -390,10 +391,10 @@ const DataSourcesWrapper = ({
   ]);
 
   useEffect(() => {
-    if (!editId && dataSourceSetup?.id && !schema) {
+    if (step === 2 && dataSourceSetup?.id && !schema) {
       execFetchTables();
     }
-  }, [dataSourceSetup?.id, schema, editId, execFetchTables]);
+  }, [dataSourceSetup?.id, schema, step, execFetchTables]);
 
   useEffect(() => {
     if (fetchTablesQuery.data) {
@@ -401,14 +402,38 @@ const DataSourcesWrapper = ({
     }
   }, [fetchTablesQuery.data, setSchema]);
 
+  useEffect(() => {
+    if (dataSources.length && curId && !curDataSource) {
+      setLocation(basePath);
+    }
+  }, [curDataSource, curId, dataSources.length, basePath, setLocation]);
+
+  useEffect(() => {
+    if (connect) {
+      setIsOnboarding(true);
+    }
+  }, [connect, setIsOnboarding]);
+
+  useEffect(() => {
+    if (curId) {
+      setStep(1);
+    }
+  }, [curId, setStep]);
+
+  useEffect(() => {
+    if (isGenerate && curDataSource) {
+      setStep(2);
+    }
+  }, [isGenerate, curDataSource, setStep]);
+
   const onGenerate = (id: string) => {
-    setFormStateData(1, { ...dataSourceSetup, id });
+    setLocation(`${basePath}/${id}/generate`);
   };
 
   return (
     <DataSources
-      defaultOpen={!!connect}
-      dataSources={datasources}
+      defaultOpen={!!slug}
+      dataSources={dataSources}
       onEdit={onEdit}
       onDelete={onDelete}
       onFinish={onFinish}

@@ -34,7 +34,6 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   onDataModelGenerationSubmit = () => {},
 }) => {
   const {
-    editId,
     step,
     isOnboarding,
     formState: formData,
@@ -65,12 +64,6 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
       setStep(activeStep);
     }
   }, [activeStep, setStep]);
-
-  useEffect(() => {
-    if (editId) {
-      setStep(1);
-    }
-  }, [editId, setStep]);
 
   const curDataSource = formState?.step0 || formData?.step0;
   switch (step) {

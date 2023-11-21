@@ -46,7 +46,7 @@ const ReportForm: FC<ReportFormProps> = ({
     i18n: { language: locale },
   } = useTranslation(["reports", "common"]);
   const [step, setStep] = useState(0);
-  const { control, handleSubmit, watch, getValues } = useForm<ReportFormType>({
+  const { control, handleSubmit, watch } = useForm<ReportFormType>({
     values: initialValue,
   });
 

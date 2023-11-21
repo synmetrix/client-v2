@@ -52,11 +52,7 @@ export default [
             component: "./pages/Teams",
           },
           {
-            path: "/settings/sources",
-            component: "./pages/DataSources",
-          },
-          {
-            path: "/settings/sources/connect",
+            path: "/settings/sources/:slug?/:generate?",
             component: "./pages/DataSources",
           },
           {

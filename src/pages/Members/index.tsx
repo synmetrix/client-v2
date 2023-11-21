@@ -71,7 +71,7 @@ export const Members: React.FC<MembersProps> = ({
         <div className={styles.body}>
           <Row justify={"start"} gutter={[32, 32]}>
             {members.map((m) => (
-              <Col xs={24} sm={12} xl={8} key={m.id}>
+              <Col xs={24} sm={12} xl={6} key={m.id}>
                 <MemberCard
                   accessLists={accessLists}
                   onAccessListChange={onAccessListChange}

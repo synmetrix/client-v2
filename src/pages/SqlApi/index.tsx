@@ -105,7 +105,7 @@ export const SqlApi = ({
             {!!credentials?.length ? (
               <Row gutter={[32, 32]}>
                 {credentials.map((c) => (
-                  <Col xs={24} sm={12} xl={8} key={c.id}>
+                  <Col xs={24} sm={12} xl={6} key={c.id}>
                     <DataSourceCard
                       dataSource={{ ...c, ...c.dataSourceData }}
                       onEdit={onEdit}

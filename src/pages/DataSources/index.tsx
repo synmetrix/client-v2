@@ -117,7 +117,7 @@ export const DataSources = ({
             <div className={styles.body}>
               <Row justify={"start"} gutter={[32, 32]}>
                 {dataSources.map((d) => (
-                  <Col xs={24} sm={12} xl={8} key={d.id}>
+                  <Col xs={24} sm={12} xl={6} key={d.id}>
                     <DataSourceCard
                       dataSource={d}
                       onEdit={onEdit}

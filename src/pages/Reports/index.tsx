@@ -132,7 +132,7 @@ const Reports: React.FC<ReportsProps> = ({
         <div className={styles.body}>
           <Row justify={"start"} gutter={[32, 32]}>
             {reports.map((a) => (
-              <Col xs={24} sm={12} xl={8} key={a.id}>
+              <Col xs={24} sm={12} xl={6} key={a.id}>
                 <AlertCard alert={a} onEdit={onEdit} onRemove={onDelete} />
               </Col>
             ))}

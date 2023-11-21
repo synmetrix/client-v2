@@ -106,19 +106,16 @@ export const SqlApi = ({
           <div className={styles.body}>
             {!!credentials?.length ? (
               <Row gutter={[32, 32]}>
-                {credentials
-                  .concat(credentials)
-                  .concat(credentials)
-                  .map((c) => (
-                    <Col xs={24} sm={12} xl={8} key={c.id}>
-                      <DataSourceCard
-                        dataSource={{ ...c, ...c.dataSourceData }}
-                        onEdit={onEdit}
-                        onDelete={onRemove}
-                        withGeneration={false}
-                      />
-                    </Col>
-                  ))}
+                {credentials.map((c) => (
+                  <Col xs={24} sm={12} xl={8} key={c.id}>
+                    <DataSourceCard
+                      dataSource={{ ...c, ...c.dataSourceData }}
+                      onEdit={onEdit}
+                      onDelete={onRemove}
+                      withGeneration={false}
+                    />
+                  </Col>
+                ))}
               </Row>
             ) : (
               <NoCredentials

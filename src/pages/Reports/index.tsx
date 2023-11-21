@@ -1,5 +1,6 @@
 import { Col, Row, Space, message } from "antd";
 import { useParams } from "@vitjs/runtime";
+import { useResponsive } from "ahooks";
 import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
@@ -32,6 +33,7 @@ const Reports: React.FC<ReportsProps> = ({
   query: initialQuery,
 }) => {
   const { t } = useTranslation(["reports", "pages"]);
+  const responsive = useResponsive();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const basePath = withAuthPrefix("/reports");
@@ -112,13 +114,13 @@ const Reports: React.FC<ReportsProps> = ({
     <AppLayout divider title={t("pages:reports")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
-          title={t("list_and_manage_your_reports")}
+          title={!responsive.sm ? t("title_mobile") : t("title")}
           action={
-            <Space size={10} align="start">
+            <Space size={!responsive.sm ? 5 : 10} align="start">
               <span className={styles.actionIcon}>
                 <DocsIcon />
               </span>
-              {t("how_to_create_report")}
+              {!responsive.sm ? t("action_mobile") : t("action")}
             </Space>
           }
           actionProps={{

@@ -1,4 +1,4 @@
-import { Card, Col, Dropdown, Row, Space } from "antd";
+import { Button, Card, Col, Dropdown, Row, Space } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
@@ -22,7 +22,15 @@ const RoleCard: FC<RoleCardProps> = ({ accessList, onRemove, onEdit }) => {
 
   return (
     <Card
-      title={accessList.name}
+      title={
+        <Button
+          style={{ textAlign: "left" }}
+          type="link"
+          onClick={() => onEdit?.(accessList.id)}
+        >
+          {accessList.name}
+        </Button>
+      }
       style={{ position: "static" }}
       bodyStyle={{ padding: 16 }}
       headStyle={{ padding: 16 }}

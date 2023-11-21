@@ -51,7 +51,7 @@ const MemberCard: FC<MemberCardProps> = ({
       bodyStyle={{ padding: 16 }}
       headStyle={{ padding: 16 }}
       title={
-        <Space size={10} className={styles.cell}>
+        <Space size={10}>
           <Avatar username={displayName} img={avatarUrl} />
           <span>{displayName}</span>
         </Space>

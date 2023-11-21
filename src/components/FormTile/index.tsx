@@ -22,7 +22,7 @@ const FormTile: FC<FormTileProps> = ({
     <div className={styles.wrapper}>
       <Card
         className={styles.card}
-        style={{ background: "#F9F9F9" }}
+        style={{ background: "#F9F9F9", position: "static" }}
         onClick={() => onClick?.(title)}
         hoverable
       >

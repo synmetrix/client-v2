@@ -42,7 +42,8 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
   return (
     <Collapse
       expandIcon={({ isActive }) =>
-        withButton && (
+        withButton &&
+        isCollapsible && (
           <Button className={styles.collapseBtn} size="small">
             {isActive ? <MinusOutlined /> : <PlusOutlined />}
           </Button>

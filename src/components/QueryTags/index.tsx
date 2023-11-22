@@ -14,9 +14,15 @@ interface QueryTagsProps {
   content?: QueryState[keyof QueryState];
   type: keyof typeof QUERY_COLORS;
   wrap?: boolean;
+  direction?: "vertical" | "horizontal";
 }
 
-const QueryTags: FC<QueryTagsProps> = ({ content, type, wrap = false }) => {
+const QueryTags: FC<QueryTagsProps> = ({
+  content,
+  type,
+  wrap = false,
+  direction = "horizontal",
+}) => {
   const detectIcon = (title: string) => {
     switch (title) {
       case "asc":
@@ -31,7 +37,7 @@ const QueryTags: FC<QueryTagsProps> = ({ content, type, wrap = false }) => {
   if (!content) return null;
 
   return (
-    <Space size={10} wrap={wrap}>
+    <Space size={10} wrap={wrap} direction={direction}>
       {Array.isArray(content)
         ? content?.map((tag) => {
             let tagSplited: string[] = [];

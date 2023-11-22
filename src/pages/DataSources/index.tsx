@@ -27,6 +27,7 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
 import { prepareInitValues } from "@/pages/SqlApi";
 import CurrentUserStore from "@/stores/CurrentUserStore";
+import type { DataSourceState } from "@/stores/DataSourceStore";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
 import type {
   DataSourceInfo,
@@ -217,8 +218,9 @@ const DataSourcesWrapper = () => {
     [currentUser]
   ) as DataSourceInfo[];
   const curDataSource = useMemo(
-    () => dataSources.find((d) => d.id === curId),
-    [curId, dataSources]
+    () =>
+      dataSources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
+    [curId, dataSourceSetup?.id, dataSources]
   );
   const activeBranchId = useMemo(
     () => curDataSource?.branch?.id,
@@ -242,12 +244,12 @@ const DataSourcesWrapper = () => {
     }
   };
 
-  const onFinish = () => {
+  const onFinish = useCallback(() => {
     setLocation(basePath);
-  };
+  }, [basePath, setLocation]);
 
   const createSQLApi = useCallback(async () => {
-    if (dataSourceSetup) {
+    if (dataSourceSetup?.id) {
       const apiConfig = prepareInitValues(
         dataSourceSetup.id,
         dataSourceSetup.name,
@@ -395,18 +397,22 @@ const DataSourcesWrapper = () => {
 
   useEffect(() => {
     if (curDataSource) {
-      DataSourceStore.setState((prev) => ({
-        formState: {
-          ...defaultFormState,
-          ...prev.formState,
-          step0: curDataSource.type,
-          step1: {
-            id: curDataSource?.id,
-            db_params: { ...curDataSource.dbParams },
-            name: curDataSource.name,
-          },
-        },
-      }));
+      DataSourceStore.setState(
+        (prev) =>
+          ({
+            ...prev,
+            formState: {
+              ...defaultFormState,
+              ...prev.formState,
+              step0: curDataSource.type,
+              step1: {
+                id: curDataSource?.id,
+                db_params: { ...curDataSource.dbParams },
+                name: curDataSource.name,
+              },
+            },
+          } as Partial<DataSourceState>)
+      );
     }
   }, [curDataSource]);
 
@@ -472,11 +478,9 @@ const DataSourcesWrapper = () => {
     setLocation(`${basePath}/${id}/generate`);
   };
 
-  const isOpen = !!slug && !!curId && !!curDataSource;
-
   return (
     <DataSources
-      defaultOpen={isOpen}
+      defaultOpen={!!slug}
       dataSources={dataSources}
       onEdit={onEdit}
       onDelete={onDelete}

@@ -1,6 +1,4 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
 
 import type {
   ApiSetupForm,
@@ -27,10 +25,10 @@ export interface DataSourceData {
   schema: Schema | undefined;
 }
 
-interface DataSourceState extends DataSourceData {
+export interface DataSourceState extends DataSourceData {
   setStep: (step: number) => void;
   nextStep: () => void;
-  setError: (error: string) => void;
+  setError: (error: string | undefined) => void;
   setMessage: (message: string) => void;
   setLoading: (status: boolean) => void;
   setSchema: (schema: Schema) => void;
@@ -59,7 +57,7 @@ const defaultState = {
 
 const dataSourceStore = create<DataSourceState>((set) => ({
   ...defaultState,
-  setError: (error: string) =>
+  setError: (error: string | undefined) =>
     set((prev) => ({ ...prev, error, message: null })),
   setMessage: (message: string) =>
     set((prev) => ({ ...prev, message, error: null })),
@@ -77,14 +75,14 @@ const dataSourceStore = create<DataSourceState>((set) => ({
           ...prev.formState,
           [formStep]: data,
         },
-      };
+      } as Partial<DataSourceState>;
     }),
   setStep: (step: number) =>
     set((prev) => ({ ...prev, step, error: null, message: null })),
   nextStep: () =>
     set((prev) => ({
       ...prev,
-      step: prev.step + 1,
+      step: (prev?.step || 0) + 1,
       error: null,
       message: null,
     })),

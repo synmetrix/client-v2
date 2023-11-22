@@ -1,11 +1,12 @@
-import { Col, Row, Space, message } from "antd";
+import { Col, Dropdown, Row, Space, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useResponsive } from "ahooks";
 import { useTranslation } from "react-i18next";
+import { Fragment } from "react";
+import { SettingOutlined } from "@ant-design/icons";
 
 import PageHeader from "@/components/PageHeader";
 import ReportModal from "@/components/ReportModal";
-import AlertCard from "@/components/AlertCard";
 import type { Alert } from "@/types/alert";
 import type { Report, ReportFormType } from "@/types/report";
 import type { QueryState } from "@/types/queryState";
@@ -18,6 +19,12 @@ import useLocation from "@/hooks/useLocation";
 import useAppSettings from "@/hooks/useAppSettings";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 import { DOCS_CREATE_REPORT_LINK } from "@/utils/constants/links";
+import StatusBadge from "@/components/StatusBadge";
+import type { Status } from "@/types/status";
+import formatTime from "@/utils/helpers/formatTime";
+import Avatar from "@/components/Avatar";
+import ConfirmModal from "@/components/ConfirmModal";
+import Card from "@/components/Card";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -110,6 +117,113 @@ const Reports: React.FC<ReportsProps> = ({
     }
   }, [reportId, reports?.length, basePath, curReport, setLocation, t]);
 
+  const renderCard = (report: Alert) => {
+    const fields = [
+      "creator",
+      "type",
+      "schedule",
+      "updatedAt",
+      "createdAt",
+      "status",
+    ];
+
+    const renderObject = Object.fromEntries(
+      Object.entries(alert).filter(([key]) => fields.includes(key))
+    );
+
+    return (
+      <Card
+        title={alert.name}
+        onTitleClick={() => onEdit(report)}
+        extra={
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => onEdit(report),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_report")}
+                      onConfirm={() => onDelete(report)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+              ],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        }
+      >
+        <dl>
+          {Object.entries(renderObject).map(([key, value]) => {
+            if (key === "creator") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t("common:words.creator")}</dt>
+                  <dd>
+                    <div className={styles.creator}>
+                      <Avatar
+                        className={styles.avatar}
+                        width={!responsive.md ? 27 : 36}
+                        height={!responsive.md ? 27 : 36}
+                        username={report.creator.displayName}
+                        img={report.creator.avatarUrl}
+                      />
+                      <div className={styles.email}>{report.creator.email}</div>
+                    </div>
+                  </dd>
+                </Fragment>
+              );
+            }
+
+            if (key === "createdAt" || key === "updatedAt") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t(`common:words.${key}`, key)}</dt>
+                  <dd>{formatTime(value as string)}</dd>
+                </Fragment>
+              );
+            }
+
+            if (key === "status") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t("common:words.status")}</dt>
+                  <dd>
+                    <StatusBadge status={value as Status}>
+                      {report.lastActivity}
+                    </StatusBadge>
+                  </dd>
+                </Fragment>
+              );
+            }
+
+            if (typeof value === "string") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t(`common:words.${key}`, key)}</dt>
+                  <dd>{value}</dd>
+                </Fragment>
+              );
+            }
+
+            return null;
+          })}
+        </dl>
+      </Card>
+    );
+  };
+
   return (
     <AppLayout divider title={t("pages:reports")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
@@ -131,9 +245,9 @@ const Reports: React.FC<ReportsProps> = ({
         />
         <div className={styles.body}>
           <Row justify={"start"} gutter={[32, 32]}>
-            {reports.map((a) => (
-              <Col xs={24} sm={12} xl={6} key={a.id}>
-                <AlertCard alert={a} onEdit={onEdit} onRemove={onDelete} />
+            {reports.map((r) => (
+              <Col xs={24} sm={12} xl={6} key={r.id}>
+                {renderCard(r)}
               </Col>
             ))}
           </Row>

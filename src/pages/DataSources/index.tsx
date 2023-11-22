@@ -1,13 +1,17 @@
-import { Col, Row, Space, Spin } from "antd";
+import { Col, Dropdown, Row, Space, Spin } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
 import { useResponsive } from "ahooks";
-import { useEffect, useMemo } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import DataSourceCard from "@/components/DataSourceCard";
 import DataSourceForm from "@/components/DataSourceForm";
+import Card from "@/components/Card";
 import Modal from "@/components/Modal";
 import NoDataSource from "@/components/NoDataSource";
 import PageHeader from "@/components/PageHeader";
+import formatTime from "@/utils/helpers/formatTime";
+import DataSourceTag from "@/components/DataSourceTag";
+import ConfirmModal from "@/components/ConfirmModal";
 import type {
   Datasources_Pk_Columns_Input,
   Datasources_Set_Input,
@@ -94,6 +98,96 @@ export const DataSources = ({
     }
   }, [editId, setIsOpen]);
 
+  const renderCard = (dataSource: DataSourceInfo) => {
+    const fields = ["dbParams", "type", "updatedAt", "createdAt", "login"];
+
+    const renderObject = Object.fromEntries(
+      Object.entries(dataSource).filter(([key]) => fields.includes(key))
+    );
+
+    return (
+      <Card
+        title={dataSource.name}
+        onTitleClick={() => dataSource.id && onEdit(dataSource.id)}
+        extra={
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => dataSource.id && onEdit(dataSource.id),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_datasource")}
+                      onConfirm={() => dataSource.id && onDelete(dataSource.id)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+
+                {
+                  key: "generate",
+                  label: t("common:words.generate_models"),
+                  onClick: () =>
+                    dataSource.id && onGenerateModel(dataSource.id),
+                },
+              ],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        }
+      >
+        <dl>
+          {Object.entries(renderObject).map(([key, value]) => {
+            if (key === "createdAt" || key === "updatedAt") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t(`common:words.${key}`)}</dt>
+                  <dd>{formatTime(value)}</dd>
+                </Fragment>
+              );
+            }
+
+            if (key === "dbParams") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t("common:words.host")}</dt>
+                  <dd>{value.host}</dd>
+                </Fragment>
+              );
+            }
+
+            if (key === "type") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t("common:words.type")}</dt>
+                  <dd>
+                    <DataSourceTag dataSource={value} />
+                  </dd>
+                </Fragment>
+              );
+            }
+
+            return (
+              <Fragment key={key}>
+                <dt>{key}</dt>
+                <dd>{value}</dd>
+              </Fragment>
+            );
+          })}
+        </dl>
+      </Card>
+    );
+  };
+
   return (
     <>
       <Spin spinning={loading}>
@@ -117,13 +211,8 @@ export const DataSources = ({
             <div className={styles.body}>
               <Row justify={"start"} gutter={[32, 32]}>
                 {dataSources.map((d) => (
-                  <Col xs={24} sm={12} xl={6} key={d.id}>
-                    <DataSourceCard
-                      dataSource={d}
-                      onEdit={onEdit}
-                      onDelete={onDelete}
-                      onGenerate={onGenerateModel}
-                    />
+                  <Col xs={24} md={12} xl={6} key={d.id}>
+                    {renderCard(d)}
                   </Col>
                 ))}
               </Row>

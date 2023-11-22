@@ -1,6 +1,8 @@
-import { Col, Row, Space, message } from "antd";
+import { Col, Dropdown, Row, Space, message } from "antd";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
+import { Fragment } from "react";
+import { SettingOutlined } from "@ant-design/icons";
 import { useParams } from "@vitjs/runtime";
 
 import PageHeader from "@/components/PageHeader";
@@ -8,7 +10,7 @@ import AlertModal from "@/components/AlertModal";
 import type { Alert, AlertFormType } from "@/types/alert";
 import type { QueryState } from "@/types/queryState";
 import AppLayout from "@/layouts/AppLayout";
-import AlertCard from "@/components/AlertCard";
+import ConfirmModal from "@/components/ConfirmModal";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
 import useAppSettings from "@/hooks/useAppSettings";
@@ -16,6 +18,11 @@ import useAlerts from "@/hooks/useAlerts";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 import { DOCS_CREATE_ALERT_LINK } from "@/utils/constants/links";
+import Card from "@/components/Card";
+import Avatar from "@/components/Avatar";
+import formatTime from "@/utils/helpers/formatTime";
+import StatusBadge from "@/components/StatusBadge";
+import type { Status } from "@/types/status";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -109,6 +116,113 @@ const Alerts: React.FC<AlertsProps> = ({
     }
   }, [alertId, alerts?.length, basePath, curAlert, setLocation, t]);
 
+  const renderCard = (alert: Alert) => {
+    const fields = [
+      "creator",
+      "type",
+      "schedule",
+      "updatedAt",
+      "createdAt",
+      "status",
+    ];
+
+    const renderObject = Object.fromEntries(
+      Object.entries(alert).filter(([key]) => fields.includes(key))
+    );
+
+    return (
+      <Card
+        title={alert.name}
+        onTitleClick={() => onEdit(alert)}
+        extra={
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => onEdit(alert),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_alert")}
+                      onConfirm={() => onDelete(alert)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+              ],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        }
+      >
+        <dl>
+          {Object.entries(renderObject).map(([key, value]) => {
+            if (key === "creator") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t("common:words.creator")}</dt>
+                  <dd>
+                    <div className={styles.creator}>
+                      <Avatar
+                        className={styles.avatar}
+                        width={!responsive.md ? 27 : 36}
+                        height={!responsive.md ? 27 : 36}
+                        username={alert.creator.displayName}
+                        img={alert.creator.avatarUrl}
+                      />
+                      <div className={styles.email}>{alert.creator.email}</div>
+                    </div>
+                  </dd>
+                </Fragment>
+              );
+            }
+
+            if (key === "createdAt" || key === "updatedAt") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t(`common:words.${key}`, key)}</dt>
+                  <dd>{formatTime(value as string)}</dd>
+                </Fragment>
+              );
+            }
+
+            if (key === "status") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t("common:words.status")}</dt>
+                  <dd>
+                    <StatusBadge status={value as Status}>
+                      {alert.lastActivity}
+                    </StatusBadge>
+                  </dd>
+                </Fragment>
+              );
+            }
+
+            if (typeof value === "string") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t(`common:words.${key}`, key)}</dt>
+                  <dd>{value}</dd>
+                </Fragment>
+              );
+            }
+
+            return null;
+          })}
+        </dl>
+      </Card>
+    );
+  };
+
   return (
     <AppLayout divider title={t("pages:alerts")}>
       <Space className={styles.wrapper} direction="vertical" size={13}>
@@ -132,7 +246,7 @@ const Alerts: React.FC<AlertsProps> = ({
           <Row justify={"start"} gutter={[32, 32]}>
             {alerts.map((a) => (
               <Col xs={24} sm={12} xl={6} key={a.id}>
-                <AlertCard alert={a} onEdit={onEdit} onRemove={onDelete} />
+                {renderCard(a)}
               </Col>
             ))}
           </Row>

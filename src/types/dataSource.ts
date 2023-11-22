@@ -72,6 +72,7 @@ export interface DataSourceInfo {
   updatedAt: string;
   createdAt: string;
   branch: Branch;
+  login?: string;
 }
 
 export interface CubeOption {

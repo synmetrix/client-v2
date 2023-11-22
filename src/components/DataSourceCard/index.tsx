@@ -134,12 +134,32 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
 
           <li className={styles.listItem}>
             <span className={styles.label}>{t("common:words.updated_at")}</span>
-            <span className={styles.value}>{formatTime(updatedAt)}</span>
+            <Paragraph
+              className={styles.paragraph}
+              style={{
+                display: "inline",
+                textAlign: "right",
+                width: "80%",
+              }}
+              ellipsis
+            >
+              {formatTime(updatedAt)}{" "}
+            </Paragraph>
           </li>
 
           <li className={styles.listItem}>
             <span className={styles.label}>{t("common:words.created_at")}</span>
-            <span className={styles.value}>{formatTime(createdAt)}</span>
+            <Paragraph
+              className={styles.paragraph}
+              style={{
+                display: "inline",
+                textAlign: "right",
+                width: "80%",
+              }}
+              ellipsis
+            >
+              {formatTime(createdAt)}{" "}
+            </Paragraph>
           </li>
         </ul>
       </Card>

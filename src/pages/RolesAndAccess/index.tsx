@@ -1,11 +1,12 @@
-import { Space, Spin } from "antd";
+import { Col, Dropdown, Row, Space, Spin } from "antd";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useTranslation } from "react-i18next";
+import { Fragment } from "react";
+import { SettingOutlined } from "@ant-design/icons";
 
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import RoleForm from "@/components/RoleForm";
-import RoleCard from "@/components/RoleCard";
 import type { AllAccessListsQuery, Datasources } from "@/graphql/generated";
 import {
   useAllAccessListsQuery,
@@ -25,6 +26,10 @@ import type {
   RoleForm as RoleFormType,
 } from "@/types/access";
 import type { Cube, DataSourceInfo } from "@/types/dataSource";
+import formatTime from "@/utils/helpers/formatTime";
+import ConfirmModal from "@/components/ConfirmModal";
+import Card from "@/components/Card";
+import { AccessTypeWrapper } from "@/components/AccessType";
 
 import styles from "./index.module.less";
 interface RolesAndAccessProps {
@@ -69,6 +74,93 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
     }
   }, [initialValues, setIsOpen]);
 
+  const renderCard = (accessList: AccessList) => {
+    const fields = ["updatedAt", "createdAt"];
+
+    const renderObject = Object.fromEntries(
+      Object.entries(alert).filter(([key]) => fields.includes(key))
+    );
+
+    return (
+      <Card
+        title={accessList.name}
+        onTitleClick={() => onEdit?.(accessList.id)}
+        extra={
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => onEdit?.(accessList.id),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_role")}
+                      onConfirm={() => onRemove?.(accessList.id)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+              ],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        }
+      >
+        <dl>
+          {Object.entries(renderObject).map(([key, value]) => {
+            if (key === "createdAt" || key === "updatedAt") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t(`common:words.${key}`, key)}</dt>
+                  <dd>{formatTime(value as string)}</dd>
+                </Fragment>
+              );
+            }
+
+            if (typeof value === "string") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t(`common:words.${key}`, key)}</dt>
+                  <dd>{value}</dd>
+                </Fragment>
+              );
+            }
+
+            return null;
+          })}
+        </dl>
+
+        {accessList.dataSources.map((d) => {
+          const permissions = accessList?.config?.datasources?.[d.id]?.cubes;
+          return (
+            <Row
+              className={styles.item}
+              justify={"space-between"}
+              key={d.id}
+              gutter={[5, 5]}
+            >
+              <Col className={styles.label}>{d.name}</Col>
+              <Col>
+                <AccessTypeWrapper
+                  dataSourceId={d.id}
+                  permissions={permissions}
+                />
+              </Col>
+            </Row>
+          );
+        })}
+      </Card>
+    );
+  };
+
   return (
     <>
       <Spin spinning={loading}>
@@ -83,14 +175,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
               columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 3 }}
             >
               <Masonry gutter="32px">
-                {accessLists.map((a) => (
-                  <RoleCard
-                    key={a.id}
-                    accessList={a}
-                    onEdit={onEdit}
-                    onRemove={onRemove}
-                  />
-                ))}
+                {accessLists.map((a) => renderCard(a))}
               </Masonry>
             </ResponsiveMasonry>
           </div>

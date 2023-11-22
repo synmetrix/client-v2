@@ -1,11 +1,18 @@
-import { Col, Row, Space, message } from "antd";
+import { Col, Row, Select, Space, message } from "antd";
+import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { Invite } from "@/components/MembersForm";
 import MembersForm from "@/components/MembersForm";
+import Card from "@/components/Card";
+import Avatar from "@/components/Avatar";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
-import MemberCard from "@/components/MemberCard";
+import ConfirmModal from "@/components/ConfirmModal";
+import Button from "@/components/Button";
+import formatTime from "@/utils/helpers/formatTime";
+import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
+import { capitalize } from "@/utils/helpers/capitalize";
 import type {
   AllAccessListsQuery,
   Members as MembersType,
@@ -20,13 +27,10 @@ import {
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import type {
-  AccessList,
-  ChangeableRoles,
-  Member,
-  Roles,
-  TeamRole,
-} from "@/types/team";
+import type { AccessList, Member, TeamRole } from "@/types/team";
+import { ChangeableRoles, Roles } from "@/types/team";
+
+import TrashIcon from "@/assets/trash.svg";
 
 import styles from "./index.module.less";
 
@@ -59,6 +63,131 @@ export const Members: React.FC<MembersProps> = ({
   };
   const onRemove = (member: Member) => onDeleteMember(member.id);
 
+  const renderCard = (member: Member) => {
+    const fields = [
+      "displayName",
+      "email",
+      "avatarUrl",
+      "createdAt",
+      "updatedAt",
+      "role",
+    ];
+
+    const renderObject = Object.fromEntries(
+      Object.entries(member).filter(([key]) => fields.includes(key))
+    );
+
+    const hasRoleChangePermission =
+      member?.role.name !== Roles.owner &&
+      (currentRole === Roles.owner ||
+        (currentRole === Roles.admin && member?.role.name === Roles.member));
+    const hasAccessChangePermission =
+      member?.role.name !== Roles.owner &&
+      member?.role.name !== ("member" as unknown as Roles);
+
+    const hasDeletePermission = hasRoleChangePermission;
+
+    return (
+      <Card
+        title={
+          <Space size={10}>
+            <Avatar username={member.displayName} img={member.avatarUrl} />
+            <span>{member.displayName}</span>
+          </Space>
+        }
+        extra={
+          hasDeletePermission && (
+            <ConfirmModal
+              title={t("common:words.delete_member")}
+              onConfirm={() => onRemove(member)}
+            >
+              <Button
+                className={styles.removeBtn}
+                type="ghost"
+                icon={<TrashIcon />}
+              />
+            </ConfirmModal>
+          )
+        }
+      >
+        <dl>
+          {Object.entries(renderObject).map(([key, value]) => {
+            if (key === "createdAt" || key === "updatedAt") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t(`common:words.${key}`)}</dt>
+                  <dd>{formatTime(value)}</dd>
+                </Fragment>
+              );
+            }
+
+            if (key === "role") {
+              return (
+                <Fragment key={key}>
+                  <dt>{t("common:words.role")}</dt>
+                  <dd>
+                    {hasRoleChangePermission ? (
+                      <Select
+                        onChange={(val) =>
+                          onRoleChange(
+                            member.role.id,
+                            val as unknown as ChangeableRoles
+                          )
+                        }
+                        disabled={!hasRoleChangePermission}
+                        bordered={false}
+                        value={member.role.name}
+                        options={createRoleOptions(ChangeableRoles)}
+                      />
+                    ) : (
+                      capitalize(value.name)
+                    )}
+                  </dd>
+
+                  <dt>{t("common:words.access_list")}</dt>
+                  <dd>
+                    {hasAccessChangePermission ? (
+                      <Select
+                        onChange={(accessListId) => {
+                          onAccessListChange(member.role.id, accessListId);
+                        }}
+                        bordered={false}
+                        disabled={!accessLists?.length}
+                        value={
+                          member.accessList?.id ||
+                          `* ${t("common:words.full_access").toUpperCase()} *`
+                        }
+                        options={[
+                          {
+                            value: null,
+                            label: t("common:words.full_access").toUpperCase(),
+                          },
+                          ...(accessLists || []).map((al) => ({
+                            value: al.id,
+                            label: al.name,
+                          })),
+                        ]}
+                      />
+                    ) : (
+                      capitalize(member.role.name)
+                    )}
+                  </dd>
+                </Fragment>
+              );
+            }
+
+            return (
+              <Fragment key={key}>
+                <dt>{key}</dt>
+                <dd>{value}</dd>
+              </Fragment>
+            );
+          })}
+        </dl>
+      </Card>
+    );
+  };
+
   return (
     <>
       <Space className={styles.wrapper} direction="vertical" size={13}>
@@ -71,15 +200,8 @@ export const Members: React.FC<MembersProps> = ({
         <div className={styles.body}>
           <Row justify={"start"} gutter={[32, 32]}>
             {members.map((m) => (
-              <Col xs={24} sm={12} xl={6} key={m.id}>
-                <MemberCard
-                  accessLists={accessLists}
-                  onAccessListChange={onAccessListChange}
-                  onRoleChange={onRoleChange}
-                  member={m}
-                  onDelete={onRemove}
-                  currentRole={currentRole}
-                />
+              <Col xs={24} md={12} xl={6} key={m.id}>
+                {renderCard(m)}
               </Col>
             ))}
           </Row>

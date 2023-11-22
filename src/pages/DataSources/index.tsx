@@ -217,9 +217,8 @@ const DataSourcesWrapper = () => {
     [currentUser]
   ) as DataSourceInfo[];
   const curDataSource = useMemo(
-    () =>
-      dataSources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
-    [curId, dataSources, dataSourceSetup]
+    () => dataSources.find((d) => d.id === curId),
+    [curId, dataSources]
   );
   const activeBranchId = useMemo(
     () => curDataSource?.branch?.id,
@@ -389,6 +388,12 @@ const DataSourcesWrapper = () => {
   };
 
   useEffect(() => {
+    if (dataSources.length && curId && !curDataSource) {
+      onFinish();
+    }
+  }, [curDataSource, curId, dataSources.length, onFinish, setLocation, t]);
+
+  useEffect(() => {
     if (curDataSource) {
       DataSourceStore.setState((prev) => ({
         formState: {
@@ -446,12 +451,6 @@ const DataSourcesWrapper = () => {
   }, [fetchTablesQuery.data, setSchema]);
 
   useEffect(() => {
-    if (dataSources.length && curId && !curDataSource) {
-      setLocation(basePath);
-    }
-  }, [curDataSource, curId, dataSources.length, basePath, setLocation]);
-
-  useEffect(() => {
     if (connect) {
       setIsOnboarding(true);
     }
@@ -473,9 +472,11 @@ const DataSourcesWrapper = () => {
     setLocation(`${basePath}/${id}/generate`);
   };
 
+  const isOpen = !!slug && !!curId && !!curDataSource;
+
   return (
     <DataSources
-      defaultOpen={!!slug}
+      defaultOpen={isOpen}
       dataSources={dataSources}
       onEdit={onEdit}
       onDelete={onDelete}

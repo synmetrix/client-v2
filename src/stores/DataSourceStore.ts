@@ -33,7 +33,7 @@ interface DataSourceState extends DataSourceData {
   setError: (error: string) => void;
   setMessage: (message: string) => void;
   setLoading: (status: boolean) => void;
-  setSchema: (schema: object) => void;
+  setSchema: (schema: Schema) => void;
   setEditId: (id: string) => void;
   setFormStateData: (step: number, data: any) => void;
   setIsOnboarding: (value: boolean) => void;
@@ -57,51 +57,43 @@ const defaultState = {
   schema: undefined,
 };
 
-const dataSourceStore = create<DataSourceState>()(
-  persist(
-    immer((set) => ({
-      ...defaultState,
-      setError: (error: string) =>
-        set((prev) => ({ ...prev, error, message: null })),
-      setMessage: (message: string) =>
-        set((prev) => ({ ...prev, message, error: null })),
-      setLoading: (status: boolean) =>
-        set((prev) => ({ ...prev, loading: status })),
-      setSchema: (schema: object) => set((prev) => ({ ...prev, schema })),
-      setEditId: (id: string) => set((prev) => ({ ...prev, id })),
-      setFormStateData: (step: number, data: any) =>
-        set((prev) => {
-          const formStep = `step${step}` as string;
+const dataSourceStore = create<DataSourceState>((set) => ({
+  ...defaultState,
+  setError: (error: string) =>
+    set((prev) => ({ ...prev, error, message: null })),
+  setMessage: (message: string) =>
+    set((prev) => ({ ...prev, message, error: null })),
+  setLoading: (status: boolean) =>
+    set((prev) => ({ ...prev, loading: status })),
+  setSchema: (schema: Schema) => set((prev) => ({ ...prev, schema })),
+  setEditId: (id: string) => set((prev) => ({ ...prev, id })),
+  setFormStateData: (step: number, data: any) =>
+    set((prev) => {
+      const formStep = `step${step}` as string;
 
-          return {
-            ...prev,
-            formState: {
-              ...prev.formState,
-              [formStep]: data,
-            },
-          };
-        }),
-      setStep: (step: number) =>
-        set((prev) => ({ ...prev, step, error: null, message: null })),
-      nextStep: () =>
-        set((prev) => ({
-          ...prev,
-          step: prev.step + 1,
-          error: null,
-          message: null,
-        })),
-      setIsOnboarding: (value: boolean) =>
-        set((prev) => ({
-          ...prev,
-          isOnboarding: value,
-        })),
-      clean: () => set({ ...defaultState }),
+      return {
+        ...prev,
+        formState: {
+          ...prev.formState,
+          [formStep]: data,
+        },
+      };
+    }),
+  setStep: (step: number) =>
+    set((prev) => ({ ...prev, step, error: null, message: null })),
+  nextStep: () =>
+    set((prev) => ({
+      ...prev,
+      step: prev.step + 1,
+      error: null,
+      message: null,
     })),
-    {
-      name: "dataSource",
-      storage: createJSONStorage(() => sessionStorage),
-    }
-  )
-);
+  setIsOnboarding: (value: boolean) =>
+    set((prev) => ({
+      ...prev,
+      isOnboarding: value,
+    })),
+  clean: () => set({ ...defaultState }),
+}));
 
 export default dataSourceStore;

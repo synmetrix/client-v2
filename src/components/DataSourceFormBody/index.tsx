@@ -66,6 +66,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   }, [activeStep, setStep]);
 
   const curDataSource = formState?.step0 || formData?.step0;
+
   switch (step) {
     case 0:
       return (
@@ -92,7 +93,6 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
             initialValue={initialValue}
             onSubmit={onDataSourceSetup}
             onGoBack={onGoBack}
-            onSkip={onSkip}
             onTestConnection={onTestConnection}
           />
         );

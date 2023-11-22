@@ -148,7 +148,7 @@ const DataSourcesWrapper = () => {
   const connect = slug === "connect";
   const curId = !connect && slug;
   const {
-    formState: { step0: dataSource, step1: dataSourceSetup },
+    formState: { step0: dataSource, step1: dataSourceSetup, step3: apiSetup },
     schema,
     step,
     isOnboarding,
@@ -172,7 +172,7 @@ const DataSourcesWrapper = () => {
   const [, execInsertSqlCredentialsMutation] =
     useInsertSqlCredentialsMutation();
   const [fetchTablesQuery, execFetchTables] = useFetchTablesQuery({
-    variables: { id: dataSourceSetup?.id || slug },
+    variables: { id: dataSourceSetup?.id },
     pause: true,
   });
 
@@ -183,6 +183,34 @@ const DataSourcesWrapper = () => {
   useCheckResponse(createMutation, () => {}, {
     successMessage: t("datasource_created"),
   });
+
+  useCheckResponse(
+    fetchTablesQuery,
+    (_data, err) => {
+      if (err?.message) {
+        setError(err?.message);
+        delete fetchTablesQuery.error;
+      }
+    },
+    {
+      showMessage: false,
+      showResponseMessage: false,
+    }
+  );
+
+  useCheckResponse(
+    genSchemaMutation,
+    (_data, err) => {
+      if (err?.message) {
+        setError(err.message);
+        delete fetchTablesQuery.error;
+      }
+    },
+    {
+      showMessage: false,
+      showResponseMessage: false,
+    }
+  );
 
   const dataSources = useMemo(
     () => currentUser?.dataSources || [],
@@ -198,9 +226,11 @@ const DataSourcesWrapper = () => {
     [curDataSource?.branch?.id]
   );
 
-  const onTestConnection = async () => {
+  const onTestConnection = async (data?: DataSourceSetupForm) => {
     try {
-      const test = await execCheckConnection({ id: dataSourceSetup?.id });
+      const test = await execCheckConnection({
+        id: dataSourceSetup?.id || data?.id,
+      });
 
       if (!test.data?.check_connection) {
         setError(t("connection_error"));
@@ -216,6 +246,30 @@ const DataSourcesWrapper = () => {
   const onFinish = () => {
     setLocation(basePath);
   };
+
+  const createSQLApi = useCallback(async () => {
+    if (dataSourceSetup) {
+      const apiConfig = prepareInitValues(
+        dataSourceSetup.id,
+        dataSourceSetup.name,
+        currentUser.id
+      );
+      const credentialParams = {
+        user_id: currentUser.id,
+        datasource_id: dataSourceSetup.id,
+        username: apiConfig.db_username,
+        password: apiConfig.password,
+      };
+
+      setFormStateData(3, apiConfig);
+      execInsertSqlCredentialsMutation({ object: credentialParams });
+    }
+  }, [
+    currentUser.id,
+    dataSourceSetup,
+    execInsertSqlCredentialsMutation,
+    setFormStateData,
+  ]);
 
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
     let dataSourceId;
@@ -270,9 +324,11 @@ const DataSourcesWrapper = () => {
   };
 
   const onDataSourceSetupSubmit = async (data: DataSourceSetupForm) => {
-    await createOrUpdateDataSource(data);
+    const resultId = await createOrUpdateDataSource(data);
 
-    const testResult = await onTestConnection();
+    const testResult = await onTestConnection({
+      id: resultId,
+    } as DataSourceSetupForm);
 
     if (!testResult) {
       return;
@@ -316,29 +372,10 @@ const DataSourcesWrapper = () => {
         return null;
       }
 
-      if (isOnboarding) {
-        const apiSetup = prepareInitValues(
-          dataSourceSetup.id,
-          dataSourceSetup.name,
-          currentUser.id
-        );
-        const credentialParams = {
-          user_id: currentUser.id,
-          datasource_id: dataSourceSetup.id,
-          username: apiSetup.db_username,
-          password: apiSetup.password,
-        };
-
-        setFormStateData(3, apiSetup);
-
-        try {
-          await execInsertSqlCredentialsMutation({ object: credentialParams });
-          nextStep();
-        } catch (error) {
-          setError(JSON.stringify(error));
-        }
-      } else {
+      if (!isOnboarding) {
         setLocation(basePath);
+      } else {
+        nextStep();
       }
     }
   };
@@ -366,7 +403,7 @@ const DataSourcesWrapper = () => {
         },
       }));
     }
-  }, [curId, curDataSource]);
+  }, [curDataSource]);
 
   useEffect(() => {
     const isLoading =
@@ -395,6 +432,12 @@ const DataSourcesWrapper = () => {
       execFetchTables();
     }
   }, [dataSourceSetup?.id, schema, step, execFetchTables]);
+
+  useEffect(() => {
+    if (isOnboarding && !apiSetup && dataSourceSetup) {
+      createSQLApi();
+    }
+  }, [apiSetup, createSQLApi, dataSourceSetup, isOnboarding]);
 
   useEffect(() => {
     if (fetchTablesQuery.data) {

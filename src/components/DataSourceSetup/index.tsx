@@ -24,7 +24,6 @@ interface DataSourceSetupProps {
   isOnboarding: boolean;
   onSubmit: (values: DataSourceSetupForm) => void;
   onGoBack: () => void;
-  onSkip: () => void;
   onTestConnection: (data: DataSourceSetupForm) => void;
   initialValue?: DataSourceSetupForm;
 }
@@ -34,7 +33,6 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
   fields,
   onSubmit,
   onGoBack,
-  onSkip,
   onTestConnection,
   initialValue,
   isOnboarding = false,
@@ -135,24 +133,6 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
             >
               {t("common:words.test_connection")}
             </Button>
-          </Col>
-
-          <Col
-            xs={24}
-            md={6}
-            className={cn(styles.skip, { [styles.center]: !windowSize.md })}
-          >
-            {isOnboarding && (
-              <Button
-                className={cn(styles.link, {
-                  [styles.fullwidth]: !windowSize.md,
-                })}
-                type="link"
-                onClick={handleSubmit(onSkip)}
-              >
-                {t("common:words.skip")}
-              </Button>
-            )}
           </Col>
         </Row>
       </Form>

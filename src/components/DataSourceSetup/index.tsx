@@ -24,7 +24,7 @@ interface DataSourceSetupProps {
   isOnboarding: boolean;
   onSubmit: (values: DataSourceSetupForm) => void;
   onGoBack: () => void;
-  onTestConnection: (data: DataSourceSetupForm) => void;
+  onTestConnection: (data: DataSourceSetupForm, isTest?: boolean) => void;
   initialValue?: DataSourceSetupForm;
 }
 
@@ -129,7 +129,7 @@ const DataSourceSetup: FC<DataSourceSetupProps> = ({
                 [styles.fullwidth]: !windowSize.md,
               })}
               type="link"
-              onClick={handleSubmit(onTestConnection)}
+              onClick={handleSubmit((data) => onTestConnection(data, true))}
             >
               {t("common:words.test_connection")}
             </Button>

@@ -1,4 +1,4 @@
-import { Card, Spin, Alert } from "antd";
+import { Card, Spin } from "antd";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -36,7 +36,7 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
   shadow = true,
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { step, setStep, loading, error, message } = DataSourceStore();
+  const { step, setStep, loading } = DataSourceStore();
 
   return (
     <Card
@@ -61,8 +61,6 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
             onDataModelGenerationSubmit={onDataModelGenerationSubmit}
           />
         </Suspense>
-        {error && <Alert message={error} type="error" />}
-        {message && <Alert message={message} type="success" />}
       </Spin>
     </Card>
   );

@@ -20,16 +20,12 @@ export interface DataSourceData {
   isOnboarding: boolean;
   formState: FormState;
   loading: boolean;
-  error: string | null | undefined;
-  message: string | null | undefined;
   schema: Schema | undefined;
 }
 
 export interface DataSourceState extends DataSourceData {
   setStep: (step: number) => void;
   nextStep: () => void;
-  setError: (error: string | undefined) => void;
-  setMessage: (message: string) => void;
   setLoading: (status: boolean) => void;
   setSchema: (schema: Schema) => void;
   setEditId: (id: string) => void;
@@ -50,17 +46,11 @@ const defaultState = {
   isOnboarding: false,
   formState: defaultFormState,
   loading: false,
-  error: null,
-  message: null,
   schema: undefined,
 };
 
 const dataSourceStore = create<DataSourceState>((set) => ({
   ...defaultState,
-  setError: (error: string | undefined) =>
-    set((prev) => ({ ...prev, error, message: null })),
-  setMessage: (message: string) =>
-    set((prev) => ({ ...prev, message, error: null })),
   setLoading: (status: boolean) =>
     set((prev) => ({ ...prev, loading: status })),
   setSchema: (schema: Schema) => set((prev) => ({ ...prev, schema })),
@@ -77,14 +67,11 @@ const dataSourceStore = create<DataSourceState>((set) => ({
         },
       } as Partial<DataSourceState>;
     }),
-  setStep: (step: number) =>
-    set((prev) => ({ ...prev, step, error: null, message: null })),
+  setStep: (step: number) => set((prev) => ({ ...prev, step })),
   nextStep: () =>
     set((prev) => ({
       ...prev,
       step: (prev?.step || 0) + 1,
-      error: null,
-      message: null,
     })),
   setIsOnboarding: (value: boolean) =>
     set((prev) => ({

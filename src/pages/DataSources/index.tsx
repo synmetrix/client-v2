@@ -1,4 +1,4 @@
-import { Col, Row, Space, Spin } from "antd";
+import { Col, Row, Space, Spin, message } from "antd";
 import { useEffect, useMemo } from "react";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
@@ -27,8 +27,8 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
 import { prepareInitValues } from "@/pages/SqlApi";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import type { DataSourceState } from "@/stores/DataSourceStore";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
+import type { DataSourceState } from "@/stores/DataSourceStore";
 import type {
   DataSourceInfo,
   DataSourceSetupForm,
@@ -156,8 +156,6 @@ const DataSourcesWrapper = () => {
     setSchema,
     setFormStateData,
     setLoading,
-    setMessage,
-    setError,
     nextStep,
     setStep,
     setIsOnboarding,
@@ -185,11 +183,15 @@ const DataSourcesWrapper = () => {
     successMessage: t("datasource_created"),
   });
 
+  useCheckResponse(updateMutation, () => {}, {
+    successMessage: t("datasource_updated"),
+  });
+
   useCheckResponse(
     fetchTablesQuery,
     (_data, err) => {
       if (err?.message) {
-        setError(err?.message);
+        message.error(err?.message);
         delete fetchTablesQuery.error;
       }
     },
@@ -203,7 +205,7 @@ const DataSourcesWrapper = () => {
     genSchemaMutation,
     (_data, err) => {
       if (err?.message) {
-        setError(err.message);
+        message.error(err.message);
         delete fetchTablesQuery.error;
       }
     },
@@ -227,20 +229,20 @@ const DataSourcesWrapper = () => {
     [curDataSource?.branch?.id]
   );
 
-  const onTestConnection = async (data?: DataSourceSetupForm) => {
+  const onTestConnection = async (data: DataSourceSetupForm) => {
     try {
       const test = await execCheckConnection({
         id: dataSourceSetup?.id || data?.id,
       });
 
       if (!test.data?.check_connection) {
-        setError(t("connection_error"));
+        message.error(t("connection_error"));
         return null;
       }
-      setMessage(t("connection_ok"));
+      message.success(t("connection_ok"));
       return true;
     } catch (error) {
-      setError(JSON.stringify(error));
+      message.error(JSON.stringify(error));
     }
   };
 
@@ -312,26 +314,25 @@ const DataSourcesWrapper = () => {
     }
 
     if (dataSourceId) {
-      setMessage(t("datasource_updated"));
       setFormStateData(1, {
         ...data,
         id: dataSourceId,
       });
-    } else {
-      setError(t("datasource_update_error"));
+      return dataSourceId;
     }
-
-    return dataSourceId;
   };
 
-  const onDataSourceSetupSubmit = async (data: DataSourceSetupForm) => {
+  const onDataSourceSetupSubmit = async (
+    data: DataSourceSetupForm,
+    isTest?: boolean
+  ) => {
     const resultId = await createOrUpdateDataSource(data);
 
     const testResult = await onTestConnection({
       id: resultId,
     } as DataSourceSetupForm);
 
-    if (!testResult) {
+    if (!testResult || isTest) {
       return;
     }
 
@@ -364,12 +365,12 @@ const DataSourcesWrapper = () => {
         });
 
         if (res.error) {
-          setError(t("no_schema"));
+          message.error(res.error.message);
           return null;
         }
-        setMessage(t("schema_generated"));
+        message.success(t("schema_generated"));
       } catch (error) {
-        setError(JSON.stringify(error));
+        message.error(JSON.stringify(error));
         return null;
       }
 
@@ -486,7 +487,7 @@ const DataSourcesWrapper = () => {
       onDelete={onDelete}
       onFinish={onFinish}
       onGenerate={onGenerate}
-      onTestConnection={onTestConnection}
+      onTestConnection={onDataSourceSetupSubmit}
       onDataSourceSetupSubmit={onDataSourceSetupSubmit}
       onDataModelGenerationSubmit={onDataModelGenerationSubmit}
     />

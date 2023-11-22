@@ -2,7 +2,6 @@ import { Col, Dropdown, Row, Space, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useResponsive } from "ahooks";
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react";
 import { SettingOutlined } from "@ant-design/icons";
 
 import PageHeader from "@/components/PageHeader";
@@ -20,7 +19,6 @@ import useAppSettings from "@/hooks/useAppSettings";
 import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 import { DOCS_CREATE_REPORT_LINK } from "@/utils/constants/links";
 import StatusBadge from "@/components/StatusBadge";
-import type { Status } from "@/types/status";
 import formatTime from "@/utils/helpers/formatTime";
 import Avatar from "@/components/Avatar";
 import ConfirmModal from "@/components/ConfirmModal";
@@ -118,22 +116,10 @@ const Reports: React.FC<ReportsProps> = ({
   }, [reportId, reports?.length, basePath, curReport, setLocation, t]);
 
   const renderCard = (report: Alert) => {
-    const fields = [
-      "creator",
-      "type",
-      "schedule",
-      "updatedAt",
-      "createdAt",
-      "status",
-    ];
-
-    const renderObject = Object.fromEntries(
-      Object.entries(alert).filter(([key]) => fields.includes(key))
-    );
-
     return (
       <Card
-        title={alert.name}
+        title={report.name}
+        titleTooltip={report.name}
         onTitleClick={() => onEdit(report)}
         extra={
           <Dropdown
@@ -165,60 +151,68 @@ const Reports: React.FC<ReportsProps> = ({
         }
       >
         <dl>
-          {Object.entries(renderObject).map(([key, value]) => {
-            if (key === "creator") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t("common:words.creator")}</dt>
-                  <dd>
-                    <div className={styles.creator}>
-                      <Avatar
-                        className={styles.avatar}
-                        width={!responsive.md ? 27 : 36}
-                        height={!responsive.md ? 27 : 36}
-                        username={report.creator.displayName}
-                        img={report.creator.avatarUrl}
-                      />
-                      <div className={styles.email}>{report.creator.email}</div>
-                    </div>
-                  </dd>
-                </Fragment>
-              );
-            }
+          {report.creator && (
+            <>
+              <dt>{t("common:words.creator")}</dt>
+              <dd title={report.creator.email}>
+                <div className={styles.creator}>
+                  <Avatar
+                    className={styles.avatar}
+                    width={!responsive.md ? 27 : 36}
+                    height={!responsive.md ? 27 : 36}
+                    username={report.creator.displayName}
+                    img={report.creator.avatarUrl}
+                  />
+                  <div className={styles.email}>{report.creator.email}</div>
+                </div>
+              </dd>
+            </>
+          )}
 
-            if (key === "createdAt" || key === "updatedAt") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t(`common:words.${key}`, key)}</dt>
-                  <dd>{formatTime(value as string)}</dd>
-                </Fragment>
-              );
-            }
+          {report.type && (
+            <>
+              <dt>{t("common:words.type")}</dt>
+              <dd title={formatTime(report.type)}>{formatTime(report.type)}</dd>
+            </>
+          )}
 
-            if (key === "status") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t("common:words.status")}</dt>
-                  <dd>
-                    <StatusBadge status={value as Status}>
-                      {report.lastActivity}
-                    </StatusBadge>
-                  </dd>
-                </Fragment>
-              );
-            }
+          {report.schedule && (
+            <>
+              <dt>{t("common:words.schedule")}</dt>
+              <dd title={formatTime(report.schedule)}>
+                {formatTime(report.schedule)}
+              </dd>
+            </>
+          )}
 
-            if (typeof value === "string") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t(`common:words.${key}`, key)}</dt>
-                  <dd>{value}</dd>
-                </Fragment>
-              );
-            }
+          {report.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(report.createdAt)}>
+                {formatTime(report.createdAt)}
+              </dd>
+            </>
+          )}
 
-            return null;
-          })}
+          {report.updatedAt && (
+            <>
+              <dt>{t("common:words.updated_at")}</dt>
+              <dd title={formatTime(report.updatedAt)}>
+                {formatTime(report.updatedAt)}
+              </dd>
+            </>
+          )}
+
+          {report.status && (
+            <>
+              <dt>{t("common:words.status")}</dt>
+              <dd>
+                <StatusBadge status={report.status}>
+                  {report.lastActivity}
+                </StatusBadge>
+              </dd>
+            </>
+          )}
         </dl>
       </Card>
     );
@@ -246,7 +240,7 @@ const Reports: React.FC<ReportsProps> = ({
         <div className={styles.body}>
           <Row justify={"start"} gutter={[32, 32]}>
             {reports.map((r) => (
-              <Col xs={24} sm={12} xl={6} key={r.id}>
+              <Col xs={24} sm={12} xl={8} key={r.id}>
                 {renderCard(r)}
               </Col>
             ))}

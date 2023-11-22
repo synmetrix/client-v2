@@ -75,15 +75,10 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   }, [initialValues, setIsOpen]);
 
   const renderCard = (accessList: AccessList) => {
-    const fields = ["updatedAt", "createdAt"];
-
-    const renderObject = Object.fromEntries(
-      Object.entries(alert).filter(([key]) => fields.includes(key))
-    );
-
     return (
       <Card
         title={accessList.name}
+        titleTooltip={accessList.name}
         onTitleClick={() => onEdit?.(accessList.id)}
         extra={
           <Dropdown
@@ -115,48 +110,46 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
         }
       >
         <dl>
-          {Object.entries(renderObject).map(([key, value]) => {
-            if (key === "createdAt" || key === "updatedAt") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t(`common:words.${key}`, key)}</dt>
-                  <dd>{formatTime(value as string)}</dd>
-                </Fragment>
-              );
-            }
+          {accessList.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(accessList.createdAt)}>
+                {formatTime(accessList.createdAt)}
+              </dd>
+            </>
+          )}
 
-            if (typeof value === "string") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t(`common:words.${key}`, key)}</dt>
-                  <dd>{value}</dd>
-                </Fragment>
-              );
-            }
-
-            return null;
-          })}
+          {accessList.updatedAt && (
+            <>
+              <dt>{t("common:words.updated_at")}</dt>
+              <dd title={formatTime(accessList.updatedAt)}>
+                {formatTime(accessList.updatedAt)}
+              </dd>
+            </>
+          )}
         </dl>
 
-        {accessList.dataSources.map((d) => {
-          const permissions = accessList?.config?.datasources?.[d.id]?.cubes;
-          return (
-            <Row
-              className={styles.item}
-              justify={"space-between"}
-              key={d.id}
-              gutter={[5, 5]}
-            >
-              <Col className={styles.label}>{d.name}</Col>
-              <Col>
-                <AccessTypeWrapper
-                  dataSourceId={d.id}
-                  permissions={permissions}
-                />
-              </Col>
-            </Row>
-          );
-        })}
+        <div className={styles.datasources}>
+          {accessList.dataSources.map((d) => {
+            const permissions = accessList?.config?.datasources?.[d.id]?.cubes;
+            return (
+              <Row
+                justify={"space-between"}
+                key={d.id}
+                gutter={[5, 5]}
+                align="middle"
+              >
+                <Col className={styles.label}>{d.name}</Col>
+                <Col className={styles.value}>
+                  <AccessTypeWrapper
+                    dataSourceId={d.id}
+                    permissions={permissions}
+                  />
+                </Col>
+              </Row>
+            );
+          })}
+        </div>
       </Card>
     );
   };
@@ -172,7 +165,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
           />
           <div className={styles.body}>
             <ResponsiveMasonry
-              columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 3 }}
+              columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 4 }}
             >
               <Masonry gutter="32px">
                 {accessLists.map((a) => renderCard(a))}

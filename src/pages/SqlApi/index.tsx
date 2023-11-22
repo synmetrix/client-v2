@@ -1,14 +1,14 @@
-import { Col, Row, Space, Spin, message } from "antd";
+import { Col, Dropdown, Row, Space, Spin, message } from "antd";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
+import { SettingOutlined } from "@ant-design/icons";
 
 import ApiSetup, {
   CONNECTION_DEFAULT,
   connectionUrls,
 } from "@/components/ApiSetup";
 import type { DataSourceCredentials } from "@/components/CredentialsTable";
-import DataSourceCard from "@/components/DataSourceCard";
 import Modal from "@/components/Modal";
 import NoCredentials from "@/components/NoCredentials";
 import PageHeader from "@/components/PageHeader";
@@ -29,6 +29,9 @@ import type { ApiSetupForm, DataSourceInfo } from "@/types/dataSource";
 import type { Member } from "@/types/team";
 import formatTime from "@/utils/helpers/formatTime";
 import genName from "@/utils/helpers/genName";
+import DataSourceTag from "@/components/DataSourceTag";
+import ConfirmModal from "@/components/ConfirmModal";
+import Card from "@/components/Card";
 
 import styles from "./index.module.less";
 
@@ -84,6 +87,80 @@ export const SqlApi = ({
   const action =
     editPermission && credentials.length ? t("settings:sql_api.action") : null;
 
+  const renderCard = (credential: DataSourceCredentials) => {
+    return (
+      <Card
+        title={credential.dataSourceData.name}
+        titleTooltip={credential.dataSourceData.name}
+        onTitleClick={() => credential.id && onEdit(credential.id)}
+        extra={
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => credential.id && onEdit(credential.id),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_datasource")}
+                      onConfirm={() => credential.id && onRemove(credential.id)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+              ],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        }
+      >
+        <dl>
+          {credential.dataSourceData.dbParams.host && (
+            <>
+              <dt>{t("common:words.host")}</dt>
+              <dd title={credential.dataSourceData.dbParams.host}>
+                {credential.dataSourceData.dbParams.host}
+              </dd>
+            </>
+          )}
+
+          {credential.login && (
+            <>
+              <dt>{t("common:words.login")}</dt>
+              <dd title={credential.login}>{credential.login}</dd>
+            </>
+          )}
+
+          {credential.dataSourceData.type && (
+            <>
+              <dt>{t("common:words.type")}</dt>
+              <dd>
+                <DataSourceTag dataSource={credential.dataSourceData.type} />
+              </dd>
+            </>
+          )}
+
+          {credential.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(credential.createdAt)}>
+                {formatTime(credential.createdAt)}
+              </dd>
+            </>
+          )}
+        </dl>
+      </Card>
+    );
+  };
+
   return (
     <>
       <Spin spinning={loading}>
@@ -105,13 +182,8 @@ export const SqlApi = ({
             {!!credentials?.length ? (
               <Row gutter={[32, 32]}>
                 {credentials.map((c) => (
-                  <Col xs={24} sm={12} xl={6} key={c.id}>
-                    <DataSourceCard
-                      dataSource={{ ...c, ...c.dataSourceData }}
-                      onEdit={onEdit}
-                      onDelete={onRemove}
-                      withGeneration={false}
-                    />
+                  <Col xs={24} sm={12} xl={8} key={c.id}>
+                    {renderCard(c)}
                   </Col>
                 ))}
               </Row>

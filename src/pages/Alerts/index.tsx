@@ -1,7 +1,6 @@
 import { Col, Dropdown, Row, Space, message } from "antd";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
-import { Fragment } from "react";
 import { SettingOutlined } from "@ant-design/icons";
 import { useParams } from "@vitjs/runtime";
 
@@ -22,7 +21,6 @@ import Card from "@/components/Card";
 import Avatar from "@/components/Avatar";
 import formatTime from "@/utils/helpers/formatTime";
 import StatusBadge from "@/components/StatusBadge";
-import type { Status } from "@/types/status";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -117,22 +115,10 @@ const Alerts: React.FC<AlertsProps> = ({
   }, [alertId, alerts?.length, basePath, curAlert, setLocation, t]);
 
   const renderCard = (alert: Alert) => {
-    const fields = [
-      "creator",
-      "type",
-      "schedule",
-      "updatedAt",
-      "createdAt",
-      "status",
-    ];
-
-    const renderObject = Object.fromEntries(
-      Object.entries(alert).filter(([key]) => fields.includes(key))
-    );
-
     return (
       <Card
         title={alert.name}
+        titleTooltip={alert.name}
         onTitleClick={() => onEdit(alert)}
         extra={
           <Dropdown
@@ -164,60 +150,68 @@ const Alerts: React.FC<AlertsProps> = ({
         }
       >
         <dl>
-          {Object.entries(renderObject).map(([key, value]) => {
-            if (key === "creator") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t("common:words.creator")}</dt>
-                  <dd>
-                    <div className={styles.creator}>
-                      <Avatar
-                        className={styles.avatar}
-                        width={!responsive.md ? 27 : 36}
-                        height={!responsive.md ? 27 : 36}
-                        username={alert.creator.displayName}
-                        img={alert.creator.avatarUrl}
-                      />
-                      <div className={styles.email}>{alert.creator.email}</div>
-                    </div>
-                  </dd>
-                </Fragment>
-              );
-            }
+          {alert.creator && (
+            <>
+              <dt>{t("common:words.creator")}</dt>
+              <dd title={alert.creator.email}>
+                <div className={styles.creator}>
+                  <Avatar
+                    className={styles.avatar}
+                    width={!responsive.md ? 27 : 36}
+                    height={!responsive.md ? 27 : 36}
+                    username={alert.creator.displayName}
+                    img={alert.creator.avatarUrl}
+                  />
+                  <div className={styles.email}>{alert.creator.email}</div>
+                </div>
+              </dd>
+            </>
+          )}
 
-            if (key === "createdAt" || key === "updatedAt") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t(`common:words.${key}`, key)}</dt>
-                  <dd>{formatTime(value as string)}</dd>
-                </Fragment>
-              );
-            }
+          {alert.type && (
+            <>
+              <dt>{t("common:words.type")}</dt>
+              <dd title={formatTime(alert.type)}>{formatTime(alert.type)}</dd>
+            </>
+          )}
 
-            if (key === "status") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t("common:words.status")}</dt>
-                  <dd>
-                    <StatusBadge status={value as Status}>
-                      {alert.lastActivity}
-                    </StatusBadge>
-                  </dd>
-                </Fragment>
-              );
-            }
+          {alert.schedule && (
+            <>
+              <dt>{t("common:words.schedule")}</dt>
+              <dd title={formatTime(alert.schedule)}>
+                {formatTime(alert.schedule)}
+              </dd>
+            </>
+          )}
 
-            if (typeof value === "string") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t(`common:words.${key}`, key)}</dt>
-                  <dd>{value}</dd>
-                </Fragment>
-              );
-            }
+          {alert.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(alert.createdAt)}>
+                {formatTime(alert.createdAt)}
+              </dd>
+            </>
+          )}
 
-            return null;
-          })}
+          {alert.updatedAt && (
+            <>
+              <dt>{t("common:words.updated_at")}</dt>
+              <dd title={formatTime(alert.updatedAt)}>
+                {formatTime(alert.updatedAt)}
+              </dd>
+            </>
+          )}
+
+          {alert.status && (
+            <>
+              <dt>{t("common:words.status")}</dt>
+              <dd>
+                <StatusBadge status={alert.status}>
+                  {alert.lastActivity}
+                </StatusBadge>
+              </dd>
+            </>
+          )}
         </dl>
       </Card>
     );
@@ -245,7 +239,7 @@ const Alerts: React.FC<AlertsProps> = ({
         <div className={styles.body}>
           <Row justify={"start"} gutter={[32, 32]}>
             {alerts.map((a) => (
-              <Col xs={24} sm={12} xl={6} key={a.id}>
+              <Col xs={24} sm={12} xl={8} key={a.id}>
                 {renderCard(a)}
               </Col>
             ))}

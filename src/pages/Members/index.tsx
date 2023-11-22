@@ -1,5 +1,4 @@
 import { Col, Row, Select, Space, message } from "antd";
-import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { Invite } from "@/components/MembersForm";
@@ -64,19 +63,6 @@ export const Members: React.FC<MembersProps> = ({
   const onRemove = (member: Member) => onDeleteMember(member.id);
 
   const renderCard = (member: Member) => {
-    const fields = [
-      "displayName",
-      "email",
-      "avatarUrl",
-      "createdAt",
-      "updatedAt",
-      "role",
-    ];
-
-    const renderObject = Object.fromEntries(
-      Object.entries(member).filter(([key]) => fields.includes(key))
-    );
-
     const hasRoleChangePermission =
       member?.role.name !== Roles.owner &&
       (currentRole === Roles.owner ||
@@ -95,6 +81,7 @@ export const Members: React.FC<MembersProps> = ({
             <span>{member.displayName}</span>
           </Space>
         }
+        titleTooltip={member.displayName}
         extra={
           hasDeletePermission && (
             <ConfirmModal
@@ -111,78 +98,82 @@ export const Members: React.FC<MembersProps> = ({
         }
       >
         <dl>
-          {Object.entries(renderObject).map(([key, value]) => {
-            if (key === "createdAt" || key === "updatedAt") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t(`common:words.${key}`)}</dt>
-                  <dd>{formatTime(value)}</dd>
-                </Fragment>
-              );
-            }
+          {member.email && (
+            <>
+              <dt>{t("common:words.email")}</dt>
+              <dd title={member.email}>{member.email}</dd>
+            </>
+          )}
 
-            if (key === "role") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t("common:words.role")}</dt>
-                  <dd>
-                    {hasRoleChangePermission ? (
-                      <Select
-                        onChange={(val) =>
-                          onRoleChange(
-                            member.role.id,
-                            val as unknown as ChangeableRoles
-                          )
-                        }
-                        disabled={!hasRoleChangePermission}
-                        bordered={false}
-                        value={member.role.name}
-                        options={createRoleOptions(ChangeableRoles)}
-                      />
-                    ) : (
-                      capitalize(value.name)
-                    )}
-                  </dd>
+          {member.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(member.createdAt)}>
+                {formatTime(member.createdAt)}
+              </dd>
+            </>
+          )}
 
-                  <dt>{t("common:words.access_list")}</dt>
-                  <dd>
-                    {hasAccessChangePermission ? (
-                      <Select
-                        onChange={(accessListId) => {
-                          onAccessListChange(member.role.id, accessListId);
-                        }}
-                        bordered={false}
-                        disabled={!accessLists?.length}
-                        value={
-                          member.accessList?.id ||
-                          `* ${t("common:words.full_access").toUpperCase()} *`
-                        }
-                        options={[
-                          {
-                            value: null,
-                            label: t("common:words.full_access").toUpperCase(),
-                          },
-                          ...(accessLists || []).map((al) => ({
-                            value: al.id,
-                            label: al.name,
-                          })),
-                        ]}
-                      />
-                    ) : (
-                      capitalize(member.role.name)
-                    )}
-                  </dd>
-                </Fragment>
-              );
-            }
+          {member.role && (
+            <>
+              <dt>{t("common:words.role")}</dt>
+              <dd title={capitalize(member.role.name)}>
+                {hasRoleChangePermission ? (
+                  <Select
+                    onChange={(val) =>
+                      onRoleChange(
+                        member.role.id,
+                        val as unknown as ChangeableRoles
+                      )
+                    }
+                    disabled={!hasRoleChangePermission}
+                    bordered={false}
+                    value={member.role.name}
+                    options={createRoleOptions(ChangeableRoles)}
+                  />
+                ) : (
+                  capitalize(member.role.name)
+                )}
+              </dd>
+              <dt>{t("common:words.access_list")}</dt>
+              <dd title={capitalize(member.role.name)}>
+                {hasAccessChangePermission ? (
+                  <Select
+                    onChange={(accessListId) => {
+                      onAccessListChange(member.role.id, accessListId);
+                    }}
+                    bordered={false}
+                    disabled={!accessLists?.length}
+                    value={
+                      member.accessList?.id ||
+                      `* ${t("common:words.full_access").toUpperCase()} *`
+                    }
+                    options={[
+                      {
+                        value: null,
+                        label: t("common:words.full_access").toUpperCase(),
+                      },
+                      ...(accessLists || []).map((al) => ({
+                        value: al.id,
+                        label: al.name,
+                      })),
+                    ]}
+                  />
+                ) : (
+                  capitalize(member.role.name)
+                )}
+              </dd>
+            </>
+          )}
 
-            return (
-              <Fragment key={key}>
-                <dt>{key}</dt>
-                <dd>{value}</dd>
-              </Fragment>
-            );
-          })}
+          {member.updatedAt && (
+            <>
+              <dt>{t("common:words.updated_at")}</dt>
+              <dd title={formatTime(member.updatedAt)}>
+                {formatTime(member.updatedAt)}
+              </dd>
+            </>
+          )}
         </dl>
       </Card>
     );
@@ -200,7 +191,7 @@ export const Members: React.FC<MembersProps> = ({
         <div className={styles.body}>
           <Row justify={"start"} gutter={[32, 32]}>
             {members.map((m) => (
-              <Col xs={24} md={12} xl={6} key={m.id}>
+              <Col xs={24} sm={12} xl={8} key={m.id}>
                 {renderCard(m)}
               </Col>
             ))}

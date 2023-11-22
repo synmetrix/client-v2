@@ -8,11 +8,18 @@ import type { CardProps as BasicCardProps } from "antd";
 
 interface CardProps extends BasicCardProps, PropsWithChildren {
   onTitleClick?: () => void;
+  titleTooltip?: string;
 }
 
 const { Paragraph } = Typography;
 
-const Card: FC<CardProps> = ({ title, onTitleClick, children, ...rest }) => {
+const Card: FC<CardProps> = ({
+  title,
+  titleTooltip,
+  onTitleClick,
+  children,
+  ...rest
+}) => {
   return (
     <div className={s.wrapper}>
       <BasicCard
@@ -33,6 +40,7 @@ const Card: FC<CardProps> = ({ title, onTitleClick, children, ...rest }) => {
                 height: "none",
               }}
               onClick={onTitleClick}
+              title={titleTooltip}
             >
               <Paragraph
                 ellipsis
@@ -43,7 +51,11 @@ const Card: FC<CardProps> = ({ title, onTitleClick, children, ...rest }) => {
               </Paragraph>
             </Button>
           ) : (
-            <Paragraph ellipsis className={cx(s.paragraph, s.btn)}>
+            <Paragraph
+              ellipsis
+              className={cx(s.paragraph, s.btn)}
+              title={titleTooltip}
+            >
               {title}
             </Paragraph>
           )

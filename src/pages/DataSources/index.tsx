@@ -1,7 +1,7 @@
 import { Col, Dropdown, Row, Space, Spin } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useResponsive } from "ahooks";
-import { Fragment, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import DataSourceForm from "@/components/DataSourceForm";
@@ -99,15 +99,10 @@ export const DataSources = ({
   }, [editId, setIsOpen]);
 
   const renderCard = (dataSource: DataSourceInfo) => {
-    const fields = ["dbParams", "type", "updatedAt", "createdAt", "login"];
-
-    const renderObject = Object.fromEntries(
-      Object.entries(dataSource).filter(([key]) => fields.includes(key))
-    );
-
     return (
       <Card
         title={dataSource.name}
+        titleTooltip={dataSource.name}
         onTitleClick={() => dataSource.id && onEdit(dataSource.id)}
         extra={
           <Dropdown
@@ -146,43 +141,41 @@ export const DataSources = ({
         }
       >
         <dl>
-          {Object.entries(renderObject).map(([key, value]) => {
-            if (key === "createdAt" || key === "updatedAt") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t(`common:words.${key}`)}</dt>
-                  <dd>{formatTime(value)}</dd>
-                </Fragment>
-              );
-            }
+          {dataSource.dbParams.host && (
+            <>
+              <dt>{t("common:words.host")}</dt>
+              <dd title={dataSource.dbParams.host}>
+                {dataSource.dbParams.host}
+              </dd>
+            </>
+          )}
 
-            if (key === "dbParams") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t("common:words.host")}</dt>
-                  <dd>{value.host}</dd>
-                </Fragment>
-              );
-            }
+          {dataSource.type && (
+            <>
+              <dt>{t("common:words.type")}</dt>
+              <dd>
+                <DataSourceTag dataSource={dataSource.type} />
+              </dd>
+            </>
+          )}
 
-            if (key === "type") {
-              return (
-                <Fragment key={key}>
-                  <dt>{t("common:words.type")}</dt>
-                  <dd>
-                    <DataSourceTag dataSource={value} />
-                  </dd>
-                </Fragment>
-              );
-            }
+          {dataSource.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(dataSource.createdAt)}>
+                {formatTime(dataSource.createdAt)}
+              </dd>
+            </>
+          )}
 
-            return (
-              <Fragment key={key}>
-                <dt>{key}</dt>
-                <dd>{value}</dd>
-              </Fragment>
-            );
-          })}
+          {dataSource.updatedAt && (
+            <>
+              <dt>{t("common:words.updated_at")}</dt>
+              <dd title={formatTime(dataSource.updatedAt)}>
+                {formatTime(dataSource.updatedAt)}
+              </dd>
+            </>
+          )}
         </dl>
       </Card>
     );
@@ -211,7 +204,7 @@ export const DataSources = ({
             <div className={styles.body}>
               <Row justify={"start"} gutter={[32, 32]}>
                 {dataSources.map((d) => (
-                  <Col xs={24} md={12} xl={6} key={d.id}>
+                  <Col xs={24} sm={12} xl={8} key={d.id}>
                     {renderCard(d)}
                   </Col>
                 ))}

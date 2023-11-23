@@ -1,5 +1,4 @@
 import { Space } from "antd";
-import moment from "moment";
 import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";

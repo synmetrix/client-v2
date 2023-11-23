@@ -110,9 +110,11 @@ export const DataSources = ({
                 },
                 {
                   key: "delete",
+                  className: styles.deleteItem,
                   label: (
                     <ConfirmModal
                       title={t("common:words.delete_datasource")}
+                      className={styles.deleteText}
                       onConfirm={() => dataSource.id && onDelete(dataSource.id)}
                     >
                       {t("common:words.delete")}

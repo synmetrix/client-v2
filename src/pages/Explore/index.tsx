@@ -33,6 +33,8 @@ import type {
 import type { AlertFormType, AlertType } from "@/types/alert";
 import type { ReportFormType } from "@/types/report";
 
+import ExploreIcon from "@/assets/explore-active.svg";
+
 export interface Params {
   screenshotMode: boolean;
   modalType?: string;
@@ -84,6 +86,7 @@ export const Explore = ({
   onSendTest = () => {},
   onCreateReport = () => {},
 }: ExploreProps) => {
+  const { t } = useTranslation();
   const { modalType } = params;
 
   const query = useMemo(
@@ -109,6 +112,8 @@ export const Explore = ({
     <>
       <ExploreWorkspace
         header={header}
+        subTitle={t("pages:explore")}
+        icon={<ExploreIcon />}
         rawSql={rawSql}
         exploration={exploration}
         params={params}

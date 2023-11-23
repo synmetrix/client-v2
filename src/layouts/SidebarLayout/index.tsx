@@ -10,6 +10,7 @@ export type SidebarLayoutProps = {
   items?: ReactNode[] | ReactNode;
   children: ReactNode;
   divider?: boolean;
+  burgerTitle?: string;
 };
 
 const SidebarLayout: React.FC<SidebarLayoutProps> = ({
@@ -19,11 +20,13 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
   items = [],
   children,
   divider = true,
+  burgerTitle,
 }) => {
   return (
     <AppLayout
       title={title}
       divider={divider}
+      burgerTitle={burgerTitle}
       sidebar={
         <Sidebar icon={icon} title={subTitle}>
           {items}

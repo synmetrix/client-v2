@@ -1,5 +1,8 @@
 {
   "words": {
+    "teams": "Teams",
+    "personal_info": "Personal Info",
+    "logout": "Logout",
     "status": "Status",
     "how_to_create_alerts": "How to create Alerts?",
     "how_to_create_reports": "How to create Reports?",

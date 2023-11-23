@@ -16,10 +16,12 @@ const Sidebar: FC<SidebarProps> = ({ icon, title, children }) => {
 
   return (
     <div className={cn(styles.wrapper, !responsive.lg && styles.wrapperMobile)}>
-      <div className={styles.header}>
-        {icon && icon}
-        <div>{title}</div>
-      </div>
+      {responsive.lg && (
+        <div className={styles.header}>
+          {icon && icon}
+          <div>{title}</div>
+        </div>
+      )}
       <div className={styles.body}>{children}</div>
     </div>
   );

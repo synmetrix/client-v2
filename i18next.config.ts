@@ -12,6 +12,7 @@ use(Backend)
       order: ["localStorage", "cookie"],
       caches: ["localStorage", "cookie"],
     },
+    ns: ["common"],
     interpolation: {
       escapeValue: false,
     },

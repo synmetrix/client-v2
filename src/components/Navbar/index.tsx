@@ -1,6 +1,5 @@
-import { useResponsive } from "ahooks";
 import { useTranslation } from "react-i18next";
-import { Dropdown, Button, Space } from "antd";
+import { Dropdown, Button, Space, Tag } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import cn from "classnames";
 
@@ -15,43 +14,46 @@ import DocsIcon from "@/assets/docs.svg";
 import styles from "./index.module.less";
 
 import type { FC } from "react";
+import type { MenuProps } from "antd";
 
-interface MenuItem {
+interface NavItem {
   label: string;
   href: string;
 }
 
+type MenuItem = Required<MenuProps>["items"][number];
+
 interface NavbarProps {
-  userMenu: MenuItem[];
+  userMenu: NavItem[];
   username?: string | null;
   userAvatar?: string | null;
   direction?: "horizontal" | "vertical";
   teams?: Team[];
+  wrap?: boolean;
+  type?: "inline" | "dropdown";
 }
 
 const Navbar: FC<NavbarProps> = ({
   direction,
-  teams,
+  teams = [],
   userMenu,
   username,
   userAvatar,
+  wrap = false,
+  type = "inline",
 }) => {
   const [, setLocation] = useLocation();
   const { currentTeam, setCurrentTeamId } = CurrentUserStore();
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
   const { t } = useTranslation(["common"]);
-  const responsive = useResponsive();
 
   const onSelectTeam = (id: string) => {
     setCurrentTeamId(id);
     setTeamsOpen(false);
   };
 
-  const onClick = ({ item }) => {
-    const {
-      props: { href },
-    } = item;
+  const onClick = (href: string) => {
     setLocation(href);
   };
 
@@ -66,11 +68,39 @@ const Navbar: FC<NavbarProps> = ({
     </Button>
   );
 
+  const teamsMenu: MenuItem[] = teams.map((tm) => ({
+    key: tm.id,
+    label: (
+      <Space>
+        {tm.name}
+        {currentTeam?.id === tm.id && (
+          <Tag style={{ margin: 0 }}>{t("common:words.current")}</Tag>
+        )}
+      </Space>
+    ),
+    onClick: () => onSelectTeam(tm.id),
+  }));
+
+  teamsMenu.push({
+    key: "/teams",
+    label: "Edit teams",
+    onClick: () => onClick("/teams"),
+  });
+
+  const userMenuItems: MenuItem[] = userMenu.map((u) => ({
+    label: u.label,
+    key: u.href,
+    onClick: () => onClick(u.href),
+    type: "item",
+  }));
+
   const account = (
     <Dropdown
       trigger={["click"]}
       onOpenChange={setAccountOpen}
-      menu={{ items: userMenu.map((u, i) => ({ ...u, key: i })), onClick }}
+      menu={{
+        items: userMenuItems,
+      }}
     >
       <Space className={styles.dropdownHeader} align="center">
         <Avatar username={username} img={userAvatar} />
@@ -81,19 +111,44 @@ const Navbar: FC<NavbarProps> = ({
     </Dropdown>
   );
 
+  if (type === "dropdown") {
+    if (!!teams?.length) {
+      const teamMobileMenu: MenuItem = {
+        label: t("common:words.teams"),
+        key: "/teams",
+        children: teamsMenu,
+        type: "group",
+      };
+
+      userMenuItems.unshift({ type: "divider" });
+      userMenuItems.unshift(teamMobileMenu);
+      userMenuItems.unshift({ type: "divider" });
+
+      userMenuItems.unshift({
+        label: t("common:words.docs"),
+        key: "/docs",
+        onClick: () => onClick("/docs"),
+      });
+    } else {
+      userMenuItems.unshift({
+        label: t("common:words.docs"),
+        key: "/docs",
+        onClick: () => onClick("/docs"),
+      });
+    }
+
+    return account;
+  }
+
   return (
-    <Space size={20} direction={direction} align="start">
+    <Space size={20} direction={direction} align="start" wrap={wrap}>
       {docs}
       {!!teams?.length && (
         <Dropdown
           trigger={["click"]}
           onOpenChange={setTeamsOpen}
           menu={{
-            items: teams.map((tm, i) => ({
-              key: i,
-              label: tm.name,
-              onClick: () => onSelectTeam(tm.id),
-            })),
+            items: teamsMenu,
           }}
         >
           <Button>

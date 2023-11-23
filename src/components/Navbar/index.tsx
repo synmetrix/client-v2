@@ -137,11 +137,6 @@ const Navbar: FC<NavbarProps> = ({
       });
     } else {
       userMenuItems.unshift({
-        label: "Edit teams",
-        key: "/teams",
-        onClick: () => onClick("/teams"),
-      });
-      userMenuItems.unshift({
         label: t("common:words.docs"),
         key: "/docs",
         onClick: () => onClick("/docs"),

@@ -120,12 +120,6 @@ const Navbar: FC<NavbarProps> = ({
         type: "group",
       };
 
-      teamMobileMenu?.children?.push({
-        label: "Edit teams",
-        key: "/teams",
-        onClick: () => onClick("/teams"),
-      });
-
       userMenuItems.unshift({ type: "divider" });
       userMenuItems.unshift(teamMobileMenu);
       userMenuItems.unshift({ type: "divider" });

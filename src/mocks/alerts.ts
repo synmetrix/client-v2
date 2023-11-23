@@ -6,7 +6,7 @@ import { SAMPLE_EXPLORATION } from "./exploration";
 export const alerts: Alert[] = [
   {
     id: "1",
-    name: "First",
+    name: "FirstFirstFirstFirstFirstFirst",
     type: "WEBHOOK",
     schedule: "dasdasdadad",
     creator: {

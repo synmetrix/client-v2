@@ -34,7 +34,10 @@ const Header: React.FC<HeaderProps> = ({
         isMobile && styles.mobile
       )}
     >
-      <Row className={styles.root} justify="space-between">
+      <Row
+        className={cx(styles.root, isMobile && styles.rootMobile)}
+        justify="space-between"
+      >
         <Col span={16} md={12}>
           <div className={styles.col}>
             {withLogo && (

@@ -1,12 +1,17 @@
-import { Col, Row, Space, Spin } from "antd";
+import { Col, Dropdown, Row, Space, Spin } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
+import { useResponsive } from "ahooks";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import DataSourceCard from "@/components/DataSourceCard";
 import DataSourceForm from "@/components/DataSourceForm";
+import Card from "@/components/Card";
 import Modal from "@/components/Modal";
 import NoDataSource from "@/components/NoDataSource";
 import PageHeader from "@/components/PageHeader";
+import formatTime from "@/utils/helpers/formatTime";
+import DataSourceTag from "@/components/DataSourceTag";
+import ConfirmModal from "@/components/ConfirmModal";
 import type {
   Datasources_Pk_Columns_Input,
   Datasources_Set_Input,
@@ -63,6 +68,7 @@ export const DataSources = ({
   const [, setLocation] = useLocation();
   const { setStep, editId, clean, setIsOnboarding } = DataSourceStore();
   const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
+  const responsive = useResponsive();
 
   const onOpen = () => {
     setIsOnboarding(true);
@@ -92,6 +98,89 @@ export const DataSources = ({
     }
   }, [editId, setIsOpen]);
 
+  const renderCard = (dataSource: DataSourceInfo) => {
+    return (
+      <Card
+        title={dataSource.name}
+        titleTooltip={dataSource.name}
+        onTitleClick={() => dataSource.id && onEdit(dataSource.id)}
+        extra={
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => dataSource.id && onEdit(dataSource.id),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_datasource")}
+                      onConfirm={() => dataSource.id && onDelete(dataSource.id)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+
+                {
+                  key: "generate",
+                  label: t("common:words.generate_models"),
+                  onClick: () =>
+                    dataSource.id && onGenerateModel(dataSource.id),
+                },
+              ],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        }
+      >
+        <dl>
+          {dataSource.dbParams.host && (
+            <>
+              <dt>{t("common:words.host")}</dt>
+              <dd title={dataSource.dbParams.host}>
+                {dataSource.dbParams.host}
+              </dd>
+            </>
+          )}
+
+          {dataSource.type && (
+            <>
+              <dt>{t("common:words.type")}</dt>
+              <dd>
+                <DataSourceTag dataSource={dataSource.type} />
+              </dd>
+            </>
+          )}
+
+          {dataSource.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(dataSource.createdAt)}>
+                {formatTime(dataSource.createdAt)}
+              </dd>
+            </>
+          )}
+
+          {dataSource.updatedAt && (
+            <>
+              <dt>{t("common:words.updated_at")}</dt>
+              <dd title={formatTime(dataSource.updatedAt)}>
+                {formatTime(dataSource.updatedAt)}
+              </dd>
+            </>
+          )}
+        </dl>
+      </Card>
+    );
+  };
+
   return (
     <>
       <Spin spinning={loading}>
@@ -99,7 +188,11 @@ export const DataSources = ({
         {dataSources.length > 0 && (
           <Space className={styles.wrapper} direction="vertical" size={13}>
             <PageHeader
-              title={t("settings:data_sources.title")}
+              title={
+                !responsive.sm
+                  ? t("settings:data_sources.title_mobile")
+                  : t("settings:data_sources.title")
+              }
               action={t("settings:data_sources.create_now")}
               actionProps={{
                 type: "primary",
@@ -108,18 +201,15 @@ export const DataSources = ({
               onClick={onOpen}
             />
 
-            <Row className={styles.body} justify={"start"} gutter={[32, 32]}>
-              {dataSources.map((d) => (
-                <Col key={d.id}>
-                  <DataSourceCard
-                    dataSource={d}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    onGenerate={onGenerateModel}
-                  />
-                </Col>
-              ))}
-            </Row>
+            <div className={styles.body}>
+              <Row justify={"start"} gutter={[32, 32]}>
+                {dataSources.map((d) => (
+                  <Col xs={24} sm={12} xl={8} key={d.id}>
+                    {renderCard(d)}
+                  </Col>
+                ))}
+              </Row>
+            </div>
           </Space>
         )}
       </Spin>

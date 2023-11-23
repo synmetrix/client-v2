@@ -13,8 +13,10 @@
   "schedule_not_set": "Schedule not set",
   "via": "via",
   "not_found": "Report not found",
-  "list_and_manage_your_reports": "List and manage your reports",
-  "how_to_create_report": "How to create Report?",
+  "title": "List and manage your reports",
+  "title_mobile": "Manage reports",
+  "action": "How to create Report?",
+  "action_mobile": "How to create?",
   "form": {
     "report_name": "Report Name:",
     "type": "Type:"

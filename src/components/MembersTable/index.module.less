@@ -1,3 +1,8 @@
+.table {
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .table thead th::before {
   display: none;
 }
@@ -28,11 +33,26 @@
 }
 
 .select {
-  width: 120px;
+  display: block;
+  width: 100%;
   color: #808080;
   opacity: 0.7;
 }
 
 .option {
   background: #ffff !important;
+}
+
+.label {
+  font-weight: 700;
+}
+
+.wrapper {
+  width: 100%;
+  padding: 0 16px;
+}
+
+.removeIcon {
+  position: relative;
+  top: 5px;
 }

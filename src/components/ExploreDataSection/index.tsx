@@ -1,4 +1,4 @@
-import { Collapse, Radio, Space } from "antd";
+import { Col, Collapse, Radio, Row, Space } from "antd";
 import { RightOutlined, SettingOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import { useSetState } from "ahooks";
@@ -285,98 +285,113 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       <Panel
         header={
           <div className={s.header}>
-            <div>
-              <Button
-                className={s.dataBtn}
-                type="dashed"
-                onClick={() => onToggleSection("dataSec")}
-              >
-                {t("data_section.data")}
-              </Button>
+            <Row justify={"space-between"} gutter={[16, 16]}>
+              <Col>
+                <Space wrap>
+                  <Button
+                    className={s.dataBtn}
+                    type="dashed"
+                    onClick={() => onToggleSection("dataSec")}
+                  >
+                    {t("data_section.data")}
+                  </Button>
 
-              <Radio.Group
-                value={currState.section}
-                onChange={onRadioClick}
-                disabled={disableSectionChange}
-                className={s.buttonGroup}
-              >
-                <Radio.Button value="results">
-                  {t("data_section.results")}
-                </Radio.Button>
-                <Radio.Button value="sql">{t("data_section.sql")}</Radio.Button>
-              </Radio.Group>
+                  <Radio.Group
+                    value={currState.section}
+                    onChange={onRadioClick}
+                    disabled={disableSectionChange}
+                    className={s.buttonGroup}
+                  >
+                    <Radio.Button value="results">
+                      {t("data_section.results")}
+                    </Radio.Button>
+                    <Radio.Button value="sql">
+                      {t("data_section.sql")}
+                    </Radio.Button>
+                  </Radio.Group>
 
-              <Button
-                className={s.run}
-                type="primary"
-                onClick={onExec}
-                disabled={!queryState?.columns?.length || disabled || loading}
-              >
-                {t("data_section.run_query")}
-                <RightOutlined />
-              </Button>
+                  <Space align="center">
+                    <Button
+                      className={s.run}
+                      type="primary"
+                      onClick={onExec}
+                      disabled={
+                        !queryState?.columns?.length || disabled || loading
+                      }
+                    >
+                      {t("data_section.run_query")}
+                      <RightOutlined />
+                    </Button>
 
-              {!disableSettings && (
-                <PopoverButton
-                  icon={<SettingOutlined />}
-                  style={{
-                    borderColor: "transparent",
-                    boxShadow: "none",
-                    color: "rgba(0, 0, 0, 0.25)",
-                  }}
-                  placement="bottom"
-                  buttonProps={{
-                    size: "middle",
-                  }}
-                  content={
-                    <div className={s.popoverInner}>
-                      <SimpleForm
-                        layout="vertical"
-                        config={formConfig}
-                        onSubmit={onSubmit}
-                        initialValues={
-                          {
-                            rows: limit,
-                            offset,
-                            hideCubeNames,
-                            hideIndexColumn,
-                          } as unknown as Record<string, string>
+                    {!disableSettings && (
+                      <PopoverButton
+                        icon={<SettingOutlined />}
+                        style={{
+                          borderColor: "transparent",
+                          boxShadow: "none",
+                          color: "rgba(0, 0, 0, 0.25)",
+                        }}
+                        placement="bottom"
+                        buttonProps={{
+                          size: "middle",
+                        }}
+                        content={
+                          <div className={s.popoverInner}>
+                            <SimpleForm
+                              layout="vertical"
+                              config={formConfig}
+                              onSubmit={onSubmit}
+                              initialValues={
+                                {
+                                  rows: limit,
+                                  offset,
+                                  hideCubeNames,
+                                  hideIndexColumn,
+                                } as unknown as Record<string, string>
+                              }
+                              autoSubmit
+                            />
+                          </div>
                         }
-                        autoSubmit
+                        trigger="click"
                       />
-                    </div>
-                  }
-                  trigger="click"
-                />
-              )}
-            </div>
+                    )}
+                  </Space>
+                </Space>
+              </Col>
 
-            <Space>
-              <CSVLink data={rows} filename={`exploration-${genName(5)}.csv`}>
-                <Button className={s.csvBtn} disabled={!explorationRowId}>
-                  {t("data_section.export")} .CSV
-                </Button>
-              </CSVLink>
+              <Col style={{ alignSelf: "end", justifySelf: "end" }}>
+                <Space wrap>
+                  <CSVLink
+                    data={rows}
+                    filename={`exploration-${genName(5)}.csv`}
+                  >
+                    <Button className={s.csvBtn} disabled={!explorationRowId}>
+                      {t("data_section.export")} .CSV
+                    </Button>
+                  </CSVLink>
 
-              <Button
-                icon={<AlertIcon />}
-                className={s.alertButton}
-                type="primary"
-                onClick={() => onOpenModal("alert")}
-                disabled={!explorationRowId}
-              >
-                {t("data_section.create_alert")}
-              </Button>
-              <Button
-                icon={<ReportIcon />}
-                className={s.alertButton}
-                type="primary"
-                onClick={() => onOpenModal("report")}
-                disabled={!explorationRowId}
-              >
-                {t("data_section.create_report")}
-              </Button>
-            </Space>
+                  <Button
+                    icon={<AlertIcon />}
+                    className={s.alertButton}
+                    type="primary"
+                    onClick={() => onOpenModal("alert")}
+                    disabled={!explorationRowId}
+                  >
+                    {t("data_section.create_alert")}
+                  </Button>
+                  <Button
+                    icon={<ReportIcon />}
+                    className={s.alertButton}
+                    type="primary"
+                    onClick={() => onOpenModal("report")}
+                    disabled={!explorationRowId}
+                  >
+                    {t("data_section.create_report")}
+                  </Button>
+                </Space>
+              </Col>
+            </Row>
           </div>
         }
         key="dataSec"

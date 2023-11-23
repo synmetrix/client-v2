@@ -19,8 +19,10 @@
     "request_timeout": "Request Timeout (minutes):",
     "timeout_on_fire": "Timeout On Fire (minutes):"
   },
-  "list_and_manage_your_alerts": "List and manage your alerts",
-  "how_to_create_alert": "How to create Alert?",
+  "title": "List and manage your alerts",
+  "title_mobile": "Manage  alerts",
+  "action": "How to create Alert?",
+  "action_mobile": "How to create?",
   "not_found": {
     "wrong_id": "Alert not found",
     "title": "No Alerts Found",

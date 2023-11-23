@@ -10,10 +10,10 @@ interface DataSourceCardProps {
 
 const DataSourceTag: FC<DataSourceCardProps> = ({ dataSource }) => {
   return (
-    <span className={styles.db}>
-      <span className={styles.icon}>{dataSource.icon}</span>
+    <div className={styles.db}>
+      <div className={styles.icon}>{dataSource.icon}</div>
       {dataSource.name}
-    </span>
+    </div>
   );
 };
 

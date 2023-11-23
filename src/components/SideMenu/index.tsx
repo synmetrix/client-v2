@@ -1,5 +1,5 @@
 import { useResponsive } from "ahooks";
-import { Layout, Space } from "antd";
+import { Space } from "antd";
 import cn from "classnames";
 
 import Button from "@/components/Button";
@@ -10,8 +10,6 @@ import useLocation from "@/hooks/useLocation";
 import styles from "./index.module.less";
 
 import type { FC } from "react";
-
-const { Sider } = Layout;
 
 interface SideMenuProps {}
 

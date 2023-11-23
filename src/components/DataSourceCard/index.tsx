@@ -16,24 +16,27 @@ import type { FC } from "react";
 const { Paragraph } = Typography;
 
 interface DataSourceCardProps {
-  dataSource: DataSourceInfo;
+  dataSource: DataSourceInfo & { login?: string };
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  onGenerate: (id: string) => void;
+  onGenerate?: (id: string) => void;
+  withGeneration?: boolean;
 }
 
 const DataSourceCard: FC<DataSourceCardProps> = ({
-  dataSource: { id, name, dbParams, type, updatedAt, createdAt },
+  dataSource,
   onEdit = () => {},
   onDelete = () => {},
   onGenerate = () => {},
+  withGeneration = true,
 }) => {
   const { t } = useTranslation(["common"]);
+  const { id, name, dbParams, type, updatedAt, createdAt, login } = dataSource;
 
   return (
     <div>
       <Card
-        style={{ width: 260, position: "static" }}
+        style={{ position: "static" }}
         bodyStyle={{ padding: 16 }}
         headStyle={{ padding: 16 }}
         title={
@@ -77,11 +80,13 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
                     </ConfirmModal>
                   ),
                 },
-                {
-                  key: "generate",
-                  label: t("common:words.generate_models"),
-                  onClick: () => id && onGenerate(id),
-                },
+                withGeneration
+                  ? {
+                      key: "generate",
+                      label: t("common:words.generate_models"),
+                      onClick: () => id && onGenerate(id),
+                    }
+                  : null,
               ],
             }}
           >
@@ -90,8 +95,47 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
         }
       >
         <ul className={styles.list}>
+          {dbParams?.host && (
+            <li className={styles.listItem}>
+              <span className={styles.label}>{t("common:words.host")}</span>
+              <Paragraph
+                className={styles.paragraph}
+                style={{
+                  display: "inline",
+                  textAlign: "right",
+                  width: "80%",
+                }}
+                ellipsis
+              >
+                {dbParams.host}
+              </Paragraph>
+            </li>
+          )}
+
+          {login && (
+            <li className={styles.listItem}>
+              <span className={styles.label}>{t("common:words.login")}</span>
+              <Paragraph
+                className={styles.paragraph}
+                style={{
+                  display: "inline",
+                  textAlign: "right",
+                  width: "80%",
+                }}
+                ellipsis
+              >
+                {login}
+              </Paragraph>
+            </li>
+          )}
+
           <li className={styles.listItem}>
-            <span className={styles.label}>{t("common:words.host")}</span>
+            <span className={styles.label}>{t("common:words.type")}</span>
+            <DataSourceTag dataSource={type} />
+          </li>
+
+          <li className={styles.listItem}>
+            <span className={styles.label}>{t("common:words.updated_at")}</span>
             <Paragraph
               className={styles.paragraph}
               style={{
@@ -101,23 +145,23 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
               }}
               ellipsis
             >
-              {dbParams.host}
+              {formatTime(updatedAt)}{" "}
             </Paragraph>
           </li>
 
           <li className={styles.listItem}>
-            <span className={styles.label}>{t("common:words.type")}</span>
-            <DataSourceTag dataSource={type} />
-          </li>
-
-          <li className={styles.listItem}>
-            <span className={styles.label}>{t("common:words.updated_at")}</span>
-            <span className={styles.value}>{formatTime(updatedAt)}</span>
-          </li>
-
-          <li className={styles.listItem}>
             <span className={styles.label}>{t("common:words.created_at")}</span>
-            <span className={styles.value}>{formatTime(createdAt)}</span>
+            <Paragraph
+              className={styles.paragraph}
+              style={{
+                display: "inline",
+                textAlign: "right",
+                width: "80%",
+              }}
+              ellipsis
+            >
+              {formatTime(createdAt)}{" "}
+            </Paragraph>
           </li>
         </ul>
       </Card>

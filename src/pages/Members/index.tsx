@@ -1,11 +1,17 @@
-import { Space, message } from "antd";
+import { Col, Row, Select, Space, message } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type { Invite } from "@/components/MembersForm";
 import MembersForm from "@/components/MembersForm";
-import MembersTable from "@/components/MembersTable";
+import Card from "@/components/Card";
+import Avatar from "@/components/Avatar";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
+import ConfirmModal from "@/components/ConfirmModal";
+import Button from "@/components/Button";
+import formatTime from "@/utils/helpers/formatTime";
+import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
+import { capitalize } from "@/utils/helpers/capitalize";
 import type {
   AllAccessListsQuery,
   Members as MembersType,
@@ -20,13 +26,10 @@ import {
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import type {
-  AccessList,
-  ChangeableRoles,
-  Member,
-  Roles,
-  TeamRole,
-} from "@/types/team";
+import type { AccessList, Member, TeamRole } from "@/types/team";
+import { ChangeableRoles, Roles } from "@/types/team";
+
+import TrashIcon from "@/assets/trash.svg";
 
 import styles from "./index.module.less";
 
@@ -59,6 +62,128 @@ export const Members: React.FC<MembersProps> = ({
   };
   const onRemove = (member: Member) => onDeleteMember(member.id);
 
+  const renderCard = (member: Member) => {
+    const hasRoleChangePermission =
+      member?.role.name !== Roles.owner &&
+      (currentRole === Roles.owner ||
+        (currentRole === Roles.admin && member?.role.name === Roles.member));
+
+    const hasDeletePermission = hasRoleChangePermission;
+
+    return (
+      <Card
+        title={
+          <Space size={10}>
+            <Avatar username={member.displayName} img={member.avatarUrl} />
+            <span>{member.displayName}</span>
+          </Space>
+        }
+        titleTooltip={member.displayName}
+        extra={
+          hasDeletePermission && (
+            <ConfirmModal
+              title={t("common:words.delete_member")}
+              onConfirm={() => onRemove(member)}
+            >
+              <Button
+                className={styles.removeBtn}
+                type="ghost"
+                icon={<TrashIcon />}
+              />
+            </ConfirmModal>
+          )
+        }
+      >
+        <dl>
+          {member.email && (
+            <>
+              <dt>{t("common:words.email")}</dt>
+              <dd title={member.email}>{member.email}</dd>
+            </>
+          )}
+
+          {member.role && (
+            <>
+              <dt>{t("common:words.role")}</dt>
+              <dd
+                title={capitalize(member.role.name)}
+                className={styles.roleName}
+              >
+                {hasRoleChangePermission ? (
+                  <Select
+                    onChange={(val) =>
+                      onRoleChange(
+                        member.role.id,
+                        val as unknown as ChangeableRoles
+                      )
+                    }
+                    disabled={!hasRoleChangePermission}
+                    bordered={false}
+                    value={member.role.name}
+                    options={createRoleOptions(ChangeableRoles)}
+                  />
+                ) : (
+                  capitalize(member.role.name)
+                )}
+              </dd>
+              <dt>{t("common:words.access_list")}</dt>
+              <dd
+                title={capitalize(member.role.name)}
+                className={styles.roleName}
+              >
+                {hasRoleChangePermission ? (
+                  <Select
+                    onChange={(accessListId) => {
+                      onAccessListChange(member.role.id, accessListId);
+                    }}
+                    bordered={false}
+                    disabled={!accessLists?.length}
+                    value={
+                      member.accessList?.id ||
+                      capitalize(t("common:words.full_access").toUpperCase())
+                    }
+                    options={[
+                      {
+                        value: null,
+                        label: capitalize(
+                          t("common:words.full_access").toUpperCase()
+                        ),
+                      },
+                      ...(accessLists || []).map((al) => ({
+                        value: al.id,
+                        label: al.name,
+                      })),
+                    ]}
+                  />
+                ) : (
+                  capitalize(member.role.name)
+                )}
+              </dd>
+            </>
+          )}
+
+          {member.updatedAt && (
+            <>
+              <dt>{t("common:words.updated_at")}</dt>
+              <dd title={formatTime(member.updatedAt)}>
+                {formatTime(member.updatedAt)}
+              </dd>
+            </>
+          )}
+
+          {member.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(member.createdAt)}>
+                {formatTime(member.createdAt)}
+              </dd>
+            </>
+          )}
+        </dl>
+      </Card>
+    );
+  };
+
   return (
     <>
       <Space className={styles.wrapper} direction="vertical" size={13}>
@@ -67,14 +192,16 @@ export const Members: React.FC<MembersProps> = ({
           action={t("settings:members.action")}
           onClick={() => setIsOpen(true)}
         />
-        <MembersTable
-          members={members}
-          accessLists={accessLists}
-          currentRole={currentRole}
-          onRemove={onRemove}
-          onAccessListChange={onAccessListChange}
-          onRoleChange={onRoleChange}
-        />
+
+        <div className={styles.body}>
+          <Row justify={"start"} gutter={[32, 32]}>
+            {members.map((m) => (
+              <Col xs={24} sm={12} xl={8} key={m.id}>
+                {renderCard(m)}
+              </Col>
+            ))}
+          </Row>
+        </div>
       </Space>
 
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
@@ -96,6 +223,8 @@ const prepareMembersData = (rawMembers: MembersType[]) => {
         id: m.member_roles?.[0]?.id,
         name: m.member_roles?.[0]?.team_role as unknown,
       } as TeamRole,
+      createdAt: m.created_at,
+      updatedAt: m.member_roles?.[0]?.updated_at || m.updated_at,
     } as Member;
   });
 

@@ -1,7 +1,9 @@
-import { Space, Spin } from "antd";
+import { Col, Dropdown, Row, Space, Spin } from "antd";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useTranslation } from "react-i18next";
+import { Fragment } from "react";
+import { SettingOutlined } from "@ant-design/icons";
 
-import AccessTable from "@/components/AccessTable";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import RoleForm from "@/components/RoleForm";
@@ -24,6 +26,10 @@ import type {
   RoleForm as RoleFormType,
 } from "@/types/access";
 import type { Cube, DataSourceInfo } from "@/types/dataSource";
+import formatTime from "@/utils/helpers/formatTime";
+import ConfirmModal from "@/components/ConfirmModal";
+import Card from "@/components/Card";
+import { AccessTypeWrapper } from "@/components/AccessType";
 
 import styles from "./index.module.less";
 interface RolesAndAccessProps {
@@ -68,20 +74,104 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
     }
   }, [initialValues, setIsOpen]);
 
+  const renderCard = (accessList: AccessList) => {
+    return (
+      <Card
+        title={accessList.name}
+        titleTooltip={accessList.name}
+        onTitleClick={() => onEdit?.(accessList.id)}
+        extra={
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => onEdit?.(accessList.id),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_role")}
+                      onConfirm={() => onRemove?.(accessList.id)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+              ],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        }
+      >
+        <dl>
+          {accessList.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(accessList.createdAt)}>
+                {formatTime(accessList.createdAt)}
+              </dd>
+            </>
+          )}
+
+          {accessList.updatedAt && (
+            <>
+              <dt>{t("common:words.updated_at")}</dt>
+              <dd title={formatTime(accessList.updatedAt)}>
+                {formatTime(accessList.updatedAt)}
+              </dd>
+            </>
+          )}
+        </dl>
+
+        <div className={styles.datasources}>
+          {accessList.dataSources.map((d) => {
+            const permissions = accessList?.config?.datasources?.[d.id]?.cubes;
+            return (
+              <Row
+                justify={"space-between"}
+                key={d.id}
+                gutter={[5, 5]}
+                align="middle"
+              >
+                <Col className={styles.label}>{d.name}</Col>
+                <Col className={styles.value}>
+                  <AccessTypeWrapper
+                    dataSourceId={d.id}
+                    permissions={permissions}
+                  />
+                </Col>
+              </Row>
+            );
+          })}
+        </div>
+      </Card>
+    );
+  };
+
   return (
     <>
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
             title={t("settings:roles_and_access.manage_roles")}
-            action={t("settings:roles_and_access.create_role")}
+            action={t("settings:roles_and_access.create_now")}
             onClick={onOpen}
           />
-          <AccessTable
-            accessLists={accessLists}
-            onRemove={onRemove}
-            onEdit={onEdit}
-          />
+          <div className={styles.body}>
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 4 }}
+            >
+              <Masonry gutter="32px">
+                {accessLists.map((a) => renderCard(a))}
+              </Masonry>
+            </ResponsiveMasonry>
+          </div>
         </Space>
       </Spin>
 

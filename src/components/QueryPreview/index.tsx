@@ -35,14 +35,16 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
   };
 
   const isCollapsible =
-    getCount([measures, dimensions, order, timeDimensions, segments]) >= 2;
+    getCount([measures, dimensions, order, timeDimensions, segments]) >= 2 &&
+    !isMobile;
 
   const wrapTags = activePanel === "1";
 
   return (
     <Collapse
       expandIcon={({ isActive }) =>
-        withButton && (
+        withButton &&
+        isCollapsible && (
           <Button className={styles.collapseBtn} size="small">
             {isActive ? <MinusOutlined /> : <PlusOutlined />}
           </Button>
@@ -50,89 +52,103 @@ const QueryPreview: FC<QueryState & { withButton?: boolean }> = ({
       }
       bordered={false}
       className={cn(styles.collapse, !isCollapsible && styles.collapseDisabled)}
-      activeKey={activePanel}
+      activeKey={isMobile ? "1" : activePanel}
       onChange={(keys) => setActivePanel(keys[0])}
     >
       <Panel
         className={cn(styles.panel)}
         collapsible={!isCollapsible ? "disabled" : undefined}
         header={
-          <div
-            className={cn(
-              !activePanel &&
-                !isMobile &&
-                !isCollapsible &&
-                styles.headerWrapperDots
-            )}
-          >
-            <Space className={styles.header} size={10} align="center">
-              <QueryTags content={measures} type="measure" />
-              {!activePanel && (
-                <>
-                  {(isShown(dimensions) || isShown(timeDimensions)) && (
-                    <>
-                      <span className={styles.tagLabel}>
-                        {t("common:words.by")}
-                      </span>
-                      <QueryTags content={dimensions} type="dimension" />
-                      <QueryTags
-                        content={timeDimensions}
-                        type="timeDimension"
-                      />
-                    </>
-                  )}
-                  {isShown(segments) && (
-                    <>
-                      <span className={styles.tagLabel}>
-                        {t("common:words.in")}
-                      </span>
-                      <QueryTags content={segments} type="segment" />
-                    </>
-                  )}
-                  {isShown(order) && (
-                    <>
-                      <span className={styles.tagLabel}>
-                        {t("common:words.ordered_by")}
-                      </span>
-                      <QueryTags content={order} type="order" />
-                    </>
-                  )}
-                </>
+          !isMobile ? (
+            <div
+              className={cn(
+                !activePanel &&
+                  !isMobile &&
+                  !isCollapsible &&
+                  styles.headerWrapperDots
               )}
-            </Space>
-          </div>
+            >
+              <Space className={styles.header} size={10} align="center">
+                <QueryTags content={measures} type="measure" />
+                {!activePanel && (
+                  <>
+                    {(isShown(dimensions) || isShown(timeDimensions)) && (
+                      <>
+                        <span className={styles.tagLabel}>
+                          {t("common:words.by")}
+                        </span>
+                        <QueryTags content={dimensions} type="dimension" />
+                        <QueryTags
+                          content={timeDimensions}
+                          type="timeDimension"
+                        />
+                      </>
+                    )}
+                    {isShown(segments) && (
+                      <>
+                        <span className={styles.tagLabel}>
+                          {t("common:words.in")}
+                        </span>
+                        <QueryTags content={segments} type="segment" />
+                      </>
+                    )}
+                    {isShown(order) && (
+                      <>
+                        <span className={styles.tagLabel}>
+                          {t("common:words.ordered_by")}
+                        </span>
+                        <QueryTags content={order} type="order" />
+                      </>
+                    )}
+                  </>
+                )}
+              </Space>
+            </div>
+          ) : null
         }
         key={"1"}
       >
         <Space className={styles.collapseInner} direction="vertical" size={10}>
           {(isShown(dimensions) || isShown(timeDimensions)) && (
-            <Space size={9}>
+            <Space size={9} wrap>
               <span className={styles.tagLabel}>{t("common:words.by")}</span>
               <QueryTags
                 content={dimensions}
                 type="dimension"
                 wrap={wrapTags}
+                direction={isMobile ? "vertical" : "horizontal"}
               />
               <QueryTags
                 content={timeDimensions}
                 type="timeDimension"
                 wrap={wrapTags}
+                direction={isMobile ? "vertical" : "horizontal"}
               />
             </Space>
           )}
           {isShown(segments) && (
-            <Space size={9}>
+            <Space size={9} wrap>
               <span className={styles.tagLabel}>{t("common:words.in")}</span>
-              <QueryTags content={segments} type="segment" wrap={wrapTags} />
+              <QueryTags
+                content={segments}
+                type="segment"
+                wrap={wrapTags}
+                direction={isMobile ? "vertical" : "horizontal"}
+              />
             </Space>
           )}
 
           {isShown(order) && (
-            <Space size={9}>
+            <Space size={9} wrap>
               <span className={styles.tagLabel}>
                 {t("common:words.ordered_by")}
               </span>
-              <QueryTags content={order} type="order" wrap={wrapTags} />
+              <QueryTags
+                content={order}
+                type="order"
+                wrap={wrapTags}
+                direction={isMobile ? "vertical" : "horizontal"}
+              />
             </Space>
           )}
         </Space>

@@ -1,3 +1,25 @@
 .wrapper {
   width: 100%;
 }
+
+.body {
+  padding: 0 16px;
+}
+
+.removeBtn {
+  padding: 0;
+  color: var(--color-primary);
+  span {
+    font-size: 12px;
+  }
+}
+
+.roleName {
+  :global(.ant-select) {
+    margin-right: -10px;
+  }
+
+  :global(.ant-select-selection-item) {
+    font-weight: 600;
+  }
+}

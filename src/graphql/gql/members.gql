@@ -20,7 +20,13 @@ query Members(
         id
         name
       }
+
+      updated_at
+      created_at
     }
+
+    updated_at
+    created_at
   }
 }
 

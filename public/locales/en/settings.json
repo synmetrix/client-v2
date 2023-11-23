@@ -1,6 +1,7 @@
 {
   "data_sources": {
     "title": "List and manage your data sources",
+    "title_mobile": "Manage data sources",
     "create_now": "Create now",
     "not_found": {
       "title": "You have no Data Sources yet",
@@ -27,7 +28,7 @@
   },
   "members": {
     "title": "Manage Members",
-    "action": "Invite to team",
+    "action": "Create now",
     "role_updated": "Role updated",
     "member_deleted": "Member deleted",
     "no_permissions": "No permissions",
@@ -51,7 +52,8 @@
   },
   "sql_api": {
     "title": "Manage SQL API Credentials",
-    "action": "Add new",
+    "title_mobile": "Manage Credentials",
+    "action": "Create now",
     "not_found": {
       "title": "You have no SQL API credentials",
       "text": "Please set up your API credentials",
@@ -60,7 +62,7 @@
   },
   "roles_and_access": {
     "manage_roles": "Manage roles",
-    "create_role": "Create Role",
+    "create_now": "Create now",
     "access_list_created": "Access list created",
     "access_list_updated": "Access list updated",
     "access_list_removed": "Access list removed",

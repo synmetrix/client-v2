@@ -117,6 +117,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
       const initialValue = formState?.step3 || formData?.step3;
       return (
         <ApiSetup
+          isOnboarding={isOnboarding}
           initialValue={initialValue}
           onSubmit={onFinish}
           onGoBack={onGoBack}

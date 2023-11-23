@@ -1,4 +1,4 @@
-import { Col, Dropdown, Row, Space, Spin, message } from "antd";
+import { Col, Dropdown, Row, Space, Spin } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useResponsive } from "ahooks";
 import { useEffect, useMemo } from "react";
@@ -280,19 +280,9 @@ const DataSourcesWrapper = () => {
     successMessage: t("datasource_updated"),
   });
 
-  useCheckResponse(
-    fetchTablesQuery,
-    (_data, err) => {
-      if (err?.message) {
-        message.error(err?.message);
-        delete fetchTablesQuery.error;
-      }
-    },
-    {
-      showMessage: false,
-      showResponseMessage: false,
-    }
-  );
+  useCheckResponse(fetchTablesQuery, () => {}, {
+    showMessage: false,
+  });
 
   useCheckResponse(genSchemaMutation, () => {}, {
     successMessage: t("schema_generated"),
@@ -331,29 +321,31 @@ const DataSourcesWrapper = () => {
     setLocation(basePath);
   }, [basePath, setLocation]);
 
-  const createSQLApi = useCallback(async () => {
-    if (dataSourceSetup?.id) {
+  const createSQLApi = useCallback(
+    async (dataSourceId: string, dataSourceName: string) => {
       const apiConfig = prepareInitValues(
-        dataSourceSetup.id,
-        dataSourceSetup.name,
+        dataSourceId,
+        dataSourceName,
         currentUser.id
       );
       const credentialParams = {
         user_id: currentUser.id,
-        datasource_id: dataSourceSetup.id,
+        datasource_id: dataSourceId,
         username: apiConfig.db_username,
         password: apiConfig.password,
       };
 
-      setFormStateData(3, apiConfig);
-      execInsertSqlCredentialsMutation({ object: credentialParams });
-    }
-  }, [
-    currentUser.id,
-    dataSourceSetup,
-    execInsertSqlCredentialsMutation,
-    setFormStateData,
-  ]);
+      const sqlApiResult = await execInsertSqlCredentialsMutation({
+        object: credentialParams,
+      });
+      const newSqlApiId = sqlApiResult.data?.insert_sql_credentials_one?.id;
+
+      if (newSqlApiId) {
+        setFormStateData(3, apiConfig);
+      }
+    },
+    [currentUser.id, execInsertSqlCredentialsMutation, setFormStateData]
+  );
 
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
     let dataSourceId;
@@ -419,6 +411,10 @@ const DataSourcesWrapper = () => {
 
     if (isOnboarding) {
       nextStep();
+
+      if (!apiSetup) {
+        await createSQLApi(resultId, data.name);
+      }
     } else {
       onFinish();
     }
@@ -518,12 +514,6 @@ const DataSourcesWrapper = () => {
       execFetchTables();
     }
   }, [dataSourceSetup?.id, schema, step, execFetchTables]);
-
-  useEffect(() => {
-    if (isOnboarding && !apiSetup && dataSourceSetup) {
-      createSQLApi();
-    }
-  }, [apiSetup, createSQLApi, dataSourceSetup, isOnboarding]);
 
   useEffect(() => {
     if (fetchTablesQuery.data) {

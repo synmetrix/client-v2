@@ -237,7 +237,6 @@ const DataSourcesWrapper = () => {
   const [, setLocation] = useLocation();
   const { slug, generate } = useParams();
   const basePath = withAuthPrefix("/settings/sources");
-  const isGenerate = generate === "generate";
   const connect = slug === "connect";
   const curId = !connect && slug;
   const {
@@ -246,6 +245,8 @@ const DataSourcesWrapper = () => {
     step,
     loading,
     isOnboarding,
+    isGenerate,
+    setIsGenerate,
     setSchema,
     setFormStateData,
     setLoading,
@@ -409,15 +410,11 @@ const DataSourcesWrapper = () => {
       return;
     }
 
-    if (isOnboarding) {
-      nextStep();
-
-      if (!apiSetup) {
-        await createSQLApi(resultId, data.name);
-      }
-    } else {
-      onFinish();
+    if (!apiSetup && isOnboarding) {
+      await createSQLApi(resultId, data.name);
     }
+
+    nextStep();
   };
 
   const onDataModelGenerationSubmit = async (data: DynamicForm) => {
@@ -532,6 +529,12 @@ const DataSourcesWrapper = () => {
       setStep(1);
     }
   }, [curId, setStep]);
+
+  useEffect(() => {
+    if (generate && generate === "generate") {
+      setIsGenerate(true);
+    }
+  }, [generate, setIsGenerate]);
 
   useEffect(() => {
     if (isGenerate && curDataSource) {

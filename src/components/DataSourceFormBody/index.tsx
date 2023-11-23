@@ -36,6 +36,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   const {
     step,
     isOnboarding,
+    isGenerate,
     formState: formData,
     schema,
     setStep,
@@ -104,6 +105,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
             icon: curDataSource?.icon,
             name: curDataSource?.name,
           }}
+          isGenerate={isGenerate}
           isOnboarding={isOnboarding}
           schema={schema}
           onSubmit={onDataModelGeneration}

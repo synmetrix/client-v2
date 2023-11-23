@@ -237,6 +237,7 @@ const Explore: FC<ExploreProps> = (props) => {
       divider={false}
       subTitle={subTitle}
       items={sidebar}
+      burgerTitle={subTitle as any}
     >
       {dataSource?.id ? (
         <div id="data-view">

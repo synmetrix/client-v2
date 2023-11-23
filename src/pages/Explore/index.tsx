@@ -84,6 +84,7 @@ export const Explore = ({
   onSendTest = () => {},
   onCreateReport = () => {},
 }: ExploreProps) => {
+  const { t } = useTranslation();
   const { modalType } = params;
 
   const query = useMemo(
@@ -109,6 +110,7 @@ export const Explore = ({
     <>
       <ExploreWorkspace
         header={header}
+        subTitle={t("pages:explore")}
         rawSql={rawSql}
         exploration={exploration}
         params={params}

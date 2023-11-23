@@ -1,4 +1,4 @@
-import { Layout } from "antd";
+import { Col, Layout, Row, Typography } from "antd";
 import { useResponsive } from "ahooks";
 
 import Header from "@/components/Header";
@@ -16,12 +16,16 @@ import type { ReactNode } from "react";
 export type AppLayoutProps = {
   sidebar?: ReactNode;
   children: ReactNode;
-  title?: ReactNode | string;
+  title?: ReactNode;
   divider?: boolean;
+  burgerTitle?: ReactNode;
 };
+
+const { Title } = Typography;
 
 const AppLayout: React.FC<AppLayoutProps> = ({
   title = "App",
+  burgerTitle,
   divider = false,
   sidebar = null,
   children,
@@ -32,10 +36,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const content = (
     <Navbar
       direction={!responsive.lg ? "vertical" : "horizontal"}
+      wrap
       username={currentUser.displayName}
       userAvatar={currentUser.avatarUrl}
       userMenu={userMenu}
       teams={currentUser?.teams}
+      type={!responsive.lg && sidebar ? "dropdown" : "inline"}
     />
   );
 
@@ -55,10 +61,21 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           bordered={divider}
           content={
             !responsive.lg ? (
-              <BurgerMenu>
-                <div style={{ height: 150 }}>{content}</div>
+              <BurgerMenu
+                header={
+                  <Row justify={"space-between"} align={"middle"}>
+                    <Col>
+                      <Title style={{ margin: 0 }} level={4}>
+                        {burgerTitle || title}
+                      </Title>
+                    </Col>
+                    {sidebar && <Col>{content}</Col>}
+                  </Row>
+                }
+              >
                 <div style={{ margin: "0 -20px" }}>
                   {!responsive.lg && sidebar}
+                  {!sidebar && content}
                 </div>
               </BurgerMenu>
             ) : (

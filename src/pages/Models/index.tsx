@@ -173,6 +173,7 @@ export const Models: React.FC<ModelsProps> = ({
           </Title>
         </Space>
       }
+      burgerTitle={t("models")}
       divider
       items={
         <Spin spinning={fetching}>

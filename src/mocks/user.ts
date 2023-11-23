@@ -10,10 +10,6 @@ export const user = {
 
 export const userMenu = [
   {
-    label: "Teams",
-    href: "/teams",
-  },
-  {
     label: "Logout",
     href: "/auth/logout",
   },

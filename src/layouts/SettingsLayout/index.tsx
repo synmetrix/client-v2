@@ -28,6 +28,7 @@ const SettingsLayout: React.FC<SidebarLayoutProps> = ({
       icon={<Icon />}
       title={title || t(`pages:settings.${titleKey}`)}
       items={<SidebarMenu items={settingsMenuItems} />}
+      burgerTitle={"Settings"}
     >
       {children}
     </SidebarLayout>

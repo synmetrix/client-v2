@@ -35,7 +35,8 @@ const Header: React.FC<HeaderProps> = ({
       )}
     >
       <Row
-        className={cx(styles.root, isMobile && styles.rootMobile)}
+        className={cx(styles.root, !responsive.lg && styles.rootMobile)}
+        align={"top"}
         justify="space-between"
       >
         <Col span={16} md={12}>
@@ -48,7 +49,10 @@ const Header: React.FC<HeaderProps> = ({
             {title && (
               <Title
                 ellipsis
-                className={cx(isMobile && styles.title)}
+                className={cx(
+                  styles.title,
+                  !responsive.lg && styles.titleMobile
+                )}
                 level={isMobile ? 5 : 4}
               >
                 {title}

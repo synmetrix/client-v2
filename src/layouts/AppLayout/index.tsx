@@ -35,7 +35,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   const content = (
     <Navbar
-      wrap
       username={currentUser.displayName}
       userAvatar={currentUser.avatarUrl}
       userMenu={userMenu}

@@ -114,7 +114,7 @@ const Navbar: FC<NavbarProps> = ({
   if (type === "dropdown") {
     if (!!teams?.length) {
       const teamMobileMenu: MenuItem = {
-        label: "Teams",
+        label: t("common:words.teams"),
         key: "/teams",
         children: teamsMenu,
         type: "group",

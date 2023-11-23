@@ -117,9 +117,6 @@ export const Teams: React.FC<TeamsProps> = ({
                 <Space size={10} align="center">
                   <AvatarGroup>
                     {team.members
-                      .concat(team.members)
-                      .concat(team.members)
-                      .concat(team.members)
                       .slice(0, 3)
                       .map((member: Member, idx: number) => (
                         <Avatar

@@ -35,13 +35,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   const content = (
     <Navbar
-      direction={!responsive.lg ? "vertical" : "horizontal"}
       wrap
       username={currentUser.displayName}
       userAvatar={currentUser.avatarUrl}
       userMenu={userMenu}
       teams={currentUser?.teams}
-      type={!responsive.lg && sidebar ? "dropdown" : "inline"}
+      type={!responsive.lg ? "dropdown" : "inline"}
     />
   );
 
@@ -60,7 +59,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           title={title}
           bordered={divider}
           content={
-            !responsive.lg ? (
+            !responsive.lg && sidebar ? (
               <BurgerMenu
                 header={
                   <Row justify={"space-between"} align={"middle"}>

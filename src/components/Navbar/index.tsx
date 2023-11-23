@@ -1,4 +1,3 @@
-import { useResponsive } from "ahooks";
 import { useTranslation } from "react-i18next";
 import { Dropdown, Button, Space, Tag } from "antd";
 import { DownOutlined } from "@ant-design/icons";
@@ -48,7 +47,6 @@ const Navbar: FC<NavbarProps> = ({
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
   const { t } = useTranslation(["common"]);
-  const responsive = useResponsive();
 
   const onSelectTeam = (id: string) => {
     setCurrentTeamId(id);
@@ -154,13 +152,7 @@ const Navbar: FC<NavbarProps> = ({
   }
 
   return (
-    <Space
-      size={20}
-      direction={direction}
-      align="start"
-      wrap={wrap}
-      className={cn(!responsive.lg && styles.wrapper)}
-    >
+    <Space size={20} direction={direction} align="start" wrap={wrap}>
       {docs}
       {!!teams?.length && (
         <Dropdown

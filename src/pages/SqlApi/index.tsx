@@ -132,19 +132,19 @@ export const SqlApi = ({
             </>
           )}
 
-          {credential.login && (
-            <>
-              <dt>{t("common:words.login")}</dt>
-              <dd title={credential.login}>{credential.login}</dd>
-            </>
-          )}
-
           {credential.dataSourceData.type && (
             <>
               <dt>{t("common:words.type")}</dt>
               <dd>
                 <DataSourceTag dataSource={credential.dataSourceData.type} />
               </dd>
+            </>
+          )}
+
+          {credential.login && (
+            <>
+              <dt>{t("common:words.login")}</dt>
+              <dd title={credential.login}>{credential.login}</dd>
             </>
           )}
 

@@ -152,6 +152,7 @@ const DataSourcesWrapper = () => {
     formState: { step0: dataSource, step1: dataSourceSetup, step3: apiSetup },
     schema,
     step,
+    loading,
     isOnboarding,
     setSchema,
     setFormStateData,
@@ -201,19 +202,13 @@ const DataSourcesWrapper = () => {
     }
   );
 
-  useCheckResponse(
-    genSchemaMutation,
-    (_data, err) => {
-      if (err?.message) {
-        message.error(err.message);
-        delete fetchTablesQuery.error;
-      }
-    },
-    {
-      showMessage: false,
-      showResponseMessage: false,
-    }
-  );
+  useCheckResponse(genSchemaMutation, () => {}, {
+    successMessage: t("schema_generated"),
+  });
+
+  useCheckResponse(checkConnectionMutation, () => {}, {
+    successMessage: t("connection_ok"),
+  });
 
   const dataSources = useMemo(
     () => currentUser?.dataSources || [],
@@ -230,20 +225,14 @@ const DataSourcesWrapper = () => {
   );
 
   const onTestConnection = async (data: DataSourceSetupForm) => {
-    try {
-      const test = await execCheckConnection({
-        id: dataSourceSetup?.id || data?.id,
-      });
+    const test = await execCheckConnection({
+      id: dataSourceSetup?.id || data?.id,
+    });
 
-      if (!test.data?.check_connection) {
-        message.error(t("connection_error"));
-        return null;
-      }
-      message.success(t("connection_ok"));
-      return true;
-    } catch (error) {
-      message.error(JSON.stringify(error));
+    if (!test.data?.check_connection) {
+      return null;
     }
+    return true;
   };
 
   const onFinish = useCallback(() => {
@@ -355,22 +344,15 @@ const DataSourcesWrapper = () => {
     );
 
     if (dataSourceSetup) {
-      try {
-        const res = await execGenSchemaMutation({
-          datasource_id: dataSourceSetup.id,
-          branch_id: activeBranchId,
-          tables,
-          format: data?.type || "yaml",
-          overwrite: true,
-        });
+      const res = await execGenSchemaMutation({
+        datasource_id: dataSourceSetup.id,
+        branch_id: activeBranchId,
+        tables,
+        format: data?.type || "yaml",
+        overwrite: true,
+      });
 
-        if (res.error) {
-          message.error(res.error.message);
-          return null;
-        }
-        message.success(t("schema_generated"));
-      } catch (error) {
-        message.error(JSON.stringify(error));
+      if (res.error) {
         return null;
       }
 
@@ -483,6 +465,7 @@ const DataSourcesWrapper = () => {
     <DataSources
       defaultOpen={!!slug}
       dataSources={dataSources}
+      loading={loading}
       onEdit={onEdit}
       onDelete={onDelete}
       onFinish={onFinish}

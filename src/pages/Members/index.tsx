@@ -67,9 +67,6 @@ export const Members: React.FC<MembersProps> = ({
       member?.role.name !== Roles.owner &&
       (currentRole === Roles.owner ||
         (currentRole === Roles.admin && member?.role.name === Roles.member));
-    const hasAccessChangePermission =
-      member?.role.name !== Roles.owner &&
-      member?.role.name !== ("member" as unknown as Roles);
 
     const hasDeletePermission = hasRoleChangePermission;
 
@@ -105,19 +102,13 @@ export const Members: React.FC<MembersProps> = ({
             </>
           )}
 
-          {member.createdAt && (
-            <>
-              <dt>{t("common:words.created_at")}</dt>
-              <dd title={formatTime(member.createdAt)}>
-                {formatTime(member.createdAt)}
-              </dd>
-            </>
-          )}
-
           {member.role && (
             <>
               <dt>{t("common:words.role")}</dt>
-              <dd title={capitalize(member.role.name)}>
+              <dd
+                title={capitalize(member.role.name)}
+                className={styles.roleName}
+              >
                 {hasRoleChangePermission ? (
                   <Select
                     onChange={(val) =>
@@ -136,8 +127,11 @@ export const Members: React.FC<MembersProps> = ({
                 )}
               </dd>
               <dt>{t("common:words.access_list")}</dt>
-              <dd title={capitalize(member.role.name)}>
-                {hasAccessChangePermission ? (
+              <dd
+                title={capitalize(member.role.name)}
+                className={styles.roleName}
+              >
+                {hasRoleChangePermission ? (
                   <Select
                     onChange={(accessListId) => {
                       onAccessListChange(member.role.id, accessListId);
@@ -146,12 +140,14 @@ export const Members: React.FC<MembersProps> = ({
                     disabled={!accessLists?.length}
                     value={
                       member.accessList?.id ||
-                      `* ${t("common:words.full_access").toUpperCase()} *`
+                      capitalize(t("common:words.full_access").toUpperCase())
                     }
                     options={[
                       {
                         value: null,
-                        label: t("common:words.full_access").toUpperCase(),
+                        label: capitalize(
+                          t("common:words.full_access").toUpperCase()
+                        ),
                       },
                       ...(accessLists || []).map((al) => ({
                         value: al.id,
@@ -171,6 +167,15 @@ export const Members: React.FC<MembersProps> = ({
               <dt>{t("common:words.updated_at")}</dt>
               <dd title={formatTime(member.updatedAt)}>
                 {formatTime(member.updatedAt)}
+              </dd>
+            </>
+          )}
+
+          {member.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(member.createdAt)}>
+                {formatTime(member.createdAt)}
               </dd>
             </>
           )}
@@ -218,6 +223,8 @@ const prepareMembersData = (rawMembers: MembersType[]) => {
         id: m.member_roles?.[0]?.id,
         name: m.member_roles?.[0]?.team_role as unknown,
       } as TeamRole,
+      createdAt: m.created_at,
+      updatedAt: m.member_roles?.[0]?.updated_at || m.updated_at,
     } as Member;
   });
 

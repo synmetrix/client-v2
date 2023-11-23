@@ -4780,6 +4780,7 @@ export type Member_Roles = {
   /** An object relationship */
   access_list?: Maybe<Access_Lists>;
   access_list_id?: Maybe<Scalars["uuid"]["output"]>;
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
   id: Scalars["uuid"]["output"];
   /** An object relationship */
   member: Members;
@@ -4787,6 +4788,7 @@ export type Member_Roles = {
   /** An object relationship */
   teamRoleByTeamRole: Team_Roles;
   team_role: Team_Roles_Enum;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
 };
 
 /** aggregated selection of "member_roles" */
@@ -4842,11 +4844,13 @@ export type Member_Roles_Bool_Exp = {
   _or?: InputMaybe<Array<Member_Roles_Bool_Exp>>;
   access_list?: InputMaybe<Access_Lists_Bool_Exp>;
   access_list_id?: InputMaybe<Uuid_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   member?: InputMaybe<Members_Bool_Exp>;
   member_id?: InputMaybe<Uuid_Comparison_Exp>;
   teamRoleByTeamRole?: InputMaybe<Team_Roles_Bool_Exp>;
   team_role?: InputMaybe<Team_Roles_Enum_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "member_roles" */
@@ -4861,41 +4865,51 @@ export enum Member_Roles_Constraint {
 export type Member_Roles_Insert_Input = {
   access_list?: InputMaybe<Access_Lists_Obj_Rel_Insert_Input>;
   access_list_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   member?: InputMaybe<Members_Obj_Rel_Insert_Input>;
   member_id?: InputMaybe<Scalars["uuid"]["input"]>;
   teamRoleByTeamRole?: InputMaybe<Team_Roles_Obj_Rel_Insert_Input>;
   team_role?: InputMaybe<Team_Roles_Enum>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
 };
 
 /** aggregate max on columns */
 export type Member_Roles_Max_Fields = {
   __typename?: "member_roles_max_fields";
   access_list_id?: Maybe<Scalars["uuid"]["output"]>;
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   member_id?: Maybe<Scalars["uuid"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
 };
 
 /** order by max() on columns of table "member_roles" */
 export type Member_Roles_Max_Order_By = {
   access_list_id?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   member_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
 export type Member_Roles_Min_Fields = {
   __typename?: "member_roles_min_fields";
   access_list_id?: Maybe<Scalars["uuid"]["output"]>;
+  created_at?: Maybe<Scalars["timestamptz"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   member_id?: Maybe<Scalars["uuid"]["output"]>;
+  updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
 };
 
 /** order by min() on columns of table "member_roles" */
 export type Member_Roles_Min_Order_By = {
   access_list_id?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   member_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "member_roles" */
@@ -4918,11 +4932,13 @@ export type Member_Roles_On_Conflict = {
 export type Member_Roles_Order_By = {
   access_list?: InputMaybe<Access_Lists_Order_By>;
   access_list_id?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   member?: InputMaybe<Members_Order_By>;
   member_id?: InputMaybe<Order_By>;
   teamRoleByTeamRole?: InputMaybe<Team_Roles_Order_By>;
   team_role?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: member_roles */
@@ -4935,19 +4951,25 @@ export enum Member_Roles_Select_Column {
   /** column name */
   AccessListId = "access_list_id",
   /** column name */
+  CreatedAt = "created_at",
+  /** column name */
   Id = "id",
   /** column name */
   MemberId = "member_id",
   /** column name */
   TeamRole = "team_role",
+  /** column name */
+  UpdatedAt = "updated_at",
 }
 
 /** input type for updating data in table "member_roles" */
 export type Member_Roles_Set_Input = {
   access_list_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   member_id?: InputMaybe<Scalars["uuid"]["input"]>;
   team_role?: InputMaybe<Team_Roles_Enum>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
 };
 
 /** Streaming cursor of the table "member_roles" */
@@ -4961,9 +4983,11 @@ export type Member_Roles_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Member_Roles_Stream_Cursor_Value_Input = {
   access_list_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   member_id?: InputMaybe<Scalars["uuid"]["input"]>;
   team_role?: InputMaybe<Team_Roles_Enum>;
+  updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
 };
 
 /** update columns of table "member_roles" */
@@ -4971,11 +4995,15 @@ export enum Member_Roles_Update_Column {
   /** column name */
   AccessListId = "access_list_id",
   /** column name */
+  CreatedAt = "created_at",
+  /** column name */
   Id = "id",
   /** column name */
   MemberId = "member_id",
   /** column name */
   TeamRole = "team_role",
+  /** column name */
+  UpdatedAt = "updated_at",
 }
 
 export type Member_Roles_Updates = {
@@ -12267,6 +12295,8 @@ export type MembersQuery = {
   members: Array<{
     __typename?: "members";
     id: any;
+    updated_at: any;
+    created_at: any;
     user: {
       __typename?: "users";
       id: any;
@@ -12277,6 +12307,8 @@ export type MembersQuery = {
       __typename?: "member_roles";
       id: any;
       team_role: Team_Roles_Enum;
+      updated_at?: any | null;
+      created_at?: any | null;
       access_list?: {
         __typename?: "access_lists";
         id: any;
@@ -13565,7 +13597,11 @@ export const MembersDocument = gql`
           id
           name
         }
+        updated_at
+        created_at
       }
+      updated_at
+      created_at
     }
   }
 `;

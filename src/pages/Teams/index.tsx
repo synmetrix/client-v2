@@ -117,6 +117,9 @@ export const Teams: React.FC<TeamsProps> = ({
                 <Space size={10} align="center">
                   <AvatarGroup>
                     {team.members
+                      .concat(team.members)
+                      .concat(team.members)
+                      .concat(team.members)
                       .slice(0, 3)
                       .map((member: Member, idx: number) => (
                         <Avatar
@@ -166,7 +169,7 @@ export const Teams: React.FC<TeamsProps> = ({
           />
           <div className={styles.body}>
             <Row justify={"start"} gutter={[32, 32]}>
-              {teams.map((tm) => (
+              {teams?.map((tm) => (
                 <Col xs={24} sm={12} xl={8} key={tm.id}>
                   {renderCard(tm)}
                 </Col>

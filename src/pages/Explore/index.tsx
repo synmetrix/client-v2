@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
-import { Space, message } from "antd";
+import { message } from "antd";
 
 import type { FetchDatasetOutput } from "@/graphql/generated";
 import {

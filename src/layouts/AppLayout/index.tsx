@@ -62,13 +62,23 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             !responsive.lg && sidebar ? (
               <BurgerMenu
                 header={
-                  <Row justify={"space-between"} align={"middle"}>
+                  <Row
+                    className={styles.burgerHeader}
+                    justify={"space-between"}
+                    align={"middle"}
+                  >
                     <Col>
-                      <Title style={{ margin: 0 }} level={4}>
+                      <Title
+                        className={styles.burgerTitle}
+                        style={{ margin: 0 }}
+                        level={4}
+                      >
                         {burgerTitle || title}
                       </Title>
                     </Col>
-                    {sidebar && <Col>{content}</Col>}
+                    {sidebar && (
+                      <Col className={styles.burgerMobile}>{content}</Col>
+                    )}
                   </Row>
                 }
               >

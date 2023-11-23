@@ -33,7 +33,7 @@ const BurgerMenu: FC<BurgerMenuProps> = ({ header = null, children }) => {
 
       <Drawer
         title={header}
-        bodyStyle={{ paddingTop: 0 }}
+        bodyStyle={{ padding: 30, paddingTop: 0 }}
         width={isMobile ? window.innerWidth : DRAWER_DEFAULT_WIDTH}
         open={isOpen}
         onClose={() => setIsOpen(false)}

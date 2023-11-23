@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
-import { message } from "antd";
+import { Space, message } from "antd";
 
 import type { FetchDatasetOutput } from "@/graphql/generated";
 import {
@@ -32,6 +32,8 @@ import type {
 } from "@/types/exploration";
 import type { AlertFormType, AlertType } from "@/types/alert";
 import type { ReportFormType } from "@/types/report";
+
+import ExploreIcon from "@/assets/explore-active.svg";
 
 export interface Params {
   screenshotMode: boolean;
@@ -111,6 +113,7 @@ export const Explore = ({
       <ExploreWorkspace
         header={header}
         subTitle={t("pages:explore")}
+        icon={<ExploreIcon />}
         rawSql={rawSql}
         exploration={exploration}
         params={params}

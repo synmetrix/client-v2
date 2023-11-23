@@ -48,12 +48,13 @@ interface ExploreProps {
   onOpenModal: (type: string) => void;
   header?: ReactNode;
   subTitle?: ReactNode;
+  icon?: ReactNode;
 }
 
 const Explore: FC<ExploreProps> = (props) => {
   const {
     header = null,
-    subTitle = <span style={{ fontSize: 20, fontWeight: 600 }}>Explore</span>,
+    subTitle = "Explore",
     source: dataSource,
     meta,
     exploration,
@@ -65,6 +66,7 @@ const Explore: FC<ExploreProps> = (props) => {
     loading = false,
     metaLoading = false,
     params: { screenshotMode } = {},
+    icon,
   } = props;
 
   const selector = screenshotMode
@@ -237,6 +239,7 @@ const Explore: FC<ExploreProps> = (props) => {
       divider={false}
       subTitle={subTitle}
       items={sidebar}
+      icon={icon}
       burgerTitle={subTitle as any}
     >
       {dataSource?.id ? (

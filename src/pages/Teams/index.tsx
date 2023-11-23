@@ -1,7 +1,7 @@
-import { Space, Spin } from "antd";
+import { Col, Dropdown, Row, Space, Spin, Tag } from "antd";
 import { useTranslation } from "react-i18next";
+import { SettingOutlined } from "@ant-design/icons";
 
-import TeamsTable from "@/components/TeamsTable";
 import Modal from "@/components/Modal";
 import TeamSettings from "@/components/TeamSettings";
 import PageHeader from "@/components/PageHeader";
@@ -12,7 +12,11 @@ import {
   useDeleteTeamMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
-import type { Team, TeamSettingsForm } from "@/types/team";
+import Avatar, { AvatarGroup } from "@/components/Avatar";
+import type { Member, Team, TeamSettingsForm } from "@/types/team";
+import Card from "@/components/Card";
+import ConfirmModal from "@/components/ConfirmModal";
+import formatTime from "@/utils/helpers/formatTime";
 
 import styles from "./index.module.less";
 
@@ -23,6 +27,8 @@ interface TeamsProps {
   onRemoveTeam: (id: string) => void;
   loading: boolean;
 }
+
+const AVATAR_COLORS = ["#000000", "#470D69", "#A31BCB"];
 
 export const Teams: React.FC<TeamsProps> = ({
   teams,
@@ -55,6 +61,100 @@ export const Teams: React.FC<TeamsProps> = ({
     setIsOpen(true);
   };
 
+  const renderCard = (team: Team) => {
+    return (
+      <Card
+        title={
+          <>
+            {team.name}
+            {team.id === currentTeam?.id && (
+              <Tag className={styles.tag} color="#EDE7F0">
+                {t("common:words.current")}
+              </Tag>
+            )}
+          </>
+        }
+        titleTooltip={team.name}
+        onTitleClick={() => onEdit(team)}
+        extra={
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => onEdit(team),
+                },
+                {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_alert")}
+                      onConfirm={() => onRemoveTeam(team.id)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+              ],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
+        }
+      >
+        <dl>
+          {team.members && (
+            <>
+              <dt>
+                <span>
+                  {team.members.length} {t("common:words.members")}
+                </span>
+              </dt>
+              <dd>
+                <Space size={10} align="center">
+                  <AvatarGroup>
+                    {team.members
+                      .slice(0, 3)
+                      .map((member: Member, idx: number) => (
+                        <Avatar
+                          key={member.id}
+                          color={AVATAR_COLORS[idx]}
+                          img={member?.avatarUrl}
+                          username={member?.displayName}
+                          width={32}
+                          height={32}
+                        />
+                      ))}
+                  </AvatarGroup>
+                </Space>
+              </dd>
+            </>
+          )}
+          {team.createdAt && (
+            <>
+              <dt>{t("common:words.created_at")}</dt>
+              <dd title={formatTime(team.createdAt)}>
+                {formatTime(team.createdAt)}
+              </dd>
+            </>
+          )}
+
+          {team.updatedAt && (
+            <>
+              <dt>{t("common:words.updated_at")}</dt>
+              <dd title={formatTime(team.updatedAt)}>
+                {formatTime(team.updatedAt)}
+              </dd>
+            </>
+          )}
+        </dl>
+      </Card>
+    );
+  };
+
   return (
     <>
       <Spin spinning={loading}>
@@ -64,12 +164,15 @@ export const Teams: React.FC<TeamsProps> = ({
             action={t("create_team")}
             onClick={onCreate}
           />
-          <TeamsTable
-            teams={teams}
-            currentTeam={currentTeam}
-            onEdit={onEdit}
-            onRemove={onRemoveTeam}
-          />
+          <div className={styles.body}>
+            <Row justify={"start"} gutter={[32, 32]}>
+              {teams.map((tm) => (
+                <Col xs={24} sm={12} xl={8} key={tm.id}>
+                  {renderCard(tm)}
+                </Col>
+              ))}
+            </Row>
+          </div>
         </Space>
       </Spin>
 

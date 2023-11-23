@@ -43,6 +43,12 @@ export const settingsMenuItems: SidebarMenuItem[] = [
     icon: <RolesAndAccessIcon />,
   },
   {
+    key: "teams",
+    label: "Teams",
+    href: "/settings/teams",
+    icon: <PersonalInfoIcon />,
+  },
+  {
     key: "personal-info",
     label: "Personal Info",
     href: "/settings/info",

@@ -82,9 +82,9 @@ const Navbar: FC<NavbarProps> = ({
   }));
 
   teamsMenu.push({
-    key: "/teams",
+    key: "/settings/teams",
     label: "Edit teams",
-    onClick: () => onClick("/teams"),
+    onClick: () => onClick("/settings/teams"),
   });
 
   const userMenuItems: MenuItem[] = userMenu.map((u) => ({
@@ -115,7 +115,7 @@ const Navbar: FC<NavbarProps> = ({
     if (!!teams?.length) {
       const teamMobileMenu: MenuItem = {
         label: t("common:words.teams"),
-        key: "/teams",
+        key: "/settings/teams",
         children: teamsMenu,
         type: "group",
       };

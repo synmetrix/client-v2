@@ -13,7 +13,6 @@ import {
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import type { Team, TeamSettingsForm } from "@/types/team";
-import AppLayout from "@/layouts/AppLayout";
 
 import styles from "./index.module.less";
 
@@ -57,7 +56,7 @@ export const Teams: React.FC<TeamsProps> = ({
   };
 
   return (
-    <AppLayout divider title={t("pages:teams")}>
+    <>
       <Spin spinning={loading}>
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
@@ -77,7 +76,7 @@ export const Teams: React.FC<TeamsProps> = ({
       <Modal open={isOpen} closable onClose={onClose}>
         <TeamSettings initialValue={selectedTeam} onSubmit={onSubmit} />
       </Modal>
-    </AppLayout>
+    </>
   );
 };
 

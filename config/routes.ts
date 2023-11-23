@@ -48,7 +48,7 @@ export default [
             component: "./pages/Models",
           },
           {
-            path: "/teams",
+            path: "/settings/teams",
             component: "./pages/Teams",
           },
           {
@@ -87,10 +87,6 @@ export default [
           {
             path: "/explore/:dataSourceId?/:explorationId?/:modalType?/:delivery?",
             component: "./pages/Explore",
-          },
-          {
-            path: "/teams",
-            component: "./pages/Teams",
           },
           {
             path: "/alerts/:alertId?",

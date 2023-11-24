@@ -136,18 +136,18 @@ const prepareUserData = (
 };
 
 export default () => {
-  const { currentUser, setUserData } = CurrentUserStore();
+  const { currentUser, currentTeamId, setUserData } = CurrentUserStore();
   const { JWTpayload, accessToken } = AuthTokensStore();
 
   const userId = JWTpayload?.["x-hasura-user-id"];
 
   const [currentUserData, execQueryCurrentUser] = useCurrentUserQuery({
-    variables: { id: userId },
+    variables: { id: userId, team_id: currentTeamId },
     pause: true,
   });
 
   const [subscriptionData, useSubscription] = useSubCurrentUserSubscription({
-    variables: { id: userId },
+    variables: { id: userId, team_id: currentTeamId },
     pause: true,
   });
 
@@ -159,7 +159,7 @@ export default () => {
   }, [currentUserData, setUserData]);
 
   useDeepCompareEffect(() => {
-    if (accessToken && userId) {
+    if (accessToken && userId && currentTeamId) {
       execQueryCurrentUser();
       useSubscription();
     }
@@ -167,7 +167,7 @@ export default () => {
     if (!accessToken) {
       window.location.href = "/auth/signin";
     }
-  }, [accessToken, userId]);
+  }, [accessToken, userId, currentTeamId]);
 
   useEffect(() => {
     if (subscriptionData?.data) {

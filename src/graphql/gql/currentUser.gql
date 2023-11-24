@@ -33,7 +33,7 @@ fragment TeamFields on teams {
   }
 }
 
-query CurrentUser($id: uuid!) {
+query CurrentUser($id: uuid!, $team_id: uuid) {
   users_by_pk(id: $id) {
     id
     display_name
@@ -42,7 +42,7 @@ query CurrentUser($id: uuid!) {
       email
     }
 
-    datasources(order_by: { created_at: desc }) {
+    datasources(order_by: { created_at: desc }, where: { team_id: { _eq: $team_id }}) {
       id
       name
       db_params
@@ -64,7 +64,7 @@ query CurrentUser($id: uuid!) {
       }
     }
 
-    alerts(order_by: { created_at: desc }) {
+    alerts(order_by: { created_at: desc }, where: { team_id: { _eq: $team_id }}) {
       id
       name
       delivery_type
@@ -87,7 +87,7 @@ query CurrentUser($id: uuid!) {
       }
     }
 
-    reports(order_by: { created_at: desc }) {
+    reports(order_by: { created_at: desc }, where: { team_id: { _eq: $team_id }}) {
       id
       name
       schedule
@@ -129,7 +129,7 @@ query CurrentUser($id: uuid!) {
   }
 }
 
-subscription SubCurrentUser($id: uuid!) {
+subscription SubCurrentUser($id: uuid!, $team_id: uuid) {
   users_by_pk(id: $id) {
     id
     display_name
@@ -138,7 +138,7 @@ subscription SubCurrentUser($id: uuid!) {
       email
     }
 
-    datasources(order_by: { created_at: desc }) {
+    datasources(order_by: { created_at: desc }, where: { team_id: { _eq: $team_id }}) {
       id
       name
       db_params
@@ -160,7 +160,7 @@ subscription SubCurrentUser($id: uuid!) {
       }
     }
 
-    alerts(order_by: { created_at: desc }) {
+    alerts(order_by: { created_at: desc }, where: { team_id: { _eq: $team_id }}) {
       id
       name
       delivery_type
@@ -183,7 +183,7 @@ subscription SubCurrentUser($id: uuid!) {
       }
     }
 
-    reports(order_by: { created_at: desc }) {
+    reports(order_by: { created_at: desc }, where: { team_id: { _eq: $team_id }}) {
       id
       name
       schedule

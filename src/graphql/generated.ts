@@ -11764,6 +11764,7 @@ export type TeamFieldsFragment = {
 
 export type CurrentUserQueryVariables = Exact<{
   id: Scalars["uuid"]["input"];
+  team_id?: InputMaybe<Scalars["uuid"]["input"]>;
 }>;
 
 export type CurrentUserQuery = {
@@ -11898,6 +11899,7 @@ export type CurrentUserQuery = {
 
 export type SubCurrentUserSubscriptionVariables = Exact<{
   id: Scalars["uuid"]["input"];
+  team_id?: InputMaybe<Scalars["uuid"]["input"]>;
 }>;
 
 export type SubCurrentUserSubscription = {
@@ -12997,7 +12999,7 @@ export function useCreateVersionMutation() {
   >(CreateVersionDocument);
 }
 export const CurrentUserDocument = gql`
-  query CurrentUser($id: uuid!) {
+  query CurrentUser($id: uuid!, $team_id: uuid) {
     users_by_pk(id: $id) {
       id
       display_name
@@ -13005,7 +13007,10 @@ export const CurrentUserDocument = gql`
       account {
         email
       }
-      datasources(order_by: { created_at: desc }) {
+      datasources(
+        order_by: { created_at: desc }
+        where: { team_id: { _eq: $team_id } }
+      ) {
         id
         name
         db_params
@@ -13026,7 +13031,10 @@ export const CurrentUserDocument = gql`
           }
         }
       }
-      alerts(order_by: { created_at: desc }) {
+      alerts(
+        order_by: { created_at: desc }
+        where: { team_id: { _eq: $team_id } }
+      ) {
         id
         name
         delivery_type
@@ -13048,7 +13056,10 @@ export const CurrentUserDocument = gql`
           playground_state
         }
       }
-      reports(order_by: { created_at: desc }) {
+      reports(
+        order_by: { created_at: desc }
+        where: { team_id: { _eq: $team_id } }
+      ) {
         id
         name
         schedule
@@ -13101,7 +13112,7 @@ export function useCurrentUserQuery(
   });
 }
 export const SubCurrentUserDocument = gql`
-  subscription SubCurrentUser($id: uuid!) {
+  subscription SubCurrentUser($id: uuid!, $team_id: uuid) {
     users_by_pk(id: $id) {
       id
       display_name
@@ -13109,7 +13120,10 @@ export const SubCurrentUserDocument = gql`
       account {
         email
       }
-      datasources(order_by: { created_at: desc }) {
+      datasources(
+        order_by: { created_at: desc }
+        where: { team_id: { _eq: $team_id } }
+      ) {
         id
         name
         db_params
@@ -13130,7 +13144,10 @@ export const SubCurrentUserDocument = gql`
           }
         }
       }
-      alerts(order_by: { created_at: desc }) {
+      alerts(
+        order_by: { created_at: desc }
+        where: { team_id: { _eq: $team_id } }
+      ) {
         id
         name
         delivery_type
@@ -13152,7 +13169,10 @@ export const SubCurrentUserDocument = gql`
           playground_state
         }
       }
-      reports(order_by: { created_at: desc }) {
+      reports(
+        order_by: { created_at: desc }
+        where: { team_id: { _eq: $team_id } }
+      ) {
         id
         name
         schedule

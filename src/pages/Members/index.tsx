@@ -184,12 +184,14 @@ export const Members: React.FC<MembersProps> = ({
     );
   };
 
+  const isMember = currentRole === Roles.member;
+
   return (
     <>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("settings:members.title")}
-          action={t("settings:members.action")}
+          action={!isMember && t("settings:members.action")}
           onClick={() => setIsOpen(true)}
         />
 

@@ -109,6 +109,12 @@ export const DataSources = ({
                   onClick: () => dataSource.id && onEdit(dataSource.id),
                 },
                 {
+                  key: "generate",
+                  label: t("common:words.generate_models"),
+                  onClick: () =>
+                    dataSource.id && onGenerateModel(dataSource.id),
+                },
+                {
                   key: "delete",
                   className: styles.deleteItem,
                   label: (
@@ -120,13 +126,6 @@ export const DataSources = ({
                       {t("common:words.delete")}
                     </ConfirmModal>
                   ),
-                },
-
-                {
-                  key: "generate",
-                  label: t("common:words.generate_models"),
-                  onClick: () =>
-                    dataSource.id && onGenerateModel(dataSource.id),
                 },
               ],
             }}

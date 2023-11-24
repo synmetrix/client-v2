@@ -1,4 +1,4 @@
-import { Layout } from "antd";
+import { Col, Layout, Row, Typography } from "antd";
 import { useResponsive } from "ahooks";
 
 import Header from "@/components/Header";
@@ -16,12 +16,16 @@ import type { ReactNode } from "react";
 export type AppLayoutProps = {
   sidebar?: ReactNode;
   children: ReactNode;
-  title?: ReactNode | string;
+  title?: ReactNode;
   divider?: boolean;
+  burgerTitle?: ReactNode;
 };
+
+const { Title } = Typography;
 
 const AppLayout: React.FC<AppLayoutProps> = ({
   title = "App",
+  burgerTitle,
   divider = false,
   sidebar = null,
   children,
@@ -31,11 +35,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   const content = (
     <Navbar
-      direction={!responsive.lg ? "vertical" : "horizontal"}
       username={currentUser.displayName}
       userAvatar={currentUser.avatarUrl}
       userMenu={userMenu}
       teams={currentUser?.teams}
+      type={!responsive.lg ? "dropdown" : "inline"}
     />
   );
 
@@ -54,11 +58,32 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           title={title}
           bordered={divider}
           content={
-            !responsive.lg ? (
-              <BurgerMenu>
-                <div style={{ height: 150 }}>{content}</div>
+            !responsive.lg && sidebar ? (
+              <BurgerMenu
+                header={
+                  <Row
+                    className={styles.burgerHeader}
+                    justify={"space-between"}
+                    align={"middle"}
+                  >
+                    <Col>
+                      <Title
+                        className={styles.burgerTitle}
+                        style={{ margin: 0 }}
+                        level={4}
+                      >
+                        {burgerTitle || title}
+                      </Title>
+                    </Col>
+                    {sidebar && (
+                      <Col className={styles.burgerMobile}>{content}</Col>
+                    )}
+                  </Row>
+                }
+              >
                 <div style={{ margin: "0 -20px" }}>
                   {!responsive.lg && sidebar}
+                  {!sidebar && content}
                 </div>
               </BurgerMenu>
             ) : (

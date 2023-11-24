@@ -4,7 +4,8 @@
     "sources": "Data Sources",
     "members": "Members",
     "info": "Personal Info",
-    "sql-api": "SQL API"
+    "sql-api": "SQL API",
+    "teams": "Teams"
   },
   "alerts": "Alerts",
   "reports": "Reports",

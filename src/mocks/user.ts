@@ -1,3 +1,5 @@
+import i18n from "i18next.config";
+
 export const user = {
   displayName: "Full Name",
   teams: [
@@ -10,11 +12,11 @@ export const user = {
 
 export const userMenu = [
   {
-    label: "Teams",
-    href: "/teams",
+    label: i18n.t("common:words.personal_info"),
+    href: "/settings/info",
   },
   {
-    label: "Logout",
+    label: i18n.t("common:words.logout"),
     href: "/auth/logout",
   },
 ];

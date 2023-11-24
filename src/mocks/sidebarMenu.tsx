@@ -6,6 +6,7 @@ import PersonalInfoIcon from "@/assets/personal-info.svg";
 import AlertsIcon from "@/assets/alert-logs.svg";
 import ReportsIcon from "@/assets/report-logs.svg";
 import QueryIcon from "@/assets/query-logs.svg";
+import TeamsIcon from "@/assets/team.svg";
 
 import type { ReactNode } from "react";
 
@@ -41,6 +42,12 @@ export const settingsMenuItems: SidebarMenuItem[] = [
     label: "Roles and Access",
     href: "/settings/access",
     icon: <RolesAndAccessIcon />,
+  },
+  {
+    key: "teams",
+    label: "Teams",
+    href: "/settings/teams",
+    icon: <TeamsIcon />,
   },
   {
     key: "personal-info",

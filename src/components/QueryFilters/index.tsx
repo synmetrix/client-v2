@@ -1,4 +1,4 @@
-import { Form, Space } from "antd";
+import { Col, Form, Row } from "antd";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 
@@ -41,52 +41,61 @@ const QueryFilters: FC<QueryFiltersProps> = ({
 
   return (
     <Form layout="vertical">
-      <Space size={10}>
-        <Input
-          className={styles.input}
-          control={control}
-          name="dataSourceId"
-          placeholder={t("query.filter.select")}
-          label={t("query.filter.data_source")}
-          fieldType="select"
-          allowClear
-          options={dataSources?.map((d) => ({
-            value: d.id || "",
-            label: d.name,
-          }))}
-        />
+      <Row gutter={[10, 0]}>
+        <Col xs={24} md={12} lg={6} xl={4}>
+          <Input
+            className={styles.input}
+            control={control}
+            name="dataSourceId"
+            placeholder={t("query.filter.select")}
+            label={t("query.filter.data_source")}
+            fieldType="select"
+            allowClear
+            options={dataSources?.map((d) => ({
+              value: d.id || "",
+              label: d.name,
+            }))}
+          />
+        </Col>
 
-        <Input
-          className={styles.input}
-          control={control}
-          name="from"
-          fieldType="date"
-          label={t("query.filter.from")}
-          showTime
-        />
-        <Input
-          className={styles.input}
-          control={control}
-          name="to"
-          fieldType="date"
-          label={t("query.filter.to")}
-          showTime
-        />
+        <Col xs={24} md={12} lg={6} xl={4}>
+          <Input
+            className={styles.input}
+            control={control}
+            name="from"
+            fieldType="date"
+            label={t("query.filter.from")}
+            showTime
+          />
+        </Col>
 
-        <Input
-          className={styles.input}
-          control={control}
-          name="sort"
-          label={t("query.filter.sort")}
-          fieldType="select"
-          defaultValue={"asc"}
-          allowClear
-          options={[
-            { value: "asc", label: "Asc" },
-            { value: "desc", label: "Desc" },
-          ]}
-        />
-      </Space>
+        <Col xs={24} md={12} lg={6} xl={4}>
+          <Input
+            className={styles.input}
+            control={control}
+            name="to"
+            fieldType="date"
+            label={t("query.filter.to")}
+            showTime
+          />
+        </Col>
+
+        <Col xs={24} md={12} lg={6} xl={4}>
+          <Input
+            className={styles.input}
+            control={control}
+            name="sort"
+            label={t("query.filter.sort")}
+            fieldType="select"
+            defaultValue={"asc"}
+            allowClear
+            options={[
+              { value: "asc", label: "Asc" },
+              { value: "desc", label: "Desc" },
+            ]}
+          />
+        </Col>
+      </Row>
     </Form>
   );
 };

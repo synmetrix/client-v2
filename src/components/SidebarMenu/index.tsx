@@ -14,7 +14,7 @@ interface SidebarMenuProps {
 }
 
 const SidebarMenu: FC<SidebarMenuProps> = ({ items }) => {
-  const [_, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
 
   const onClick = (menuItem: SidebarMenuItem) => {
     const href = menuItem.href;

@@ -20,7 +20,6 @@ import type { ErrorMessage } from "@/types/errorMessage";
 import type { CubeMember } from "@/types/cube";
 import type { ExplorationState } from "@/types/exploration";
 
-import CSVIcon from "@/assets/csv.svg";
 import AlertIcon from "@/assets/alert-logs.svg";
 import ReportIcon from "@/assets/report-logs.svg";
 

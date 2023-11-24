@@ -236,6 +236,7 @@ const DataSourcesWrapper = () => {
   const [, setLocation] = useLocation();
   const { slug, generate } = useParams();
   const basePath = withAuthPrefix("/settings/sources");
+  const modelsPath = withAuthPrefix("/models");
   const connect = slug === "connect";
   const curId = !connect && slug;
   const {
@@ -318,8 +319,13 @@ const DataSourcesWrapper = () => {
   };
 
   const onFinish = useCallback(() => {
-    setLocation(basePath);
-  }, [basePath, setLocation]);
+    let finishPath = modelsPath;
+
+    if (dataSourceSetup?.id) {
+      finishPath = `${finishPath}/${dataSourceSetup.id}`;
+    }
+    setLocation(finishPath);
+  }, [dataSourceSetup?.id, modelsPath, setLocation]);
 
   const createSQLApi = useCallback(
     async (dataSourceId: string, dataSourceName: string) => {
@@ -440,11 +446,12 @@ const DataSourcesWrapper = () => {
         return null;
       }
 
-      if (!isOnboarding) {
-        setLocation(basePath);
-      } else {
+      if (isOnboarding) {
         nextStep();
+        return true;
       }
+
+      onFinish();
     }
   };
 
@@ -458,9 +465,9 @@ const DataSourcesWrapper = () => {
 
   useEffect(() => {
     if (dataSources.length && curId && !curDataSource) {
-      onFinish();
+      setLocation(basePath);
     }
-  }, [curDataSource, curId, dataSources.length, onFinish, setLocation, t]);
+  }, [basePath, curDataSource, curId, dataSources.length, setLocation]);
 
   useEffect(() => {
     if (curDataSource) {
@@ -524,10 +531,10 @@ const DataSourcesWrapper = () => {
   }, [connect, setIsOnboarding]);
 
   useEffect(() => {
-    if (curId) {
+    if (curId && !generate) {
       setStep(1);
     }
-  }, [curId, setStep]);
+  }, [curId, generate, setStep]);
 
   useEffect(() => {
     if (generate && generate === "generate") {

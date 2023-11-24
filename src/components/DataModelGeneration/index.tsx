@@ -169,19 +169,18 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
 
             <Row align="middle" justify={"space-between"}>
               <Col xs={24} md={18}>
-                {isOnboarding ||
-                  (!isGenerate && (
-                    <Button
-                      className={cn(styles.back, {
-                        [styles.fullwidth]: !windowSize.md,
-                      })}
-                      size="large"
-                      color="primary"
-                      onClick={onGoBack}
-                    >
-                      {t("common:words.back")}
-                    </Button>
-                  ))}
+                {(isOnboarding || !isGenerate) && (
+                  <Button
+                    className={cn(styles.back, {
+                      [styles.fullwidth]: !windowSize.md,
+                    })}
+                    size="large"
+                    color="primary"
+                    onClick={onGoBack}
+                  >
+                    {t("common:words.back")}
+                  </Button>
+                )}
                 <Button
                   className={cn(styles.submit, {
                     [styles.fullwidth]: !windowSize.md,

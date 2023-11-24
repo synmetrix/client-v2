@@ -5,11 +5,7 @@ import { useTranslation } from "react-i18next";
 import StepFormHeader from "@/components/StepFormHeader";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import DataSourceFormBody from "@/components/DataSourceFormBody";
-import type {
-  ApiSetupForm,
-  DataSourceSetupForm,
-  DynamicForm,
-} from "@/types/dataSource";
+import type { DataSourceSetupForm, DynamicForm } from "@/types/dataSource";
 import DataSourceStore from "@/stores/DataSourceStore";
 
 import styles from "./index.module.less";
@@ -17,7 +13,7 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface DataSourceFormProps {
-  onFinish: (data: ApiSetupForm) => void;
+  onFinish: () => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;

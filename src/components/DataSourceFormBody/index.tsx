@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
 import type {
-  ApiSetupForm,
   DataSource,
   DataSourceSetupForm,
   DynamicForm,
@@ -19,7 +18,7 @@ import type { FC } from "react";
 interface DataSourceFormBodyProps {
   activeStep?: number;
   formState?: FormState;
-  onFinish: (data: ApiSetupForm) => void;
+  onFinish: () => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;

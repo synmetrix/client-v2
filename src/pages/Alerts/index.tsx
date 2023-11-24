@@ -5,6 +5,7 @@ import { SettingOutlined } from "@ant-design/icons";
 import { useParams } from "@vitjs/runtime";
 
 import PageHeader from "@/components/PageHeader";
+import NoSignals from "@/components/NoSignals";
 import AlertModal from "@/components/AlertModal";
 import type { Alert, AlertFormType } from "@/types/alert";
 import type { QueryState } from "@/types/queryState";
@@ -237,13 +238,17 @@ const Alerts: React.FC<AlertsProps> = ({
           href={DOCS_CREATE_ALERT_LINK}
         />
         <div className={styles.body}>
-          <Row justify={"start"} gutter={[32, 32]}>
-            {alerts.map((a) => (
-              <Col xs={24} sm={12} xl={8} key={a.id}>
-                {renderCard(a)}
-              </Col>
-            ))}
-          </Row>
+          {!!alerts?.length ? (
+            <Row justify={"start"} gutter={[32, 32]}>
+              {alerts.map((a) => (
+                <Col xs={24} sm={12} xl={8} key={a.id}>
+                  {renderCard(a)}
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <NoSignals />
+          )}
         </div>
       </Space>
 

@@ -6,6 +6,7 @@ import { SettingOutlined } from "@ant-design/icons";
 
 import PageHeader from "@/components/PageHeader";
 import ReportModal from "@/components/ReportModal";
+import NoSignals from "@/components/NoSignals";
 import type { Alert } from "@/types/alert";
 import type { Report, ReportFormType } from "@/types/report";
 import type { QueryState } from "@/types/queryState";
@@ -238,13 +239,17 @@ const Reports: React.FC<ReportsProps> = ({
           href={DOCS_CREATE_REPORT_LINK}
         />
         <div className={styles.body}>
-          <Row justify={"start"} gutter={[32, 32]}>
-            {reports.map((r) => (
-              <Col xs={24} sm={12} xl={8} key={r.id}>
-                {renderCard(r)}
-              </Col>
-            ))}
-          </Row>
+          {!!reports?.length ? (
+            <Row justify={"start"} gutter={[32, 32]}>
+              {reports.map((r) => (
+                <Col xs={24} sm={12} xl={8} key={r.id}>
+                  {renderCard(r)}
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <NoSignals type="reports" />
+          )}
         </div>
       </Space>
 

@@ -24,5 +24,9 @@
   "report_created": "Report created",
   "report_updated": "Report updated",
   "report_deleted": "Report deleted",
-  "test_report_sent": "Test report has been sent"
+  "test_report_sent": "Test report has been sent",
+  "not": {
+    "title": "No reports found",
+    "text": "There are currently no alerts to display."
+  }
 }

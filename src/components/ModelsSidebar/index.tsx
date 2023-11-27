@@ -104,7 +104,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
         onChange={onDataSourceChange}
       />
       <div className={styles.inner}>
-        <Space className={styles.space} align="end">
+        <div className={styles.row}>
           <Space className={styles.space} size={10} direction="vertical">
             <div className={styles.label}>{t("common:words.branch")}:</div>
 
@@ -155,7 +155,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               disabled={!branches?.length}
             />
           )}
-        </Space>
+        </div>
 
         <Space className={styles.space} size={10} direction="vertical">
           {branches?.length ? (
@@ -183,7 +183,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
         </Space>
 
         <Space className={styles.space} size={16} direction="vertical">
-          <Space className={styles.space} size={10} align="center">
+          <div className={styles.row}>
             <SearchInput
               value={searchValue}
               onChange={setSearchValue}
@@ -221,7 +221,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 disabled={!branches?.length}
               />
             )}
-          </Space>
+          </div>
 
           {files
             .filter((f) =>

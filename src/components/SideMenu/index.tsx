@@ -1,5 +1,5 @@
 import { useResponsive } from "ahooks";
-import { Space } from "antd";
+import { Space, Tooltip } from "antd";
 import cn from "classnames";
 
 import Button from "@/components/Button";
@@ -30,24 +30,48 @@ const SideMenu: FC<SideMenuProps> = () => {
     <div className={styles.wrapper}>
       <Space className={styles.inner} size={0} align="center">
         <div className={cn(styles.menu)}>
-          <img className={styles.logo} alt="" src="/logo_bg.png" />
+          <img
+            className={cn(styles.logo, isMobile && styles.logoMobile)}
+            alt=""
+            src="/logo_bg.png"
+          />
 
-          {items.map((i) => (
-            <Button
-              key={i.key}
-              className={cn(styles.btn, isMobile && styles.mobile)}
-              type="text"
-              href={i.href}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onClick(i);
-              }}
-            >
-              {i.icon}
-              <span className={styles.label}>{i.label}</span>
-            </Button>
-          ))}
+          {items.map((i) =>
+            isMobile ? (
+              <Tooltip
+                placement="right"
+                key={i.key}
+                title={i.label}
+                trigger={"contextMenu"}
+              >
+                <Button
+                  className={cn(styles.btn, isMobile && styles.mobile)}
+                  type="text"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onClick(i);
+                  }}
+                  icon={i.icon}
+                />
+              </Tooltip>
+            ) : (
+              <Button
+                key={i.key}
+                className={cn(styles.btn, isMobile && styles.mobile)}
+                type="text"
+                href={i.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClick(i);
+                }}
+              >
+                {i.icon}
+                <span className={styles.label}>{i.label}</span>
+              </Button>
+            )
+          )}
         </div>
       </Space>
     </div>

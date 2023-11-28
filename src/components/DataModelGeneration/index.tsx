@@ -29,6 +29,7 @@ interface DataModelGenerationProps {
   dataSource: DataSource | DataSourceInfo;
   schema: Schema | undefined;
   isOnboarding: boolean;
+  isGenerate: boolean;
   onSubmit: (data: DynamicForm, format: string) => void;
   onGoBack?: () => void;
   onSkip?: () => void;
@@ -48,6 +49,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   onSubmit,
   onGoBack,
   onSkip,
+  isGenerate = false,
   isOnboarding = false,
   initialValue = {
     type: "js",
@@ -167,7 +169,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
 
             <Row align="middle" justify={"space-between"}>
               <Col xs={24} md={18}>
-                {isOnboarding && (
+                {(isOnboarding || !isGenerate) && (
                   <Button
                     className={cn(styles.back, {
                       [styles.fullwidth]: !windowSize.md,

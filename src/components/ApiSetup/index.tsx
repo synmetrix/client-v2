@@ -49,7 +49,7 @@ const defaultConnectionOptions = [
 interface ApiSetupProps {
   onSubmit: (data: ApiSetupForm) => void;
   onGoBack?: () => void;
-  editId?: string;
+  isOnboarding?: boolean;
   initialValue: ApiSetupForm | undefined;
   connectionOptions?: ApiSetupField[];
   dataSources?: DataSourceInfo[];
@@ -75,7 +75,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
   initialValue,
   dataSources,
   teamMembers,
-  editId,
+  isOnboarding,
   onSubmit,
   onGoBack,
 }) => {
@@ -161,7 +161,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                   value: m.id,
                   label: m.displayName,
                 }))}
-                disabled={!!editId}
+                disabled={!!isOnboarding}
               />
             </Col>
             <Col xs={24} sm={12}>
@@ -176,7 +176,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                   value: d.id as string,
                   label: d.name,
                 }))}
-                disabled={!!editId}
+                disabled={!!isOnboarding}
               />
             </Col>
           </Row>
@@ -212,7 +212,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                   defaultValue={initialValue?.[name]}
                   fieldType={f.type}
                   label={f.label}
-                  disabled={f.disabled || !isNew || !!editId}
+                  disabled={f.disabled || !isNew || !!isOnboarding}
                   suffix={
                     <CopyIcon
                       className={styles.icon}
@@ -273,7 +273,9 @@ const ApiSetup: FC<ApiSetupProps> = ({
               form="api-setup"
               onClick={handleSubmit(onSubmit)}
             >
-              {editId ? t("common:words.close") : t("common:words.finish")}
+              {!isOnboarding
+                ? t("common:words.close")
+                : t("common:words.finish")}
             </Button>
 
             <Button

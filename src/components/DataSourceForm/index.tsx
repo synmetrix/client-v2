@@ -1,15 +1,11 @@
-import { Card, Spin, Alert } from "antd";
+import { Card, Spin } from "antd";
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 
 import StepFormHeader from "@/components/StepFormHeader";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import DataSourceFormBody from "@/components/DataSourceFormBody";
-import type {
-  ApiSetupForm,
-  DataSourceSetupForm,
-  DynamicForm,
-} from "@/types/dataSource";
+import type { DataSourceSetupForm, DynamicForm } from "@/types/dataSource";
 import DataSourceStore from "@/stores/DataSourceStore";
 
 import styles from "./index.module.less";
@@ -17,7 +13,7 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 interface DataSourceFormProps {
-  onFinish: (data: ApiSetupForm) => void;
+  onFinish: () => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;
@@ -36,7 +32,7 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
   shadow = true,
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { step, setStep, loading, error, message } = DataSourceStore();
+  const { step, setStep, loading } = DataSourceStore();
 
   return (
     <Card
@@ -61,8 +57,6 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
             onDataModelGenerationSubmit={onDataModelGenerationSubmit}
           />
         </Suspense>
-        {error && <Alert message={error} type="error" />}
-        {message && <Alert message={message} type="success" />}
       </Spin>
     </Card>
   );

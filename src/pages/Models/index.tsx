@@ -243,6 +243,7 @@ export const Models: React.FC<ModelsProps> = ({
               <DataModelGeneration
                 dataSource={dataSource!}
                 schema={tablesSchema}
+                isGenerate={true}
                 isOnboarding={false}
                 loading={schemaFetching}
                 onSubmit={onGenSubmit}

@@ -69,9 +69,11 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
                 },
                 {
                   key: "delete",
+                  className: styles.deleteItem,
                   label: (
                     <ConfirmModal
                       title={t("common:words.delete_datasource")}
+                      className={styles.deleteText}
                       onConfirm={() => id && onDelete(id)}
                     >
                       {t("common:words.delete")}

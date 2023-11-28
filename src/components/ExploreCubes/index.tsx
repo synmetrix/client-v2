@@ -171,54 +171,58 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
     <div>
       {header && <div className={styles.header}>{header}</div>}
 
-      <Radio.Group
-        value={state.radioValue}
-        size="small"
-        onChange={onFilterChange}
-        className={styles.buttonGroup}
-      >
-        <Radio.Button className={styles.radioButton} type="text" value="all">
-          {t("All")}
-        </Radio.Button>
-        <Radio.Button
-          className={styles.radioButton}
-          type="text"
-          value="dimensions"
-        >
-          {t("Dimensions")}
-        </Radio.Button>
-        <Radio.Button
-          className={styles.radioButton}
-          type="text"
-          value="measures"
-        >
-          {t("Measures")}
-        </Radio.Button>
-      </Radio.Group>
-
-      <Input
-        className={styles.searchInput}
-        bordered={false}
-        prefix={<SearchIcon />}
-        placeholder="Find..."
-        onChange={onChange}
-        allowClear
-      />
-
       <div>
-        {dataSchemaValidation?.error && <Alert {...dataSchemaError} />}
-        <Collapse
-          className={styles.collapse}
-          bordered={false}
-          activeKey={state.openedCubes}
-          defaultActiveKey={state.openedCubes}
-          onChange={onCollapse}
-          expandIcon={({ isActive }) => (
-            <RightOutlined rotate={isActive ? -90 : 0} />
-          )}
+        <Radio.Group
+          value={state.radioValue}
+          size="small"
+          onChange={onFilterChange}
+          className={styles.buttonGroup}
         >
-          {options}
-        </Collapse>
+          <Radio.Button className={styles.radioButton} type="text" value="all">
+            {t("All")}
+          </Radio.Button>
+          <Radio.Button
+            className={styles.radioButton}
+            type="text"
+            value="dimensions"
+          >
+            {t("Dimensions")}
+          </Radio.Button>
+          <Radio.Button
+            className={styles.radioButton}
+            type="text"
+            value="measures"
+          >
+            {t("Measures")}
+          </Radio.Button>
+        </Radio.Group>
+      </div>
+
+      <div className={styles.body}>
+        <Input
+          className={styles.searchInput}
+          bordered={false}
+          prefix={<SearchIcon />}
+          placeholder="Find..."
+          onChange={onChange}
+          allowClear
+        />
+
+        <div>
+          {dataSchemaValidation?.error && <Alert {...dataSchemaError} />}
+          <Collapse
+            className={styles.collapse}
+            bordered={false}
+            activeKey={state.openedCubes}
+            defaultActiveKey={state.openedCubes}
+            onChange={onCollapse}
+            expandIcon={({ isActive }) => (
+              <RightOutlined rotate={isActive ? -90 : 0} />
+            )}
+          >
+            {options}
+          </Collapse>
+        </div>
       </div>
     </div>
   );

@@ -157,7 +157,11 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
           </Space>
         </div>
 
-        <Space className={styles.space} size={10} direction="vertical">
+        <Space
+          className={cn(styles.space, styles.versionRow)}
+          size={10}
+          direction="vertical"
+        >
           {branches?.length ? (
             <div>
               <span> {t("sidebar.version")}:</span>{" "}
@@ -183,7 +187,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
         </Space>
 
         <Space className={styles.space} size={16} direction="vertical">
-          <div className={styles.row}>
+          <div className={cn(styles.row, styles.searchRow)}>
             <SearchInput
               value={searchValue}
               onChange={setSearchValue}

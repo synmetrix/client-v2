@@ -30,10 +30,13 @@ import formatTime from "@/utils/helpers/formatTime";
 import ConfirmModal from "@/components/ConfirmModal";
 import Card from "@/components/Card";
 import { AccessTypeWrapper } from "@/components/AccessType";
+import type { Team } from "@/types/team";
+import { Roles } from "@/types/team";
 
 import styles from "./index.module.less";
 interface RolesAndAccessProps {
   initialValues?: RoleFormType;
+  currentTeam: Team;
   accessLists: AccessList[];
   dataSourceAccess: DataSourceAccess[];
   loading?: boolean;
@@ -44,6 +47,7 @@ interface RolesAndAccessProps {
 }
 
 export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
+  currentTeam,
   initialValues,
   accessLists,
   loading,
@@ -74,39 +78,43 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
     }
   }, [initialValues, setIsOpen]);
 
+  const isMember = currentTeam.role === Roles.member;
+
   const renderCard = (accessList: AccessList) => {
     return (
       <Card
         title={accessList.name}
         titleTooltip={accessList.name}
-        onTitleClick={() => onEdit?.(accessList.id)}
+        onTitleClick={() => !isMember && onEdit?.(accessList.id)}
         extra={
-          <Dropdown
-            className={styles.btn}
-            trigger={["click"]}
-            menu={{
-              items: [
-                {
-                  key: "edit",
-                  label: t("common:words.edit"),
-                  onClick: () => onEdit?.(accessList.id),
-                },
-                {
-                  key: "delete",
-                  label: (
-                    <ConfirmModal
-                      title={t("common:words.delete_role")}
-                      onConfirm={() => onRemove?.(accessList.id)}
-                    >
-                      {t("common:words.delete")}
-                    </ConfirmModal>
-                  ),
-                },
-              ],
-            }}
-          >
-            <SettingOutlined key="setting" />
-          </Dropdown>
+          !isMember && (
+            <Dropdown
+              className={styles.btn}
+              trigger={["click"]}
+              menu={{
+                items: [
+                  {
+                    key: "edit",
+                    label: t("common:words.edit"),
+                    onClick: () => onEdit?.(accessList.id),
+                  },
+                  {
+                    key: "delete",
+                    label: (
+                      <ConfirmModal
+                        title={t("common:words.delete_role")}
+                        onConfirm={() => onRemove?.(accessList.id)}
+                      >
+                        {t("common:words.delete")}
+                      </ConfirmModal>
+                    ),
+                  },
+                ],
+              }}
+            >
+              <SettingOutlined key="setting" />
+            </Dropdown>
+          )
         }
       >
         <dl>
@@ -160,7 +168,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
         <Space className={styles.wrapper} direction="vertical" size={13}>
           <PageHeader
             title={t("settings:roles_and_access.manage_roles")}
-            action={t("settings:roles_and_access.create_now")}
+            action={!isMember && t("settings:roles_and_access.create_now")}
             onClick={onOpen}
           />
           <div className={styles.body}>
@@ -412,6 +420,7 @@ const RolesAndAccessWrapper: React.FC = () => {
 
   return (
     <RolesAndAccess
+      currentTeam={currentTeam}
       accessLists={accessLists}
       loading={loading}
       onEdit={onEdit}

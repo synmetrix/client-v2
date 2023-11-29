@@ -11751,6 +11751,14 @@ export type TeamFieldsFragment = {
       __typename?: "member_roles";
       id: any;
       team_role: Team_Roles_Enum;
+      created_at?: any | null;
+      updated_at?: any | null;
+      access_list?: {
+        __typename?: "access_lists";
+        id: any;
+        name: string;
+        config: any;
+      } | null;
     }>;
     user: {
       __typename?: "users";
@@ -11764,7 +11772,6 @@ export type TeamFieldsFragment = {
 
 export type CurrentUserQueryVariables = Exact<{
   id: Scalars["uuid"]["input"];
-  team_id?: InputMaybe<Scalars["uuid"]["input"]>;
 }>;
 
 export type CurrentUserQuery = {
@@ -11775,91 +11782,20 @@ export type CurrentUserQuery = {
     display_name?: string | null;
     avatar_url?: string | null;
     account?: { __typename?: "auth_accounts"; email?: any | null } | null;
-    datasources: Array<{
-      __typename?: "datasources";
-      id: any;
-      name: string;
-      db_params: any;
-      db_type: string;
-      created_at: any;
-      updated_at: any;
-      branches: Array<{
-        __typename?: "branches";
-        id: any;
-        name: string;
-        status: Branch_Statuses_Enum;
-        versions: Array<{
-          __typename?: "versions";
-          id: any;
-          dataschemas_aggregate: {
-            __typename?: "dataschemas_aggregate";
-            aggregate?: {
-              __typename?: "dataschemas_aggregate_fields";
-              count: number;
-            } | null;
-          };
-        }>;
-      }>;
-      sql_credentials: Array<{
-        __typename?: "sql_credentials";
-        id: any;
-        username: string;
-        created_at: any;
-        updated_at: any;
-        user: { __typename?: "users"; id: any; display_name?: string | null };
-      }>;
-    }>;
-    alerts: Array<{
-      __typename?: "alerts";
-      id: any;
-      name: string;
-      delivery_type: string;
-      delivery_config: any;
-      trigger_config: any;
-      created_at: any;
-      updated_at: any;
-      schedule: string;
-      user: {
-        __typename?: "users";
-        id: any;
-        avatar_url?: string | null;
-        display_name?: string | null;
-        account?: { __typename?: "auth_accounts"; email?: any | null } | null;
-      };
-      exploration: {
-        __typename?: "explorations";
-        id: any;
-        playground_state: any;
-      };
-    }>;
-    reports: Array<{
-      __typename?: "reports";
-      id: any;
-      name: string;
-      schedule: string;
-      delivery_type: string;
-      delivery_config: any;
-      created_at: any;
-      updated_at: any;
-      user: {
-        __typename?: "users";
-        id: any;
-        avatar_url?: string | null;
-        display_name?: string | null;
-        account?: { __typename?: "auth_accounts"; email?: any | null } | null;
-      };
-      exploration: {
-        __typename?: "explorations";
-        id: any;
-        playground_state: any;
-      };
-    }>;
     members: Array<{
       __typename?: "members";
       member_roles: Array<{
         __typename?: "member_roles";
         id: any;
         team_role: Team_Roles_Enum;
+        created_at?: any | null;
+        updated_at?: any | null;
+        access_list?: {
+          __typename?: "access_lists";
+          id: any;
+          name: string;
+          config: any;
+        } | null;
       }>;
       user: {
         __typename?: "users";
@@ -11880,6 +11816,14 @@ export type CurrentUserQuery = {
             __typename?: "member_roles";
             id: any;
             team_role: Team_Roles_Enum;
+            created_at?: any | null;
+            updated_at?: any | null;
+            access_list?: {
+              __typename?: "access_lists";
+              id: any;
+              name: string;
+              config: any;
+            } | null;
           }>;
           user: {
             __typename?: "users";
@@ -11899,7 +11843,6 @@ export type CurrentUserQuery = {
 
 export type SubCurrentUserSubscriptionVariables = Exact<{
   id: Scalars["uuid"]["input"];
-  team_id?: InputMaybe<Scalars["uuid"]["input"]>;
 }>;
 
 export type SubCurrentUserSubscription = {
@@ -11910,6 +11853,73 @@ export type SubCurrentUserSubscription = {
     display_name?: string | null;
     avatar_url?: string | null;
     account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+    members: Array<{
+      __typename?: "members";
+      member_roles: Array<{
+        __typename?: "member_roles";
+        id: any;
+        team_role: Team_Roles_Enum;
+        created_at?: any | null;
+        updated_at?: any | null;
+        access_list?: {
+          __typename?: "access_lists";
+          id: any;
+          name: string;
+          config: any;
+        } | null;
+      }>;
+      user: {
+        __typename?: "users";
+        id: any;
+        avatar_url?: string | null;
+        display_name?: string | null;
+        account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+      };
+      team: {
+        __typename?: "teams";
+        id: any;
+        name: string;
+        created_at: any;
+        updated_at: any;
+        members: Array<{
+          __typename?: "members";
+          member_roles: Array<{
+            __typename?: "member_roles";
+            id: any;
+            team_role: Team_Roles_Enum;
+            created_at?: any | null;
+            updated_at?: any | null;
+            access_list?: {
+              __typename?: "access_lists";
+              id: any;
+              name: string;
+              config: any;
+            } | null;
+          }>;
+          user: {
+            __typename?: "users";
+            id: any;
+            avatar_url?: string | null;
+            display_name?: string | null;
+            account?: {
+              __typename?: "auth_accounts";
+              email?: any | null;
+            } | null;
+          };
+        }>;
+      };
+    }>;
+  } | null;
+};
+
+export type TeamDataQueryVariables = Exact<{
+  team_id: Scalars["uuid"]["input"];
+}>;
+
+export type TeamDataQuery = {
+  __typename?: "query_root";
+  teams_by_pk?: {
+    __typename?: "teams";
     datasources: Array<{
       __typename?: "datasources";
       id: any;
@@ -11989,13 +11999,61 @@ export type SubCurrentUserSubscription = {
         playground_state: any;
       };
     }>;
-    members: Array<{
-      __typename?: "members";
-      member_roles: Array<{
-        __typename?: "member_roles";
+  } | null;
+};
+
+export type SubTeamDataSubscriptionVariables = Exact<{
+  team_id: Scalars["uuid"]["input"];
+}>;
+
+export type SubTeamDataSubscription = {
+  __typename?: "subscription_root";
+  teams_by_pk?: {
+    __typename?: "teams";
+    datasources: Array<{
+      __typename?: "datasources";
+      id: any;
+      name: string;
+      db_params: any;
+      db_type: string;
+      created_at: any;
+      updated_at: any;
+      branches: Array<{
+        __typename?: "branches";
         id: any;
-        team_role: Team_Roles_Enum;
+        name: string;
+        status: Branch_Statuses_Enum;
+        versions: Array<{
+          __typename?: "versions";
+          id: any;
+          dataschemas_aggregate: {
+            __typename?: "dataschemas_aggregate";
+            aggregate?: {
+              __typename?: "dataschemas_aggregate_fields";
+              count: number;
+            } | null;
+          };
+        }>;
       }>;
+      sql_credentials: Array<{
+        __typename?: "sql_credentials";
+        id: any;
+        username: string;
+        created_at: any;
+        updated_at: any;
+        user: { __typename?: "users"; id: any; display_name?: string | null };
+      }>;
+    }>;
+    alerts: Array<{
+      __typename?: "alerts";
+      id: any;
+      name: string;
+      delivery_type: string;
+      delivery_config: any;
+      trigger_config: any;
+      created_at: any;
+      updated_at: any;
+      schedule: string;
       user: {
         __typename?: "users";
         id: any;
@@ -12003,30 +12061,32 @@ export type SubCurrentUserSubscription = {
         display_name?: string | null;
         account?: { __typename?: "auth_accounts"; email?: any | null } | null;
       };
-      team: {
-        __typename?: "teams";
+      exploration: {
+        __typename?: "explorations";
         id: any;
-        name: string;
-        created_at: any;
-        updated_at: any;
-        members: Array<{
-          __typename?: "members";
-          member_roles: Array<{
-            __typename?: "member_roles";
-            id: any;
-            team_role: Team_Roles_Enum;
-          }>;
-          user: {
-            __typename?: "users";
-            id: any;
-            avatar_url?: string | null;
-            display_name?: string | null;
-            account?: {
-              __typename?: "auth_accounts";
-              email?: any | null;
-            } | null;
-          };
-        }>;
+        playground_state: any;
+      };
+    }>;
+    reports: Array<{
+      __typename?: "reports";
+      id: any;
+      name: string;
+      schedule: string;
+      delivery_type: string;
+      delivery_config: any;
+      created_at: any;
+      updated_at: any;
+      user: {
+        __typename?: "users";
+        id: any;
+        avatar_url?: string | null;
+        display_name?: string | null;
+        account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+      };
+      exploration: {
+        __typename?: "explorations";
+        id: any;
+        playground_state: any;
       };
     }>;
   } | null;
@@ -12707,6 +12767,13 @@ export const TeamFieldsFragmentDoc = gql`
       member_roles {
         id
         team_role
+        created_at
+        updated_at
+        access_list {
+          id
+          name
+          config
+        }
       }
       user {
         id
@@ -12999,7 +13066,7 @@ export function useCreateVersionMutation() {
   >(CreateVersionDocument);
 }
 export const CurrentUserDocument = gql`
-  query CurrentUser($id: uuid!, $team_id: uuid) {
+  query CurrentUser($id: uuid!) {
     users_by_pk(id: $id) {
       id
       display_name
@@ -13007,83 +13074,17 @@ export const CurrentUserDocument = gql`
       account {
         email
       }
-      datasources(
-        order_by: { created_at: desc }
-        where: { team_id: { _eq: $team_id } }
-      ) {
-        id
-        name
-        db_params
-        db_type
-        created_at
-        updated_at
-        branches(where: { status: { _eq: active } }) {
-          ...BranchesFields
-        }
-        sql_credentials {
-          id
-          username
-          created_at
-          updated_at
-          user {
-            id
-            display_name
-          }
-        }
-      }
-      alerts(
-        order_by: { created_at: desc }
-        where: { team_id: { _eq: $team_id } }
-      ) {
-        id
-        name
-        delivery_type
-        delivery_config
-        trigger_config
-        created_at
-        updated_at
-        schedule
-        user {
-          id
-          avatar_url
-          display_name
-          account {
-            email
-          }
-        }
-        exploration {
-          id
-          playground_state
-        }
-      }
-      reports(
-        order_by: { created_at: desc }
-        where: { team_id: { _eq: $team_id } }
-      ) {
-        id
-        name
-        schedule
-        delivery_type
-        delivery_config
-        created_at
-        updated_at
-        user {
-          id
-          avatar_url
-          display_name
-          account {
-            email
-          }
-        }
-        exploration {
-          id
-          playground_state
-        }
-      }
       members(order_by: { created_at: desc }) {
         member_roles {
           id
           team_role
+          created_at
+          updated_at
+          access_list {
+            id
+            name
+            config
+          }
         }
         user {
           id
@@ -13099,7 +13100,6 @@ export const CurrentUserDocument = gql`
       }
     }
   }
-  ${BranchesFieldsFragmentDoc}
   ${TeamFieldsFragmentDoc}
 `;
 
@@ -13112,7 +13112,7 @@ export function useCurrentUserQuery(
   });
 }
 export const SubCurrentUserDocument = gql`
-  subscription SubCurrentUser($id: uuid!, $team_id: uuid) {
+  subscription SubCurrentUser($id: uuid!) {
     users_by_pk(id: $id) {
       id
       display_name
@@ -13120,83 +13120,17 @@ export const SubCurrentUserDocument = gql`
       account {
         email
       }
-      datasources(
-        order_by: { created_at: desc }
-        where: { team_id: { _eq: $team_id } }
-      ) {
-        id
-        name
-        db_params
-        db_type
-        created_at
-        updated_at
-        branches(where: { status: { _eq: active } }) {
-          ...BranchesFields
-        }
-        sql_credentials {
-          id
-          username
-          created_at
-          updated_at
-          user {
-            id
-            display_name
-          }
-        }
-      }
-      alerts(
-        order_by: { created_at: desc }
-        where: { team_id: { _eq: $team_id } }
-      ) {
-        id
-        name
-        delivery_type
-        delivery_config
-        trigger_config
-        created_at
-        updated_at
-        schedule
-        user {
-          id
-          avatar_url
-          display_name
-          account {
-            email
-          }
-        }
-        exploration {
-          id
-          playground_state
-        }
-      }
-      reports(
-        order_by: { created_at: desc }
-        where: { team_id: { _eq: $team_id } }
-      ) {
-        id
-        name
-        schedule
-        delivery_type
-        delivery_config
-        created_at
-        updated_at
-        user {
-          id
-          avatar_url
-          display_name
-          account {
-            email
-          }
-        }
-        exploration {
-          id
-          playground_state
-        }
-      }
       members(order_by: { created_at: desc }) {
         member_roles {
           id
           team_role
+          created_at
+          updated_at
+          access_list {
+            id
+            name
+            config
+          }
         }
         user {
           id
@@ -13212,7 +13146,6 @@ export const SubCurrentUserDocument = gql`
       }
     }
   }
-  ${BranchesFieldsFragmentDoc}
   ${TeamFieldsFragmentDoc}
 `;
 
@@ -13230,6 +13163,171 @@ export function useSubCurrentUserSubscription<
     TData,
     SubCurrentUserSubscriptionVariables
   >({ query: SubCurrentUserDocument, ...options }, handler);
+}
+export const TeamDataDocument = gql`
+  query TeamData($team_id: uuid!) {
+    teams_by_pk(id: $team_id) {
+      datasources(order_by: { created_at: desc }) {
+        id
+        name
+        db_params
+        db_type
+        created_at
+        updated_at
+        branches(where: { status: { _eq: active } }) {
+          ...BranchesFields
+        }
+        sql_credentials {
+          id
+          username
+          created_at
+          updated_at
+          user {
+            id
+            display_name
+          }
+        }
+      }
+      alerts(order_by: { created_at: desc }) {
+        id
+        name
+        delivery_type
+        delivery_config
+        trigger_config
+        created_at
+        updated_at
+        schedule
+        user {
+          id
+          avatar_url
+          display_name
+          account {
+            email
+          }
+        }
+        exploration {
+          id
+          playground_state
+        }
+      }
+      reports(order_by: { created_at: desc }) {
+        id
+        name
+        schedule
+        delivery_type
+        delivery_config
+        created_at
+        updated_at
+        user {
+          id
+          avatar_url
+          display_name
+          account {
+            email
+          }
+        }
+        exploration {
+          id
+          playground_state
+        }
+      }
+    }
+  }
+  ${BranchesFieldsFragmentDoc}
+`;
+
+export function useTeamDataQuery(
+  options: Omit<Urql.UseQueryArgs<TeamDataQueryVariables>, "query">
+) {
+  return Urql.useQuery<TeamDataQuery, TeamDataQueryVariables>({
+    query: TeamDataDocument,
+    ...options,
+  });
+}
+export const SubTeamDataDocument = gql`
+  subscription SubTeamData($team_id: uuid!) {
+    teams_by_pk(id: $team_id) {
+      datasources(order_by: { created_at: desc }) {
+        id
+        name
+        db_params
+        db_type
+        created_at
+        updated_at
+        branches(where: { status: { _eq: active } }) {
+          ...BranchesFields
+        }
+        sql_credentials {
+          id
+          username
+          created_at
+          updated_at
+          user {
+            id
+            display_name
+          }
+        }
+      }
+      alerts(order_by: { created_at: desc }) {
+        id
+        name
+        delivery_type
+        delivery_config
+        trigger_config
+        created_at
+        updated_at
+        schedule
+        user {
+          id
+          avatar_url
+          display_name
+          account {
+            email
+          }
+        }
+        exploration {
+          id
+          playground_state
+        }
+      }
+      reports(order_by: { created_at: desc }) {
+        id
+        name
+        schedule
+        delivery_type
+        delivery_config
+        created_at
+        updated_at
+        user {
+          id
+          avatar_url
+          display_name
+          account {
+            email
+          }
+        }
+        exploration {
+          id
+          playground_state
+        }
+      }
+    }
+  }
+  ${BranchesFieldsFragmentDoc}
+`;
+
+export function useSubTeamDataSubscription<TData = SubTeamDataSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<SubTeamDataSubscriptionVariables>,
+    "query"
+  >,
+  handler?: Urql.SubscriptionHandler<SubTeamDataSubscription, TData>
+) {
+  return Urql.useSubscription<
+    SubTeamDataSubscription,
+    TData,
+    SubTeamDataSubscriptionVariables
+  >({ query: SubTeamDataDocument, ...options }, handler);
 }
 export const UpdateUserInfoDocument = gql`
   mutation UpdateUserInfo(
@@ -14124,6 +14222,7 @@ export const namedOperations = {
     AllAccessLists: "AllAccessLists",
     AccessList: "AccessList",
     CurrentUser: "CurrentUser",
+    TeamData: "TeamData",
     Datasources: "Datasources",
     FetchTables: "FetchTables",
     FetchMeta: "FetchMeta",
@@ -14176,6 +14275,7 @@ export const namedOperations = {
   Subscription: {
     SubAccessLists: "SubAccessLists",
     SubCurrentUser: "SubCurrentUser",
+    SubTeamData: "SubTeamData",
     AllDataSources: "AllDataSources",
     SubAllLogs: "SubAllLogs",
     AllSchemas: "AllSchemas",

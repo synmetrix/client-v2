@@ -9,9 +9,6 @@ export interface User {
   displayName?: string | null;
   avatarUrl?: string | null;
   teams: Team[];
-  dataSources: DataSourceInfo[];
-  alerts: Alert[];
-  reports: Report[];
 }
 
 export interface RawUser {
@@ -22,4 +19,10 @@ export interface RawUser {
   account: {
     email: string;
   };
+}
+
+export interface UserData {
+  dataSources: DataSourceInfo[];
+  alerts: Alert[];
+  reports: Report[];
 }

@@ -1,4 +1,4 @@
-import { Col, Row, Select, Space, message } from "antd";
+import { Col, Row, Select, Space, Spin, message } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type { Invite } from "@/components/MembersForm";
@@ -37,6 +37,7 @@ interface MembersProps {
   members: Member[];
   accessLists: AccessList[];
   currentRole?: Roles;
+  loading?: boolean;
   onDeleteMember?: (id: string) => void;
   onInviteMember?: (data: Invite) => void;
   onRoleChange?: (id: string, newRole: ChangeableRoles) => void;
@@ -47,6 +48,7 @@ export const Members: React.FC<MembersProps> = ({
   members,
   accessLists,
   currentRole,
+  loading = false,
   onDeleteMember = () => {},
   onInviteMember = () => {},
   onRoleChange = () => {},
@@ -195,15 +197,17 @@ export const Members: React.FC<MembersProps> = ({
           onClick={() => setIsOpen(true)}
         />
 
-        <div className={styles.body}>
-          <Row justify={"start"} gutter={[32, 32]}>
-            {members.map((m) => (
-              <Col xs={24} sm={12} xl={8} key={m.id}>
-                {renderCard(m)}
-              </Col>
-            ))}
-          </Row>
-        </div>
+        <Spin spinning={loading}>
+          <div className={styles.body}>
+            <Row justify={"start"} gutter={[32, 32]}>
+              {members.map((m) => (
+                <Col xs={24} sm={12} xl={8} key={m.id}>
+                  {renderCard(m)}
+                </Col>
+              ))}
+            </Row>
+          </div>
+        </Spin>
       </Space>
 
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
@@ -211,26 +215,6 @@ export const Members: React.FC<MembersProps> = ({
       </Modal>
     </>
   );
-};
-
-const prepareMembersData = (rawMembers: MembersType[]) => {
-  const members = rawMembers?.map((m) => {
-    return {
-      id: m.user.id,
-      email: m?.user?.account?.email,
-      avatarUrl: m.user.avatar_url,
-      displayName: m.user.display_name,
-      accessList: m.member_roles?.[0]?.access_list as unknown as AccessList,
-      role: {
-        id: m.member_roles?.[0]?.id,
-        name: m.member_roles?.[0]?.team_role as unknown,
-      } as TeamRole,
-      createdAt: m.created_at,
-      updatedAt: m.member_roles?.[0]?.updated_at || m.updated_at,
-    } as Member;
-  });
-
-  return members;
 };
 
 const prepareAccessData = (accessResult: AllAccessListsQuery): AccessList[] => {
@@ -254,17 +238,6 @@ const MembersWrapper = () => {
   const [updateRoleMutation, execUpdateRoleMutation] =
     useUpdateMemberRoleMutation();
 
-  const [allMembersData, execAllMembersQuery] = useMembersQuery({
-    variables: {
-      where: {
-        team_id: {
-          _eq: currentTeam?.id,
-        },
-      },
-    },
-    pause: true,
-  });
-
   const [allAccessLists, execAllAccessLists] = useAllAccessListsQuery({
     variables: {
       where: {
@@ -280,7 +253,6 @@ const MembersWrapper = () => {
     (res) => {
       if (res.delete_members_roles_by_pk?.id) {
         message.success(t("settings:members:member_deleted"));
-        execAllMembersQuery();
       } else {
         message.warning(t("settings:members:no_permissions"));
       }
@@ -299,7 +271,6 @@ const MembersWrapper = () => {
     (res) => {
       if (res.update_member_roles_by_pk?.id) {
         message.success(t("settings:members:role_updated"));
-        execAllMembersQuery();
       } else {
         message.warning(t("settings:members:no_permissions"));
       }
@@ -341,20 +312,14 @@ const MembersWrapper = () => {
 
   useEffect(() => {
     if (currentTeam?.id) {
-      execAllMembersQuery();
       execAllAccessLists();
     }
-  }, [currentTeam?.id, execAllMembersQuery, execAllAccessLists]);
+  }, [currentTeam?.id, execAllAccessLists]);
 
-  const members = useMemo(() => {
-    let rawMembers = [] as MembersType[];
-    if (allMembersData.data) {
-      rawMembers = allMembersData.data.members as MembersType[];
-    }
-
-    return prepareMembersData(rawMembers);
-  }, [allMembersData.data]);
-
+  const members = useMemo(
+    () => currentTeam?.members || [],
+    [currentTeam?.members]
+  );
   const accessLists = useMemo(
     () =>
       prepareAccessData(allAccessLists?.data as unknown as AllAccessListsQuery),

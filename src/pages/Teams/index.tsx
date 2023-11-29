@@ -14,6 +14,7 @@ import {
 import useCheckResponse from "@/hooks/useCheckResponse";
 import Avatar, { AvatarGroup } from "@/components/Avatar";
 import type { Member, Team, TeamSettingsForm } from "@/types/team";
+import { Roles } from "@/types/team";
 import Card from "@/components/Card";
 import ConfirmModal from "@/components/ConfirmModal";
 import formatTime from "@/utils/helpers/formatTime";
@@ -61,6 +62,8 @@ export const Teams: React.FC<TeamsProps> = ({
     setIsOpen(true);
   };
 
+  const isMember = currentTeam?.role === Roles.member;
+
   const renderCard = (team: Team) => {
     return (
       <Card
@@ -75,34 +78,36 @@ export const Teams: React.FC<TeamsProps> = ({
           </>
         }
         titleTooltip={team.name}
-        onTitleClick={() => onEdit(team)}
+        onTitleClick={() => !isMember && onEdit(team)}
         extra={
-          <Dropdown
-            className={styles.btn}
-            trigger={["click"]}
-            menu={{
-              items: [
-                {
-                  key: "edit",
-                  label: t("common:words.edit"),
-                  onClick: () => onEdit(team),
-                },
-                {
-                  key: "delete",
-                  label: (
-                    <ConfirmModal
-                      title={t("common:words.delete_alert")}
-                      onConfirm={() => onRemoveTeam(team.id)}
-                    >
-                      {t("common:words.delete")}
-                    </ConfirmModal>
-                  ),
-                },
-              ],
-            }}
-          >
-            <SettingOutlined key="setting" />
-          </Dropdown>
+          !isMember && (
+            <Dropdown
+              className={styles.btn}
+              trigger={["click"]}
+              menu={{
+                items: [
+                  {
+                    key: "edit",
+                    label: t("common:words.edit"),
+                    onClick: () => onEdit(team),
+                  },
+                  {
+                    key: "delete",
+                    label: (
+                      <ConfirmModal
+                        title={t("common:words.delete_alert")}
+                        onConfirm={() => onRemoveTeam(team.id)}
+                      >
+                        {t("common:words.delete")}
+                      </ConfirmModal>
+                    ),
+                  },
+                ],
+              }}
+            >
+              <SettingOutlined key="setting" />
+            </Dropdown>
+          )
         }
       >
         <dl>

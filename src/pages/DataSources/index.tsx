@@ -31,6 +31,7 @@ import useLocation from "@/hooks/useLocation";
 import { prepareInitValues } from "@/pages/SqlApi";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
+import { Roles } from "@/types/team";
 import type {
   DataSourceInfo,
   DataSourceSetupForm,
@@ -41,6 +42,7 @@ import styles from "./index.module.less";
 
 interface DataSourcesProps {
   dataSources: DataSourceInfo[];
+  disableCreate: boolean;
   loading?: boolean;
   defaultOpen?: boolean;
   onFinish: () => void;
@@ -54,6 +56,7 @@ interface DataSourcesProps {
 
 export const DataSources = ({
   dataSources = [],
+  disableCreate = false,
   loading = false,
   defaultOpen = false,
   onTestConnection = () => {},
@@ -184,7 +187,9 @@ export const DataSources = ({
   return (
     <>
       <Spin spinning={loading}>
-        {dataSources.length === 0 && <NoDataSource onConnect={onOpen} />}
+        {dataSources.length === 0 && (
+          <NoDataSource onConnect={!disableCreate ? onOpen : undefined} />
+        )}
         {dataSources.length > 0 && (
           <Space className={styles.wrapper} direction="vertical" size={13}>
             <PageHeader
@@ -193,7 +198,7 @@ export const DataSources = ({
                   ? t("settings:data_sources.title_mobile")
                   : t("settings:data_sources.title")
               }
-              action={t("settings:data_sources.create_now")}
+              action={!disableCreate && t("settings:data_sources.create_now")}
               actionProps={{
                 type: "primary",
                 size: "large",
@@ -240,7 +245,14 @@ const DataSourcesWrapper = ({
   dataSources: DataSourceInfo[];
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { currentUser, currentTeamId } = CurrentUserStore();
+  const {
+    currentUser,
+    currentTeamId,
+    currentTeam,
+    teamData,
+    loading,
+    setLoading,
+  } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { id: curId, connect } = location.query;
   const {
@@ -250,7 +262,7 @@ const DataSourcesWrapper = ({
     isOnboarding,
     setSchema,
     setFormStateData,
-    setLoading,
+    // setLoading,
     setMessage,
     setError,
     nextStep,
@@ -279,8 +291,8 @@ const DataSourcesWrapper = ({
   });
 
   const datasources = useMemo(
-    () => (dataSources.length ? dataSources : currentUser.dataSources || []),
-    [dataSources, currentUser]
+    () => (dataSources.length ? dataSources : teamData.dataSources || []),
+    [dataSources, teamData]
   ) as DataSourceInfo[];
   const curDataSource = useMemo(
     () =>
@@ -459,6 +471,7 @@ const DataSourcesWrapper = ({
 
   useEffect(() => {
     const isLoading =
+      loading ||
       createMutation.fetching ||
       updateMutation.fetching ||
       checkConnectionMutation.fetching ||
@@ -471,6 +484,7 @@ const DataSourcesWrapper = ({
       setLoading(false);
     }
   }, [
+    loading,
     createMutation.fetching,
     updateMutation.fetching,
     checkConnectionMutation.fetching,
@@ -495,9 +509,12 @@ const DataSourcesWrapper = ({
     setFormStateData(1, { ...dataSourceSetup, id });
   };
 
+  const isMember = currentTeam?.role === Roles.member;
+
   return (
     <DataSources
       defaultOpen={!!connect}
+      disableCreate={isMember}
       dataSources={datasources}
       onEdit={onEdit}
       onDelete={onDelete}

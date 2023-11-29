@@ -104,60 +104,64 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
         onChange={onDataSourceChange}
       />
       <div className={styles.inner}>
-        <Space className={styles.space} align="end">
+        <div>
           <Space className={styles.space} size={10} direction="vertical">
             <div className={styles.label}>{t("common:words.branch")}:</div>
-
-            <Select
-              className={cn(styles.select, isMobile && styles.selectMobile)}
-              placeholder={t("common:words.select_branch")}
-              prefixIcon={<BranchIcon />}
-              size="large"
-              defaultValue={currentBranch?.id}
-              value={currentBranch?.id}
-              optionLabelProp="valueLabel"
-              suffixIcon={<DownOutlined />}
-              options={branches.map((b) => ({
-                value: b.id,
-                label: b.status === "active" ? b.name + " - default" : b.name,
-              }))}
-              onChange={onChangeBranch}
-              disabled={!branches?.length}
-              dropdownRender={(menu) => (
-                <>
-                  {menu}
-                  <Input
-                    value={newBranchName}
-                    onChange={(e) => setNewBranchName(e.target.value)}
-                    addonAfter={
-                      <PlusOutlined
-                        onClick={() => {
-                          onCreateBranch(newBranchName);
-                          setNewBranchName("");
-                        }}
-                      />
-                    }
-                  />
-                </>
+            <div className={styles.row}>
+              <Select
+                className={cn(styles.select, isMobile && styles.selectMobile)}
+                placeholder={t("common:words.select_branch")}
+                prefixIcon={<BranchIcon />}
+                size="large"
+                defaultValue={currentBranch?.id}
+                value={currentBranch?.id}
+                optionLabelProp="valueLabel"
+                suffixIcon={<DownOutlined />}
+                options={branches.map((b) => ({
+                  value: b.id,
+                  label: b.status === "active" ? b.name + " - default" : b.name,
+                }))}
+                onChange={onChangeBranch}
+                disabled={!branches?.length}
+                dropdownRender={(menu) => (
+                  <>
+                    {menu}
+                    <Input
+                      value={newBranchName}
+                      onChange={(e) => setNewBranchName(e.target.value)}
+                      addonAfter={
+                        <PlusOutlined
+                          onClick={() => {
+                            onCreateBranch(newBranchName);
+                            setNewBranchName("");
+                          }}
+                        />
+                      }
+                    />
+                  </>
+                )}
+              />
+              {branchMenu && (
+                <PopoverButton
+                  className={styles.dropdown}
+                  popoverType="dropdown"
+                  buttonProps={{ type: "ghost" }}
+                  menu={{ items: branchMenu }}
+                  icon={<VerticalDots />}
+                  trigger={["click"]}
+                  arrow
+                  disabled={!branches?.length}
+                />
               )}
-            />
+            </div>
           </Space>
+        </div>
 
-          {branchMenu && (
-            <PopoverButton
-              className={styles.dropdown}
-              popoverType="dropdown"
-              buttonProps={{ type: "ghost" }}
-              menu={{ items: branchMenu }}
-              icon={<VerticalDots />}
-              trigger={["click"]}
-              arrow
-              disabled={!branches?.length}
-            />
-          )}
-        </Space>
-
-        <Space className={styles.space} size={10} direction="vertical">
+        <Space
+          className={cn(styles.space, styles.versionRow)}
+          size={10}
+          direction="vertical"
+        >
           {branches?.length ? (
             <div>
               <span> {t("sidebar.version")}:</span>{" "}
@@ -183,7 +187,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
         </Space>
 
         <Space className={styles.space} size={16} direction="vertical">
-          <Space className={styles.space} size={10} align="center">
+          <div className={cn(styles.row, styles.searchRow)}>
             <SearchInput
               value={searchValue}
               onChange={setSearchValue}
@@ -221,7 +225,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 disabled={!branches?.length}
               />
             )}
-          </Space>
+          </div>
 
           {files
             .filter((f) =>
@@ -240,7 +244,10 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                       {f.name}
                     </Col>
 
-                    <Col span={6}>
+                    <Col
+                      span={6}
+                      style={{ display: "flex", justifyContent: "end" }}
+                    >
                       <Space align="center" size={5}>
                         <PopoverButton
                           className={styles.edit}

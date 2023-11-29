@@ -11,6 +11,7 @@ interface ConfirmModalProps {
   content?: string;
   okText?: string;
   cancelText?: string;
+  className?: string;
   children: ReactNode | string;
   onConfirm?: () => void;
   onCancel?: () => void | undefined;
@@ -22,6 +23,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   content,
   okText,
   cancelText,
+  className,
   onConfirm = () => {},
   onCancel = () => {},
   children,
@@ -44,7 +46,9 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   return (
     <>
       {contextHolder}
-      <div onClick={confirm}>{children}</div>
+      <div className={className} onClick={confirm}>
+        {children}
+      </div>
     </>
   );
 };

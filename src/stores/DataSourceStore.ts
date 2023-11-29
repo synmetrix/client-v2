@@ -1,6 +1,4 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
 
 import type {
   ApiSetupForm,
@@ -18,25 +16,22 @@ export interface FormState {
 }
 
 export interface DataSourceData {
-  editId: string | null;
   step: number;
+  isGenerate: boolean;
   isOnboarding: boolean;
   formState: FormState;
   loading: boolean;
-  error: string | null | undefined;
-  message: string | null | undefined;
   schema: Schema | undefined;
 }
 
-interface DataSourceState extends DataSourceData {
+export interface DataSourceState extends DataSourceData {
   setStep: (step: number) => void;
   nextStep: () => void;
-  setError: (error: string) => void;
-  setMessage: (message: string) => void;
   setLoading: (status: boolean) => void;
-  setSchema: (schema: object) => void;
+  setSchema: (schema: Schema) => void;
   setEditId: (id: string) => void;
   setFormStateData: (step: number, data: any) => void;
+  setIsGenerate: (value: boolean) => void;
   setIsOnboarding: (value: boolean) => void;
   clean: () => void;
 }
@@ -49,61 +44,46 @@ export const defaultFormState = {
 };
 
 const defaultState = {
-  editId: null,
   step: 0,
   isOnboarding: false,
+  isGenerate: false,
   formState: defaultFormState,
   loading: false,
-  error: null,
-  message: null,
   schema: undefined,
 };
 
-const dataSourceStore = create<DataSourceState>()(
-  persist(
-    immer((set, _get) => ({
-      ...defaultState,
-      setError: (error: string) =>
-        set((prev) => ({ ...prev, error, message: null })),
-      setMessage: (message: string) =>
-        set((prev) => ({ ...prev, message, error: null })),
-      setLoading: (status: boolean) =>
-        set((prev) => ({ ...prev, loading: status })),
-      setSchema: (schema: object) => set((prev) => ({ ...prev, schema })),
-      setEditId: (id: string) => set((prev) => ({ ...prev, id })),
-      setFormStateData: (step: number, data: any) =>
-        set((prev) => {
-          const formStep = `step${step}` as string;
+const dataSourceStore = create<DataSourceState>((set) => ({
+  ...defaultState,
+  setLoading: (status: boolean) =>
+    set((prev) => ({ ...prev, loading: status })),
+  setIsGenerate: (value: boolean) =>
+    set((prev) => ({ ...prev, isGenerate: value })),
+  setSchema: (schema: Schema) => set((prev) => ({ ...prev, schema })),
+  setEditId: (id: string) => set((prev) => ({ ...prev, id })),
+  setFormStateData: (step: number, data: any) =>
+    set((prev) => {
+      const formStep = `step${step}` as string;
 
-          return {
-            ...prev,
-            formState: {
-              ...prev.formState,
-              [formStep]: data,
-            },
-          };
-        }),
-      setStep: (step: number) =>
-        set((prev) => ({ ...prev, step, error: null, message: null })),
-      nextStep: () =>
-        set((prev) => ({
-          ...prev,
-          step: prev.step + 1,
-          error: null,
-          message: null,
-        })),
-      setIsOnboarding: (value: boolean) =>
-        set((prev) => ({
-          ...prev,
-          isOnboarding: value,
-        })),
-      clean: () => set({ ...defaultState }),
+      return {
+        ...prev,
+        formState: {
+          ...prev.formState,
+          [formStep]: data,
+        },
+      } as Partial<DataSourceState>;
+    }),
+  setStep: (step: number) => set((prev) => ({ ...prev, step })),
+  nextStep: () =>
+    set((prev) => ({
+      ...prev,
+      step: (prev?.step || 0) + 1,
     })),
-    {
-      name: "dataSource",
-      storage: createJSONStorage(() => sessionStorage),
-    }
-  )
-);
+  setIsOnboarding: (value: boolean) =>
+    set((prev) => ({
+      ...prev,
+      isOnboarding: value,
+    })),
+  clean: () => set({ ...defaultState }),
+}));
 
 export default dataSourceStore;

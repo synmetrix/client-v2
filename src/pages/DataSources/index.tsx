@@ -2,6 +2,7 @@ import { Col, Dropdown, Row, Space, Spin } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useResponsive } from "ahooks";
 import { useEffect, useMemo } from "react";
+import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 
 import DataSourceForm from "@/components/DataSourceForm";
@@ -26,12 +27,14 @@ import {
   Branch_Statuses_Enum,
   useUpdateDataSourceMutation,
 } from "@/graphql/generated";
+import useAppSettings from "@/hooks/useAppSettings";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
 import { prepareInitValues } from "@/pages/SqlApi";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
 import { Roles } from "@/types/team";
+import type { DataSourceState } from "@/stores/DataSourceStore";
 import type {
   DataSourceInfo,
   DataSourceSetupForm,
@@ -69,20 +72,17 @@ export const DataSources = ({
 }: DataSourcesProps) => {
   const { t } = useTranslation(["settings", "pages"]);
   const [, setLocation] = useLocation();
-  const { setStep, editId, clean, setIsOnboarding } = DataSourceStore();
-  const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
+  const { setStep, clean, setIsOnboarding } = DataSourceStore();
   const responsive = useResponsive();
 
   const onOpen = () => {
     setIsOnboarding(true);
-    setIsOpen(true);
+    setLocation("/settings/sources/connect");
   };
 
   const onClose = useCallback(() => {
-    clean();
-    setIsOpen(false);
     setLocation("/settings/sources");
-  }, [clean, setLocation]);
+  }, [setLocation]);
 
   const onFormFinish = () => {
     onClose();
@@ -91,15 +91,8 @@ export const DataSources = ({
 
   const onGenerateModel = (id: string) => {
     onGenerate(id);
-    setIsOpen(true);
     setStep(2);
   };
-
-  useEffect(() => {
-    if (editId) {
-      setIsOpen(true);
-    }
-  }, [editId, setIsOpen]);
 
   const renderCard = (dataSource: DataSourceInfo) => {
     return (
@@ -119,22 +112,23 @@ export const DataSources = ({
                   onClick: () => dataSource.id && onEdit(dataSource.id),
                 },
                 {
+                  key: "generate",
+                  label: t("common:words.generate_models"),
+                  onClick: () =>
+                    dataSource.id && onGenerateModel(dataSource.id),
+                },
+                {
                   key: "delete",
+                  className: styles.deleteItem,
                   label: (
                     <ConfirmModal
                       title={t("common:words.delete_datasource")}
+                      className={styles.deleteText}
                       onConfirm={() => dataSource.id && onDelete(dataSource.id)}
                     >
                       {t("common:words.delete")}
                     </ConfirmModal>
                   ),
-                },
-
-                {
-                  key: "generate",
-                  label: t("common:words.generate_models"),
-                  onClick: () =>
-                    dataSource.id && onGenerateModel(dataSource.id),
                 },
               ],
             }}
@@ -221,7 +215,8 @@ export const DataSources = ({
 
       <Modal
         width={1000}
-        open={isOpen}
+        afterClose={clean}
+        open={defaultOpen}
         onClose={onClose}
         destroyOnClose
         closable
@@ -239,11 +234,7 @@ export const DataSources = ({
   );
 };
 
-const DataSourcesWrapper = ({
-  dataSources = [],
-}: {
-  dataSources: DataSourceInfo[];
-}) => {
+const DataSourcesWrapper = () => {
   const { t } = useTranslation(["dataSourceStepForm"]);
   const {
     currentUser,
@@ -253,19 +244,30 @@ const DataSourcesWrapper = ({
     loading,
     setLoading,
   } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
-  const { id: curId, connect } = location.query;
+  const { withAuthPrefix } = useAppSettings();
+  const [, setLocation] = useLocation();
+  const { slug, generate } = useParams();
+  const basePath = withAuthPrefix("/settings/sources");
+  const modelsPath = withAuthPrefix("/models");
+  const connect = slug === "connect";
+  const curId = !connect && slug;
   const {
-    editId,
-    formState: { step0: dataSource, step1: dataSourceSetup },
+    formState: { step0: dataSource, step1: dataSourceSetup, step3: apiSetup },
     schema,
+    step,
+    // loading,
     isOnboarding,
+    isGenerate,
+    setIsGenerate,
     setSchema,
     setFormStateData,
     // setLoading,
-    setMessage,
-    setError,
+    // setMessage,
+    // setError,
+    // setLoading,
     nextStep,
+    setStep,
+    setIsOnboarding,
   } = DataSourceStore();
 
   const [createMutation, execCreateMutation] = useCreateDataSourceMutation();
@@ -278,7 +280,7 @@ const DataSourcesWrapper = ({
   const [, execInsertSqlCredentialsMutation] =
     useInsertSqlCredentialsMutation();
   const [fetchTablesQuery, execFetchTables] = useFetchTablesQuery({
-    variables: { id: dataSourceSetup?.id || editId },
+    variables: { id: dataSourceSetup?.id },
     pause: true,
   });
 
@@ -290,23 +292,85 @@ const DataSourcesWrapper = ({
     successMessage: t("datasource_created"),
   });
 
-  const datasources = useMemo(
-    () => (dataSources.length ? dataSources : teamData.dataSources || []),
-    [dataSources, teamData]
+  useCheckResponse(updateMutation, () => {}, {
+    successMessage: t("datasource_updated"),
+  });
+
+  useCheckResponse(fetchTablesQuery, () => {}, {
+    showMessage: false,
+  });
+
+  useCheckResponse(genSchemaMutation, () => {}, {
+    successMessage: t("schema_generated"),
+  });
+
+  useCheckResponse(checkConnectionMutation, () => {}, {
+    successMessage: t("connection_ok"),
+  });
+
+  const dataSources = useMemo(
+    () => teamData?.dataSources || [],
+    [currentUser]
   ) as DataSourceInfo[];
   const curDataSource = useMemo(
     () =>
-      datasources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
-    [curId, dataSourceSetup?.id, datasources]
+      dataSources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
+    [curId, dataSourceSetup?.id, dataSources]
   );
   const activeBranchId = useMemo(
     () => curDataSource?.branch?.id,
     [curDataSource?.branch?.id]
   );
 
+  const onTestConnection = async (data: DataSourceSetupForm) => {
+    const test = await execCheckConnection({
+      id: dataSourceSetup?.id || data?.id,
+    });
+
+    if (!test.data?.check_connection) {
+      return null;
+    }
+    return true;
+  };
+
+  const onFinish = useCallback(() => {
+    let finishPath = modelsPath;
+
+    if (dataSourceSetup?.id) {
+      finishPath = `${finishPath}/${dataSourceSetup.id}`;
+    }
+    setLocation(finishPath);
+  }, [dataSourceSetup?.id, modelsPath, setLocation]);
+
+  const createSQLApi = useCallback(
+    async (dataSourceId: string, dataSourceName: string) => {
+      const apiConfig = prepareInitValues(
+        dataSourceId,
+        dataSourceName,
+        currentUser.id
+      );
+      const credentialParams = {
+        user_id: currentUser.id,
+        datasource_id: dataSourceId,
+        username: apiConfig.db_username,
+        password: apiConfig.password,
+      };
+
+      const sqlApiResult = await execInsertSqlCredentialsMutation({
+        object: credentialParams,
+      });
+      const newSqlApiId = sqlApiResult.data?.insert_sql_credentials_one?.id;
+
+      if (newSqlApiId) {
+        setFormStateData(3, apiConfig);
+      }
+    },
+    [currentUser.id, execInsertSqlCredentialsMutation, setFormStateData]
+  );
+
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
     let dataSourceId;
-    if (!editId && !dataSourceSetup?.id) {
+    if (!curId && !dataSourceSetup?.id) {
       const newData = {
         ...data,
         db_type: dataSource?.value?.toUpperCase(),
@@ -332,59 +396,45 @@ const DataSourcesWrapper = ({
 
       dataSourceId = result?.data?.insert_datasources_one?.id;
     } else {
-      const id = editId || dataSourceSetup?.id;
-
       delete data.id;
       const newData = {
-        pk_columns: { id } as Datasources_Pk_Columns_Input,
+        pk_columns: { id: dataSourceSetup?.id } as Datasources_Pk_Columns_Input,
         _set: data as Datasources_Set_Input,
       };
 
       const result = await execUpdateMutation(newData);
 
       dataSourceId = result?.data?.update_datasources_by_pk?.id;
-
-      if (dataSourceId) {
-        setMessage(t("datasource_updated"));
-      } else {
-        setError(t("datasource_update_error"));
-      }
     }
 
-    setFormStateData(1, {
-      ...data,
-      id: dataSourceId,
-    });
-    return dataSourceId;
+    if (dataSourceId) {
+      setFormStateData(1, {
+        ...data,
+        id: dataSourceId,
+      });
+      return dataSourceId;
+    }
   };
 
-  const onDataSourceSetupSubmit = async (data: DataSourceSetupForm) => {
-    await createOrUpdateDataSource(data);
+  const onDataSourceSetupSubmit = async (
+    data: DataSourceSetupForm,
+    isTest?: boolean
+  ) => {
+    const resultId = await createOrUpdateDataSource(data);
 
-    if (!isOnboarding) {
+    const testResult = await onTestConnection({
+      id: resultId,
+    } as DataSourceSetupForm);
+
+    if (!testResult || isTest) {
       return;
     }
 
-    nextStep();
-  };
-
-  const onFinish = () => {
-    setLocation("/settings/sources");
-  };
-
-  const onTestConnection = async (data: DataSourceSetupForm) => {
-    try {
-      const dataSourceId = await createOrUpdateDataSource(data);
-      const test = await execCheckConnection({ id: dataSourceId });
-
-      if (!test.data?.check_connection) {
-        setError(t("connection_error"));
-        return null;
-      }
-      setMessage(t("connection_ok"));
-    } catch (error) {
-      setError(JSON.stringify(error));
+    if (!apiSetup && isOnboarding) {
+      await createSQLApi(resultId, data.name);
     }
+
+    nextStep();
   };
 
   const onDataModelGenerationSubmit = async (data: DynamicForm) => {
@@ -399,47 +449,24 @@ const DataSourcesWrapper = ({
     );
 
     if (dataSourceSetup) {
-      try {
-        const res = await execGenSchemaMutation({
-          datasource_id: dataSourceSetup.id,
-          branch_id: activeBranchId,
-          tables,
-          format: data?.type || "yaml",
-          overwrite: true,
-        });
+      const res = await execGenSchemaMutation({
+        datasource_id: dataSourceSetup.id,
+        branch_id: activeBranchId,
+        tables,
+        format: data?.type || "yaml",
+        overwrite: true,
+      });
 
-        if (res.error) {
-          setError(t("no_schema"));
-          return null;
-        }
-        setMessage(t("schema_generated"));
-      } catch (error) {
-        setError(JSON.stringify(error));
+      if (res.error) {
         return null;
       }
 
       if (isOnboarding) {
-        const apiSetup = prepareInitValues(
-          dataSourceSetup.id,
-          dataSourceSetup.name,
-          currentUser.id
-        );
-        const credentialParams = {
-          user_id: currentUser.id,
-          datasource_id: dataSourceSetup.id,
-          username: apiSetup.db_username,
-          password: apiSetup.password,
-        };
-
-        setFormStateData(3, apiSetup);
-
-        try {
-          await execInsertSqlCredentialsMutation({ object: credentialParams });
-          nextStep();
-        } catch (error) {
-          setError(JSON.stringify(error));
-        }
+        nextStep();
+        return true;
       }
+
+      onFinish();
     }
   };
 
@@ -448,26 +475,35 @@ const DataSourcesWrapper = ({
   };
 
   const onEdit = (dataSourceId: string) => {
-    setLocation(`/settings/sources?id=${dataSourceId}`);
+    setLocation(`${basePath}/${dataSourceId}`);
   };
 
   useEffect(() => {
-    if (curDataSource) {
-      DataSourceStore.setState((prev) => ({
-        editId: curId,
-        formState: {
-          ...defaultFormState,
-          ...prev.formState,
-          step0: curDataSource.type,
-          step1: {
-            id: curDataSource?.id,
-            db_params: { ...curDataSource.dbParams },
-            name: curDataSource.name,
-          },
-        },
-      }));
+    if (dataSources.length && curId && !curDataSource) {
+      setLocation(basePath);
     }
-  }, [curId, curDataSource]);
+  }, [basePath, curDataSource, curId, dataSources.length, setLocation]);
+
+  useEffect(() => {
+    if (curDataSource) {
+      DataSourceStore.setState(
+        (prev) =>
+          ({
+            ...prev,
+            formState: {
+              ...defaultFormState,
+              ...prev.formState,
+              step0: curDataSource.type,
+              step1: {
+                id: curDataSource?.id,
+                db_params: { ...curDataSource.dbParams },
+                name: curDataSource.name,
+              },
+            },
+          } as Partial<DataSourceState>)
+      );
+    }
+  }, [curDataSource]);
 
   useEffect(() => {
     const isLoading =
@@ -494,10 +530,10 @@ const DataSourcesWrapper = ({
   ]);
 
   useEffect(() => {
-    if (!editId && dataSourceSetup?.id && !schema) {
+    if (step === 2 && dataSourceSetup?.id && !schema) {
       execFetchTables();
     }
-  }, [dataSourceSetup?.id, schema, editId, execFetchTables]);
+  }, [dataSourceSetup?.id, schema, step, execFetchTables]);
 
   useEffect(() => {
     if (fetchTablesQuery.data) {
@@ -505,22 +541,47 @@ const DataSourcesWrapper = ({
     }
   }, [fetchTablesQuery.data, setSchema]);
 
+  useEffect(() => {
+    if (connect) {
+      setIsOnboarding(true);
+    }
+  }, [connect, setIsOnboarding]);
+
+  useEffect(() => {
+    if (curId && !generate) {
+      setStep(1);
+    }
+  }, [curId, generate, setStep]);
+
+  useEffect(() => {
+    if (generate && generate === "generate") {
+      setIsGenerate(true);
+    }
+  }, [generate, setIsGenerate]);
+
+  useEffect(() => {
+    if (isGenerate && curDataSource) {
+      setStep(2);
+    }
+  }, [isGenerate, curDataSource, setStep]);
+
   const onGenerate = (id: string) => {
-    setFormStateData(1, { ...dataSourceSetup, id });
+    setLocation(`${basePath}/${id}/generate`);
   };
 
   const isMember = currentTeam?.role === Roles.member;
 
   return (
     <DataSources
-      defaultOpen={!!connect}
+      defaultOpen={!!slug}
       disableCreate={isMember}
-      dataSources={datasources}
+      dataSources={dataSources}
+      loading={loading}
       onEdit={onEdit}
       onDelete={onDelete}
       onFinish={onFinish}
       onGenerate={onGenerate}
-      onTestConnection={onTestConnection}
+      onTestConnection={onDataSourceSetupSubmit}
       onDataSourceSetupSubmit={onDataSourceSetupSubmit}
       onDataModelGenerationSubmit={onDataModelGenerationSubmit}
     />

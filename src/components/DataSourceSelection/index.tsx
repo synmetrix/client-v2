@@ -17,7 +17,7 @@ const { Title, Text } = Typography;
 interface DataSourceSelectionProps {
   options: DataSource[];
   initialValue?: DataSource;
-  onSubmit: (option: DataSource) => void;
+  onSubmit?: (option: DataSource) => void;
 }
 
 const DataSourceSelection: FC<DataSourceSelectionProps> = ({
@@ -28,9 +28,6 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
   const { t } = useTranslation(["dataSourceSelecton", "common"]);
   const windowSize = useResponsive();
 
-  const [activeTile, setActiveTile] = useState<DataSource | undefined>(
-    initialValue
-  );
   const [keyword, setKeyword] = useState<string>("");
 
   return (
@@ -53,8 +50,8 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
               <FormTile
                 title={tile.name || ""}
                 icon={tile.icon}
-                active={activeTile?.value === tile.value}
-                onClick={() => setActiveTile(tile)}
+                active={initialValue?.value === tile.value}
+                onClick={() => onSubmit?.(tile)}
               />
             </Col>
           ))}
@@ -69,7 +66,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
             type="primary"
             size="large"
             htmlType="submit"
-            onClick={() => activeTile && onSubmit(activeTile)}
+            onClick={() => initialValue && onSubmit?.(initialValue)}
           >
             {t("common:words.next")}
           </Button>

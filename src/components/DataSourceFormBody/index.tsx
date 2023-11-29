@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
 import type {
-  ApiSetupForm,
   DataSource,
   DataSourceSetupForm,
   DynamicForm,
@@ -19,7 +18,7 @@ import type { FC } from "react";
 interface DataSourceFormBodyProps {
   activeStep?: number;
   formState?: FormState;
-  onFinish: (data: ApiSetupForm) => void;
+  onFinish: () => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;
@@ -34,9 +33,9 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   onDataModelGenerationSubmit = () => {},
 }) => {
   const {
-    editId,
     step,
     isOnboarding,
+    isGenerate,
     formState: formData,
     schema,
     setStep,
@@ -66,13 +65,8 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
     }
   }, [activeStep, setStep]);
 
-  useEffect(() => {
-    if (editId) {
-      setStep(1);
-    }
-  }, [editId, setStep]);
-
   const curDataSource = formState?.step0 || formData?.step0;
+
   switch (step) {
     case 0:
       return (
@@ -99,7 +93,6 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
             initialValue={initialValue}
             onSubmit={onDataSourceSetup}
             onGoBack={onGoBack}
-            onSkip={onSkip}
             onTestConnection={onTestConnection}
           />
         );
@@ -111,6 +104,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
             icon: curDataSource?.icon,
             name: curDataSource?.name,
           }}
+          isGenerate={isGenerate}
           isOnboarding={isOnboarding}
           schema={schema}
           onSubmit={onDataModelGeneration}
@@ -124,6 +118,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
       const initialValue = formState?.step3 || formData?.step3;
       return (
         <ApiSetup
+          isOnboarding={isOnboarding}
           initialValue={initialValue}
           onSubmit={onFinish}
           onGoBack={onGoBack}

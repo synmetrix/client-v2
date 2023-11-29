@@ -215,7 +215,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
             {ideMenu && (
               <PopoverButton
-                className={styles.dropdown}
+                className={cn(styles.dropdown, styles.schemaMenu)}
                 popoverType="dropdown"
                 buttonProps={{ type: "ghost" }}
                 menu={{ items: ideMenu }}

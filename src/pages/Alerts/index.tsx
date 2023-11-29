@@ -41,12 +41,12 @@ const Alerts: React.FC<AlertsProps> = ({
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const basePath = withAuthPrefix("/alerts");
-  const { currentUser } = CurrentUserStore();
+  const { teamData } = CurrentUserStore();
   const { alertId } = useParams();
 
   const alerts = useMemo(
-    () => (initialAlerts?.length ? initialAlerts : currentUser.alerts || []),
-    [initialAlerts, currentUser]
+    () => (initialAlerts?.length ? initialAlerts : teamData.alerts || []),
+    [initialAlerts, teamData]
   ) as Alert[];
 
   const curAlert = useMemo(

@@ -20,14 +20,12 @@ export interface DataSourceData {
   isGenerate: boolean;
   isOnboarding: boolean;
   formState: FormState;
-  loading: boolean;
   schema: Schema | undefined;
 }
 
 export interface DataSourceState extends DataSourceData {
   setStep: (step: number) => void;
   nextStep: () => void;
-  setLoading: (status: boolean) => void;
   setSchema: (schema: Schema) => void;
   setEditId: (id: string) => void;
   setFormStateData: (step: number, data: any) => void;
@@ -48,14 +46,11 @@ const defaultState = {
   isOnboarding: false,
   isGenerate: false,
   formState: defaultFormState,
-  loading: false,
   schema: undefined,
 };
 
 const dataSourceStore = create<DataSourceState>((set) => ({
   ...defaultState,
-  setLoading: (status: boolean) =>
-    set((prev) => ({ ...prev, loading: status })),
   setIsGenerate: (value: boolean) =>
     set((prev) => ({ ...prev, isGenerate: value })),
   setSchema: (schema: Schema) => set((prev) => ({ ...prev, schema })),

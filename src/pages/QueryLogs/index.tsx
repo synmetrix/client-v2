@@ -11,9 +11,9 @@ import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import useLocation from "@/hooks/useLocation";
 import type { Request_Logs } from "@/graphql/generated";
 import QueryFilters from "@/components/QueryFilters";
-import useUserData from "@/hooks/useUserData";
 import type { QueryFiltersForm } from "@/types/queryFilter";
 import type { DataSourceInfo } from "@/types/dataSource";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -102,9 +102,15 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
 const QueryLogsWrapper = () => {
   const [filter, setFilter] = useState(defaultFilterState);
 
+  const { teamData } = CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const basePath = withAuthPrefix("/logs/query");
+
+  const dataSources = useMemo(
+    () => teamData?.dataSources || [],
+    [teamData]
+  ) as DataSourceInfo[];
 
   const {
     tableState: { pageSize, currentPage, paginationVars },
@@ -121,10 +127,6 @@ const QueryLogsWrapper = () => {
       ...filter,
     },
   });
-
-  const {
-    currentUser: { dataSources },
-  } = useUserData();
 
   const onClickRow = (recordId: string) =>
     setLocation(`${basePath}/${recordId}`);

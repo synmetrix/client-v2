@@ -190,7 +190,7 @@ export const Teams: React.FC<TeamsProps> = ({
 
 const TeamsWrapper: React.FC = () => {
   const { t } = useTranslation(["teams", "pages"]);
-  const { currentUser, currentTeam } = CurrentUserStore();
+  const { currentUser, currentTeam, loading, setLoading } = CurrentUserStore();
   const [createMutation, execCreateMutation] = useCreateTeamMutation();
   const [updateMutation, execUpdateMutation] = useEditTeamMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteTeamMutation();
@@ -208,6 +208,7 @@ const TeamsWrapper: React.FC = () => {
   });
 
   const onCreateOrEditTeam = (data: TeamSettingsForm) => {
+    setLoading(true);
     if (data.id) {
       execUpdateMutation({
         pk_columns: { id: data.id },
@@ -223,15 +224,22 @@ const TeamsWrapper: React.FC = () => {
   };
 
   const onRemoveTeam = (id: string) => {
+    setLoading(true);
     execDeleteMutation({ id });
   };
 
-  const loading = useMemo(
+  const isLoading = useMemo(
     () =>
+      loading ||
       createMutation.fetching ||
       updateMutation.fetching ||
       deleteMutation.fetching,
-    [createMutation.fetching, deleteMutation.fetching, updateMutation.fetching]
+    [
+      loading,
+      createMutation.fetching,
+      deleteMutation.fetching,
+      updateMutation.fetching,
+    ]
   );
 
   return (
@@ -240,7 +248,7 @@ const TeamsWrapper: React.FC = () => {
       currentTeam={currentTeam}
       onCreateOrEditTeam={onCreateOrEditTeam}
       onRemoveTeam={onRemoveTeam}
-      loading={loading}
+      loading={isLoading}
     />
   );
 };

@@ -160,39 +160,20 @@ const prepareTeamData = (rawData): UserData => {
   };
 };
 
-type Params = {
-  userId?: string;
-  teamId?: Maybe<string>;
-};
-
-const getListVariables = (params: Params) => {
-  const res = {
-    id: params?.userId,
-  };
-
-  if (params?.teamId) {
-    // res = set("datasourceWhere.team_id._eq", params.teamId, res);
-    // res = set("alertWhere.team_id._eq", params.teamId, res);
-    // res = set("reportWhere.team_id._eq", params.teamId, res);
-  }
-
-  return res;
-};
-
 export default () => {
   const { currentUser, currentTeamId, setLoading, setUserData, setTeamData } =
     CurrentUserStore();
   const { JWTpayload, accessToken } = AuthTokensStore();
   const userId = JWTpayload?.["x-hasura-user-id"];
 
-  const [teamMutation, execCreateTeamMutation] = useCreateTeamMutation();
+  const [, execCreateTeamMutation] = useCreateTeamMutation();
   const [currentUserData, execQueryCurrentUser] = useCurrentUserQuery({
-    variables: getListVariables({ userId, teamId: currentTeamId }),
+    variables: { id: userId },
     pause: true,
   });
 
   const [subscriptionData, execSubscription] = useSubCurrentUserSubscription({
-    variables: getListVariables({ userId, teamId: currentTeamId }),
+    variables: { id: userId },
     pause: true,
   });
 
@@ -251,15 +232,11 @@ export default () => {
   }, [setLoading, setUserData, subscriptionData?.data]);
 
   const createTeam = useCallback(async () => {
-    const res = await execCreateTeamMutation({
+    await execCreateTeamMutation({
       name: DEFAULT_TEAM_NAME,
     });
 
     execQueryCurrentUser();
-
-    // if (currentUser?.dataSources?.length) {
-    //   console.log(currentUser?.dataSources);
-    // }
   }, [execCreateTeamMutation, execQueryCurrentUser]);
 
   useEffect(() => {

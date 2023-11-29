@@ -226,6 +226,7 @@ export const DataSources = ({
           onTestConnection={onTestConnection}
           onDataSourceSetupSubmit={onDataSourceSetupSubmit}
           onDataModelGenerationSubmit={onDataModelGenerationSubmit}
+          loading={loading}
           bordered={false}
           shadow={false}
         />
@@ -255,16 +256,11 @@ const DataSourcesWrapper = () => {
     formState: { step0: dataSource, step1: dataSourceSetup, step3: apiSetup },
     schema,
     step,
-    // loading,
     isOnboarding,
     isGenerate,
     setIsGenerate,
     setSchema,
     setFormStateData,
-    // setLoading,
-    // setMessage,
-    // setError,
-    // setLoading,
     nextStep,
     setStep,
     setIsOnboarding,
@@ -310,7 +306,7 @@ const DataSourcesWrapper = () => {
 
   const dataSources = useMemo(
     () => teamData?.dataSources || [],
-    [currentUser]
+    [teamData]
   ) as DataSourceInfo[];
   const curDataSource = useMemo(
     () =>
@@ -327,6 +323,7 @@ const DataSourcesWrapper = () => {
       id: dataSourceSetup?.id || data?.id,
     });
 
+    setLoading(false);
     if (!test.data?.check_connection) {
       return null;
     }
@@ -369,7 +366,9 @@ const DataSourcesWrapper = () => {
   );
 
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
+    setLoading(true);
     let dataSourceId;
+
     if (!curId && !dataSourceSetup?.id) {
       const newData = {
         ...data,
@@ -438,6 +437,8 @@ const DataSourcesWrapper = () => {
   };
 
   const onDataModelGenerationSubmit = async (data: DynamicForm) => {
+    setLoading(true);
+
     let tables = { ...data } as any;
     delete tables.type;
     tables = Object.values(tables).reduce(
@@ -471,6 +472,7 @@ const DataSourcesWrapper = () => {
   };
 
   const onDelete = (dataSourceId: string) => {
+    setLoading(true);
     execDeleteMutation({ id: dataSourceId });
   };
 
@@ -537,9 +539,10 @@ const DataSourcesWrapper = () => {
 
   useEffect(() => {
     if (fetchTablesQuery.data) {
+      setLoading(false);
       setSchema(fetchTablesQuery.data?.fetch_tables?.schema);
     }
-  }, [fetchTablesQuery.data, setSchema]);
+  }, [fetchTablesQuery.data, setSchema, setLoading]);
 
   useEffect(() => {
     if (connect) {

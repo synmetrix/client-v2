@@ -19,6 +19,7 @@ interface DataSourceFormProps {
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;
   withSteps?: boolean;
   bordered?: boolean;
+  loading?: boolean;
   shadow?: boolean;
 }
 
@@ -29,10 +30,11 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
   onDataModelGenerationSubmit = () => {},
   withSteps = false,
   bordered = true,
+  loading = false,
   shadow = true,
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { step, setStep, loading } = DataSourceStore();
+  const { step, setStep } = DataSourceStore();
 
   return (
     <Card

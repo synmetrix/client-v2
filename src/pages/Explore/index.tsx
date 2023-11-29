@@ -157,7 +157,7 @@ export const Explore = ({
 
 const ExploreWrapper = () => {
   const { t } = useTranslation(["explore", "alerts", "reports"]);
-  const { currentUser } = CurrentUserStore();
+  const { teamData } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { screenshotMode } = location.query;
   const { dataSourceId, explorationId, modalType, delivery } = useParams();
@@ -222,8 +222,8 @@ const ExploreWrapper = () => {
   });
 
   const datasources = useMemo(
-    () => currentUser.dataSources || [],
-    [currentUser]
+    () => teamData.dataSources || [],
+    [teamData]
   ) as DataSourceInfo[];
 
   const [metaData, execMetaQuery] = useFetchMetaQuery({

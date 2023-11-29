@@ -232,7 +232,7 @@ const prepareAccessData = (accessResult: AllAccessListsQuery): AccessList[] => {
 
 const MembersWrapper = () => {
   const { t } = useTranslation(["settings", "pages"]);
-  const { currentTeam } = CurrentUserStore();
+  const { currentTeam, loading, setLoading } = CurrentUserStore();
   const [deleteMutation, execDeleteMutation] = useDeleteMemberMutation();
   const [inviteMutation, execInviteMutation] = useInviteMemberMutation();
   const [updateRoleMutation, execUpdateRoleMutation] =
@@ -281,10 +281,12 @@ const MembersWrapper = () => {
   );
 
   const onDeleteMember = (id: string) => {
+    setLoading(true);
     execDeleteMutation({ id });
   };
 
   const onRoleChange = (id: string, newRole: ChangeableRoles) => {
+    setLoading(true);
     execUpdateRoleMutation({
       pk_columns: { id },
       _set: {
@@ -329,6 +331,7 @@ const MembersWrapper = () => {
   return (
     <Members
       members={members}
+      loading={loading}
       accessLists={accessLists}
       currentRole={currentTeam?.role}
       onDeleteMember={onDeleteMember}

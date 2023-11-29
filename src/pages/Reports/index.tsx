@@ -43,12 +43,12 @@ const Reports: React.FC<ReportsProps> = ({
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const basePath = withAuthPrefix("/reports");
-  const { currentUser } = CurrentUserStore();
+  const { teamData } = CurrentUserStore();
   const { reportId } = useParams();
 
   const reports = useMemo(
-    () => (initialReports?.length ? initialReports : currentUser.reports || []),
-    [initialReports, currentUser]
+    () => (initialReports?.length ? initialReports : teamData.reports || []),
+    [initialReports, teamData]
   ) as Alert[];
 
   const curReport = useMemo(

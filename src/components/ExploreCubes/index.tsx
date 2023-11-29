@@ -102,7 +102,9 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
                 style={{
                   backgroundColor: "#fff",
                   color: "#000",
-                  padding: "0 10px",
+                  padding: "0 13px",
+                  fontSize: 10,
+                  fontWeight: 600,
                 }}
               />
             }

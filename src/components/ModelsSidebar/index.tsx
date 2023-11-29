@@ -98,11 +98,13 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
   return (
     <Space className={styles.wrapper} size={16} direction="vertical">
-      <DataSourcesMenu
-        selectedId={dataSourceId}
-        entities={dataSources}
-        onChange={onDataSourceChange}
-      />
+      <div className={styles.dataSourceMenu}>
+        <DataSourcesMenu
+          selectedId={dataSourceId}
+          entities={dataSources}
+          onChange={onDataSourceChange}
+        />
+      </div>
       <div className={styles.inner}>
         <div>
           <Space className={styles.space} size={10} direction="vertical">

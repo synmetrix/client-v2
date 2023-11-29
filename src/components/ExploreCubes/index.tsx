@@ -1,6 +1,8 @@
 import { Collapse, Badge, Radio, Input, Alert } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import { useResponsive } from "ahooks";
+import cn from "classnames";
 
 import useCubesList from "@/hooks/useCubesList";
 import ExploreCubesSection from "@/components//ExploreCubesSection";
@@ -44,6 +46,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
   header,
 }) => {
   const { t } = useTranslation(["explore", "common"]);
+  const responsive = useResponsive();
 
   const { state, setState } = useCubesList({
     query: "",
@@ -198,17 +201,17 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
         </Radio.Group>
       </div>
 
-      <div className={styles.body}>
-        <Input
-          className={styles.searchInput}
-          bordered={false}
-          prefix={<SearchIcon />}
-          placeholder="Find..."
-          onChange={onChange}
-          allowClear
-        />
+      <div className={cn(styles.body, !responsive.lg && styles.bodyMobile)}>
+        <div className={styles.cubes}>
+          <Input
+            className={styles.searchInput}
+            bordered={false}
+            prefix={<SearchIcon />}
+            placeholder="Find..."
+            onChange={onChange}
+            allowClear
+          />
 
-        <div>
           {dataSchemaValidation?.error && <Alert {...dataSchemaError} />}
           <Collapse
             className={styles.collapse}

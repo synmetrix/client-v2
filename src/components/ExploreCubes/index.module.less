@@ -10,12 +10,13 @@
 
 .body {
   padding: 0 11px;
+
+  &Mobile {
+    padding: 0;
+  }
 }
 
 .collapse {
-  * {
-    // padding: 0 !important;
-  }
   background: transparent;
 }
 
@@ -91,7 +92,7 @@
   display: flex !important;
 
   margin-bottom: 16px;
-  padding: 10px 0 10px;
+  padding: 12px 0 12px;
   padding-right: 25px;
   text-align: center;
   background: transparent;
@@ -128,7 +129,7 @@
 
     &::after {
       position: absolute;
-      bottom: -10px;
+      bottom: -14px;
       left: 50%;
       width: calc(100% + 18px);
       height: 2px;
@@ -155,4 +156,8 @@
 
 .freeMembers {
   margin-top: 2px;
+}
+
+.cubes {
+  padding: 0 11px;
 }

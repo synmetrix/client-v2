@@ -22,6 +22,7 @@ import formatTime from "@/utils/helpers/formatTime";
 import styles from "./index.module.less";
 
 interface TeamsProps {
+  userId: string;
   teams: Team[];
   currentTeam: Team | null;
   onCreateOrEditTeam: (data: TeamSettingsForm) => void;
@@ -32,6 +33,7 @@ interface TeamsProps {
 const AVATAR_COLORS = ["#000000", "#470D69", "#A31BCB"];
 
 export const Teams: React.FC<TeamsProps> = ({
+  userId,
   teams,
   currentTeam,
   onCreateOrEditTeam = () => {},
@@ -62,9 +64,10 @@ export const Teams: React.FC<TeamsProps> = ({
     setIsOpen(true);
   };
 
-  const isMember = currentTeam?.role === Roles.member;
-
   const renderCard = (team: Team) => {
+    const teamRole = team.members.find((m) => m.id === userId)?.role?.name;
+    const isMember = teamRole === Roles.member;
+
     return (
       <Card
         title={
@@ -136,6 +139,12 @@ export const Teams: React.FC<TeamsProps> = ({
                   </AvatarGroup>
                 </Space>
               </dd>
+            </>
+          )}
+          {teamRole && (
+            <>
+              <dt>{t("common:words.role")}</dt>
+              <dd title={teamRole}>{teamRole}</dd>
             </>
           )}
           {team.createdAt && (
@@ -244,6 +253,7 @@ const TeamsWrapper: React.FC = () => {
 
   return (
     <Teams
+      userId={currentUser.id}
       teams={currentUser.teams}
       currentTeam={currentTeam}
       onCreateOrEditTeam={onCreateOrEditTeam}

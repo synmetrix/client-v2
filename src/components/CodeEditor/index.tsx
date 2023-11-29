@@ -71,7 +71,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   const defaultButtons = [
     <Button
-      className={cn(styles.btn, {
+      className={cn(styles.btn, styles.sqlRunner, {
         [styles.active]: active === "sqlrunner",
       })}
       key="sqlrunner"
@@ -100,7 +100,10 @@ const CodeEditor: FC<CodeEditorProps> = ({
             </Form.Item>
           </Form>
         }
-        buttonProps={{ className: styles.settings, type: "ghost" }}
+        buttonProps={{
+          className: styles.settings,
+          type: "link",
+        }}
       />
     ) : null,
   ];
@@ -114,11 +117,11 @@ const CodeEditor: FC<CodeEditorProps> = ({
       <Row
         className={styles.nav}
         justify="space-between"
-        align="middle"
+        align="stretch"
         gutter={16}
       >
         <Col className={styles.navBtns} order={isMobile ? 1 : -1}>
-          <Space size={16} align="center">
+          <Space size={4} align="center">
             {files &&
               Object.keys(files).map((name) => (
                 <Button

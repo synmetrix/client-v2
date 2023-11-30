@@ -66,12 +66,11 @@ export const Members: React.FC<MembersProps> = ({
 
   const renderCard = (member: Member) => {
     const hasRoleChangePermission =
-      member?.role.name !== Roles.owner &&
-      (currentRole === Roles.owner ||
-        (currentRole === Roles.admin && member?.role.name === Roles.member));
+      (currentRole === Roles.owner || currentRole === Roles.admin) &&
+      member?.role.name === Roles.member;
+    const hasDeletePermission =
+      currentRole === Roles.owner && member?.role.name !== Roles.owner;
 
-    const hasDeletePermission = hasRoleChangePermission;
-    console.log(member);
     return (
       <Card
         title={
@@ -186,14 +185,14 @@ export const Members: React.FC<MembersProps> = ({
     );
   };
 
-  const isMember = currentRole === Roles.member;
+  const hasInvitePermissions = currentRole !== Roles.member;
 
   return (
     <>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("settings:members.title")}
-          action={!isMember && t("settings:members.action")}
+          action={hasInvitePermissions && t("settings:members.action")}
           onClick={() => setIsOpen(true)}
         />
 

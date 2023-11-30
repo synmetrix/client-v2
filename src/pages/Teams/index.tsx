@@ -71,7 +71,8 @@ export const Teams: React.FC<TeamsProps> = ({
   const renderCard = (team: Team) => {
     const teamRole = (team?.members || []).find((m) => m.id === userId)?.role
       ?.name;
-    const isMember = teamRole === Roles.member;
+    const hasEditPermissions = teamRole !== Roles.member;
+    const hasDeletePermissions = teamRole === Roles.owner;
 
     return (
       <Card
@@ -86,14 +87,14 @@ export const Teams: React.FC<TeamsProps> = ({
           </>
         }
         titleTooltip={team.name}
-        onTitleClick={() => !isMember && onEdit(team)}
+        onTitleClick={() => hasEditPermissions && onEdit(team)}
         extra={
           <Dropdown
             className={styles.btn}
             trigger={["click"]}
             menu={{
               items: [
-                !isMember && {
+                hasEditPermissions && {
                   key: "edit",
                   label: t("common:words.edit"),
                   onClick: () => onEdit(team),
@@ -103,7 +104,7 @@ export const Teams: React.FC<TeamsProps> = ({
                   label: t("common:words.set_current"),
                   onClick: () => onSelect(team.id),
                 },
-                !isMember && {
+                hasDeletePermissions && {
                   key: "delete",
                   label: (
                     <ConfirmModal
@@ -147,6 +148,12 @@ export const Teams: React.FC<TeamsProps> = ({
                   </AvatarGroup>
                 </Space>
               </dd>
+            </>
+          )}
+          {team.role && (
+            <>
+              <dt>{t("common:words.my_role")}</dt>
+              <dd title={team.role}>{team.role}</dd>
             </>
           )}
           {team?.creatorEmail && (

@@ -96,7 +96,8 @@
     "filename": "Filename",
     "loading": "Loading",
     "no_docs": "Documentation has not been generated yet.",
-    "set_current": "Set current"
+    "set_current": "Set current",
+    "my_role": "My role"
   },
   "form": {
     "labels": {

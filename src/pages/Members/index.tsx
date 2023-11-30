@@ -71,7 +71,7 @@ export const Members: React.FC<MembersProps> = ({
         (currentRole === Roles.admin && member?.role.name === Roles.member));
 
     const hasDeletePermission = hasRoleChangePermission;
-
+    console.log(member);
     return (
       <Card
         title={
@@ -158,7 +158,7 @@ export const Members: React.FC<MembersProps> = ({
                     ]}
                   />
                 ) : (
-                  capitalize(member.role.name)
+                  member?.accessList?.name || capitalize(member.role.name)
                 )}
               </dd>
             </>

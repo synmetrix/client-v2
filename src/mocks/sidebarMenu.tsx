@@ -14,7 +14,7 @@ export interface SidebarMenuItem {
   key: string;
   label: string;
   icon: ReactNode;
-  href?: string;
+  href: string;
   activeIcon?: ReactNode;
 }
 

@@ -81,7 +81,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                   </Row>
                 }
               >
-                <div style={{ margin: "0 -30px" }}>
+                <div>
                   {!responsive.lg && sidebar}
                   {!sidebar && content}
                 </div>

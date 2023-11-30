@@ -176,7 +176,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
     <div>
       {header && <div className={styles.header}>{header}</div>}
 
-      <div>
+      <div className={styles.radio}>
         <Radio.Group
           value={state.radioValue}
           size="small"

@@ -42,7 +42,7 @@ const SideMenu: FC<SideMenuProps> = () => {
                 placement="right"
                 key={i.key}
                 title={i.label}
-                trigger={"contextMenu"}
+                trigger={"focus"}
               >
                 <Button
                   className={cn(styles.btn, isMobile && styles.mobile)}

@@ -69,7 +69,7 @@ query CurrentUser($id: uuid!) {
           email
         }
       }
-      team {
+      team(order_by: { created_at: desc }) {
         ...TeamFields
       }
     }
@@ -105,7 +105,7 @@ subscription SubCurrentUser($id: uuid!) {
           email
         }
       }
-      team {
+      team(order_by: { created_at: desc }) {
         ...TeamFields
       }
     }

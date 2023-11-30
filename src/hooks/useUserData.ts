@@ -12,14 +12,16 @@ import AuthTokensStore from "@/stores/AuthTokensStore";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
   SubCurrentUserSubscription,
+  SubTeamDataSubscription,
   CurrentUserQuery,
   Datasources,
-  Maybe,
+  TeamDataQuery,
   Members as MembersType,
 } from "@/graphql/generated";
 import type { User, UserData } from "@/types/user";
 import type { DataSourceInfo } from "@/types/dataSource";
 import { dbTiles } from "@/mocks/dataSources";
+import { Roles } from "@/types/team";
 import type { AccessList, Member, Team, TeamRole } from "@/types/team";
 import type { Alert, RawAlert } from "@/types/alert";
 import type { Report, RawReport } from "@/types/report";
@@ -117,10 +119,14 @@ const prepareUserData = (
 
   const teams =
     rawUserData?.members?.reduce((acc: Team[], m) => {
-      const members = prepareMembersData(m?.team?.members);
+      const members = prepareMembersData(m?.team?.members as MembersType[]);
+      const creatorEmail = members.find(
+        (member) => member.role.name === Roles.owner
+      )?.email;
 
       const newTeam = {
         ...m.team,
+        creatorEmail,
         role: m?.member_roles?.[0]?.team_role,
         updatedAt: m.team.updated_at,
         createdAt: m.team.created_at,
@@ -143,7 +149,9 @@ const prepareUserData = (
   };
 };
 
-const prepareTeamData = (rawData): UserData => {
+const prepareTeamData = (
+  rawData: TeamDataQuery | SubTeamDataSubscription
+): UserData => {
   const rawUserData = rawData.teams_by_pk || null;
 
   const dataSources = prepareDataSourceData(
@@ -209,7 +217,7 @@ export default () => {
 
   useEffect(() => {
     if (subTeamData?.data) {
-      const newTeamData = prepareTeamData(subTeamData?.data);
+      const newTeamData = prepareTeamData(subTeamData.data);
       setTeamData(newTeamData);
       setLoading(false);
     }

@@ -15,6 +15,7 @@ import {
   useDeleteAccessListMutation,
   useSubAccessListsSubscription,
   useUpdateAccessListMutation,
+  Order_By,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
@@ -36,7 +37,7 @@ import { Roles } from "@/types/team";
 import styles from "./index.module.less";
 interface RolesAndAccessProps {
   initialValues?: RoleFormType;
-  currentTeam: Team;
+  currentTeam: Team | null;
   accessLists: AccessList[];
   dataSourceAccess: DataSourceAccess[];
   loading?: boolean;
@@ -78,7 +79,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
     }
   }, [initialValues, setIsOpen]);
 
-  const isMember = currentTeam.role === Roles.member;
+  const isMember = currentTeam?.role === Roles.member;
 
   const renderCard = (accessList: AccessList) => {
     return (
@@ -138,7 +139,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
         </dl>
 
         <div className={styles.datasources}>
-          {accessList.dataSources.map((d) => {
+          {dataSourceAccess.map((d) => {
             const permissions = accessList?.config?.datasources?.[d.id]?.cubes;
             return (
               <Row
@@ -273,6 +274,9 @@ const RolesAndAccessWrapper: React.FC = () => {
           _eq: currentTeam?.id,
         },
       },
+      order_by: {
+        created_at: Order_By.Desc,
+      },
     },
     pause: true,
   });
@@ -299,12 +303,33 @@ const RolesAndAccessWrapper: React.FC = () => {
     successMessage: t("settings:roles_and_access.access_list_removed"),
   });
 
+  const dataSources = useMemo(
+    () =>
+      prepareDataSourceData(
+        dataSourcesData?.data?.datasources as Datasources[]
+      ),
+    [dataSourcesData.data?.datasources]
+  );
+  const dataSourceAccess = useMemo(
+    () => prepareDataSourceAccess(dataSources),
+    [dataSources]
+  );
+  const accessLists = useMemo(
+    () => prepareAccessData(accessListsData?.data, dataSources),
+    [accessListsData.data, dataSources]
+  );
+
   const onFinish = (data: RoleFormType) => {
     const datasources = Object.entries(data.access).reduce(
       (acc, [id, cubes]) => {
         const filteredCubes = filterEmpty(cubes as unknown as Cube);
 
-        if (!Object.keys(filteredCubes).length) return acc;
+        if (
+          !Object.keys(filteredCubes).length ||
+          !dataSources.find((d) => d.id === id)
+        ) {
+          return acc;
+        }
 
         return {
           ...acc,
@@ -361,22 +386,6 @@ const RolesAndAccessWrapper: React.FC = () => {
       execAccessLists();
     }
   }, [execAccessLists, subscriptionData.data]);
-
-  const dataSources = useMemo(
-    () =>
-      prepareDataSourceData(
-        dataSourcesData?.data?.datasources as Datasources[]
-      ),
-    [dataSourcesData.data?.datasources]
-  );
-  const dataSourceAccess = useMemo(
-    () => prepareDataSourceAccess(dataSources),
-    [dataSources]
-  );
-  const accessLists = useMemo(
-    () => prepareAccessData(accessListsData?.data, dataSources),
-    [accessListsData.data, dataSources]
-  );
 
   const initialValues = useMemo(() => {
     if (editId) {

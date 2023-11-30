@@ -95,7 +95,8 @@
     "select_branch": "Select branch",
     "filename": "Filename",
     "loading": "Loading",
-    "no_docs": "Documentation has not been generated yet."
+    "no_docs": "Documentation has not been generated yet.",
+    "set_current": "Set current"
   },
   "form": {
     "labels": {

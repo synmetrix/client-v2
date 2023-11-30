@@ -13,13 +13,15 @@ import {
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import Avatar, { AvatarGroup } from "@/components/Avatar";
-import type { Member, Team, TeamSettingsForm } from "@/types/team";
-import { Roles } from "@/types/team";
 import Card from "@/components/Card";
 import ConfirmModal from "@/components/ConfirmModal";
 import formatTime from "@/utils/helpers/formatTime";
+import type { Member, Team, TeamSettingsForm } from "@/types/team";
+import { Roles } from "@/types/team";
 
 import styles from "./index.module.less";
+
+import type { ItemType } from "antd/lib/menu/hooks/useItems";
 
 interface TeamsProps {
   userId: string;
@@ -27,6 +29,7 @@ interface TeamsProps {
   currentTeam: Team | null;
   onCreateOrEditTeam: (data: TeamSettingsForm) => void;
   onRemoveTeam: (id: string) => void;
+  onSelect: (id: string) => void;
   loading: boolean;
 }
 
@@ -38,6 +41,7 @@ export const Teams: React.FC<TeamsProps> = ({
   currentTeam,
   onCreateOrEditTeam = () => {},
   onRemoveTeam = () => {},
+  onSelect = () => {},
   loading = false,
 }) => {
   const { t } = useTranslation(["teams", "pages"]);
@@ -84,34 +88,37 @@ export const Teams: React.FC<TeamsProps> = ({
         titleTooltip={team.name}
         onTitleClick={() => !isMember && onEdit(team)}
         extra={
-          !isMember && (
-            <Dropdown
-              className={styles.btn}
-              trigger={["click"]}
-              menu={{
-                items: [
-                  {
-                    key: "edit",
-                    label: t("common:words.edit"),
-                    onClick: () => onEdit(team),
-                  },
-                  {
-                    key: "delete",
-                    label: (
-                      <ConfirmModal
-                        title={t("common:words.delete_alert")}
-                        onConfirm={() => onRemoveTeam(team.id)}
-                      >
-                        {t("common:words.delete")}
-                      </ConfirmModal>
-                    ),
-                  },
-                ],
-              }}
-            >
-              <SettingOutlined key="setting" />
-            </Dropdown>
-          )
+          <Dropdown
+            className={styles.btn}
+            trigger={["click"]}
+            menu={{
+              items: [
+                !isMember && {
+                  key: "edit",
+                  label: t("common:words.edit"),
+                  onClick: () => onEdit(team),
+                },
+                {
+                  key: "select",
+                  label: t("common:words.set_current"),
+                  onClick: () => onSelect(team.id),
+                },
+                !isMember && {
+                  key: "delete",
+                  label: (
+                    <ConfirmModal
+                      title={t("common:words.delete_alert")}
+                      onConfirm={() => onRemoveTeam(team.id)}
+                    >
+                      {t("common:words.delete")}
+                    </ConfirmModal>
+                  ),
+                },
+              ].filter(Boolean) as ItemType[],
+            }}
+          >
+            <SettingOutlined key="setting" />
+          </Dropdown>
         }
       >
         <dl>
@@ -142,10 +149,10 @@ export const Teams: React.FC<TeamsProps> = ({
               </dd>
             </>
           )}
-          {teamRole && (
+          {team?.creatorEmail && (
             <>
-              <dt>{t("common:words.role")}</dt>
-              <dd title={teamRole}>{teamRole}</dd>
+              <dt>{t("common:words.creator")}</dt>
+              <dd title={team?.creatorEmail}>{team?.creatorEmail}</dd>
             </>
           )}
           {team.createdAt && (
@@ -200,7 +207,8 @@ export const Teams: React.FC<TeamsProps> = ({
 
 const TeamsWrapper: React.FC = () => {
   const { t } = useTranslation(["teams", "pages"]);
-  const { currentUser, currentTeam, loading, setLoading } = CurrentUserStore();
+  const { currentUser, currentTeam, loading, setLoading, setCurrentTeamId } =
+    CurrentUserStore();
   const [createMutation, execCreateMutation] = useCreateTeamMutation();
   const [updateMutation, execUpdateMutation] = useEditTeamMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteTeamMutation();
@@ -238,6 +246,10 @@ const TeamsWrapper: React.FC = () => {
     execDeleteMutation({ id });
   };
 
+  const onSelect = (id: string) => {
+    setCurrentTeamId(id);
+  };
+
   const isLoading = useMemo(
     () =>
       loading ||
@@ -259,6 +271,7 @@ const TeamsWrapper: React.FC = () => {
       currentTeam={currentTeam}
       onCreateOrEditTeam={onCreateOrEditTeam}
       onRemoveTeam={onRemoveTeam}
+      onSelect={onSelect}
       loading={isLoading}
     />
   );

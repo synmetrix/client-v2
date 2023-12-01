@@ -150,12 +150,6 @@ export const Teams: React.FC<TeamsProps> = ({
               </dd>
             </>
           )}
-          {team.role && (
-            <>
-              <dt>{t("common:words.my_role")}</dt>
-              <dd title={team.role}>{team.role}</dd>
-            </>
-          )}
           {team?.creatorEmail && (
             <>
               <dt>{t("common:words.creator")}</dt>

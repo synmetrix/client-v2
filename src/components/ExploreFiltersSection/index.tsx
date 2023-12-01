@@ -68,7 +68,7 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
         {...restProps}
         className={s.panel}
         header={
-          <>
+          <div className={s.header}>
             <Button
               className={s.filters}
               type="dashed"
@@ -86,7 +86,7 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
                 padding: "0 13px",
               }}
             />
-          </>
+          </div>
         }
         key={"filtersSec"}
       >

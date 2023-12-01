@@ -83,7 +83,7 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
                 marginLeft: 10,
                 backgroundColor: "#EDE7F0",
                 color: "#000",
-                padding: "0 10px",
+                padding: "0 13px",
               }}
             />
           </>

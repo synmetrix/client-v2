@@ -8,5 +8,6 @@
   },
   "team_created": "Team created",
   "team_updated": "Team updated",
-  "team_deleted": "Team deleted"
+  "team_deleted": "Team deleted",
+  "team_name_error": "Team name is already used"
 }

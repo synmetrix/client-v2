@@ -1,4 +1,4 @@
-import { Col, Dropdown, Row, Space, Spin, Tag } from "antd";
+import { Col, Dropdown, Row, Space, Spin, Tag, message } from "antd";
 import { useTranslation } from "react-i18next";
 import { SettingOutlined } from "@ant-design/icons";
 
@@ -220,17 +220,45 @@ const TeamsWrapper: React.FC = () => {
   const [updateMutation, execUpdateMutation] = useEditTeamMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteTeamMutation();
 
-  useCheckResponse(createMutation, () => {}, {
-    successMessage: t("team_created"),
-  });
+  useCheckResponse(
+    createMutation,
+    (data, err) => {
+      if (data) message.success(t("team_created"));
 
-  useCheckResponse(updateMutation, () => {}, {
-    successMessage: t("team_updated"),
-  });
+      if (err?.message) {
+        if (err.message.match("teams_user_id_name_key")) {
+          message.error(t("team_name_error"));
+        } else {
+          message.error(err.message);
+        }
+      }
+      setLoading(false);
+    },
+    {
+      showMessage: false,
+      showResponseMessage: false,
+    }
+  );
 
-  useCheckResponse(deleteMutation, () => {}, {
-    successMessage: t("team_deleted"),
-  });
+  useCheckResponse(
+    updateMutation,
+    () => {
+      setLoading(false);
+    },
+    {
+      successMessage: t("team_updated"),
+    }
+  );
+
+  useCheckResponse(
+    deleteMutation,
+    () => {
+      setLoading(false);
+    },
+    {
+      successMessage: t("team_deleted"),
+    }
+  );
 
   const onCreateOrEditTeam = (data: TeamSettingsForm) => {
     setLoading(true);

@@ -2582,7 +2582,29 @@ export type Auth_Roles_Updates = {
 /** columns and relationships of "branch_statuses" */
 export type Branch_Statuses = {
   __typename?: "branch_statuses";
+  /** An array relationship */
+  branches: Array<Branches>;
+  /** An aggregate relationship */
+  branches_aggregate: Branches_Aggregate;
   status: Scalars["String"]["output"];
+};
+
+/** columns and relationships of "branch_statuses" */
+export type Branch_StatusesBranchesArgs = {
+  distinct_on?: InputMaybe<Array<Branches_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Branches_Order_By>>;
+  where?: InputMaybe<Branches_Bool_Exp>;
+};
+
+/** columns and relationships of "branch_statuses" */
+export type Branch_StatusesBranches_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Branches_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Branches_Order_By>>;
+  where?: InputMaybe<Branches_Bool_Exp>;
 };
 
 /** aggregated selection of "branch_statuses" */
@@ -2611,6 +2633,8 @@ export type Branch_Statuses_Bool_Exp = {
   _and?: InputMaybe<Array<Branch_Statuses_Bool_Exp>>;
   _not?: InputMaybe<Branch_Statuses_Bool_Exp>;
   _or?: InputMaybe<Array<Branch_Statuses_Bool_Exp>>;
+  branches?: InputMaybe<Branches_Bool_Exp>;
+  branches_aggregate?: InputMaybe<Branches_Aggregate_Bool_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -2637,6 +2661,7 @@ export type Branch_Statuses_Enum_Comparison_Exp = {
 
 /** input type for inserting data into table "branch_statuses" */
 export type Branch_Statuses_Insert_Input = {
+  branches?: InputMaybe<Branches_Arr_Rel_Insert_Input>;
   status?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -2677,6 +2702,7 @@ export type Branch_Statuses_On_Conflict = {
 
 /** Ordering options when selecting data from "branch_statuses". */
 export type Branch_Statuses_Order_By = {
+  branches_aggregate?: InputMaybe<Branches_Aggregate_Order_By>;
   status?: InputMaybe<Order_By>;
 };
 
@@ -7408,9 +7434,9 @@ export type Query_Root = {
   team_roles_aggregate: Team_Roles_Aggregate;
   /** fetch data from the table: "team_roles" using primary key columns */
   team_roles_by_pk?: Maybe<Team_Roles>;
-  /** fetch data from the table: "teams" */
+  /** An array relationship */
   teams: Array<Teams>;
-  /** fetch aggregated fields from the table: "teams" */
+  /** An aggregate relationship */
   teams_aggregate: Teams_Aggregate;
   /** fetch data from the table: "teams" using primary key columns */
   teams_by_pk?: Maybe<Teams>;
@@ -9620,9 +9646,9 @@ export type Subscription_Root = {
   team_roles_by_pk?: Maybe<Team_Roles>;
   /** fetch data from the table in a streaming manner: "team_roles" */
   team_roles_stream: Array<Team_Roles>;
-  /** fetch data from the table: "teams" */
+  /** An array relationship */
   teams: Array<Teams>;
-  /** fetch aggregated fields from the table: "teams" */
+  /** An aggregate relationship */
   teams_aggregate: Teams_Aggregate;
   /** fetch data from the table: "teams" using primary key columns */
   teams_by_pk?: Maybe<Teams>;
@@ -10552,6 +10578,9 @@ export type Teams = {
   /** An aggregate relationship */
   reports_aggregate: Reports_Aggregate;
   updated_at: Scalars["timestamptz"]["output"];
+  /** An object relationship */
+  user: Users;
+  user_id: Scalars["uuid"]["output"];
 };
 
 /** columns and relationships of "teams" */
@@ -10669,6 +10698,17 @@ export type Teams_Aggregate = {
   nodes: Array<Teams>;
 };
 
+export type Teams_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Teams_Aggregate_Bool_Exp_Count>;
+};
+
+export type Teams_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Teams_Select_Column>>;
+  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+  filter?: InputMaybe<Teams_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "teams" */
 export type Teams_Aggregate_Fields = {
   __typename?: "teams_aggregate_fields";
@@ -10681,6 +10721,20 @@ export type Teams_Aggregate_Fields = {
 export type Teams_Aggregate_FieldsCountArgs = {
   columns?: InputMaybe<Array<Teams_Select_Column>>;
   distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/** order by aggregate values of table "teams" */
+export type Teams_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Teams_Max_Order_By>;
+  min?: InputMaybe<Teams_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "teams" */
+export type Teams_Arr_Rel_Insert_Input = {
+  data: Array<Teams_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Teams_On_Conflict>;
 };
 
 /** Boolean expression to filter rows from the table "teams". All fields are combined with a logical 'AND'. */
@@ -10704,12 +10758,16 @@ export type Teams_Bool_Exp = {
   reports?: InputMaybe<Reports_Bool_Exp>;
   reports_aggregate?: InputMaybe<Reports_Aggregate_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  user?: InputMaybe<Users_Bool_Exp>;
+  user_id?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "teams" */
 export enum Teams_Constraint {
   /** unique or primary key constraint on columns "id" */
   TeamsPkey = "teams_pkey",
+  /** unique or primary key constraint on columns "name", "user_id" */
+  TeamsUserIdNameKey = "teams_user_id_name_key",
 }
 
 /** input type for inserting data into table "teams" */
@@ -10724,6 +10782,8 @@ export type Teams_Insert_Input = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   reports?: InputMaybe<Reports_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
 /** aggregate max on columns */
@@ -10733,6 +10793,16 @@ export type Teams_Max_Fields = {
   id?: Maybe<Scalars["uuid"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by max() on columns of table "teams" */
+export type Teams_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -10742,6 +10812,16 @@ export type Teams_Min_Fields = {
   id?: Maybe<Scalars["uuid"]["output"]>;
   name?: Maybe<Scalars["String"]["output"]>;
   updated_at?: Maybe<Scalars["timestamptz"]["output"]>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
+};
+
+/** order by min() on columns of table "teams" */
+export type Teams_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "teams" */
@@ -10779,6 +10859,8 @@ export type Teams_Order_By = {
   name?: InputMaybe<Order_By>;
   reports_aggregate?: InputMaybe<Reports_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
+  user?: InputMaybe<Users_Order_By>;
+  user_id?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: teams */
@@ -10796,6 +10878,8 @@ export enum Teams_Select_Column {
   Name = "name",
   /** column name */
   UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
 }
 
 /** input type for updating data in table "teams" */
@@ -10804,6 +10888,7 @@ export type Teams_Set_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
 /** Streaming cursor of the table "teams" */
@@ -10820,6 +10905,7 @@ export type Teams_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
+  user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
 /** update columns of table "teams" */
@@ -10832,6 +10918,8 @@ export enum Teams_Update_Column {
   Name = "name",
   /** column name */
   UpdatedAt = "updated_at",
+  /** column name */
+  UserId = "user_id",
 }
 
 export type Teams_Updates = {
@@ -10904,6 +10992,14 @@ export type Users = {
   request_logs: Array<Request_Logs>;
   /** An aggregate relationship */
   request_logs_aggregate: Request_Logs_Aggregate;
+  /** An array relationship */
+  sql_credentials: Array<Sql_Credentials>;
+  /** An aggregate relationship */
+  sql_credentials_aggregate: Sql_Credentials_Aggregate;
+  /** An array relationship */
+  teams: Array<Teams>;
+  /** An aggregate relationship */
+  teams_aggregate: Teams_Aggregate;
   updated_at: Scalars["timestamptz"]["output"];
   /** An array relationship */
   versions: Array<Versions>;
@@ -11038,6 +11134,42 @@ export type UsersRequest_Logs_AggregateArgs = {
 };
 
 /** columns and relationships of "users" */
+export type UsersSql_CredentialsArgs = {
+  distinct_on?: InputMaybe<Array<Sql_Credentials_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Sql_Credentials_Order_By>>;
+  where?: InputMaybe<Sql_Credentials_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersSql_Credentials_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Sql_Credentials_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Sql_Credentials_Order_By>>;
+  where?: InputMaybe<Sql_Credentials_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersTeamsArgs = {
+  distinct_on?: InputMaybe<Array<Teams_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Teams_Order_By>>;
+  where?: InputMaybe<Teams_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
+export type UsersTeams_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Teams_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Teams_Order_By>>;
+  where?: InputMaybe<Teams_Bool_Exp>;
+};
+
+/** columns and relationships of "users" */
 export type UsersVersionsArgs = {
   distinct_on?: InputMaybe<Array<Versions_Select_Column>>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -11100,6 +11232,10 @@ export type Users_Bool_Exp = {
   reports_aggregate?: InputMaybe<Reports_Aggregate_Bool_Exp>;
   request_logs?: InputMaybe<Request_Logs_Bool_Exp>;
   request_logs_aggregate?: InputMaybe<Request_Logs_Aggregate_Bool_Exp>;
+  sql_credentials?: InputMaybe<Sql_Credentials_Bool_Exp>;
+  sql_credentials_aggregate?: InputMaybe<Sql_Credentials_Aggregate_Bool_Exp>;
+  teams?: InputMaybe<Teams_Bool_Exp>;
+  teams_aggregate?: InputMaybe<Teams_Aggregate_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   versions?: InputMaybe<Versions_Bool_Exp>;
   versions_aggregate?: InputMaybe<Versions_Aggregate_Bool_Exp>;
@@ -11125,6 +11261,8 @@ export type Users_Insert_Input = {
   members?: InputMaybe<Members_Arr_Rel_Insert_Input>;
   reports?: InputMaybe<Reports_Arr_Rel_Insert_Input>;
   request_logs?: InputMaybe<Request_Logs_Arr_Rel_Insert_Input>;
+  sql_credentials?: InputMaybe<Sql_Credentials_Arr_Rel_Insert_Input>;
+  teams?: InputMaybe<Teams_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   versions?: InputMaybe<Versions_Arr_Rel_Insert_Input>;
 };
@@ -11186,6 +11324,8 @@ export type Users_Order_By = {
   members_aggregate?: InputMaybe<Members_Aggregate_Order_By>;
   reports_aggregate?: InputMaybe<Reports_Aggregate_Order_By>;
   request_logs_aggregate?: InputMaybe<Request_Logs_Aggregate_Order_By>;
+  sql_credentials_aggregate?: InputMaybe<Sql_Credentials_Aggregate_Order_By>;
+  teams_aggregate?: InputMaybe<Teams_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
   versions_aggregate?: InputMaybe<Versions_Aggregate_Order_By>;
 };

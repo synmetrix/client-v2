@@ -34,7 +34,7 @@ const AccessCard: FC<AccessCardProps> = ({
       onClick={() => onClick?.({ id, name, access, dataSource })}
     >
       <Space direction="vertical" size={14} style={{ width: "100%" }}>
-        <Paragraph ellipsis className={styles.url}>
+        <Paragraph title={name} ellipsis className={styles.url}>
           {name}
         </Paragraph>
 

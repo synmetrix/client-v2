@@ -12,21 +12,16 @@ import Button from "@/components/Button";
 import formatTime from "@/utils/helpers/formatTime";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 import { capitalize } from "@/utils/helpers/capitalize";
-import type {
-  AllAccessListsQuery,
-  Members as MembersType,
-  Team_Roles_Enum,
-} from "@/graphql/generated";
+import type { AllAccessListsQuery, Team_Roles_Enum } from "@/graphql/generated";
 import {
   useAllAccessListsQuery,
   useDeleteMemberMutation,
   useInviteMemberMutation,
-  useMembersQuery,
   useUpdateMemberRoleMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import type { AccessList, Member, TeamRole } from "@/types/team";
+import type { AccessList, Member } from "@/types/team";
 import { ChangeableRoles, Roles } from "@/types/team";
 
 import TrashIcon from "@/assets/trash.svg";

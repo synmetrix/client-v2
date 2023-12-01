@@ -49,6 +49,7 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
           >
             <Paragraph
               ellipsis
+              title={name}
               style={{ display: "inline-block", width: "95%" }}
               className={cx(styles.paragraph, styles.btn)}
             >
@@ -99,6 +100,7 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
             <li className={styles.listItem}>
               <span className={styles.label}>{t("common:words.host")}</span>
               <Paragraph
+                title={dbParams.host}
                 className={styles.paragraph}
                 style={{
                   display: "inline",
@@ -116,6 +118,7 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
             <li className={styles.listItem}>
               <span className={styles.label}>{t("common:words.login")}</span>
               <Paragraph
+                title={login}
                 className={styles.paragraph}
                 style={{
                   display: "inline",
@@ -137,6 +140,7 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
           <li className={styles.listItem}>
             <span className={styles.label}>{t("common:words.updated_at")}</span>
             <Paragraph
+              title={formatTime(updatedAt)}
               className={styles.paragraph}
               style={{
                 display: "inline",
@@ -152,6 +156,7 @@ const DataSourceCard: FC<DataSourceCardProps> = ({
           <li className={styles.listItem}>
             <span className={styles.label}>{t("common:words.created_at")}</span>
             <Paragraph
+              title={formatTime(createdAt)}
               className={styles.paragraph}
               style={{
                 display: "inline",

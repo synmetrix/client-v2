@@ -1,7 +1,6 @@
-import { Col, Dropdown, Row, Space, Spin } from "antd";
+import { Dropdown, Space, Spin, Typography } from "antd";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react";
 import { SettingOutlined } from "@ant-design/icons";
 
 import Modal from "@/components/Modal";
@@ -35,6 +34,9 @@ import type { Team } from "@/types/team";
 import { Roles } from "@/types/team";
 
 import styles from "./index.module.less";
+
+const { Paragraph } = Typography;
+
 interface RolesAndAccessProps {
   initialValues?: RoleFormType;
   currentTeam: Team | null;
@@ -142,20 +144,17 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
           {dataSourceAccess.map((d) => {
             const permissions = accessList?.config?.datasources?.[d.id]?.cubes;
             return (
-              <Row
-                justify={"space-between"}
-                key={d.id}
-                gutter={[5, 5]}
-                align="middle"
-              >
-                <Col className={styles.label}>{d.name}</Col>
-                <Col className={styles.value}>
+              <div key={d.id} className={styles.dataSource}>
+                <Paragraph title={d.name} ellipsis className={styles.label}>
+                  {d.name}
+                </Paragraph>
+                <div className={styles.access}>
                   <AccessTypeWrapper
                     dataSourceId={d.id}
                     permissions={permissions}
                   />
-                </Col>
-              </Row>
+                </div>
+              </div>
             );
           })}
         </div>

@@ -100,6 +100,7 @@ const AccessTable: FC<AccessTableProps> = ({
         render: (value) => (
           <Paragraph
             ellipsis
+            title={value}
             style={{ display: "inline-block", maxWidth: 225 }}
             className={styles.paragraph}
           >

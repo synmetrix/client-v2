@@ -69,7 +69,7 @@
     "name": "Name",
     "last_activity": "Last Activity",
     "schedule": "Schedule",
-    "creator": "Creator",
+    "creator": "Created by",
     "delivery_type": "Delivery Type",
     "reports": "Reports",
     "alerts": "Alerts",

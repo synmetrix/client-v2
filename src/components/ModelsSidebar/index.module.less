@@ -6,7 +6,7 @@
 }
 
 .inner {
-  padding: 0 11px;
+  padding: 0 11px 0 10px;
 }
 
 .space {
@@ -48,9 +48,11 @@
 }
 
 .version {
+  overflow: hidden;
   font-weight: 700;
   font-size: 14px;
-  word-break: break-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .docsLink {
@@ -100,7 +102,9 @@
   }
 }
 
-.filename {
+.file {
+  position: relative;
+  top: -2px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

@@ -177,7 +177,9 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               </Button>
             </div>
           ) : null}
-          <div className={styles.version}>{version}</div>
+          <div className={styles.version} title={version}>
+            {version}
+          </div>
           {currentBranch && currentBranch.status !== "active" && (
             <Button
               className={styles.default}
@@ -241,16 +243,16 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                   onClick={() => onSelectFile(f.name)}
                 >
                   <Row justify={"space-between"} wrap={false}>
-                    <Col className={styles.filename} span={18}>
+                    <Col className={styles.file} span={18} title={f.name}>
                       {icons[f.name.split(".")[1] as keyof typeof icons]}{" "}
-                      {f.name}
+                      <span className={styles.fileNameText}>{f.name}</span>
                     </Col>
 
                     <Col
                       span={6}
                       style={{ display: "flex", justifyContent: "end" }}
                     >
-                      <Space align="center" size={5}>
+                      <Space align="center" size={0}>
                         <PopoverButton
                           className={styles.edit}
                           trigger={["click"]}
@@ -274,6 +276,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                           buttonProps={{
                             size: "small",
                             type: "text",
+                            className: styles.fileControl,
                           }}
                         />
 
@@ -283,6 +286,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                           buttonProps={{
                             size: "small",
                             type: "text",
+                            className: styles.fileControl,
                           }}
                           isVisible={
                             editPopover?.id === f.id &&

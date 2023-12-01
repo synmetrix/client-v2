@@ -70,8 +70,8 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
         header={
           <>
             <Button
+              className={s.filters}
               type="dashed"
-              size="small"
               onClick={() => onToggleSection("filtersSec")}
             >
               {t("Filters")}

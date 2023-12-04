@@ -49,7 +49,7 @@ const SideMenu: FC<SideMenuProps> = () => {
                     className={cn(
                       styles.btn,
                       isMobile && styles.mobile,
-                      location.pathname.includes(i.href!) && styles.active
+                      location?.pathname?.includes(i.href!) && styles.active
                     )}
                     type="text"
                     onClick={(e) => {

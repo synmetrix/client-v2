@@ -18,6 +18,8 @@ fragment TeamFields on teams {
   created_at
   updated_at
   members(order_by: { created_at: desc }) {
+    id
+    user_id
     member_roles {
       id
       team_role
@@ -50,6 +52,8 @@ query CurrentUser($id: uuid!) {
     }
 
     members(order_by: { created_at: desc }) {
+      id
+      user_id
       member_roles {
         id
         team_role
@@ -69,7 +73,7 @@ query CurrentUser($id: uuid!) {
           email
         }
       }
-      team(order_by: { created_at: desc }) {
+      team {
         ...TeamFields
       }
     }
@@ -86,6 +90,8 @@ subscription SubCurrentUser($id: uuid!) {
     }
 
     members(order_by: { created_at: desc }) {
+      id
+      user_id
       member_roles {
         id
         team_role
@@ -105,7 +111,7 @@ subscription SubCurrentUser($id: uuid!) {
           email
         }
       }
-      team(order_by: { created_at: desc }) {
+      team {
         ...TeamFields
       }
     }

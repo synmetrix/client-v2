@@ -158,7 +158,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                 label={getLabel("team_member")}
                 defaultValue={initialValue?.user_id}
                 options={(teamMembers || []).map((m) => ({
-                  value: m.id,
+                  value: m.user_id,
                   label: m.displayName,
                 }))}
                 disabled={!!isOnboarding}

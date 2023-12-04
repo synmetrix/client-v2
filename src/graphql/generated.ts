@@ -11887,6 +11887,8 @@ export type TeamFieldsFragment = {
   updated_at: any;
   members: Array<{
     __typename?: "members";
+    id: any;
+    user_id: any;
     member_roles: Array<{
       __typename?: "member_roles";
       id: any;
@@ -11924,6 +11926,8 @@ export type CurrentUserQuery = {
     account?: { __typename?: "auth_accounts"; email?: any | null } | null;
     members: Array<{
       __typename?: "members";
+      id: any;
+      user_id: any;
       member_roles: Array<{
         __typename?: "member_roles";
         id: any;
@@ -11952,6 +11956,8 @@ export type CurrentUserQuery = {
         updated_at: any;
         members: Array<{
           __typename?: "members";
+          id: any;
+          user_id: any;
           member_roles: Array<{
             __typename?: "member_roles";
             id: any;
@@ -11995,6 +12001,8 @@ export type SubCurrentUserSubscription = {
     account?: { __typename?: "auth_accounts"; email?: any | null } | null;
     members: Array<{
       __typename?: "members";
+      id: any;
+      user_id: any;
       member_roles: Array<{
         __typename?: "member_roles";
         id: any;
@@ -12023,6 +12031,8 @@ export type SubCurrentUserSubscription = {
         updated_at: any;
         members: Array<{
           __typename?: "members";
+          id: any;
+          user_id: any;
           member_roles: Array<{
             __typename?: "member_roles";
             id: any;
@@ -12904,6 +12914,8 @@ export const TeamFieldsFragmentDoc = gql`
     created_at
     updated_at
     members(order_by: { created_at: desc }) {
+      id
+      user_id
       member_roles {
         id
         team_role
@@ -13215,6 +13227,8 @@ export const CurrentUserDocument = gql`
         email
       }
       members(order_by: { created_at: desc }) {
+        id
+        user_id
         member_roles {
           id
           team_role
@@ -13261,6 +13275,8 @@ export const SubCurrentUserDocument = gql`
         email
       }
       members(order_by: { created_at: desc }) {
+        id
+        user_id
         member_roles {
           id
           team_role

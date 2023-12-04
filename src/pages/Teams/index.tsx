@@ -69,8 +69,8 @@ export const Teams: React.FC<TeamsProps> = ({
   };
 
   const renderCard = (team: Team) => {
-    const teamRole = (team?.members || []).find((m) => m.id === userId)?.role
-      ?.name;
+    const teamRole = (team?.members || []).find((m) => m.user_id === userId)
+      ?.role?.name;
     const hasEditPermissions = teamRole !== Roles.member;
     const hasDeletePermissions = teamRole === Roles.owner;
 

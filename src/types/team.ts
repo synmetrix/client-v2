@@ -27,6 +27,7 @@ export interface Member {
   email: string;
   role: TeamRole;
   id: string;
+  user_id: string;
   accessList?: AccessList | null;
   displayName?: string;
   createdAt?: string;

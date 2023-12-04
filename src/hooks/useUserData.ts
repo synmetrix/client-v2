@@ -31,7 +31,8 @@ const DEFAULT_TEAM_NAME = "Default team";
 const prepareMembersData = (rawMembers: MembersType[]) => {
   const members = rawMembers?.map((m) => {
     return {
-      id: m.user.id,
+      id: m.id,
+      user_id: m.user_id,
       email: m?.user?.account?.email,
       avatarUrl: m.user.avatar_url,
       displayName: m.user.display_name,

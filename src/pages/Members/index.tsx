@@ -12,7 +12,11 @@ import Button from "@/components/Button";
 import formatTime from "@/utils/helpers/formatTime";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 import { capitalize } from "@/utils/helpers/capitalize";
-import type { AllAccessListsQuery, Team_Roles_Enum } from "@/graphql/generated";
+import type {
+  AllAccessListsQuery,
+  Member_Roles_Set_Input,
+  Team_Roles_Enum,
+} from "@/graphql/generated";
 import {
   useAllAccessListsQuery,
   useDeleteMemberMutation,
@@ -61,10 +65,10 @@ export const Members: React.FC<MembersProps> = ({
 
   const renderCard = (member: Member) => {
     const hasRoleChangePermission =
-      (currentRole === Roles.owner || currentRole === Roles.admin) &&
-      member?.role.name === Roles.member;
-    const hasDeletePermission =
-      currentRole === Roles.owner && member?.role.name !== Roles.owner;
+      (currentRole === Roles.owner && member.role.name !== Roles.owner) ||
+      (currentRole === Roles.admin && member.role.name === Roles.member);
+    const hasChangeAccessPermission =
+      member.role.name === Roles.member && currentRole !== Roles.member;
 
     return (
       <Card
@@ -76,7 +80,7 @@ export const Members: React.FC<MembersProps> = ({
         }
         titleTooltip={member.displayName}
         extra={
-          hasDeletePermission && (
+          hasRoleChangePermission && (
             <ConfirmModal
               title={t("common:words.delete_member")}
               onConfirm={() => onRemove(member)}
@@ -113,7 +117,6 @@ export const Members: React.FC<MembersProps> = ({
                         val as unknown as ChangeableRoles
                       )
                     }
-                    disabled={!hasRoleChangePermission}
                     bordered={false}
                     value={member.role.name}
                     options={createRoleOptions(ChangeableRoles)}
@@ -127,7 +130,7 @@ export const Members: React.FC<MembersProps> = ({
                 title={capitalize(member.role.name)}
                 className={styles.roleName}
               >
-                {hasRoleChangePermission ? (
+                {hasChangeAccessPermission ? (
                   <Select
                     onChange={(accessListId) => {
                       onAccessListChange(member.role.id, accessListId);
@@ -181,6 +184,15 @@ export const Members: React.FC<MembersProps> = ({
   };
 
   const hasInvitePermissions = currentRole !== Roles.member;
+  const inviteRoles = useMemo(() => {
+    const roles = ChangeableRoles as any;
+
+    if (currentRole === Roles.admin) {
+      delete roles.admin;
+    }
+
+    return createRoleOptions(roles);
+  }, [currentRole]);
 
   return (
     <>
@@ -205,7 +217,7 @@ export const Members: React.FC<MembersProps> = ({
       </Space>
 
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
-        <MembersForm onSubmit={onSubmit} />
+        <MembersForm onSubmit={onSubmit} inviteRoles={inviteRoles} />
       </Modal>
     </>
   );
@@ -245,7 +257,7 @@ const MembersWrapper = () => {
   useCheckResponse(
     deleteMutation,
     (res) => {
-      if (res.delete_members_roles_by_pk?.id) {
+      if (res.delete_members_by_pk?.id) {
         message.success(t("settings:members:member_deleted"));
       } else {
         message.warning(t("settings:members:no_permissions"));
@@ -281,11 +293,17 @@ const MembersWrapper = () => {
 
   const onRoleChange = (id: string, newRole: ChangeableRoles) => {
     setLoading(true);
+    const roleObject = {
+      team_role: newRole.toLowerCase() as Team_Roles_Enum,
+    } as Member_Roles_Set_Input;
+
+    if (newRole !== ChangeableRoles.member) {
+      roleObject.access_list_id = null;
+    }
+
     execUpdateRoleMutation({
       pk_columns: { id },
-      _set: {
-        team_role: newRole.toLowerCase() as Team_Roles_Enum,
-      },
+      _set: roleObject,
     });
   };
 

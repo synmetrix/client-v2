@@ -38,7 +38,7 @@ const BurgerMenu: FC<BurgerMenuProps> = ({ header = null, children }) => {
         title={<div className={s.header}>{header}</div>}
         bodyStyle={{ padding: 0 }}
         width={isMobile ? window.innerWidth : DRAWER_DEFAULT_WIDTH}
-        open={isOpen}
+        open={true}
         onClose={() => setIsOpen(false)}
         style={{ background: "#f9f9f9" }}
       >

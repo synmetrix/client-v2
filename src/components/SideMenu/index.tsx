@@ -15,6 +15,7 @@ interface SideMenuProps {}
 
 const SideMenu: FC<SideMenuProps> = () => {
   const [location, setLocation] = useLocation();
+
   const windowSize = useResponsive();
   const isMobile = windowSize.sm === false;
 

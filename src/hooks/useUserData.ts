@@ -146,7 +146,7 @@ const prepareUserData = (
     email: rawUserData?.account?.email,
     displayName: rawUserData?.display_name,
     avatarUrl: rawUserData?.avatar_url,
-    teams,
+    teams: teams.sort((a, b) => a.createdAt <= b.createdAt),
   };
 };
 
@@ -170,8 +170,14 @@ const prepareTeamData = (
 };
 
 export default () => {
-  const { currentUser, currentTeamId, setLoading, setUserData, setTeamData } =
-    CurrentUserStore();
+  const {
+    currentUser,
+    currentTeamId,
+    setCurrentTeamId,
+    setLoading,
+    setUserData,
+    setTeamData,
+  } = CurrentUserStore();
   const { JWTpayload, accessToken } = AuthTokensStore();
   const userId = JWTpayload?.["x-hasura-user-id"];
 
@@ -253,6 +259,15 @@ export default () => {
       createTeam();
     }
   }, [currentUser?.id, currentUser?.teams?.length, createTeam]);
+
+  useEffect(() => {
+    if (
+      currentUser.teams.length &&
+      !currentUser.teams.find((t) => t.id === currentTeamId)
+    ) {
+      setCurrentTeamId(currentUser.teams?.[0]?.id);
+    }
+  }, [currentTeamId, currentUser.teams, setCurrentTeamId]);
 
   return {
     currentUser,

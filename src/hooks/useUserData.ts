@@ -9,7 +9,7 @@ import {
   useSubTeamDataSubscription,
 } from "@/graphql/generated";
 import AuthTokensStore from "@/stores/AuthTokensStore";
-import CurrentUserStore from "@/stores/CurrentUserStore";
+import CurrentUserStore, { LAST_TEAM_ID_KEY } from "@/stores/CurrentUserStore";
 import type {
   SubCurrentUserSubscription,
   SubTeamDataSubscription,
@@ -31,8 +31,8 @@ const DEFAULT_TEAM_NAME = "Default team";
 const prepareMembersData = (rawMembers: MembersType[]) => {
   const members = rawMembers?.map((m) => {
     return {
-      id: m.id,
-      user_id: m.user_id,
+      id: m?.id,
+      user_id: m?.user_id,
       email: m?.user?.account?.email,
       avatarUrl: m.user.avatar_url,
       displayName: m.user.display_name,
@@ -153,33 +153,36 @@ const prepareUserData = (
 const prepareTeamData = (
   rawData: TeamDataQuery | SubTeamDataSubscription
 ): UserData => {
-  const rawUserData = rawData.teams_by_pk || null;
+  const rawTeamData = rawData.teams_by_pk || null;
 
   const dataSources = prepareDataSourceData(
-    rawUserData?.datasources as Datasources[]
+    rawTeamData?.datasources as Datasources[]
   );
 
-  const alerts = prepareAlertData(rawUserData?.alerts as RawAlert[]);
-  const reports = prepareReportData(rawUserData?.reports as RawReport[]);
+  const alerts = prepareAlertData(rawTeamData?.alerts as RawAlert[]);
+  const reports = prepareReportData(rawTeamData?.reports as RawReport[]);
+  const members = prepareMembersData(rawTeamData?.members as MembersType[]);
 
   return {
     dataSources,
     alerts,
     reports,
+    members,
   };
 };
 
 export default () => {
   const {
     currentUser,
-    currentTeamId,
-    setCurrentTeamId,
+    currentTeam,
+    setCurrentTeam,
     setLoading,
     setUserData,
     setTeamData,
   } = CurrentUserStore();
   const { JWTpayload, accessToken } = AuthTokensStore();
   const userId = JWTpayload?.["x-hasura-user-id"];
+  const lastTeamId = localStorage.getItem(LAST_TEAM_ID_KEY);
 
   const [, execCreateTeamMutation] = useCreateTeamMutation();
   const [currentUserData, execQueryCurrentUser] = useCurrentUserQuery({
@@ -187,32 +190,35 @@ export default () => {
     pause: true,
   });
 
-  const [subscriptionData, execSubscription] = useSubCurrentUserSubscription({
+  const [subCurrentUserData, execSubscription] = useSubCurrentUserSubscription({
     variables: { id: userId },
     pause: true,
   });
 
   const [teamData, execTeamData] = useTeamDataQuery({
-    variables: { team_id: currentTeamId },
+    variables: { team_id: currentTeam?.id },
   });
 
   const [subTeamData, execSubTeamData] = useSubTeamDataSubscription({
-    variables: { team_id: currentTeamId },
+    variables: { team_id: currentTeam?.id },
     pause: true,
   });
 
   useDeepCompareEffect(() => {
-    if (accessToken && userId && currentTeamId) {
+    if (accessToken && userId) {
       execQueryCurrentUser();
       execSubscription();
-      execTeamData();
-      execSubTeamData();
+
+      if (currentTeam?.id) {
+        execTeamData();
+        execSubTeamData();
+      }
     }
 
     if (!accessToken) {
       window.location.href = "/auth/signin";
     }
-  }, [accessToken, userId, currentTeamId]);
+  }, [accessToken, userId, currentTeam?.id]);
 
   useEffect(() => {
     if (teamData.data) {
@@ -224,11 +230,10 @@ export default () => {
 
   useEffect(() => {
     if (subTeamData?.data) {
-      const newTeamData = prepareTeamData(subTeamData.data);
-      setTeamData(newTeamData);
-      setLoading(false);
+      execTeamData();
+      setLoading(true);
     }
-  }, [setLoading, setTeamData, subTeamData?.data]);
+  }, [execTeamData, setLoading, subTeamData?.data]);
 
   useEffect(() => {
     if (currentUserData.data) {
@@ -239,12 +244,11 @@ export default () => {
   }, [currentUserData, setLoading, setUserData]);
 
   useEffect(() => {
-    if (subscriptionData?.data) {
-      const newUserData = prepareUserData(subscriptionData?.data);
-      setUserData(newUserData);
-      setLoading(false);
+    if (subCurrentUserData?.data) {
+      execQueryCurrentUser();
+      setLoading(true);
     }
-  }, [setLoading, setUserData, subscriptionData?.data]);
+  }, [execQueryCurrentUser, setLoading, subCurrentUserData?.data]);
 
   const createTeam = useCallback(async () => {
     await execCreateTeamMutation({
@@ -261,13 +265,14 @@ export default () => {
   }, [currentUser?.id, currentUser?.teams?.length, createTeam]);
 
   useEffect(() => {
+    const lastTeam = currentUser?.teams?.find((t) => t.id === lastTeamId);
     if (
       currentUser?.teams?.length &&
-      !currentUser?.teams?.find((t) => t.id === currentTeamId)
+      (!lastTeamId || !lastTeam || !currentTeam)
     ) {
-      setCurrentTeamId(currentUser.teams?.[0]?.id);
+      setCurrentTeam(currentUser.teams[0].id);
     }
-  }, [currentTeamId, currentUser?.teams, setCurrentTeamId]);
+  }, [currentTeam, currentUser.teams, lastTeamId, setCurrentTeam]);
 
   return {
     currentUser,

@@ -237,14 +237,8 @@ export const DataSources = ({
 
 const DataSourcesWrapper = () => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const {
-    currentUser,
-    currentTeamId,
-    currentTeam,
-    teamData,
-    loading,
-    setLoading,
-  } = CurrentUserStore();
+  const { currentUser, currentTeam, teamData, loading, setLoading } =
+    CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const { slug, generate } = useParams();
@@ -375,8 +369,8 @@ const DataSourcesWrapper = () => {
         db_type: dataSource?.value?.toUpperCase(),
       } as Datasources_Set_Input;
 
-      if (currentTeamId) {
-        newData.team_id = currentTeamId;
+      if (currentTeam?.id) {
+        newData.team_id = currentTeam?.id;
       }
 
       const result = await execCreateMutation({

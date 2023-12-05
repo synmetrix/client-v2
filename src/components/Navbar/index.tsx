@@ -43,13 +43,13 @@ const Navbar: FC<NavbarProps> = ({
   type = "inline",
 }) => {
   const [, setLocation] = useLocation();
-  const { currentTeam, setCurrentTeamId } = CurrentUserStore();
+  const { currentTeam, setCurrentTeam } = CurrentUserStore();
   const [teamsOpen, setTeamsOpen] = useState<boolean>(false);
   const [accountOpen, setAccountOpen] = useState<boolean>(false);
   const { t } = useTranslation(["common"]);
 
   const onSelectTeam = (id: string) => {
-    setCurrentTeamId(id);
+    setCurrentTeam(id);
     setTeamsOpen(false);
   };
 

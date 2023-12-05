@@ -1,5 +1,5 @@
 import type { DataSourceInfo } from "./dataSource";
-import type { Team } from "./team";
+import type { Team, Member } from "./team";
 import type { Alert } from "./alert";
 import type { Report } from "./report";
 
@@ -25,4 +25,5 @@ export interface UserData {
   dataSources: DataSourceInfo[];
   alerts: Alert[];
   reports: Report[];
+  members: Member[];
 }

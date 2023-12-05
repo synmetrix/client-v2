@@ -15,6 +15,7 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import Avatar, { AvatarGroup } from "@/components/Avatar";
 import Card from "@/components/Card";
 import ConfirmModal from "@/components/ConfirmModal";
+import NoTeams from "@/components/NoTeams";
 import formatTime from "@/utils/helpers/formatTime";
 import type { Member, Team, TeamSettingsForm } from "@/types/team";
 import { Roles } from "@/types/team";
@@ -180,24 +181,29 @@ export const Teams: React.FC<TeamsProps> = ({
 
   return (
     <>
-      <Spin spinning={loading}>
-        <Space className={styles.wrapper} direction="vertical" size={13}>
-          <PageHeader
-            title={t("manage_teams")}
-            action={t("create_team")}
-            onClick={onCreate}
-          />
-          <div className={styles.body}>
-            <Row justify={"start"} gutter={[32, 32]}>
-              {teams?.map((tm) => (
-                <Col xs={24} sm={12} xl={8} key={tm.id}>
-                  {renderCard(tm)}
-                </Col>
-              ))}
-            </Row>
-          </div>
-        </Space>
-      </Spin>
+      <Space className={styles.wrapper} direction="vertical" size={13}>
+        <PageHeader
+          title={t("manage_teams")}
+          action={t("create_team")}
+          onClick={onCreate}
+        />
+
+        <Spin spinning={loading}>
+          {teams.length ? (
+            <div className={styles.body}>
+              <Row justify={"start"} gutter={[32, 32]}>
+                {teams?.map((tm) => (
+                  <Col xs={24} sm={12} xl={8} key={tm.id}>
+                    {renderCard(tm)}
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          ) : (
+            <NoTeams />
+          )}
+        </Spin>
+      </Space>
 
       <Modal open={isOpen} closable onClose={onClose}>
         <TeamSettings initialValue={selectedTeam} onSubmit={onSubmit} />
@@ -208,7 +214,7 @@ export const Teams: React.FC<TeamsProps> = ({
 
 const TeamsWrapper: React.FC = () => {
   const { t } = useTranslation(["teams", "pages"]);
-  const { currentUser, currentTeam, loading, setLoading, setCurrentTeamId } =
+  const { currentUser, currentTeam, loading, setLoading, setCurrentTeam } =
     CurrentUserStore();
   const [createMutation, execCreateMutation] = useCreateTeamMutation();
   const [updateMutation, execUpdateMutation] = useEditTeamMutation();
@@ -276,7 +282,7 @@ const TeamsWrapper: React.FC = () => {
   };
 
   const onSelect = (id: string) => {
-    setCurrentTeamId(id);
+    setCurrentTeam(id);
   };
 
   const isLoading = useMemo(

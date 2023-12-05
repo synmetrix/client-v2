@@ -205,7 +205,6 @@ export const SqlApi = ({
         destroyOnClose
       >
         <ApiSetup
-          editId={editId}
           dataSources={dataSources}
           teamMembers={teamMembers}
           initialValue={initialValue}
@@ -255,7 +254,7 @@ export const prepareInitValues = (
 
 const SqlApiWrapper = () => {
   const { t } = useTranslation(["apiSetup", "pages"]);
-  const { currentTeam, currentTeamId } = CurrentUserStore();
+  const { currentTeam } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { id: editId } = location.query;
 
@@ -264,7 +263,7 @@ const SqlApiWrapper = () => {
   const [deleteMutation, execDeleteMutation] = useDeleteCredentialsMutation();
   const [credentialsData, execCredentialsQuery] = useCredentialsQuery({
     variables: {
-      teamId: currentTeamId,
+      teamId: currentTeam?.id,
     },
     pause: true,
   });
@@ -273,7 +272,7 @@ const SqlApiWrapper = () => {
     variables: {
       where: {
         team_id: {
-          _eq: currentTeamId,
+          _eq: currentTeam?.id,
         },
       },
       order_by: [
@@ -286,7 +285,7 @@ const SqlApiWrapper = () => {
   });
 
   const [subscriptionData] = useSubCredentialsSubscription({
-    variables: { teamId: currentTeamId },
+    variables: { teamId: currentTeam?.id },
   });
 
   useCheckResponse(
@@ -330,10 +329,10 @@ const SqlApiWrapper = () => {
   };
 
   useEffect(() => {
-    if (currentTeamId) {
+    if (currentTeam?.id) {
       execDataSourcesQuery();
     }
-  }, [currentTeamId, execCredentialsQuery, execDataSourcesQuery]);
+  }, [currentTeam?.id, execCredentialsQuery, execDataSourcesQuery]);
 
   useEffect(() => {
     if (subscriptionData.data) {

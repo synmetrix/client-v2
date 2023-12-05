@@ -12,11 +12,27 @@ fragment BranchesFields on branches {
   }
 }
 
-fragment TeamFields on teams {
+fragment UserTeamFields on teams {
   id
   name
   created_at
   updated_at
+  members(order_by: { created_at: desc }) {
+    member_roles {
+      team_role
+    }
+    user {
+      id
+      avatar_url
+      display_name
+      account {
+        email
+      }
+    }
+  }
+}
+
+fragment TeamMembersFields on teams {
   members(order_by: { created_at: desc }) {
     id
     user_id
@@ -52,18 +68,8 @@ query CurrentUser($id: uuid!) {
     }
 
     members(order_by: { created_at: desc }) {
-      id
-      user_id
       member_roles {
-        id
         team_role
-        created_at
-        updated_at
-        access_list {
-          id
-          name
-          config
-        }
       }
       user {
         id
@@ -74,7 +80,7 @@ query CurrentUser($id: uuid!) {
         }
       }
       team {
-        ...TeamFields
+        ...UserTeamFields
       }
     }
   }
@@ -112,7 +118,7 @@ subscription SubCurrentUser($id: uuid!) {
         }
       }
       team {
-        ...TeamFields
+        ...UserTeamFields
       }
     }
   }
@@ -120,6 +126,8 @@ subscription SubCurrentUser($id: uuid!) {
 
 query TeamData($team_id: uuid!) {
   teams_by_pk(id: $team_id) {
+    ...TeamMembersFields
+
     datasources(order_by: { created_at: desc }) {
       id
       name
@@ -191,6 +199,8 @@ query TeamData($team_id: uuid!) {
 
 subscription SubTeamData($team_id: uuid!) {
   teams_by_pk(id: $team_id) {
+    ...TeamMembersFields
+
     datasources(order_by: { created_at: desc }) {
       id
       name

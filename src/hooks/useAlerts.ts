@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default ({ alertId, explorationId }: Props) => {
-  const { currentTeamId } = CurrentUserStore();
+  const { currentTeam } = CurrentUserStore();
 
   const [createMutationData, execInsertMutation] = useCreateAlertMutation();
   const [updateMutationData, execUpdateMutation] = useUpdateAlertMutation();
@@ -36,12 +36,12 @@ export default ({ alertId, explorationId }: Props) => {
         delivery_type: values.type,
         delivery_config: values.deliveryConfig,
         exploration_id: explorationId,
-        team_id: currentTeamId,
+        team_id: currentTeam?.id,
       };
 
       execInsertMutation({ object: newAlertWithExplorationPayload });
     },
-    [explorationId, currentTeamId, execInsertMutation]
+    [explorationId, currentTeam?.id, execInsertMutation]
   );
 
   const updateAlert = useCallback(

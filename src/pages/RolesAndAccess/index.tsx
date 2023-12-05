@@ -29,6 +29,7 @@ import type { Cube, DataSourceInfo } from "@/types/dataSource";
 import formatTime from "@/utils/helpers/formatTime";
 import ConfirmModal from "@/components/ConfirmModal";
 import Card from "@/components/Card";
+import NoRoles from "@/components/NoRoles";
 import { AccessTypeWrapper } from "@/components/AccessType";
 import type { Team } from "@/types/team";
 import { Roles } from "@/types/team";
@@ -164,24 +165,29 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
 
   return (
     <>
-      <Spin spinning={loading}>
-        <Space className={styles.wrapper} direction="vertical" size={13}>
-          <PageHeader
-            title={t("settings:roles_and_access.manage_roles")}
-            action={!isMember && t("settings:roles_and_access.create_now")}
-            onClick={onOpen}
-          />
-          <div className={styles.body}>
-            <ResponsiveMasonry
-              columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 4 }}
-            >
-              <Masonry gutter="32px">
-                {accessLists.map((a) => renderCard(a))}
-              </Masonry>
-            </ResponsiveMasonry>
-          </div>
-        </Space>
-      </Spin>
+      <Space className={styles.wrapper} direction="vertical" size={13}>
+        <PageHeader
+          title={t("settings:roles_and_access.manage_roles")}
+          action={!isMember && t("settings:roles_and_access.create_now")}
+          onClick={onOpen}
+        />
+
+        <Spin spinning={loading}>
+          {accessLists.length ? (
+            <div className={styles.body}>
+              <ResponsiveMasonry
+                columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 4 }}
+              >
+                <Masonry gutter="32px">
+                  {accessLists.map((a) => renderCard(a))}
+                </Masonry>
+              </ResponsiveMasonry>
+            </div>
+          ) : (
+            <NoRoles onCreate={onOpen} />
+          )}
+        </Spin>
+      </Space>
 
       <Modal
         width={1000}

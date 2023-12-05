@@ -11879,12 +11879,30 @@ export type BranchesFieldsFragment = {
   }>;
 };
 
-export type TeamFieldsFragment = {
+export type UserTeamFieldsFragment = {
   __typename?: "teams";
   id: any;
   name: string;
   created_at: any;
   updated_at: any;
+  members: Array<{
+    __typename?: "members";
+    member_roles: Array<{
+      __typename?: "member_roles";
+      team_role: Team_Roles_Enum;
+    }>;
+    user: {
+      __typename?: "users";
+      id: any;
+      avatar_url?: string | null;
+      display_name?: string | null;
+      account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+    };
+  }>;
+};
+
+export type TeamMembersFieldsFragment = {
+  __typename?: "teams";
   members: Array<{
     __typename?: "members";
     id: any;
@@ -11926,20 +11944,9 @@ export type CurrentUserQuery = {
     account?: { __typename?: "auth_accounts"; email?: any | null } | null;
     members: Array<{
       __typename?: "members";
-      id: any;
-      user_id: any;
       member_roles: Array<{
         __typename?: "member_roles";
-        id: any;
         team_role: Team_Roles_Enum;
-        created_at?: any | null;
-        updated_at?: any | null;
-        access_list?: {
-          __typename?: "access_lists";
-          id: any;
-          name: string;
-          config: any;
-        } | null;
       }>;
       user: {
         __typename?: "users";
@@ -11956,20 +11963,9 @@ export type CurrentUserQuery = {
         updated_at: any;
         members: Array<{
           __typename?: "members";
-          id: any;
-          user_id: any;
           member_roles: Array<{
             __typename?: "member_roles";
-            id: any;
             team_role: Team_Roles_Enum;
-            created_at?: any | null;
-            updated_at?: any | null;
-            access_list?: {
-              __typename?: "access_lists";
-              id: any;
-              name: string;
-              config: any;
-            } | null;
           }>;
           user: {
             __typename?: "users";
@@ -12031,20 +12027,9 @@ export type SubCurrentUserSubscription = {
         updated_at: any;
         members: Array<{
           __typename?: "members";
-          id: any;
-          user_id: any;
           member_roles: Array<{
             __typename?: "member_roles";
-            id: any;
             team_role: Team_Roles_Enum;
-            created_at?: any | null;
-            updated_at?: any | null;
-            access_list?: {
-              __typename?: "access_lists";
-              id: any;
-              name: string;
-              config: any;
-            } | null;
           }>;
           user: {
             __typename?: "users";
@@ -12149,6 +12134,31 @@ export type TeamDataQuery = {
         playground_state: any;
       };
     }>;
+    members: Array<{
+      __typename?: "members";
+      id: any;
+      user_id: any;
+      member_roles: Array<{
+        __typename?: "member_roles";
+        id: any;
+        team_role: Team_Roles_Enum;
+        created_at?: any | null;
+        updated_at?: any | null;
+        access_list?: {
+          __typename?: "access_lists";
+          id: any;
+          name: string;
+          config: any;
+        } | null;
+      }>;
+      user: {
+        __typename?: "users";
+        id: any;
+        avatar_url?: string | null;
+        display_name?: string | null;
+        account?: { __typename?: "auth_accounts"; email?: any | null } | null;
+      };
+    }>;
   } | null;
 };
 
@@ -12237,6 +12247,31 @@ export type SubTeamDataSubscription = {
         __typename?: "explorations";
         id: any;
         playground_state: any;
+      };
+    }>;
+    members: Array<{
+      __typename?: "members";
+      id: any;
+      user_id: any;
+      member_roles: Array<{
+        __typename?: "member_roles";
+        id: any;
+        team_role: Team_Roles_Enum;
+        created_at?: any | null;
+        updated_at?: any | null;
+        access_list?: {
+          __typename?: "access_lists";
+          id: any;
+          name: string;
+          config: any;
+        } | null;
+      }>;
+      user: {
+        __typename?: "users";
+        id: any;
+        avatar_url?: string | null;
+        display_name?: string | null;
+        account?: { __typename?: "auth_accounts"; email?: any | null } | null;
       };
     }>;
   } | null;
@@ -12907,12 +12942,29 @@ export const BranchesFieldsFragmentDoc = gql`
     }
   }
 `;
-export const TeamFieldsFragmentDoc = gql`
-  fragment TeamFields on teams {
+export const UserTeamFieldsFragmentDoc = gql`
+  fragment UserTeamFields on teams {
     id
     name
     created_at
     updated_at
+    members(order_by: { created_at: desc }) {
+      member_roles {
+        team_role
+      }
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+    }
+  }
+`;
+export const TeamMembersFieldsFragmentDoc = gql`
+  fragment TeamMembersFields on teams {
     members(order_by: { created_at: desc }) {
       id
       user_id
@@ -13227,18 +13279,8 @@ export const CurrentUserDocument = gql`
         email
       }
       members(order_by: { created_at: desc }) {
-        id
-        user_id
         member_roles {
-          id
           team_role
-          created_at
-          updated_at
-          access_list {
-            id
-            name
-            config
-          }
         }
         user {
           id
@@ -13249,12 +13291,12 @@ export const CurrentUserDocument = gql`
           }
         }
         team {
-          ...TeamFields
+          ...UserTeamFields
         }
       }
     }
   }
-  ${TeamFieldsFragmentDoc}
+  ${UserTeamFieldsFragmentDoc}
 `;
 
 export function useCurrentUserQuery(
@@ -13297,12 +13339,12 @@ export const SubCurrentUserDocument = gql`
           }
         }
         team {
-          ...TeamFields
+          ...UserTeamFields
         }
       }
     }
   }
-  ${TeamFieldsFragmentDoc}
+  ${UserTeamFieldsFragmentDoc}
 `;
 
 export function useSubCurrentUserSubscription<
@@ -13323,6 +13365,7 @@ export function useSubCurrentUserSubscription<
 export const TeamDataDocument = gql`
   query TeamData($team_id: uuid!) {
     teams_by_pk(id: $team_id) {
+      ...TeamMembersFields
       datasources(order_by: { created_at: desc }) {
         id
         name
@@ -13389,6 +13432,7 @@ export const TeamDataDocument = gql`
       }
     }
   }
+  ${TeamMembersFieldsFragmentDoc}
   ${BranchesFieldsFragmentDoc}
 `;
 
@@ -13403,6 +13447,7 @@ export function useTeamDataQuery(
 export const SubTeamDataDocument = gql`
   subscription SubTeamData($team_id: uuid!) {
     teams_by_pk(id: $team_id) {
+      ...TeamMembersFields
       datasources(order_by: { created_at: desc }) {
         id
         name
@@ -13469,6 +13514,7 @@ export const SubTeamDataDocument = gql`
       }
     }
   }
+  ${TeamMembersFieldsFragmentDoc}
   ${BranchesFieldsFragmentDoc}
 `;
 
@@ -14440,7 +14486,8 @@ export const namedOperations = {
   },
   Fragment: {
     BranchesFields: "BranchesFields",
-    TeamFields: "TeamFields",
+    UserTeamFields: "UserTeamFields",
+    TeamMembersFields: "TeamMembersFields",
     DefaultFields: "DefaultFields",
   },
 };

@@ -8,6 +8,7 @@ import Avatar from "@/components/Avatar";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import ConfirmModal from "@/components/ConfirmModal";
+import NoMember from "@/components/NoMember";
 import Button from "@/components/Button";
 import formatTime from "@/utils/helpers/formatTime";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
@@ -204,15 +205,19 @@ export const Members: React.FC<MembersProps> = ({
         />
 
         <Spin spinning={loading}>
-          <div className={styles.body}>
-            <Row justify={"start"} gutter={[32, 32]}>
-              {members.map((m) => (
-                <Col xs={24} sm={12} xl={8} key={m.id}>
-                  {renderCard(m)}
-                </Col>
-              ))}
-            </Row>
-          </div>
+          {members.length ? (
+            <div className={styles.body}>
+              <Row justify={"start"} gutter={[32, 32]}>
+                {members.map((m) => (
+                  <Col xs={24} sm={12} xl={8} key={m.id}>
+                    {renderCard(m)}
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          ) : (
+            <NoMember onInvite={() => setIsOpen(true)} />
+          )}
         </Spin>
       </Space>
 
@@ -238,7 +243,7 @@ const prepareAccessData = (accessResult: AllAccessListsQuery): AccessList[] => {
 
 const MembersWrapper = () => {
   const { t } = useTranslation(["settings", "pages"]);
-  const { currentTeam, loading, setLoading } = CurrentUserStore();
+  const { currentTeam, teamData, loading, setLoading } = CurrentUserStore();
   const [deleteMutation, execDeleteMutation] = useDeleteMemberMutation();
   const [inviteMutation, execInviteMutation] = useInviteMemberMutation();
   const [updateRoleMutation, execUpdateRoleMutation] =
@@ -330,10 +335,7 @@ const MembersWrapper = () => {
     }
   }, [currentTeam?.id, execAllAccessLists]);
 
-  const members = useMemo(
-    () => currentTeam?.members || [],
-    [currentTeam?.members]
-  );
+  const members = useMemo(() => teamData?.members || [], [teamData?.members]);
   const accessLists = useMemo(
     () =>
       prepareAccessData(allAccessLists?.data as unknown as AllAccessListsQuery),

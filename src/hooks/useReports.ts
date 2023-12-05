@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default ({ reportId, explorationId }: Props) => {
-  const { currentTeamId } = CurrentUserStore();
+  const { currentTeam } = CurrentUserStore();
 
   const [createMutationData, execInsertMutation] = useCreateReportMutation();
   const [updateMutationData, execUpdateMutation] = useUpdateReportMutation();
@@ -29,12 +29,12 @@ export default ({ reportId, explorationId }: Props) => {
         delivery_type: values.type,
         delivery_config: values.deliveryConfig,
         exploration_id: explorationId,
-        team_id: currentTeamId,
+        team_id: currentTeam?.id,
       };
 
       execInsertMutation({ object: newReportWithExplorationPayload });
     },
-    [explorationId, currentTeamId, execInsertMutation]
+    [explorationId, currentTeam?.id, execInsertMutation]
   );
 
   const updateReport = useCallback(

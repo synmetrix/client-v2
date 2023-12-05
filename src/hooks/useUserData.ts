@@ -231,7 +231,6 @@ export default () => {
   useEffect(() => {
     if (subTeamData?.data) {
       execTeamData();
-      setLoading(true);
     }
   }, [execTeamData, setLoading, subTeamData?.data]);
 
@@ -246,7 +245,6 @@ export default () => {
   useEffect(() => {
     if (subCurrentUserData?.data) {
       execQueryCurrentUser();
-      setLoading(true);
     }
   }, [execQueryCurrentUser, setLoading, subCurrentUserData?.data]);
 

@@ -252,7 +252,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                       span={6}
                       style={{ display: "flex", justifyContent: "end" }}
                     >
-                      <Space align="center" size={0}>
+                      <Space align="center" size={8}>
                         <PopoverButton
                           className={styles.edit}
                           trigger={["click"]}
@@ -275,7 +275,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                           }
                           buttonProps={{
                             size: "small",
-                            type: "text",
+                            type: "link",
                             className: styles.fileControl,
                           }}
                         />
@@ -285,7 +285,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                           title={t("sure_delete")}
                           buttonProps={{
                             size: "small",
-                            type: "text",
+                            type: "link",
                             className: styles.fileControl,
                           }}
                           isVisible={

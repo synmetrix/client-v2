@@ -2,7 +2,7 @@ import { useReducer, useCallback } from "react";
 import { set, remove, getOr } from "unchanged";
 
 import type { CubeMember } from "@/types/cube";
-import type { PlaygroundState } from "@/hooks/usePlayground";
+import type { PlaygroundState } from "@/types/exploration";
 import type { SortBySet } from "@/components/VirtualTable";
 
 import type { Reducer } from "react";
@@ -10,7 +10,6 @@ import type { Reducer } from "react";
 const defaultFilterValues = {
   time: {
     operator: "onTheDate",
-    values: "This year",
   },
   string: {
     operator: "set",

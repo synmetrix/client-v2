@@ -28,9 +28,9 @@ export interface ExplorationState extends PlaygroundState {
   rows: object[];
   columns: object[];
   settings: QuerySettings;
-  loading: boolean;
   progress: LoadingProgress;
   skippedMembers?: string[];
+  loading?: boolean;
   error?: boolean;
   hitLimit?: boolean;
   limit?: number;

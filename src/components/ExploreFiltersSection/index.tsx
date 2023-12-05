@@ -68,10 +68,10 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
         {...restProps}
         className={s.panel}
         header={
-          <>
+          <div className={s.header}>
             <Button
+              className={s.filters}
               type="dashed"
-              size="small"
               onClick={() => onToggleSection("filtersSec")}
             >
               {t("Filters")}
@@ -83,10 +83,10 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
                 marginLeft: 10,
                 backgroundColor: "#EDE7F0",
                 color: "#000",
-                padding: "0 10px",
+                padding: "0 13px",
               }}
             />
-          </>
+          </div>
         }
         key={"filtersSec"}
       >

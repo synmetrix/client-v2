@@ -333,6 +333,8 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                         placement="bottom"
                         buttonProps={{
                           size: "middle",
+                          type: "link",
+                          className: s.settingsBtn,
                         }}
                         content={
                           <div className={s.popoverInner}>

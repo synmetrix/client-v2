@@ -243,7 +243,7 @@ const Explore: FC<ExploreProps> = (props) => {
       burgerTitle={subTitle as any}
     >
       {dataSource?.id ? (
-        <div id="data-view">
+        <div id="data-view" className={styles.dataView}>
           {dataSection} {filtersSection}
         </div>
       ) : (

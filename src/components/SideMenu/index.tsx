@@ -14,7 +14,8 @@ import type { FC } from "react";
 interface SideMenuProps {}
 
 const SideMenu: FC<SideMenuProps> = () => {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+
   const windowSize = useResponsive();
   const isMobile = windowSize.sm === false;
 
@@ -36,42 +37,52 @@ const SideMenu: FC<SideMenuProps> = () => {
             src="/logo_bg.png"
           />
 
-          {items.map((i) =>
-            isMobile ? (
-              <Tooltip
-                placement="right"
-                key={i.key}
-                title={i.label}
-                trigger={"contextMenu"}
-              >
+          <div className={styles.items}>
+            {items.map((i) =>
+              isMobile ? (
+                <Tooltip
+                  placement="right"
+                  key={i.key}
+                  title={i.label}
+                  trigger={"focus"}
+                >
+                  <Button
+                    className={cn(
+                      styles.btn,
+                      isMobile && styles.mobile,
+                      location?.pathname?.includes(i.href!) && styles.active
+                    )}
+                    type="text"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onClick(i);
+                    }}
+                    icon={i.icon}
+                  />
+                </Tooltip>
+              ) : (
                 <Button
-                  className={cn(styles.btn, isMobile && styles.mobile)}
+                  key={i.key}
+                  className={cn(
+                    styles.btn,
+                    isMobile && styles.mobile,
+                    location.pathname.includes(i.href!) && styles.active
+                  )}
                   type="text"
+                  href={i.href}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     onClick(i);
                   }}
-                  icon={i.icon}
-                />
-              </Tooltip>
-            ) : (
-              <Button
-                key={i.key}
-                className={cn(styles.btn, isMobile && styles.mobile)}
-                type="text"
-                href={i.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onClick(i);
-                }}
-              >
-                {i.icon}
-                <span className={styles.label}>{i.label}</span>
-              </Button>
-            )
-          )}
+                >
+                  {i.icon}
+                  <span className={styles.label}>{i.label}</span>
+                </Button>
+              )
+            )}
+          </div>
         </div>
       </Space>
     </div>

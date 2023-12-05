@@ -77,12 +77,8 @@ const SQLRunner: FC<SQLRunnerProps> = ({
         </div>
       </ResizableBox>
       {showData && (
-        <div>
-          <VirtualTable
-            data={data || []}
-            loading={false}
-            loadingProgress={{}}
-          />
+        <div className={styles.data}>
+          <VirtualTable data={data || []} loading={false} />
         </div>
       )}
     </Space>

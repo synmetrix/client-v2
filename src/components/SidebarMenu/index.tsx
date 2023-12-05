@@ -14,7 +14,7 @@ interface SidebarMenuProps {
 }
 
 const SidebarMenu: FC<SidebarMenuProps> = ({ items }) => {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
 
   const onClick = (menuItem: SidebarMenuItem) => {
     const href = menuItem.href;
@@ -32,19 +32,23 @@ const SidebarMenu: FC<SidebarMenuProps> = ({ items }) => {
           e.stopPropagation();
           onClick(i);
         }}
-        className={styles.link}
+        className={cn(
+          styles.link,
+          location.pathname.includes(i.href) && styles.active
+        )}
         href={i.href}
         key={i.key}
         type="text"
       >
-        <Space>
-          {i.icon} {i.label}
+        <Space align="center">
+          <div className={styles.icon}>{i.icon} </div>
+          {i.label}
         </Space>
       </Button>
     </div>
   ));
 
-  return <div>{content}</div>;
+  return <div className={styles.wrapper}>{content}</div>;
 };
 
 export default SidebarMenu;

@@ -1,6 +1,8 @@
 import { Collapse, Badge, Radio, Input, Alert } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import { useResponsive } from "ahooks";
+import cn from "classnames";
 
 import useCubesList from "@/hooks/useCubesList";
 import ExploreCubesSection from "@/components//ExploreCubesSection";
@@ -44,6 +46,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
   header,
 }) => {
   const { t } = useTranslation(["explore", "common"]);
+  const responsive = useResponsive();
 
   const { state, setState } = useCubesList({
     query: "",
@@ -99,7 +102,9 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
                 style={{
                   backgroundColor: "#fff",
                   color: "#000",
-                  padding: "0 10px",
+                  padding: "0 13px",
+                  fontSize: 10,
+                  fontWeight: 600,
                 }}
               />
             }
@@ -171,54 +176,58 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
     <div>
       {header && <div className={styles.header}>{header}</div>}
 
-      <Radio.Group
-        value={state.radioValue}
-        size="small"
-        onChange={onFilterChange}
-        className={styles.buttonGroup}
-      >
-        <Radio.Button className={styles.radioButton} type="text" value="all">
-          {t("All")}
-        </Radio.Button>
-        <Radio.Button
-          className={styles.radioButton}
-          type="text"
-          value="dimensions"
+      <div className={styles.radio}>
+        <Radio.Group
+          value={state.radioValue}
+          size="small"
+          onChange={onFilterChange}
+          className={styles.buttonGroup}
         >
-          {t("Dimensions")}
-        </Radio.Button>
-        <Radio.Button
-          className={styles.radioButton}
-          type="text"
-          value="measures"
-        >
-          {t("Measures")}
-        </Radio.Button>
-      </Radio.Group>
+          <Radio.Button className={styles.radioButton} type="text" value="all">
+            {t("All")}
+          </Radio.Button>
+          <Radio.Button
+            className={styles.radioButton}
+            type="text"
+            value="dimensions"
+          >
+            {t("Dimensions")}
+          </Radio.Button>
+          <Radio.Button
+            className={styles.radioButton}
+            type="text"
+            value="measures"
+          >
+            {t("Measures")}
+          </Radio.Button>
+        </Radio.Group>
+      </div>
 
-      <Input
-        className={styles.searchInput}
-        bordered={false}
-        prefix={<SearchIcon />}
-        placeholder="Find..."
-        onChange={onChange}
-        allowClear
-      />
+      <div className={cn(styles.body, !responsive.lg && styles.bodyMobile)}>
+        <div className={styles.cubes}>
+          <Input
+            className={styles.searchInput}
+            bordered={false}
+            prefix={<SearchIcon />}
+            placeholder="Find..."
+            onChange={onChange}
+            allowClear
+          />
 
-      <div>
-        {dataSchemaValidation?.error && <Alert {...dataSchemaError} />}
-        <Collapse
-          className={styles.collapse}
-          bordered={false}
-          activeKey={state.openedCubes}
-          defaultActiveKey={state.openedCubes}
-          onChange={onCollapse}
-          expandIcon={({ isActive }) => (
-            <RightOutlined rotate={isActive ? -90 : 0} />
-          )}
-        >
-          {options}
-        </Collapse>
+          {dataSchemaValidation?.error && <Alert {...dataSchemaError} />}
+          <Collapse
+            className={styles.collapse}
+            bordered={false}
+            activeKey={state.openedCubes}
+            defaultActiveKey={state.openedCubes}
+            onChange={onCollapse}
+            expandIcon={({ isActive }) => (
+              <RightOutlined rotate={isActive ? -90 : 0} />
+            )}
+          >
+            {options}
+          </Collapse>
+        </div>
       </div>
     </div>
   );

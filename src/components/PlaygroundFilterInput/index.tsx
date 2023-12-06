@@ -61,7 +61,7 @@ const filterInputs = {
   time: ({ values, onChange }: PlaygroundFilterInputProps) => (
     <DatePicker
       size="large"
-      value={values[0] ? dayjs(values[0]) : null}
+      value={Date.parse(values[0]) ? dayjs(values[0]) : undefined}
       onChange={(_, dateString) => onChange([dateString])}
     />
   ),
@@ -73,8 +73,8 @@ const filterInputs = {
         value={
           values
             ? [
-                values[0] ? dayjs(values[0]) : null,
-                values[1] ? dayjs(values[1]) : null,
+                Date.parse(values[0]) ? dayjs(values[0]) : null,
+                Date.parse(values[1]) ? dayjs(values[1]) : null,
               ]
             : null
         }
@@ -110,16 +110,19 @@ const FilterInput: FC<FilterInputProps> = ({
     { wait: 500 }
   );
 
-  if (!member || inputlessOperators.includes(member.operator)) {
+  if (
+    !member ||
+    (member.operator && inputlessOperators.includes(member.operator))
+  ) {
     return null;
   }
 
-  const dimensionType = member.dimension.type || "";
+  const dimensionType = member?.dimension?.type || "";
   let Filter =
     filterInputs[dimensionType as keyof typeof filterInputs] ||
     filterInputs.string;
 
-  if (rangeOperators.includes(member.operator)) {
+  if (member.operator && rangeOperators.includes(member.operator)) {
     Filter = filterInputs.timeRange;
   }
 

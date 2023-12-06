@@ -6,7 +6,7 @@
 }
 
 .inner {
-  padding: 0 11px;
+  padding: 0 11px 0 10px;
 }
 
 .space {
@@ -35,7 +35,7 @@
 }
 
 .select {
-  width: 248px;
+  width: 232px;
 }
 
 .selectMobile {
@@ -43,13 +43,16 @@
 }
 
 .dropdown {
-  margin-bottom: 4px;
+  position: relative;
+  top: 1px;
 }
 
 .version {
+  overflow: hidden;
   font-weight: 700;
   font-size: 14px;
-  word-break: break-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .docsLink {
@@ -99,7 +102,9 @@
   }
 }
 
-.filename {
+.file {
+  position: relative;
+  top: -2px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -109,4 +114,13 @@
   position: relative;
   top: 4px;
   margin-right: 12px;
+}
+
+.fileControl {
+  padding: 0 !important;
+  color: #000;
+
+  &:hover {
+    color: #a31bcb !important;
+  }
 }

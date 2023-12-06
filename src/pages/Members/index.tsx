@@ -1,4 +1,4 @@
-import { Col, Row, Select, Space, Spin, message } from "antd";
+import { Col, Row, Select, Space, Spin, Tag, Typography, message } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type { Invite } from "@/components/MembersForm";
@@ -33,7 +33,10 @@ import TrashIcon from "@/assets/trash.svg";
 
 import styles from "./index.module.less";
 
+const { Paragraph } = Typography;
+
 interface MembersProps {
+  userId: string;
   members: Member[];
   accessLists: AccessList[];
   currentRole?: Roles;
@@ -45,6 +48,7 @@ interface MembersProps {
 }
 
 export const Members: React.FC<MembersProps> = ({
+  userId,
   members,
   accessLists,
   currentRole,
@@ -74,10 +78,21 @@ export const Members: React.FC<MembersProps> = ({
     return (
       <Card
         title={
-          <Space size={10}>
-            <Avatar username={member.displayName} img={member.avatarUrl} />
-            <span>{member.displayName}</span>
-          </Space>
+          <div className={styles.title}>
+            <Avatar
+              username={member.displayName}
+              img={member.avatarUrl}
+              className={styles.cardAvatar}
+            />
+            <Paragraph ellipsis className={styles.paragraph}>
+              {member.displayName}
+            </Paragraph>
+            {member.user_id === userId && (
+              <Tag className={styles.tag} color="#EDE7F0">
+                {t("common:words.current")}
+              </Tag>
+            )}
+          </div>
         }
         titleTooltip={member.displayName}
         extra={
@@ -243,7 +258,8 @@ const prepareAccessData = (accessResult: AllAccessListsQuery): AccessList[] => {
 
 const MembersWrapper = () => {
   const { t } = useTranslation(["settings", "pages"]);
-  const { currentTeam, teamData, loading, setLoading } = CurrentUserStore();
+  const { currentUser, currentTeam, teamData, loading, setLoading } =
+    CurrentUserStore();
   const [deleteMutation, execDeleteMutation] = useDeleteMemberMutation();
   const [inviteMutation, execInviteMutation] = useInviteMemberMutation();
   const [updateRoleMutation, execUpdateRoleMutation] =
@@ -346,6 +362,7 @@ const MembersWrapper = () => {
 
   return (
     <Members
+      userId={currentUser?.id}
       members={members}
       loading={loading}
       accessLists={accessLists}

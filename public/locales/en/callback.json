@@ -1,0 +1,9 @@
+{
+  "title": "Logging",
+  "subtitle": "You'll be redirected to the explore page in a few seconds",
+  "action": "Sign In",
+  "error": {
+    "title": "Link is expired",
+    "subtitle": "Try to Sign In again or contact administrator"
+  }
+}

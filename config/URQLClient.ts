@@ -72,12 +72,11 @@ export default () => {
         },
         refreshAuth: async () => {
           if (refreshToken) {
-            const request = await fetchRefreshToken(refreshToken);
-            const result = await request.json();
+            const result = await fetchRefreshToken(refreshToken);
 
             if (result.error) {
               cleanTokens();
-              history.push("/signin");
+              history.push("/auth/signin");
               return;
             }
 

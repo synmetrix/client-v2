@@ -35,15 +35,9 @@ export const items: SidebarItem[] = [
     icon: <ModelsIcon />,
   },
   {
-    key: "reports",
-    label: "Reports",
-    href: "/reports",
-    icon: <ReportsIcon />,
-  },
-  {
-    key: "alerts",
-    label: "Alerts",
-    href: "/alerts",
+    key: "signals",
+    label: "Signals",
+    href: "/signals/alerts",
     icon: <AlertsIcon />,
   },
   {

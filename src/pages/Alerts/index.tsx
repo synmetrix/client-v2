@@ -9,7 +9,6 @@ import NoSignals from "@/components/NoSignals";
 import AlertModal from "@/components/AlertModal";
 import type { Alert, AlertFormType } from "@/types/alert";
 import type { QueryState } from "@/types/queryState";
-import AppLayout from "@/layouts/AppLayout";
 import ConfirmModal from "@/components/ConfirmModal";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
@@ -219,7 +218,7 @@ const Alerts: React.FC<AlertsProps> = ({
   };
 
   return (
-    <AppLayout divider title={t("pages:alerts")}>
+    <>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={!responsive.sm ? t("title_mobile") : t("title")}
@@ -261,7 +260,7 @@ const Alerts: React.FC<AlertsProps> = ({
         onSendTest={onSendTest}
         onSubmit={onSubmit}
       />
-    </AppLayout>
+    </>
   );
 };
 

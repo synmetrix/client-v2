@@ -36,6 +36,20 @@ export default [
         component: "./pages/Docs",
       },
       {
+        path: "/signals",
+        component: "./layouts/SignalsLayout",
+        routes: [
+          {
+            path: "/signals/alerts/:alertId?",
+            component: "./pages/Alerts",
+          },
+          {
+            path: "/signals/reports/:reportId?",
+            component: "./pages/Reports",
+          },
+        ],
+      },
+      {
         path: "/settings",
         component: "./layouts/SettingsLayout",
         routes: [
@@ -83,14 +97,6 @@ export default [
           {
             path: "/explore/:dataSourceId?/:explorationId?/:modalType?/:delivery?",
             component: "./pages/Explore",
-          },
-          {
-            path: "/alerts/:alertId?",
-            component: "./pages/Alerts",
-          },
-          {
-            path: "/reports/:reportId?",
-            component: "./pages/Reports",
           },
           {
             path: "/logs/query",

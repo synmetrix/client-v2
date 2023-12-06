@@ -37,7 +37,7 @@ export default [
       },
       {
         path: "/signals",
-        component: "./layouts/SignalsLayout",
+        component: "./layouts/SettingsLayout",
         routes: [
           {
             path: "/signals/alerts/:alertId?",

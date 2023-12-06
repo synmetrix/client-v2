@@ -1,12 +1,9 @@
 {
-  "settings": {
-    "access": "Roles and access",
-    "sources": "Data Sources",
-    "members": "Members",
-    "info": "Personal Info",
-    "sql-api": "SQL API",
-    "teams": "Teams"
-  },
+  "access": "Roles and access",
+  "sources": "Data Sources",
+  "members": "Members",
+  "info": "Personal Info",
+  "sql-api": "SQL API",
   "alerts": "Alerts",
   "reports": "Reports",
   "teams": "Teams",

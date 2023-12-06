@@ -254,7 +254,7 @@ export const prepareInitValues = (
 
 const SqlApiWrapper = () => {
   const { t } = useTranslation(["apiSetup", "pages"]);
-  const { currentTeam } = CurrentUserStore();
+  const { currentTeam, teamData } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { id: editId } = location.query;
 
@@ -381,16 +381,16 @@ const SqlApiWrapper = () => {
     return prepareInitValues(
       dataSources?.[0]?.id,
       dataSources?.[0]?.name,
-      currentTeam?.members?.[0]?.id as string
+      teamData?.members?.[0]?.id as string
     );
-  }, [credentials, editId, currentTeam?.members, dataSources, t]);
+  }, [credentials, editId, teamData?.members, dataSources, t]);
 
   return (
     <SqlApi
       loading={loading}
       editId={editId}
       editPermission={currentTeam?.role !== "member"}
-      teamMembers={currentTeam?.members}
+      teamMembers={teamData?.members}
       dataSources={dataSources}
       credentials={credentials}
       initialValue={initialValue}

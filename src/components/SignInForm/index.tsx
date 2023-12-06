@@ -25,7 +25,7 @@ interface SignInFormProps {
 }
 
 const SignInForm: FC<SignInFormProps> = ({ isMagicLink, onSubmit }) => {
-  const [_, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
 
   const { t } = useTranslation(["sign", "common"]);
   const {
@@ -44,13 +44,15 @@ const SignInForm: FC<SignInFormProps> = ({ isMagicLink, onSubmit }) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
-        <Title>{t("sign_in.title")}</Title>
-        <Text>{t("sign_in.text")}</Text>
+        <Title level={2}>{t("sign_in.title")}</Title>
+        <Text className={styles.desc}>{t("sign_in.text")}!</Text>
       </div>
 
       <div className={styles.magicLinkWrapper}>
         <Button
           className={styles.magicLink}
+          block
+          size="large"
           type="default"
           onClick={() =>
             isMagicLink
@@ -63,7 +65,7 @@ const SignInForm: FC<SignInFormProps> = ({ isMagicLink, onSubmit }) => {
             : t("sign_in.magic_link_login")}
         </Button>
       </div>
-
+      <div className={styles.or}>{t("sign_in.or")}</div>
       <Form className={styles.form}>
         <Input
           className={cn(styles.formItem, styles.input, {
@@ -95,9 +97,10 @@ const SignInForm: FC<SignInFormProps> = ({ isMagicLink, onSubmit }) => {
           />
         )}
         <Button
-          className={styles.formItem}
+          className={styles.submit}
           type="primary"
           htmlType="submit"
+          size="large"
           onClick={handleSubmit(onSubmit)}
         >
           {isMagicLink ? t("sign_in.send_link") : t("sign_in.login")}

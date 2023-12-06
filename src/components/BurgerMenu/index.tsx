@@ -6,6 +6,8 @@ import { Suspense } from "react";
 import Button from "@/components/Button";
 import useLocation from "@/hooks/useLocation";
 
+import s from "./index.module.less";
+
 import type { FC, PropsWithChildren, ReactNode } from "react";
 
 const DRAWER_DEFAULT_WIDTH = 320;
@@ -32,8 +34,11 @@ const BurgerMenu: FC<BurgerMenuProps> = ({ header = null, children }) => {
       </Button>
 
       <Drawer
-        title={header}
-        bodyStyle={{ padding: 30, paddingTop: 0 }}
+        className={s.drawer}
+        title={<div className={s.header}>{header}</div>}
+        bodyStyle={{
+          padding: 0,
+        }}
         width={isMobile ? window.innerWidth : DRAWER_DEFAULT_WIDTH}
         open={isOpen}
         onClose={() => setIsOpen(false)}

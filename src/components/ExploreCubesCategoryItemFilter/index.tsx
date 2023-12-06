@@ -63,12 +63,12 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
       {selectedFilterIndex > -1 && (
         <Button
           size="small"
-          className={cn(s.filter)}
+          className={cn(s.filter, s.plus)}
           style={{ marginLeft: 5 }}
           onClick={addFilter}
           onMouseDown={(e) => e.preventDefault()}
         >
-          <PlusOutlined />
+          +
         </Button>
       )}
     </div>

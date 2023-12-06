@@ -14,7 +14,7 @@ export interface SidebarMenuItem {
   key: string;
   label: string;
   icon: ReactNode;
-  href?: string;
+  href: string;
   activeIcon?: ReactNode;
 }
 
@@ -75,5 +75,20 @@ export const logsMenuItems: SidebarMenuItem[] = [
     icon: <QueryIcon />,
     href: "/logs/query",
     label: "Query logs",
+  },
+];
+
+export const singalsMenuItems: SidebarMenuItem[] = [
+  {
+    key: "alerts",
+    icon: <AlertsIcon />,
+    href: "/signals/alerts",
+    label: "Alerts logs",
+  },
+  {
+    key: "reports",
+    icon: <ReportsIcon />,
+    href: "/signals/reports",
+    label: "Reports logs",
   },
 ];

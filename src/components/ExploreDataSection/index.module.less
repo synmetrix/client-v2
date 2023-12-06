@@ -4,12 +4,24 @@
 }
 
 .header {
-  padding: 8px 22px;
+  margin-top: -3px;
+  padding: 12px 22px 9px;
   overflow: auto;
+  cursor: default;
 }
 
 .dataBtn {
   margin-right: 17px;
+  color: #a31bcb;
+  border-color: #a31bcb;
+}
+
+.settingsBtn {
+  padding: 0;
+  color: #000;
+  &:hover {
+    color: #a31bcb !important;
+  }
 }
 
 .popoverInner {
@@ -87,6 +99,11 @@
 
 .buttonGroup {
   margin-right: 17px;
+}
+
+.buttonGroup :global(.ant-radio-button-wrapper-checked) {
+  color: #a31bcb;
+  border-color: #a31bcb !important;
 }
 
 .run {

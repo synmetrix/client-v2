@@ -313,6 +313,7 @@ const MembersWrapper = () => {
   };
 
   const onAccessListChange = (id: string, accessListId: string | null) => {
+    setLoading(true);
     execUpdateRoleMutation({
       pk_columns: { id },
       _set: {
@@ -322,6 +323,7 @@ const MembersWrapper = () => {
   };
 
   const onInviteMember = (data: Invite) => {
+    setLoading(true);
     execInviteMutation({
       ...data,
       role: data.role.toLowerCase(),

@@ -11887,6 +11887,8 @@ export type UserTeamFieldsFragment = {
   updated_at: any;
   members: Array<{
     __typename?: "members";
+    id: any;
+    user_id: any;
     member_roles: Array<{
       __typename?: "member_roles";
       team_role: Team_Roles_Enum;
@@ -11963,6 +11965,8 @@ export type CurrentUserQuery = {
         updated_at: any;
         members: Array<{
           __typename?: "members";
+          id: any;
+          user_id: any;
           member_roles: Array<{
             __typename?: "member_roles";
             team_role: Team_Roles_Enum;
@@ -12027,6 +12031,8 @@ export type SubCurrentUserSubscription = {
         updated_at: any;
         members: Array<{
           __typename?: "members";
+          id: any;
+          user_id: any;
           member_roles: Array<{
             __typename?: "member_roles";
             team_role: Team_Roles_Enum;
@@ -12949,6 +12955,8 @@ export const UserTeamFieldsFragmentDoc = gql`
     created_at
     updated_at
     members(order_by: { created_at: desc }) {
+      id
+      user_id
       member_roles {
         team_role
       }

@@ -18,6 +18,8 @@ fragment UserTeamFields on teams {
   created_at
   updated_at
   members(order_by: { created_at: desc }) {
+    id
+    user_id
     member_roles {
       team_role
     }

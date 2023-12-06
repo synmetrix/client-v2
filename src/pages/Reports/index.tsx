@@ -10,7 +10,6 @@ import NoSignals from "@/components/NoSignals";
 import type { Alert } from "@/types/alert";
 import type { Report, ReportFormType } from "@/types/report";
 import type { QueryState } from "@/types/queryState";
-import AppLayout from "@/layouts/AppLayout";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useAlerts from "@/hooks/useAlerts";
@@ -220,7 +219,7 @@ const Reports: React.FC<ReportsProps> = ({
   };
 
   return (
-    <AppLayout divider title={t("pages:reports")}>
+    <>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={!responsive.sm ? t("title_mobile") : t("title")}
@@ -262,7 +261,7 @@ const Reports: React.FC<ReportsProps> = ({
         onSubmit={onSubmit}
         loading={false}
       />
-    </AppLayout>
+    </>
   );
 };
 

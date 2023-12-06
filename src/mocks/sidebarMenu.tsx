@@ -77,3 +77,18 @@ export const logsMenuItems: SidebarMenuItem[] = [
     label: "Query logs",
   },
 ];
+
+export const singalsMenuItems: SidebarMenuItem[] = [
+  {
+    key: "alerts",
+    icon: <AlertsIcon />,
+    href: "/signals/alerts",
+    label: "Alerts logs",
+  },
+  {
+    key: "reports",
+    icon: <ReportsIcon />,
+    href: "/signals/reports",
+    label: "Reports logs",
+  },
+];

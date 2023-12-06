@@ -2,12 +2,17 @@ import { useTranslation } from "react-i18next";
 
 import SidebarLayout from "@/layouts/SidebarLayout";
 import SidebarMenu from "@/components/SidebarMenu";
-import { settingsMenuItems } from "@/mocks/sidebarMenu";
+import { settingsMenuItems, singalsMenuItems } from "@/mocks/sidebarMenu";
 import type { Location } from "@/hooks/useLocation";
 
 import Icon from "@/assets/settings-active.svg";
 
 import type { ReactNode } from "react";
+
+const sidebar = {
+  settings: settingsMenuItems,
+  signals: singalsMenuItems,
+};
 
 export type SidebarLayoutProps = {
   title?: string;
@@ -21,14 +26,16 @@ const SettingsLayout: React.FC<SidebarLayoutProps> = ({
   location,
 }) => {
   const { t } = useTranslation(["pages"]);
-  const titleKey = (location?.pathname || "").split("/")?.[2];
-
+  const splitedPath = (location?.pathname || "").split("/");
+  const titleKey = splitedPath?.[2];
+  const subKey = splitedPath?.[1];
   return (
     <SidebarLayout
       icon={<Icon />}
-      title={title || t(`pages:settings.${titleKey}`)}
-      items={<SidebarMenu items={settingsMenuItems} />}
-      burgerTitle={"Settings"}
+      title={title || t(`pages:${titleKey}`)}
+      items={<SidebarMenu items={sidebar[subKey as keyof typeof sidebar]} />}
+      burgerTitle={subKey}
+      subTitle={subKey}
     >
       {children}
     </SidebarLayout>

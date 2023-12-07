@@ -40,7 +40,7 @@ export const validateResponse = async (response: any) => {
 };
 
 export const fetchRefreshToken = async (refreshToken: string) => {
-  return await fetch(
+  const response = await fetch(
     `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/token/refresh?refresh_token=${refreshToken}`,
     {
       method: "GET",
@@ -49,6 +49,8 @@ export const fetchRefreshToken = async (refreshToken: string) => {
       },
     }
   );
+
+  return (await validateResponse(response)) as AuthResponse;
 };
 
 export default () => {
@@ -174,7 +176,7 @@ export default () => {
       `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/register`,
       {
         method: "POST",
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, cookie: false }),
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",

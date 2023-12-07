@@ -263,12 +263,12 @@ export default () => {
   }, [currentUser?.id, currentUser?.teams?.length, createTeam]);
 
   useEffect(() => {
-    const lastTeam = currentUser?.teams?.find((t) => t.id === lastTeamId);
-    if (
-      currentUser?.teams?.length &&
-      (!lastTeamId || !lastTeam || !currentTeam)
-    ) {
-      setCurrentTeam(currentUser.teams[0].id);
+    if (currentUser?.teams?.length) {
+      if (!lastTeamId) {
+        setCurrentTeam(currentUser.teams[0].id);
+      } else {
+        setCurrentTeam(lastTeamId);
+      }
     }
   }, [currentTeam, currentUser.teams, lastTeamId, setCurrentTeam]);
 

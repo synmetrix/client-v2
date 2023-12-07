@@ -43,14 +43,17 @@ const CurrentUserStore = create<CurrentUser>((set, get) => ({
     const state = get();
     const team = state?.currentUser?.teams?.find((t) => t.id === id);
 
-    if (team) {
-      localStorage.setItem(LAST_TEAM_ID_KEY, id);
-      set({ currentTeam: team });
-    } else {
+    if (!team) {
       localStorage.removeItem(LAST_TEAM_ID_KEY);
+      return;
     }
 
-    set({ loading: false });
+    const lastTeamId = localStorage.getItem(LAST_TEAM_ID_KEY);
+    if (lastTeamId !== id) {
+      localStorage.setItem(LAST_TEAM_ID_KEY, id);
+    }
+
+    set({ currentTeam: team });
   },
 }));
 

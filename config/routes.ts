@@ -4,6 +4,10 @@ export default [
     component: "./layouts/RootLayout",
     routes: [
       {
+        path: "/callback",
+        component: "./pages/Callback",
+      },
+      {
         path: "/auth",
         routes: [
           {

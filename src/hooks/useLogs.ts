@@ -48,6 +48,10 @@ const getListVariables = (
     res = set("order_by.duration", params.sort, res);
   }
 
+  if (params?.teamId) {
+    res = set("where.datasource.team_id._eq", params.teamId, res);
+  }
+
   if (pagination && !params.sort) {
     res = set("order_by.created_at", "desc", res);
   }

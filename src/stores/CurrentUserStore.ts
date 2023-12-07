@@ -24,7 +24,7 @@ const CurrentUserStore = create<CurrentUser>((set, get) => ({
   } as unknown as User,
   currentTeam: null,
   teamData: null,
-  setTeamData: (teamData: any) => set({ teamData }),
+  setTeamData: (teamData: any) => set({ teamData, loading: false }),
   setLoading: (value: boolean) => {
     set({ loading: value });
 

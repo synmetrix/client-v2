@@ -102,7 +102,7 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
 const QueryLogsWrapper = () => {
   const [filter, setFilter] = useState(defaultFilterState);
 
-  const { teamData } = CurrentUserStore();
+  const { teamData, currentTeam } = CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const basePath = withAuthPrefix("/logs/query");
@@ -124,12 +124,19 @@ const QueryLogsWrapper = () => {
   } = useLogs({
     pagination: paginationVars,
     params: {
+      teamId: currentTeam?.id,
       ...filter,
     },
   });
 
   const onClickRow = (recordId: string) =>
     setLocation(`${basePath}/${recordId}`);
+
+  useEffect(() => {
+    if (dataSources) {
+      setFilter((prev) => ({ ...prev, dataSourceId: null }));
+    }
+  }, [dataSources]);
 
   return (
     <QueryLogs

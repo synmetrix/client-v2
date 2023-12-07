@@ -222,7 +222,7 @@ const ExploreWrapper = () => {
   });
 
   const datasources = useMemo(
-    () => teamData.dataSources || [],
+    () => teamData?.dataSources || [],
     [teamData]
   ) as DataSourceInfo[];
 

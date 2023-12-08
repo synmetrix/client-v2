@@ -258,6 +258,7 @@ const DataSourcesWrapper = () => {
     nextStep,
     setStep,
     setIsOnboarding,
+    clean,
   } = DataSourceStore();
 
   const [createMutation, execCreateMutation] = useCreateDataSourceMutation();
@@ -330,8 +331,10 @@ const DataSourcesWrapper = () => {
     if (dataSourceSetup?.id) {
       finishPath = `${finishPath}/${dataSourceSetup.id}`;
     }
+
+    clean();
     setLocation(finishPath);
-  }, [dataSourceSetup?.id, modelsPath, setLocation]);
+  }, [dataSourceSetup?.id, modelsPath, clean, setLocation]);
 
   const createSQLApi = useCallback(
     async (dataSourceId: string, dataSourceName: string) => {

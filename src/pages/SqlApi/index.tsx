@@ -2,6 +2,7 @@ import { Col, Dropdown, Row, Space, Spin, message } from "antd";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
+import { useParams } from "@vitjs/runtime";
 import { SettingOutlined } from "@ant-design/icons";
 
 import ApiSetup, {
@@ -24,6 +25,7 @@ import {
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
 import { prepareDataSourceData } from "@/hooks/useUserData";
+import useAppSettings from "@/hooks/useAppSettings";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { ApiSetupForm, DataSourceInfo } from "@/types/dataSource";
 import type { Member } from "@/types/team";
@@ -39,6 +41,7 @@ interface SqlApiProps {
   editPermission?: boolean;
   teamMembers?: Member[];
   dataSources?: DataSourceInfo[];
+  isNew?: boolean;
   editId?: string;
   credentials: DataSourceCredentials[];
   initialValue: ApiSetupForm;
@@ -46,6 +49,8 @@ interface SqlApiProps {
   onFinish: (data: ApiSetupForm) => void;
   onEdit?: (id: string) => void;
   onRemove?: (id: string) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
 }
 
 export const SqlApi = ({
@@ -54,35 +59,17 @@ export const SqlApi = ({
   dataSources,
   credentials = [],
   initialValue,
+  isNew,
   editId,
   loading = false,
   onEdit = () => {},
   onRemove = () => {},
   onFinish = () => {},
+  onOpen = () => {},
+  onClose = () => {},
 }: SqlApiProps) => {
   const { t } = useTranslation(["settings", "pages"]);
-  const [, setLocation] = useLocation();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const onOpen = () => setIsOpen(true);
   const responsive = useResponsive();
-
-  const onClose = () => {
-    setLocation("/settings/sql-api");
-    setIsOpen(false);
-  };
-
-  const onFinishForm = (data: ApiSetupForm) => {
-    if (!editId) {
-      onFinish(data);
-    }
-    onClose();
-  };
-
-  useEffect(() => {
-    if (editId) {
-      onOpen();
-    }
-  }, [editId]);
 
   const action =
     editPermission && credentials.length ? t("settings:sql_api.action") : null;
@@ -199,16 +186,18 @@ export const SqlApi = ({
 
       <Modal
         width={1000}
-        open={isOpen}
+        open={!!editId}
         onClose={onClose}
         closable
         destroyOnClose
       >
         <ApiSetup
+          isNew={isNew}
+          isOnboarding={!!editId}
           dataSources={dataSources}
           teamMembers={teamMembers}
           initialValue={initialValue}
-          onSubmit={onFinishForm}
+          onSubmit={onFinish}
         />
       </Modal>
     </>
@@ -255,8 +244,11 @@ export const prepareInitValues = (
 const SqlApiWrapper = () => {
   const { t } = useTranslation(["apiSetup", "pages"]);
   const { currentTeam, teamData } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
-  const { id: editId } = location.query;
+  const [, setLocation] = useLocation();
+  const { withAuthPrefix } = useAppSettings();
+  const { editId } = useParams();
+  const isNew = editId === "new";
+  const basePath = withAuthPrefix("/settings/sql-api");
 
   const [createMutation, execCreateMutation] =
     useInsertSqlCredentialsMutation();
@@ -288,11 +280,21 @@ const SqlApiWrapper = () => {
     variables: { teamId: currentTeam?.id },
   });
 
+  const onClose = () => {
+    setLocation(basePath);
+  };
+
   useCheckResponse(
     createMutation,
-    (_data, err) => {
+    (data, err) => {
+      if (data?.insert_sql_credentials_one?.id) {
+        message.success(t("apiSetup:sql_credentials_created"));
+        onClose();
+        return;
+      }
+
       if (err) {
-        if (err.message.includes("Uniqueness violation")) {
+        if (err?.message?.includes("Uniqueness violation")) {
           message.error(t("apiSetup:uniq_violation"));
         } else {
           message.error(err);
@@ -300,8 +302,8 @@ const SqlApiWrapper = () => {
       }
     },
     {
-      successMessage: t("apiSetup:sql_credentials_created"),
-      errorMessage: "",
+      showMessage: false,
+      showResponseMessage: false,
     }
   );
 
@@ -309,23 +311,31 @@ const SqlApiWrapper = () => {
     successMessage: t("apiSetup:sql_credentials_deleted"),
   });
 
-  const onFinish = (data: ApiSetupForm) => {
-    execCreateMutation({
-      object: {
-        user_id: data.user_id,
-        datasource_id: data.datasource_id,
-        username: data.db_username,
-        password: data.password,
-      },
-    });
-  };
-
   const onRemove = (id: string) => {
     execDeleteMutation({ id });
   };
 
   const onEdit = (id: string) => {
-    setLocation(`/settings/sql-api?id=${id}`);
+    setLocation(`${basePath}/${id}`);
+  };
+
+  const onOpen = () => {
+    setLocation(`${basePath}/new`);
+  };
+
+  const onFinish = (data: ApiSetupForm) => {
+    if (isNew) {
+      execCreateMutation({
+        object: {
+          user_id: data.user_id,
+          datasource_id: data.datasource_id,
+          username: data.db_username,
+          password: data.password,
+        },
+      });
+    } else {
+      onClose();
+    }
   };
 
   useEffect(() => {
@@ -363,7 +373,7 @@ const SqlApiWrapper = () => {
   );
 
   const initialValue = useMemo(() => {
-    if (editId && credentials.length) {
+    if (!isNew && editId && credentials.length) {
       const curCredentials = credentials.find((c) => c.id === editId);
 
       if (curCredentials) {
@@ -381,13 +391,14 @@ const SqlApiWrapper = () => {
     return prepareInitValues(
       dataSources?.[0]?.id,
       dataSources?.[0]?.name,
-      teamData?.members?.[0]?.id as string
+      teamData?.members?.[0]?.user_id as string
     );
-  }, [credentials, editId, teamData?.members, dataSources, t]);
+  }, [credentials, isNew, editId, teamData?.members, dataSources, t]);
 
   return (
     <SqlApi
       loading={loading}
+      isNew={isNew}
       editId={editId}
       editPermission={currentTeam?.role !== "member"}
       teamMembers={teamData?.members}
@@ -397,6 +408,8 @@ const SqlApiWrapper = () => {
       onEdit={onEdit}
       onRemove={onRemove}
       onFinish={onFinish}
+      onOpen={onOpen}
+      onClose={onClose}
     />
   );
 };

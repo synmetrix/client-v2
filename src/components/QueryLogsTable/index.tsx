@@ -54,14 +54,18 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
       title: t("query.table.creator"),
       dataIndex: "user",
       key: "user",
-      render: (value) => (
-        <span className={cn(styles.cell, styles.creator)}>
-          <Space size={10}>
-            <Avatar img={value.avatarUrl} username={value.display_name} />
-            <span>{value.display_name}</span>
-          </Space>
-        </span>
-      ),
+      render: (value) => {
+        if (value?.display_name) {
+          return (
+            <span className={cn(styles.cell, styles.creator)}>
+              <Space size={10}>
+                <Avatar img={value?.avatarUrl} username={value?.display_name} />
+                <span>{value?.display_name}</span>
+              </Space>
+            </span>
+          );
+        }
+      },
     },
     {
       title: t("query.table.duration"),

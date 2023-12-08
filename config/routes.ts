@@ -78,7 +78,7 @@ export default [
             component: "./pages/Members",
           },
           {
-            path: "/settings/sql-api",
+            path: "/settings/sql-api/:editId?",
             component: "./pages/SqlApi",
           },
           {

@@ -173,7 +173,9 @@ const AlertForm: FC<AlertFormProps> = ({
           size={10}
           direction="vertical"
         >
-          <span className={styles.subtitle}>{t("set_metrics_boundaries")}</span>
+          <div className={cn(styles.subtitle, styles.metricsTitle)}>
+            {t("set_metrics_boundaries")}
+          </div>
           <Table
             rootClassName={styles.table}
             columns={columns}
@@ -187,70 +189,74 @@ const AlertForm: FC<AlertFormProps> = ({
           <Col span={24} md={12}>
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>{t("delivery_settings")}</span>
-              <Input
-                starPosition="left"
-                starColor="#A31BCB"
-                label={`${capitalize(type)}:`}
-                control={control}
-                rules={{
-                  required: true,
-                  validate:
+              <div className={styles.deliveryInput}>
+                <Input
+                  starPosition="left"
+                  starColor="#A31BCB"
+                  label={`${capitalize(type)}:`}
+                  control={control}
+                  rules={{
+                    required: true,
+                    validate:
+                      type === "EMAIL"
+                        ? (v: string) =>
+                            validate.email(v) || t("common:form.errors.email")
+                        : (v: string) =>
+                            validate.url(v) || t("common:form.errors.url"),
+                  }}
+                  placeholder={
                     type === "EMAIL"
-                      ? (v: string) =>
-                          validate.email(v) || t("common:form.errors.email")
-                      : (v: string) =>
-                          validate.url(v) || t("common:form.errors.url"),
-                }}
-                placeholder={
-                  type === "EMAIL"
-                    ? t("common:form.placeholders.email")
-                    : WEBHOOK_PLACEHOLDER
-                }
-                name={
-                  type === "EMAIL"
-                    ? "deliveryConfig.address"
-                    : "deliveryConfig.url"
-                }
-                defaultValue={
-                  type === "EMAIL"
-                    ? initialValue?.deliveryConfig?.address
-                    : initialValue?.deliveryConfig?.url
-                }
-              />
+                      ? t("common:form.placeholders.email")
+                      : WEBHOOK_PLACEHOLDER
+                  }
+                  name={
+                    type === "EMAIL"
+                      ? "deliveryConfig.address"
+                      : "deliveryConfig.url"
+                  }
+                  defaultValue={
+                    type === "EMAIL"
+                      ? initialValue?.deliveryConfig?.address
+                      : initialValue?.deliveryConfig?.url
+                  }
+                />
+              </div>
             </Space>
           </Col>
 
           <Col span={24} md={12}>
             <Space className={styles.space} size={10} direction="vertical">
               <span className={styles.subtitle}>{t("trigger_settings")}</span>
-              <Input
-                rules={{ required: true, validate: validate.cronExp }}
-                starPosition="left"
-                starColor="#A31BCB"
-                label={
-                  <span>
-                    {t("schedule")} (
-                    <a
-                      className={styles.link}
-                      href="https://crontab.guru/"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {t("build_cron_expression")}
-                    </a>
-                    ):
-                  </span>
-                }
-                control={control}
-                name="schedule"
-                placeholder="* * * * *"
-                defaultValue={initialValue?.schedule || "* * * * *"}
-                suffix={
-                  <Popover content={t("common:words.in_utc_timezone")}>
-                    <InfoIcon />
-                  </Popover>
-                }
-              />
+              <div className={styles.deliveryInput}>
+                <Input
+                  rules={{ required: true, validate: validate.cronExp }}
+                  starPosition="left"
+                  starColor="#A31BCB"
+                  label={
+                    <span>
+                      {t("schedule")} (
+                      <a
+                        className={styles.link}
+                        href="https://crontab.guru/"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {t("build_cron_expression")}
+                      </a>
+                      ):
+                    </span>
+                  }
+                  control={control}
+                  name="schedule"
+                  placeholder="* * * * *"
+                  defaultValue={initialValue?.schedule || "* * * * *"}
+                  suffix={
+                    <Popover content={t("common:words.in_utc_timezone")}>
+                      <InfoIcon />
+                    </Popover>
+                  }
+                />
+              </div>
             </Space>
           </Col>
         </Row>

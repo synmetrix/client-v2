@@ -83,12 +83,12 @@ export const singalsMenuItems: SidebarMenuItem[] = [
     key: "alerts",
     icon: <AlertsIcon />,
     href: "/signals/alerts",
-    label: "Alerts logs",
+    label: "Alerts",
   },
   {
     key: "reports",
     icon: <ReportsIcon />,
     href: "/signals/reports",
-    label: "Reports logs",
+    label: "Reports",
   },
 ];

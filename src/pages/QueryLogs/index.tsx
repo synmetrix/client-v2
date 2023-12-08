@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 
 import PageHeader from "@/components/PageHeader";
@@ -80,7 +80,7 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
               dataSources={dataSources}
               onChange={onFilterUpdate}
             />
-            <BouncingDotsLoader loading={fetching}>
+            <Spin spinning={fetching}>
               <QueryLogsTable
                 logs={logs}
                 onClickRow={onClickRow}
@@ -91,7 +91,7 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
                   onChange: (current) => onPageChange({ current }),
                 }}
               />
-            </BouncingDotsLoader>
+            </Spin>
           </Space>
         </div>
       </Space>

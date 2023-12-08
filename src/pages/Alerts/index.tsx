@@ -39,7 +39,7 @@ const Alerts: React.FC<AlertsProps> = ({
   const responsive = useResponsive();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
-  const basePath = withAuthPrefix("/alerts");
+  const basePath = withAuthPrefix("/signals/alerts");
   const { teamData } = CurrentUserStore();
   const { alertId } = useParams();
 

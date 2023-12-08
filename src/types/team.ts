@@ -27,6 +27,7 @@ export interface Member {
   email: string;
   role: TeamRole;
   id: string;
+  user_id: string;
   accessList?: AccessList | null;
   displayName?: string;
   createdAt?: string;
@@ -38,6 +39,7 @@ export interface Team {
   id: string;
   name: string;
   role: Roles;
+  creatorEmail: string;
   members: Member[];
   createdAt: string;
   updatedAt: string;

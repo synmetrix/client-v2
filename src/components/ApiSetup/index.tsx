@@ -50,6 +50,7 @@ interface ApiSetupProps {
   onSubmit: (data: ApiSetupForm) => void;
   onGoBack?: () => void;
   isOnboarding?: boolean;
+  isNew?: boolean;
   initialValue: ApiSetupForm | undefined;
   connectionOptions?: ApiSetupField[];
   dataSources?: DataSourceInfo[];
@@ -76,6 +77,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
   dataSources,
   teamMembers,
   isOnboarding,
+  isNew,
   onSubmit,
   onGoBack,
 }) => {
@@ -84,8 +86,6 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();
-
-  const isNew = useMemo(() => !!dataSources?.length, [dataSources]);
 
   const getLabel = (key: string) => t(`common:form.labels.${key}`, key);
 
@@ -158,10 +158,9 @@ const ApiSetup: FC<ApiSetupProps> = ({
                 label={getLabel("team_member")}
                 defaultValue={initialValue?.user_id}
                 options={(teamMembers || []).map((m) => ({
-                  value: m.id,
+                  value: m.user_id,
                   label: m.displayName,
                 }))}
-                disabled={!!isOnboarding}
               />
             </Col>
             <Col xs={24} sm={12}>
@@ -176,7 +175,6 @@ const ApiSetup: FC<ApiSetupProps> = ({
                   value: d.id as string,
                   label: d.name,
                 }))}
-                disabled={!!isOnboarding}
               />
             </Col>
           </Row>
@@ -212,7 +210,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
                   defaultValue={initialValue?.[name]}
                   fieldType={f.type}
                   label={f.label}
-                  disabled={f.disabled || !isNew || !!isOnboarding}
+                  disabled={f.disabled || !isOnboarding || !isNew}
                   suffix={
                     <CopyIcon
                       className={styles.icon}
@@ -251,7 +249,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
         <Row align="middle" justify={"space-between"}>
           <Col xs={24} md={18}>
-            {!isNew && (
+            {!isOnboarding && (
               <Button
                 className={cn(styles.back, {
                   [styles.fullwidth]: !windowSize.md,

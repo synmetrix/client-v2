@@ -4,10 +4,10 @@ import { useForm } from "react-hook-form";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 import type { Team_Roles_Enum } from "@/graphql/generated";
 import { ChangeableRoles } from "@/types/team";
 import validate from "@/utils/validations";
+import type { Option } from "@/types/access";
 
 import styles from "./index.module.less";
 
@@ -21,11 +21,16 @@ export interface Invite {
 interface MembersFormProps {
   onSubmit: (data: Invite) => void;
   initialValue?: Invite;
+  inviteRoles: Option[];
 }
 
 const { Title } = Typography;
 
-const MembersForm: FC<MembersFormProps> = ({ onSubmit, initialValue }) => {
+const MembersForm: FC<MembersFormProps> = ({
+  onSubmit,
+  initialValue,
+  inviteRoles,
+}) => {
   const { t } = useTranslation(["settings", "common"]);
   const { control, handleSubmit } = useForm<Invite>({
     values: initialValue,
@@ -55,7 +60,7 @@ const MembersForm: FC<MembersFormProps> = ({ onSubmit, initialValue }) => {
             control={control}
             fieldType="select"
             defaultValue={ChangeableRoles.member}
-            options={createRoleOptions(ChangeableRoles)}
+            options={inviteRoles}
           />
         </Col>
       </Row>

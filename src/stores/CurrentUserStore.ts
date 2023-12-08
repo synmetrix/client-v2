@@ -3,36 +3,57 @@ import { create } from "zustand";
 import type { User } from "@/types/user";
 import type { Team } from "@/types/team";
 
+const LOADING_TIMEOUT = 5000; // 5 seconds
+export const LAST_TEAM_ID_KEY = "lastTeamId";
+
 interface CurrentUser {
-  currentTeamId: string | null;
+  loading: boolean;
   currentTeam: Team | null;
   currentUser: User;
+  teamData: any | null;
+  setTeamData: (teamData: any) => void;
+  setLoading: (value: boolean) => void;
   setUserData: (currentUser: User) => void;
-  setCurrentTeamId: (teamId: string) => void;
+  setCurrentTeam: (id: string) => void;
 }
 
 const CurrentUserStore = create<CurrentUser>((set, get) => ({
-  currentUser: {} as User,
-  currentTeamId: localStorage.getItem("currentTeam"),
+  loading: false,
+  currentUser: {
+    teams: [],
+  } as unknown as User,
   currentTeam: null,
-  setUserData: (currentUser: User) => {
-    const state = get();
+  teamData: null,
+  setTeamData: (teamData: any) => set({ teamData, loading: false }),
+  setLoading: (value: boolean) => {
+    set({ loading: value });
 
-    if (state.currentTeamId && !state.currentTeam) {
-      const currentTeam = currentUser.teams.find(
-        (t) => t.id === state.currentTeamId
-      );
-      if (currentTeam) set({ currentTeam });
+    setTimeout(() => {
+      const state = get();
+
+      if (state.loading) {
+        set({ loading: false });
+      }
+    }, LOADING_TIMEOUT);
+  },
+  setUserData: (currentUser: User) => {
+    set({ currentUser, loading: false });
+  },
+  setCurrentTeam(id: string) {
+    const state = get();
+    const team = state?.currentUser?.teams?.find((t) => t.id === id);
+
+    if (!team) {
+      localStorage.removeItem(LAST_TEAM_ID_KEY);
+      return;
     }
 
-    set({ currentUser });
-  },
-  setCurrentTeamId: (teamId: string) => {
-    const state = get();
-    const currentTeam = state.currentUser.teams.find((t) => t.id === teamId);
+    const lastTeamId = localStorage.getItem(LAST_TEAM_ID_KEY);
+    if (lastTeamId !== id) {
+      localStorage.setItem(LAST_TEAM_ID_KEY, id);
+    }
 
-    localStorage.setItem("currentTeam", teamId);
-    set({ currentTeamId: teamId, currentTeam });
+    set({ currentTeam: team });
   },
 }));
 

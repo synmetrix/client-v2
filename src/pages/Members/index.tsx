@@ -1,4 +1,4 @@
-import { Col, Row, Select, Space, message } from "antd";
+import { Col, Row, Select, Space, Spin, Tag, Typography, message } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type { Invite } from "@/components/MembersForm";
@@ -8,35 +8,39 @@ import Avatar from "@/components/Avatar";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import ConfirmModal from "@/components/ConfirmModal";
+import NoMember from "@/components/NoMember";
 import Button from "@/components/Button";
 import formatTime from "@/utils/helpers/formatTime";
 import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 import { capitalize } from "@/utils/helpers/capitalize";
 import type {
   AllAccessListsQuery,
-  Members as MembersType,
+  Member_Roles_Set_Input,
   Team_Roles_Enum,
 } from "@/graphql/generated";
 import {
   useAllAccessListsQuery,
   useDeleteMemberMutation,
   useInviteMemberMutation,
-  useMembersQuery,
   useUpdateMemberRoleMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import type { AccessList, Member, TeamRole } from "@/types/team";
+import type { AccessList, Member } from "@/types/team";
 import { ChangeableRoles, Roles } from "@/types/team";
 
 import TrashIcon from "@/assets/trash.svg";
 
 import styles from "./index.module.less";
 
+const { Paragraph } = Typography;
+
 interface MembersProps {
+  userId: string;
   members: Member[];
   accessLists: AccessList[];
   currentRole?: Roles;
+  loading?: boolean;
   onDeleteMember?: (id: string) => void;
   onInviteMember?: (data: Invite) => void;
   onRoleChange?: (id: string, newRole: ChangeableRoles) => void;
@@ -44,9 +48,11 @@ interface MembersProps {
 }
 
 export const Members: React.FC<MembersProps> = ({
+  userId,
   members,
   accessLists,
   currentRole,
+  loading = false,
   onDeleteMember = () => {},
   onInviteMember = () => {},
   onRoleChange = () => {},
@@ -64,23 +70,33 @@ export const Members: React.FC<MembersProps> = ({
 
   const renderCard = (member: Member) => {
     const hasRoleChangePermission =
-      member?.role.name !== Roles.owner &&
-      (currentRole === Roles.owner ||
-        (currentRole === Roles.admin && member?.role.name === Roles.member));
-
-    const hasDeletePermission = hasRoleChangePermission;
+      (currentRole === Roles.owner && member.role.name !== Roles.owner) ||
+      (currentRole === Roles.admin && member.role.name === Roles.member);
+    const hasChangeAccessPermission =
+      member.role.name === Roles.member && currentRole !== Roles.member;
 
     return (
       <Card
         title={
-          <Space size={10}>
-            <Avatar username={member.displayName} img={member.avatarUrl} />
-            <span>{member.displayName}</span>
-          </Space>
+          <div className={styles.title}>
+            <Avatar
+              username={member.displayName}
+              img={member.avatarUrl}
+              className={styles.cardAvatar}
+            />
+            <Paragraph ellipsis className={styles.paragraph}>
+              {member.displayName}
+            </Paragraph>
+            {member.user_id === userId && (
+              <Tag className={styles.tag} color="#EDE7F0">
+                {t("common:words.current")}
+              </Tag>
+            )}
+          </div>
         }
         titleTooltip={member.displayName}
         extra={
-          hasDeletePermission && (
+          hasRoleChangePermission && (
             <ConfirmModal
               title={t("common:words.delete_member")}
               onConfirm={() => onRemove(member)}
@@ -117,7 +133,6 @@ export const Members: React.FC<MembersProps> = ({
                         val as unknown as ChangeableRoles
                       )
                     }
-                    disabled={!hasRoleChangePermission}
                     bordered={false}
                     value={member.role.name}
                     options={createRoleOptions(ChangeableRoles)}
@@ -131,7 +146,7 @@ export const Members: React.FC<MembersProps> = ({
                 title={capitalize(member.role.name)}
                 className={styles.roleName}
               >
-                {hasRoleChangePermission ? (
+                {hasChangeAccessPermission ? (
                   <Select
                     onChange={(accessListId) => {
                       onAccessListChange(member.role.id, accessListId);
@@ -156,7 +171,7 @@ export const Members: React.FC<MembersProps> = ({
                     ]}
                   />
                 ) : (
-                  capitalize(member.role.name)
+                  member?.accessList?.name || capitalize(member.role.name)
                 )}
               </dd>
             </>
@@ -184,51 +199,48 @@ export const Members: React.FC<MembersProps> = ({
     );
   };
 
+  const hasInvitePermissions = currentRole !== Roles.member;
+  const inviteRoles = useMemo(() => {
+    const roles = ChangeableRoles as any;
+
+    if (currentRole === Roles.admin) {
+      delete roles.admin;
+    }
+
+    return createRoleOptions(roles);
+  }, [currentRole]);
+
   return (
     <>
       <Space className={styles.wrapper} direction="vertical" size={13}>
         <PageHeader
           title={t("settings:members.title")}
-          action={t("settings:members.action")}
+          action={hasInvitePermissions && t("settings:members.action")}
           onClick={() => setIsOpen(true)}
         />
 
-        <div className={styles.body}>
-          <Row justify={"start"} gutter={[32, 32]}>
-            {members.map((m) => (
-              <Col xs={24} sm={12} xl={8} key={m.id}>
-                {renderCard(m)}
-              </Col>
-            ))}
-          </Row>
-        </div>
+        <Spin spinning={loading}>
+          {members.length ? (
+            <div className={styles.body}>
+              <Row justify={"start"} gutter={[32, 32]}>
+                {members.map((m) => (
+                  <Col xs={24} sm={12} xl={8} key={m.id}>
+                    {renderCard(m)}
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          ) : (
+            <NoMember onInvite={() => setIsOpen(true)} />
+          )}
+        </Spin>
       </Space>
 
       <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
-        <MembersForm onSubmit={onSubmit} />
+        <MembersForm onSubmit={onSubmit} inviteRoles={inviteRoles} />
       </Modal>
     </>
   );
-};
-
-const prepareMembersData = (rawMembers: MembersType[]) => {
-  const members = rawMembers?.map((m) => {
-    return {
-      id: m.user.id,
-      email: m?.user?.account?.email,
-      avatarUrl: m.user.avatar_url,
-      displayName: m.user.display_name,
-      accessList: m.member_roles?.[0]?.access_list as unknown as AccessList,
-      role: {
-        id: m.member_roles?.[0]?.id,
-        name: m.member_roles?.[0]?.team_role as unknown,
-      } as TeamRole,
-      createdAt: m.created_at,
-      updatedAt: m.member_roles?.[0]?.updated_at || m.updated_at,
-    } as Member;
-  });
-
-  return members;
 };
 
 const prepareAccessData = (accessResult: AllAccessListsQuery): AccessList[] => {
@@ -246,22 +258,12 @@ const prepareAccessData = (accessResult: AllAccessListsQuery): AccessList[] => {
 
 const MembersWrapper = () => {
   const { t } = useTranslation(["settings", "pages"]);
-  const { currentTeam } = CurrentUserStore();
+  const { currentUser, currentTeam, teamData, loading, setLoading } =
+    CurrentUserStore();
   const [deleteMutation, execDeleteMutation] = useDeleteMemberMutation();
   const [inviteMutation, execInviteMutation] = useInviteMemberMutation();
   const [updateRoleMutation, execUpdateRoleMutation] =
     useUpdateMemberRoleMutation();
-
-  const [allMembersData, execAllMembersQuery] = useMembersQuery({
-    variables: {
-      where: {
-        team_id: {
-          _eq: currentTeam?.id,
-        },
-      },
-    },
-    pause: true,
-  });
 
   const [allAccessLists, execAllAccessLists] = useAllAccessListsQuery({
     variables: {
@@ -276,9 +278,8 @@ const MembersWrapper = () => {
   useCheckResponse(
     deleteMutation,
     (res) => {
-      if (res.delete_members_roles_by_pk?.id) {
+      if (res.delete_members_by_pk?.id) {
         message.success(t("settings:members:member_deleted"));
-        execAllMembersQuery();
       } else {
         message.warning(t("settings:members:no_permissions"));
       }
@@ -297,7 +298,6 @@ const MembersWrapper = () => {
     (res) => {
       if (res.update_member_roles_by_pk?.id) {
         message.success(t("settings:members:role_updated"));
-        execAllMembersQuery();
       } else {
         message.warning(t("settings:members:no_permissions"));
       }
@@ -308,19 +308,28 @@ const MembersWrapper = () => {
   );
 
   const onDeleteMember = (id: string) => {
+    setLoading(true);
     execDeleteMutation({ id });
   };
 
   const onRoleChange = (id: string, newRole: ChangeableRoles) => {
+    setLoading(true);
+    const roleObject = {
+      team_role: newRole.toLowerCase() as Team_Roles_Enum,
+    } as Member_Roles_Set_Input;
+
+    if (newRole !== ChangeableRoles.member) {
+      roleObject.access_list_id = null;
+    }
+
     execUpdateRoleMutation({
       pk_columns: { id },
-      _set: {
-        team_role: newRole.toLowerCase() as Team_Roles_Enum,
-      },
+      _set: roleObject,
     });
   };
 
   const onAccessListChange = (id: string, accessListId: string | null) => {
+    setLoading(true);
     execUpdateRoleMutation({
       pk_columns: { id },
       _set: {
@@ -330,6 +339,7 @@ const MembersWrapper = () => {
   };
 
   const onInviteMember = (data: Invite) => {
+    setLoading(true);
     execInviteMutation({
       ...data,
       role: data.role.toLowerCase(),
@@ -339,20 +349,11 @@ const MembersWrapper = () => {
 
   useEffect(() => {
     if (currentTeam?.id) {
-      execAllMembersQuery();
       execAllAccessLists();
     }
-  }, [currentTeam?.id, execAllMembersQuery, execAllAccessLists]);
+  }, [currentTeam?.id, execAllAccessLists]);
 
-  const members = useMemo(() => {
-    let rawMembers = [] as MembersType[];
-    if (allMembersData.data) {
-      rawMembers = allMembersData.data.members as MembersType[];
-    }
-
-    return prepareMembersData(rawMembers);
-  }, [allMembersData.data]);
-
+  const members = useMemo(() => teamData?.members || [], [teamData?.members]);
   const accessLists = useMemo(
     () =>
       prepareAccessData(allAccessLists?.data as unknown as AllAccessListsQuery),
@@ -361,7 +362,9 @@ const MembersWrapper = () => {
 
   return (
     <Members
+      userId={currentUser?.id}
       members={members}
+      loading={loading}
       accessLists={accessLists}
       currentRole={currentTeam?.role}
       onDeleteMember={onDeleteMember}

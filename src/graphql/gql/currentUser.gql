@@ -12,15 +12,42 @@ fragment BranchesFields on branches {
   }
 }
 
-fragment TeamFields on teams {
+fragment UserTeamFields on teams {
   id
   name
   created_at
   updated_at
   members(order_by: { created_at: desc }) {
+    id
+    user_id
+    member_roles {
+      team_role
+    }
+    user {
+      id
+      avatar_url
+      display_name
+      account {
+        email
+      }
+    }
+  }
+}
+
+fragment TeamMembersFields on teams {
+  members(order_by: { created_at: desc }) {
+    id
+    user_id
     member_roles {
       id
       team_role
+      created_at
+      updated_at
+      access_list {
+        id
+        name
+        config
+      }
     }
     user {
       id
@@ -42,76 +69,8 @@ query CurrentUser($id: uuid!) {
       email
     }
 
-    datasources(order_by: { created_at: desc }) {
-      id
-      name
-      db_params
-      db_type
-      created_at
-      updated_at
-      branches(where: { status: { _eq: active } }) {
-        ...BranchesFields
-      }
-      sql_credentials {
-        id
-        username
-        created_at
-        updated_at
-        user {
-          id
-          display_name
-        }
-      }
-    }
-
-    alerts(order_by: { created_at: desc }) {
-      id
-      name
-      delivery_type
-      delivery_config
-      trigger_config
-      created_at
-      updated_at
-      schedule
-      user {
-        id
-        avatar_url
-        display_name
-        account {
-          email
-        }
-      }
-      exploration {
-        id
-        playground_state
-      }
-    }
-
-    reports(order_by: { created_at: desc }) {
-      id
-      name
-      schedule
-      delivery_type
-      delivery_config
-      created_at
-      updated_at
-      user {
-        id
-        avatar_url
-        display_name
-        account {
-          email
-        }
-      }
-      exploration {
-        id
-        playground_state
-      }
-    }
-
     members(order_by: { created_at: desc }) {
       member_roles {
-        id
         team_role
       }
       user {
@@ -123,7 +82,7 @@ query CurrentUser($id: uuid!) {
         }
       }
       team {
-        ...TeamFields
+        ...UserTeamFields
       }
     }
   }
@@ -138,6 +97,39 @@ subscription SubCurrentUser($id: uuid!) {
       email
     }
 
+    members(order_by: { created_at: desc }) {
+      id
+      user_id
+      member_roles {
+        id
+        team_role
+        created_at
+        updated_at
+        access_list {
+          id
+          name
+          config
+        }
+      }
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+      team {
+        ...UserTeamFields
+      }
+    }
+  }
+}
+
+query TeamData($team_id: uuid!) {
+  teams_by_pk(id: $team_id) {
+    ...TeamMembersFields
+
     datasources(order_by: { created_at: desc }) {
       id
       name
@@ -204,12 +196,44 @@ subscription SubCurrentUser($id: uuid!) {
         playground_state
       }
     }
+  }
+}
 
-    members(order_by: { created_at: desc }) {
-      member_roles {
-        id
-        team_role
+subscription SubTeamData($team_id: uuid!) {
+  teams_by_pk(id: $team_id) {
+    ...TeamMembersFields
+
+    datasources(order_by: { created_at: desc }) {
+      id
+      name
+      db_params
+      db_type
+      created_at
+      updated_at
+      branches(where: { status: { _eq: active } }) {
+        ...BranchesFields
       }
+      sql_credentials {
+        id
+        username
+        created_at
+        updated_at
+        user {
+          id
+          display_name
+        }
+      }
+    }
+
+    alerts(order_by: { created_at: desc }) {
+      id
+      name
+      delivery_type
+      delivery_config
+      trigger_config
+      created_at
+      updated_at
+      schedule
       user {
         id
         avatar_url
@@ -218,8 +242,31 @@ subscription SubCurrentUser($id: uuid!) {
           email
         }
       }
-      team {
-        ...TeamFields
+      exploration {
+        id
+        playground_state
+      }
+    }
+
+    reports(order_by: { created_at: desc }) {
+      id
+      name
+      schedule
+      delivery_type
+      delivery_config
+      created_at
+      updated_at
+      user {
+        id
+        avatar_url
+        display_name
+        account {
+          email
+        }
+      }
+      exploration {
+        id
+        playground_state
       }
     }
   }

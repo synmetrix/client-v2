@@ -5,4 +5,5 @@ export interface QueryFiltersForm {
   to: string | null;
   sort: Order_By | null;
   dataSourceId: string | null;
+  teamId?: string;
 }

@@ -4,20 +4,50 @@ import { useDeepCompareEffect } from "ahooks";
 import {
   useCurrentUserQuery,
   useSubCurrentUserSubscription,
+  useCreateTeamMutation,
+  useTeamDataQuery,
+  useSubTeamDataSubscription,
 } from "@/graphql/generated";
 import AuthTokensStore from "@/stores/AuthTokensStore";
-import CurrentUserStore from "@/stores/CurrentUserStore";
+import CurrentUserStore, { LAST_TEAM_ID_KEY } from "@/stores/CurrentUserStore";
 import type {
   SubCurrentUserSubscription,
+  SubTeamDataSubscription,
   CurrentUserQuery,
   Datasources,
+  TeamDataQuery,
+  Members as MembersType,
 } from "@/graphql/generated";
-import type { User } from "@/types/user";
+import type { User, UserData } from "@/types/user";
 import type { DataSourceInfo } from "@/types/dataSource";
 import { dbTiles } from "@/mocks/dataSources";
-import type { Team } from "@/types/team";
+import { Roles } from "@/types/team";
+import type { AccessList, Member, Team, TeamRole } from "@/types/team";
 import type { Alert, RawAlert } from "@/types/alert";
 import type { Report, RawReport } from "@/types/report";
+
+const DEFAULT_TEAM_NAME = "Default team";
+
+const prepareMembersData = (rawMembers: MembersType[]) => {
+  const members = rawMembers?.map((m) => {
+    return {
+      id: m?.id,
+      user_id: m?.user_id,
+      email: m?.user?.account?.email,
+      avatarUrl: m.user.avatar_url,
+      displayName: m.user.display_name,
+      accessList: m.member_roles?.[0]?.access_list as unknown as AccessList,
+      role: {
+        id: m.member_roles?.[0]?.id,
+        name: m.member_roles?.[0]?.team_role as unknown,
+      } as TeamRole,
+      createdAt: m.member_roles?.[0]?.created_at || m.created_at,
+      updatedAt: m.member_roles?.[0]?.updated_at || m.updated_at,
+    } as Member;
+  });
+
+  return members;
+};
 
 export const prepareDataSourceData = (data: Datasources[] | undefined) => {
   if (!data?.length) return [];
@@ -90,19 +120,14 @@ const prepareUserData = (
 
   const teams =
     rawUserData?.members?.reduce((acc: Team[], m) => {
-      const members = (m?.team?.members || []).map((member) => ({
-        id: member.user.id,
-        email: member?.user?.account?.email,
-        avatarUrl: member.user.avatar_url,
-        displayName: member.user.display_name,
-        role: {
-          id: member.member_roles?.[0]?.id,
-          name: member.member_roles?.[0]?.team_role,
-        },
-      }));
+      const members = prepareMembersData(m?.team?.members as MembersType[]);
+      const creatorEmail = members.find(
+        (member) => member.role.name === Roles.owner
+      )?.email;
 
       const newTeam = {
         ...m.team,
+        creatorEmail,
         role: m?.member_roles?.[0]?.team_role,
         updatedAt: m.team.updated_at,
         createdAt: m.team.created_at,
@@ -116,65 +141,136 @@ const prepareUserData = (
       return acc;
     }, []) || [];
 
-  const dataSources = prepareDataSourceData(
-    rawUserData?.datasources as Datasources[]
-  );
-
-  const alerts = prepareAlertData(rawUserData?.alerts as RawAlert[]);
-  const reports = prepareReportData(rawUserData?.reports as RawReport[]);
-
   return {
     id: rawUserData?.id,
     email: rawUserData?.account?.email,
     displayName: rawUserData?.display_name,
     avatarUrl: rawUserData?.avatar_url,
-    teams,
+    teams: teams.sort((a, b) => a.createdAt <= b.createdAt),
+  };
+};
+
+const prepareTeamData = (
+  rawData: TeamDataQuery | SubTeamDataSubscription
+): UserData => {
+  const rawTeamData = rawData.teams_by_pk || null;
+
+  const dataSources = prepareDataSourceData(
+    rawTeamData?.datasources as Datasources[]
+  );
+
+  const alerts = prepareAlertData(rawTeamData?.alerts as RawAlert[]);
+  const reports = prepareReportData(rawTeamData?.reports as RawReport[]);
+  const members = prepareMembersData(rawTeamData?.members as MembersType[]);
+
+  return {
     dataSources,
     alerts,
     reports,
+    members,
   };
 };
 
 export default () => {
-  const { currentUser, setUserData } = CurrentUserStore();
+  const {
+    currentUser,
+    currentTeam,
+    setCurrentTeam,
+    setLoading,
+    setUserData,
+    setTeamData,
+  } = CurrentUserStore();
   const { JWTpayload, accessToken } = AuthTokensStore();
-
   const userId = JWTpayload?.["x-hasura-user-id"];
+  const lastTeamId = localStorage.getItem(LAST_TEAM_ID_KEY);
 
+  const [, execCreateTeamMutation] = useCreateTeamMutation();
   const [currentUserData, execQueryCurrentUser] = useCurrentUserQuery({
     variables: { id: userId },
     pause: true,
   });
 
-  const [subscriptionData, useSubscription] = useSubCurrentUserSubscription({
+  const [subCurrentUserData, execSubscription] = useSubCurrentUserSubscription({
     variables: { id: userId },
     pause: true,
   });
 
-  useEffect(() => {
-    if (currentUserData.data) {
-      const newUserData = prepareUserData(currentUserData.data);
-      setUserData(newUserData);
-    }
-  }, [currentUserData, setUserData]);
+  const [teamData, execTeamData] = useTeamDataQuery({
+    variables: { team_id: currentTeam?.id },
+  });
+
+  const [subTeamData, execSubTeamData] = useSubTeamDataSubscription({
+    variables: { team_id: currentTeam?.id },
+    pause: true,
+  });
 
   useDeepCompareEffect(() => {
     if (accessToken && userId) {
       execQueryCurrentUser();
-      useSubscription();
+      execSubscription();
+
+      if (currentTeam?.id) {
+        execTeamData();
+        execSubTeamData();
+      }
     }
 
     if (!accessToken) {
       window.location.href = "/auth/signin";
     }
-  }, [accessToken, userId]);
+  }, [accessToken, userId, currentTeam?.id]);
 
   useEffect(() => {
-    if (subscriptionData?.data) {
-      const newUserData = prepareUserData(subscriptionData?.data);
-      setUserData(newUserData);
+    if (teamData.data) {
+      const newTeamData = prepareTeamData(teamData.data);
+      setTeamData(newTeamData);
+      setLoading(false);
     }
-  }, [setUserData, subscriptionData]);
+  }, [setTeamData, setLoading, teamData.data]);
+
+  useEffect(() => {
+    if (subTeamData?.data) {
+      execTeamData();
+    }
+  }, [execTeamData, setLoading, subTeamData?.data]);
+
+  useEffect(() => {
+    if (currentUserData.data) {
+      const newUserData = prepareUserData(currentUserData.data);
+      setUserData(newUserData);
+      setLoading(false);
+    }
+  }, [currentUserData, setLoading, setUserData]);
+
+  useEffect(() => {
+    if (subCurrentUserData?.data) {
+      execQueryCurrentUser();
+    }
+  }, [execQueryCurrentUser, setLoading, subCurrentUserData?.data]);
+
+  const createTeam = useCallback(async () => {
+    await execCreateTeamMutation({
+      name: DEFAULT_TEAM_NAME,
+    });
+
+    execQueryCurrentUser();
+  }, [execCreateTeamMutation, execQueryCurrentUser]);
+
+  useEffect(() => {
+    if (currentUser?.id && !currentUser?.teams?.length) {
+      createTeam();
+    }
+  }, [currentUser?.id, currentUser?.teams?.length, createTeam]);
+
+  useEffect(() => {
+    if (currentUser?.teams?.length) {
+      if (!lastTeamId) {
+        setCurrentTeam(currentUser.teams[0].id);
+      } else {
+        setCurrentTeam(lastTeamId);
+      }
+    }
+  }, [currentTeam, currentUser.teams, lastTeamId, setCurrentTeam]);
 
   return {
     currentUser,

@@ -1,4 +1,4 @@
-import { Col, Dropdown, Row, Space, Spin, Tag } from "antd";
+import { Col, Dropdown, Row, Space, Spin, Tag, message } from "antd";
 import { useTranslation } from "react-i18next";
 import { SettingOutlined } from "@ant-design/icons";
 
@@ -13,28 +13,36 @@ import {
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import Avatar, { AvatarGroup } from "@/components/Avatar";
-import type { Member, Team, TeamSettingsForm } from "@/types/team";
 import Card from "@/components/Card";
 import ConfirmModal from "@/components/ConfirmModal";
+import NoTeams from "@/components/NoTeams";
 import formatTime from "@/utils/helpers/formatTime";
+import type { Member, Team, TeamSettingsForm } from "@/types/team";
+import { Roles } from "@/types/team";
 
 import styles from "./index.module.less";
 
+import type { ItemType } from "antd/lib/menu/hooks/useItems";
+
 interface TeamsProps {
+  userId: string;
   teams: Team[];
   currentTeam: Team | null;
   onCreateOrEditTeam: (data: TeamSettingsForm) => void;
   onRemoveTeam: (id: string) => void;
+  onSelect: (id: string) => void;
   loading: boolean;
 }
 
 const AVATAR_COLORS = ["#000000", "#470D69", "#A31BCB"];
 
 export const Teams: React.FC<TeamsProps> = ({
+  userId,
   teams,
   currentTeam,
   onCreateOrEditTeam = () => {},
   onRemoveTeam = () => {},
+  onSelect = () => {},
   loading = false,
 }) => {
   const { t } = useTranslation(["teams", "pages"]);
@@ -62,6 +70,11 @@ export const Teams: React.FC<TeamsProps> = ({
   };
 
   const renderCard = (team: Team) => {
+    const teamRole = (team?.members || []).find((m) => m.user_id === userId)
+      ?.role?.name;
+    const hasEditPermissions = teamRole !== Roles.member;
+    const hasDeletePermissions = teamRole === Roles.owner;
+
     return (
       <Card
         title={
@@ -75,19 +88,24 @@ export const Teams: React.FC<TeamsProps> = ({
           </>
         }
         titleTooltip={team.name}
-        onTitleClick={() => onEdit(team)}
+        onTitleClick={() => hasEditPermissions && onEdit(team)}
         extra={
           <Dropdown
             className={styles.btn}
             trigger={["click"]}
             menu={{
               items: [
-                {
+                hasEditPermissions && {
                   key: "edit",
                   label: t("common:words.edit"),
                   onClick: () => onEdit(team),
                 },
                 {
+                  key: "select",
+                  label: t("common:words.set_current"),
+                  onClick: () => onSelect(team.id),
+                },
+                hasDeletePermissions && {
                   key: "delete",
                   label: (
                     <ConfirmModal
@@ -98,7 +116,7 @@ export const Teams: React.FC<TeamsProps> = ({
                     </ConfirmModal>
                   ),
                 },
-              ],
+              ].filter(Boolean) as ItemType[],
             }}
           >
             <SettingOutlined key="setting" />
@@ -133,6 +151,12 @@ export const Teams: React.FC<TeamsProps> = ({
               </dd>
             </>
           )}
+          {team?.creatorEmail && (
+            <>
+              <dt>{t("common:words.creator")}</dt>
+              <dd title={team?.creatorEmail}>{team?.creatorEmail}</dd>
+            </>
+          )}
           {team.createdAt && (
             <>
               <dt>{t("common:words.created_at")}</dt>
@@ -157,24 +181,29 @@ export const Teams: React.FC<TeamsProps> = ({
 
   return (
     <>
-      <Spin spinning={loading}>
-        <Space className={styles.wrapper} direction="vertical" size={13}>
-          <PageHeader
-            title={t("manage_teams")}
-            action={t("create_team")}
-            onClick={onCreate}
-          />
-          <div className={styles.body}>
-            <Row justify={"start"} gutter={[32, 32]}>
-              {teams?.map((tm) => (
-                <Col xs={24} sm={12} xl={8} key={tm.id}>
-                  {renderCard(tm)}
-                </Col>
-              ))}
-            </Row>
-          </div>
-        </Space>
-      </Spin>
+      <Space className={styles.wrapper} direction="vertical" size={13}>
+        <PageHeader
+          title={t("manage_teams")}
+          action={t("create_team")}
+          onClick={onCreate}
+        />
+
+        <Spin spinning={loading}>
+          {teams.length ? (
+            <div className={styles.body}>
+              <Row justify={"start"} gutter={[32, 32]}>
+                {teams?.map((tm) => (
+                  <Col xs={24} sm={12} xl={8} key={tm.id}>
+                    {renderCard(tm)}
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          ) : (
+            <NoTeams />
+          )}
+        </Spin>
+      </Space>
 
       <Modal open={isOpen} closable onClose={onClose}>
         <TeamSettings initialValue={selectedTeam} onSubmit={onSubmit} />
@@ -185,24 +214,54 @@ export const Teams: React.FC<TeamsProps> = ({
 
 const TeamsWrapper: React.FC = () => {
   const { t } = useTranslation(["teams", "pages"]);
-  const { currentUser, currentTeam } = CurrentUserStore();
+  const { currentUser, currentTeam, loading, setLoading, setCurrentTeam } =
+    CurrentUserStore();
   const [createMutation, execCreateMutation] = useCreateTeamMutation();
   const [updateMutation, execUpdateMutation] = useEditTeamMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteTeamMutation();
 
-  useCheckResponse(createMutation, () => {}, {
-    successMessage: t("team_created"),
-  });
+  useCheckResponse(
+    createMutation,
+    (data, err) => {
+      if (data) message.success(t("team_created"));
 
-  useCheckResponse(updateMutation, () => {}, {
-    successMessage: t("team_updated"),
-  });
+      if (err?.message) {
+        if (err.message.match("teams_user_id_name_key")) {
+          message.error(t("team_name_error"));
+        } else {
+          message.error(err.message);
+        }
+      }
+      setLoading(false);
+    },
+    {
+      showMessage: false,
+      showResponseMessage: false,
+    }
+  );
 
-  useCheckResponse(deleteMutation, () => {}, {
-    successMessage: t("team_deleted"),
-  });
+  useCheckResponse(
+    updateMutation,
+    () => {
+      setLoading(false);
+    },
+    {
+      successMessage: t("team_updated"),
+    }
+  );
+
+  useCheckResponse(
+    deleteMutation,
+    () => {
+      setLoading(false);
+    },
+    {
+      successMessage: t("team_deleted"),
+    }
+  );
 
   const onCreateOrEditTeam = (data: TeamSettingsForm) => {
+    setLoading(true);
     if (data.id) {
       execUpdateMutation({
         pk_columns: { id: data.id },
@@ -218,24 +277,37 @@ const TeamsWrapper: React.FC = () => {
   };
 
   const onRemoveTeam = (id: string) => {
+    setLoading(true);
     execDeleteMutation({ id });
   };
 
-  const loading = useMemo(
+  const onSelect = (id: string) => {
+    setCurrentTeam(id);
+  };
+
+  const isLoading = useMemo(
     () =>
+      loading ||
       createMutation.fetching ||
       updateMutation.fetching ||
       deleteMutation.fetching,
-    [createMutation.fetching, deleteMutation.fetching, updateMutation.fetching]
+    [
+      loading,
+      createMutation.fetching,
+      deleteMutation.fetching,
+      updateMutation.fetching,
+    ]
   );
 
   return (
     <Teams
+      userId={currentUser.id}
       teams={currentUser.teams}
       currentTeam={currentTeam}
       onCreateOrEditTeam={onCreateOrEditTeam}
       onRemoveTeam={onRemoveTeam}
-      loading={loading}
+      onSelect={onSelect}
+      loading={isLoading}
     />
   );
 };

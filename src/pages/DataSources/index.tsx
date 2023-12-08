@@ -33,6 +33,7 @@ import useLocation from "@/hooks/useLocation";
 import { prepareInitValues } from "@/pages/SqlApi";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
+import { Roles } from "@/types/team";
 import type { DataSourceState } from "@/stores/DataSourceStore";
 import type {
   DataSourceInfo,
@@ -44,6 +45,7 @@ import styles from "./index.module.less";
 
 interface DataSourcesProps {
   dataSources: DataSourceInfo[];
+  disableCreate: boolean;
   loading?: boolean;
   defaultOpen?: boolean;
   onFinish: () => void;
@@ -57,6 +59,7 @@ interface DataSourcesProps {
 
 export const DataSources = ({
   dataSources = [],
+  disableCreate = false,
   loading = false,
   defaultOpen = false,
   onTestConnection = () => {},
@@ -178,7 +181,9 @@ export const DataSources = ({
   return (
     <>
       <Spin spinning={loading}>
-        {dataSources.length === 0 && <NoDataSource onConnect={onOpen} />}
+        {dataSources.length === 0 && (
+          <NoDataSource onConnect={!disableCreate ? onOpen : undefined} />
+        )}
         {dataSources.length > 0 && (
           <Space className={styles.wrapper} direction="vertical" size={13}>
             <PageHeader
@@ -187,7 +192,7 @@ export const DataSources = ({
                   ? t("settings:data_sources.title_mobile")
                   : t("settings:data_sources.title")
               }
-              action={t("settings:data_sources.create_now")}
+              action={!disableCreate && t("settings:data_sources.create_now")}
               actionProps={{
                 type: "primary",
                 size: "large",
@@ -221,6 +226,7 @@ export const DataSources = ({
           onTestConnection={onTestConnection}
           onDataSourceSetupSubmit={onDataSourceSetupSubmit}
           onDataModelGenerationSubmit={onDataModelGenerationSubmit}
+          loading={loading}
           bordered={false}
           shadow={false}
         />
@@ -231,7 +237,8 @@ export const DataSources = ({
 
 const DataSourcesWrapper = () => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { currentUser, currentTeamId } = CurrentUserStore();
+  const { currentUser, currentTeam, teamData, loading, setLoading } =
+    CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const { slug, generate } = useParams();
@@ -243,16 +250,15 @@ const DataSourcesWrapper = () => {
     formState: { step0: dataSource, step1: dataSourceSetup, step3: apiSetup },
     schema,
     step,
-    loading,
     isOnboarding,
     isGenerate,
     setIsGenerate,
     setSchema,
     setFormStateData,
-    setLoading,
     nextStep,
     setStep,
     setIsOnboarding,
+    clean,
   } = DataSourceStore();
 
   const [createMutation, execCreateMutation] = useCreateDataSourceMutation();
@@ -294,8 +300,8 @@ const DataSourcesWrapper = () => {
   });
 
   const dataSources = useMemo(
-    () => currentUser?.dataSources || [],
-    [currentUser]
+    () => teamData?.dataSources || [],
+    [teamData]
   ) as DataSourceInfo[];
   const curDataSource = useMemo(
     () =>
@@ -312,6 +318,7 @@ const DataSourcesWrapper = () => {
       id: dataSourceSetup?.id || data?.id,
     });
 
+    setLoading(false);
     if (!test.data?.check_connection) {
       return null;
     }
@@ -324,8 +331,10 @@ const DataSourcesWrapper = () => {
     if (dataSourceSetup?.id) {
       finishPath = `${finishPath}/${dataSourceSetup.id}`;
     }
+
+    clean();
     setLocation(finishPath);
-  }, [dataSourceSetup?.id, modelsPath, setLocation]);
+  }, [dataSourceSetup?.id, modelsPath, clean, setLocation]);
 
   const createSQLApi = useCallback(
     async (dataSourceId: string, dataSourceName: string) => {
@@ -354,15 +363,17 @@ const DataSourcesWrapper = () => {
   );
 
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
+    setLoading(true);
     let dataSourceId;
+
     if (!curId && !dataSourceSetup?.id) {
       const newData = {
         ...data,
         db_type: dataSource?.value?.toUpperCase(),
       } as Datasources_Set_Input;
 
-      if (currentTeamId) {
-        newData.team_id = currentTeamId;
+      if (currentTeam?.id) {
+        newData.team_id = currentTeam?.id;
       }
 
       const result = await execCreateMutation({
@@ -423,6 +434,8 @@ const DataSourcesWrapper = () => {
   };
 
   const onDataModelGenerationSubmit = async (data: DynamicForm) => {
+    setLoading(true);
+
     let tables = { ...data } as any;
     delete tables.type;
     tables = Object.values(tables).reduce(
@@ -456,6 +469,7 @@ const DataSourcesWrapper = () => {
   };
 
   const onDelete = (dataSourceId: string) => {
+    setLoading(true);
     execDeleteMutation({ id: dataSourceId });
   };
 
@@ -492,6 +506,7 @@ const DataSourcesWrapper = () => {
 
   useEffect(() => {
     const isLoading =
+      loading ||
       createMutation.fetching ||
       updateMutation.fetching ||
       checkConnectionMutation.fetching ||
@@ -504,6 +519,7 @@ const DataSourcesWrapper = () => {
       setLoading(false);
     }
   }, [
+    loading,
     createMutation.fetching,
     updateMutation.fetching,
     checkConnectionMutation.fetching,
@@ -520,9 +536,10 @@ const DataSourcesWrapper = () => {
 
   useEffect(() => {
     if (fetchTablesQuery.data) {
+      setLoading(false);
       setSchema(fetchTablesQuery.data?.fetch_tables?.schema);
     }
-  }, [fetchTablesQuery.data, setSchema]);
+  }, [fetchTablesQuery.data, setSchema, setLoading]);
 
   useEffect(() => {
     if (connect) {
@@ -552,9 +569,12 @@ const DataSourcesWrapper = () => {
     setLocation(`${basePath}/${id}/generate`);
   };
 
+  const isMember = currentTeam?.role === Roles.member;
+
   return (
     <DataSources
       defaultOpen={!!slug}
+      disableCreate={isMember}
       dataSources={dataSources}
       loading={loading}
       onEdit={onEdit}

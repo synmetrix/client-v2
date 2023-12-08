@@ -1,7 +1,6 @@
-import { Col, Dropdown, Row, Space, Spin } from "antd";
+import { Dropdown, Space, Spin, Typography } from "antd";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react";
 import { SettingOutlined } from "@ant-design/icons";
 
 import Modal from "@/components/Modal";
@@ -15,6 +14,7 @@ import {
   useDeleteAccessListMutation,
   useSubAccessListsSubscription,
   useUpdateAccessListMutation,
+  Order_By,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
@@ -29,11 +29,18 @@ import type { Cube, DataSourceInfo } from "@/types/dataSource";
 import formatTime from "@/utils/helpers/formatTime";
 import ConfirmModal from "@/components/ConfirmModal";
 import Card from "@/components/Card";
+import NoRoles from "@/components/NoRoles";
 import { AccessTypeWrapper } from "@/components/AccessType";
+import type { Team } from "@/types/team";
+import { Roles } from "@/types/team";
 
 import styles from "./index.module.less";
+
+const { Paragraph } = Typography;
+
 interface RolesAndAccessProps {
   initialValues?: RoleFormType;
+  currentTeam: Team | null;
   accessLists: AccessList[];
   dataSourceAccess: DataSourceAccess[];
   loading?: boolean;
@@ -44,6 +51,7 @@ interface RolesAndAccessProps {
 }
 
 export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
+  currentTeam,
   initialValues,
   accessLists,
   loading,
@@ -74,39 +82,43 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
     }
   }, [initialValues, setIsOpen]);
 
+  const isMember = currentTeam?.role === Roles.member;
+
   const renderCard = (accessList: AccessList) => {
     return (
       <Card
         title={accessList.name}
         titleTooltip={accessList.name}
-        onTitleClick={() => onEdit?.(accessList.id)}
+        onTitleClick={() => !isMember && onEdit?.(accessList.id)}
         extra={
-          <Dropdown
-            className={styles.btn}
-            trigger={["click"]}
-            menu={{
-              items: [
-                {
-                  key: "edit",
-                  label: t("common:words.edit"),
-                  onClick: () => onEdit?.(accessList.id),
-                },
-                {
-                  key: "delete",
-                  label: (
-                    <ConfirmModal
-                      title={t("common:words.delete_role")}
-                      onConfirm={() => onRemove?.(accessList.id)}
-                    >
-                      {t("common:words.delete")}
-                    </ConfirmModal>
-                  ),
-                },
-              ],
-            }}
-          >
-            <SettingOutlined key="setting" />
-          </Dropdown>
+          !isMember && (
+            <Dropdown
+              className={styles.btn}
+              trigger={["click"]}
+              menu={{
+                items: [
+                  {
+                    key: "edit",
+                    label: t("common:words.edit"),
+                    onClick: () => onEdit?.(accessList.id),
+                  },
+                  {
+                    key: "delete",
+                    label: (
+                      <ConfirmModal
+                        title={t("common:words.delete_role")}
+                        onConfirm={() => onRemove?.(accessList.id)}
+                      >
+                        {t("common:words.delete")}
+                      </ConfirmModal>
+                    ),
+                  },
+                ],
+              }}
+            >
+              <SettingOutlined key="setting" />
+            </Dropdown>
+          )
         }
       >
         <dl>
@@ -130,23 +142,20 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
         </dl>
 
         <div className={styles.datasources}>
-          {accessList.dataSources.map((d) => {
+          {dataSourceAccess.map((d) => {
             const permissions = accessList?.config?.datasources?.[d.id]?.cubes;
             return (
-              <Row
-                justify={"space-between"}
-                key={d.id}
-                gutter={[5, 5]}
-                align="middle"
-              >
-                <Col className={styles.label}>{d.name}</Col>
-                <Col className={styles.value}>
+              <div key={d.id} className={styles.dataSource}>
+                <Paragraph title={d.name} ellipsis className={styles.label}>
+                  {d.name}
+                </Paragraph>
+                <div className={styles.access}>
                   <AccessTypeWrapper
                     dataSourceId={d.id}
                     permissions={permissions}
                   />
-                </Col>
-              </Row>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -156,24 +165,29 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
 
   return (
     <>
-      <Spin spinning={loading}>
-        <Space className={styles.wrapper} direction="vertical" size={13}>
-          <PageHeader
-            title={t("settings:roles_and_access.manage_roles")}
-            action={t("settings:roles_and_access.create_now")}
-            onClick={onOpen}
-          />
-          <div className={styles.body}>
-            <ResponsiveMasonry
-              columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 4 }}
-            >
-              <Masonry gutter="32px">
-                {accessLists.map((a) => renderCard(a))}
-              </Masonry>
-            </ResponsiveMasonry>
-          </div>
-        </Space>
-      </Spin>
+      <Space className={styles.wrapper} direction="vertical" size={13}>
+        <PageHeader
+          title={t("settings:roles_and_access.manage_roles")}
+          action={!isMember && t("settings:roles_and_access.create_now")}
+          onClick={onOpen}
+        />
+
+        <Spin spinning={loading}>
+          {accessLists.length ? (
+            <div className={styles.body}>
+              <ResponsiveMasonry
+                columnsCountBreakPoints={{ 350: 1, 900: 2, 1200: 4 }}
+              >
+                <Masonry gutter="32px">
+                  {accessLists.map((a) => renderCard(a))}
+                </Masonry>
+              </ResponsiveMasonry>
+            </div>
+          ) : (
+            <NoRoles onCreate={onOpen} />
+          )}
+        </Spin>
+      </Space>
 
       <Modal
         width={1000}
@@ -265,6 +279,9 @@ const RolesAndAccessWrapper: React.FC = () => {
           _eq: currentTeam?.id,
         },
       },
+      order_by: {
+        created_at: Order_By.Desc,
+      },
     },
     pause: true,
   });
@@ -291,12 +308,33 @@ const RolesAndAccessWrapper: React.FC = () => {
     successMessage: t("settings:roles_and_access.access_list_removed"),
   });
 
+  const dataSources = useMemo(
+    () =>
+      prepareDataSourceData(
+        dataSourcesData?.data?.datasources as Datasources[]
+      ),
+    [dataSourcesData.data?.datasources]
+  );
+  const dataSourceAccess = useMemo(
+    () => prepareDataSourceAccess(dataSources),
+    [dataSources]
+  );
+  const accessLists = useMemo(
+    () => prepareAccessData(accessListsData?.data, dataSources),
+    [accessListsData.data, dataSources]
+  );
+
   const onFinish = (data: RoleFormType) => {
     const datasources = Object.entries(data.access).reduce(
       (acc, [id, cubes]) => {
         const filteredCubes = filterEmpty(cubes as unknown as Cube);
 
-        if (!Object.keys(filteredCubes).length) return acc;
+        if (
+          !Object.keys(filteredCubes).length ||
+          !dataSources.find((d) => d.id === id)
+        ) {
+          return acc;
+        }
 
         return {
           ...acc,
@@ -354,22 +392,6 @@ const RolesAndAccessWrapper: React.FC = () => {
     }
   }, [execAccessLists, subscriptionData.data]);
 
-  const dataSources = useMemo(
-    () =>
-      prepareDataSourceData(
-        dataSourcesData?.data?.datasources as Datasources[]
-      ),
-    [dataSourcesData.data?.datasources]
-  );
-  const dataSourceAccess = useMemo(
-    () => prepareDataSourceAccess(dataSources),
-    [dataSources]
-  );
-  const accessLists = useMemo(
-    () => prepareAccessData(accessListsData?.data, dataSources),
-    [accessListsData.data, dataSources]
-  );
-
   const initialValues = useMemo(() => {
     if (editId) {
       const curAccessList = accessLists.find((a) => a.id === editId);
@@ -412,6 +434,7 @@ const RolesAndAccessWrapper: React.FC = () => {
 
   return (
     <RolesAndAccess
+      currentTeam={currentTeam}
       accessLists={accessLists}
       loading={loading}
       onEdit={onEdit}

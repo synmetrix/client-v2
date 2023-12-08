@@ -36,7 +36,7 @@ const DataModelSelection: FC<DataModelSelectionProps> = ({
     <Space className={styles.wrapper} direction="vertical" size={16}>
       <Space direction="vertical" size={16} style={{ width: "100%" }}>
         <Text className={styles.title}>{t("common:words.data_models")}</Text>
-        <Paragraph ellipsis className={styles.resource}>
+        <Paragraph title={title} ellipsis className={styles.resource}>
           {title}
         </Paragraph>
       </Space>

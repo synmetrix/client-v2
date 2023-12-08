@@ -45,7 +45,7 @@ const Avatar: FC<AvatarProps> = ({
         background: color,
       }}
       src={img}
-      className={styles.avatar}
+      className={cn(styles.avatar, className)}
     >
       <div>
         {name?.[0]?.[0]}

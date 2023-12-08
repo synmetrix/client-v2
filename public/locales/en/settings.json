@@ -70,6 +70,11 @@
     "access_table": {
       "count": "Access to data sources"
     },
+    "not_found": {
+      "title": "You have no Roles",
+      "text": "Click \"Create Role\" to add one",
+      "create_btn": "Create Role"
+    },
     "form": {
       "labels": {
         "1": "1. Role name",

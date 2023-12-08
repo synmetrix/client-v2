@@ -75,11 +75,11 @@ export default ({
   disableSubscription = true,
 }: Props) => {
   const { editId } = params;
-  const { currentTeamId } = CurrentUserStore();
+  const { currentTeam } = CurrentUserStore();
 
   const reqParams = {
     ...params,
-    teamId: currentTeamId,
+    teamId: currentTeam?.id,
   };
 
   const [createMutation, execCreateMutation] = useCreateDataSourceMutation();
@@ -131,7 +131,7 @@ export default ({
         doQueryAll();
       }
     },
-    [currentTeamId, pauseQueryAll, doQueryAll]
+    [currentTeam?.id, pauseQueryAll, doQueryAll]
   );
 
   const all = useMemo(() => allData.data?.datasources || [], [allData.data]);

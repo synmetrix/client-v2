@@ -7,6 +7,7 @@ import Input from "@/components/Input";
 import AccessSelection from "@/components/AccessSelection";
 import AccessController from "@/components/AccessController";
 import Button from "@/components/Button";
+import NoDataSource from "@/components/NoDataSource";
 import useLocation from "@/hooks/useLocation";
 import { useFetchMetaQuery } from "@/graphql/generated";
 import type {
@@ -89,6 +90,31 @@ const RoleForm: FC<RoleFormProps> = ({
     }
   }, [dataSourceAccess, setValue]);
 
+  const emptyScreen = useMemo(() => {
+    if (!dataSourceAccess?.length) {
+      return (
+        <NoDataSource onConnect={() => setLocation("/settings/sources")} />
+      );
+    }
+
+    return (
+      <div>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={t("roles_and_access.models_not_found")}
+        >
+          <Button
+            type="primary"
+            className={styles.btn}
+            onClick={() => setLocation("/models")}
+          >
+            {t("common:words.generate")}
+          </Button>
+        </Empty>
+      </div>
+    );
+  }, [dataSourceAccess?.length, setLocation, t]);
+
   return (
     <Spin spinning={metaData.fetching}>
       <Form layout="vertical">
@@ -100,57 +126,50 @@ const RoleForm: FC<RoleFormProps> = ({
             rules={{ required: true }}
           />
 
-          <Form.Item
-            className={styles.label}
-            label={t("roles_and_access.form.labels.2")}
-          >
-            <Controller
-              control={control}
-              name="resource"
-              render={({ field: { onChange, value } }) => (
-                <AccessSelection
-                  items={dataSourceAccess}
-                  permissions={accessWatch}
-                  onSelect={onChange}
-                  active={value?.id}
-                />
-              )}
-            />
-          </Form.Item>
-
-          {resourceData?.dataModels.length ? (
-            <Suspense>
-              <AccessController
-                control={control}
-                name="access"
-                resource={resourceData as DataResource}
-              />
-            </Suspense>
-          ) : (
-            <div>
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={t("roles_and_access.models_not_found")}
+          {!!resourceData?.dataModels?.length && (
+            <>
+              <Form.Item
+                className={styles.label}
+                label={t("roles_and_access.form.labels.2")}
               >
-                <Button
-                  type="primary"
-                  className={styles.btn}
-                  onClick={() => setLocation("/models")}
-                >
-                  {t("common:words.generate")}
-                </Button>
-              </Empty>
-            </div>
+                <Controller
+                  control={control}
+                  name="resource"
+                  render={({ field: { onChange, value } }) => (
+                    <AccessSelection
+                      items={dataSourceAccess}
+                      permissions={accessWatch}
+                      onSelect={onChange}
+                      active={value?.id}
+                    />
+                  )}
+                />
+              </Form.Item>
+
+              <Suspense>
+                <AccessController
+                  control={control}
+                  name="access"
+                  resource={resourceData as DataResource}
+                />
+              </Suspense>
+            </>
           )}
 
-          <Button
-            className={styles.submit}
-            type="primary"
-            size="large"
-            onClick={handleSubmit(onSubmit)}
-          >
-            {initialValues ? t("common:words.save") : t("common:words.create")}
-          </Button>
+          {!dataSourceAccess?.length ? (
+            emptyScreen
+          ) : (
+            <Button
+              className={styles.submit}
+              type="primary"
+              size="large"
+              onClick={handleSubmit(onSubmit)}
+            >
+              {initialValues
+                ? t("common:words.save")
+                : t("common:words.create")}
+            </Button>
+          )}
         </Space>
       </Form>
     </Spin>

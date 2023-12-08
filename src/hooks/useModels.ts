@@ -79,11 +79,11 @@ export default (props: Props = {}) => {
     disableSubscription = true,
   } = props;
 
-  const { currentTeamId } = CurrentUserStore();
+  const { currentTeam } = CurrentUserStore();
 
   const reqParams = {
     ...params,
-    teamId: currentTeamId,
+    teamId: currentTeam?.id,
     statuses: ["active", "created"],
   };
 
@@ -127,7 +127,7 @@ export default (props: Props = {}) => {
         execAllData();
       }
     },
-    [currentTeamId, pauseQueryAll, execAllData]
+    [currentTeam?.id, pauseQueryAll, execAllData]
   );
 
   return {

@@ -16,7 +16,6 @@ import Modal from "@/components/Modal";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import VersionsList from "@/components/VersionsList";
 import NoDataSource from "@/components/NoDataSource";
-import useUserData from "@/hooks/useUserData";
 import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
 import useModelsIde from "@/hooks/useModelsIde";
@@ -32,6 +31,7 @@ import type { Branch, DataSourceInfo, Schema } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
 import type { Version } from "@/types/version";
 import type { Branches_Insert_Input } from "@/graphql/generated";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
 
@@ -272,7 +272,7 @@ const reservedSlugs = ["sqlrunner", "genschema", "docs"];
 const ModelsWrapper: React.FC = () => {
   const { t } = useTranslation(["models", "common"]);
 
-  const { currentUser } = useUserData();
+  const { currentUser, teamData } = CurrentUserStore();
   const [, setLocation] = useLocation();
   const { withAuthPrefix } = useAppSettings();
   const basePath = withAuthPrefix("/models");
@@ -290,8 +290,8 @@ const ModelsWrapper: React.FC = () => {
     [params]
   );
   const dataSource = useMemo(
-    () => currentUser?.dataSources?.find((d) => d.id === dataSourceId),
-    [dataSourceId, currentUser]
+    () => teamData?.dataSources?.find((d) => d.id === dataSourceId),
+    [dataSourceId, teamData]
   );
 
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
@@ -514,10 +514,10 @@ const ModelsWrapper: React.FC = () => {
   }, [sourceTablesSchema]);
 
   useLayoutEffect(() => {
-    if (!dataSourceId && currentUser?.dataSources?.length) {
-      setLocation(`${basePath}/${currentUser.dataSources[0].id}`);
+    if (!dataSourceId && teamData?.dataSources?.length) {
+      setLocation(`${basePath}/${teamData.dataSources[0].id}`);
     }
-  }, [dataSourceId, currentUser, basePath, setLocation, dataSource?.branch.id]);
+  }, [dataSourceId, teamData, basePath, setLocation, dataSource?.branch.id]);
 
   const inputFile = useRef<HTMLInputElement>(null);
 
@@ -846,7 +846,7 @@ const ModelsWrapper: React.FC = () => {
       onDataSourceChange={(ds) =>
         setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}/sqlrunner`)
       }
-      dataSources={currentUser?.dataSources || []}
+      dataSources={teamData?.dataSources || []}
       sqlError={runQueryMutation?.error}
       onConnect={() => setLocation("/settings/sources?connect=true")}
     />

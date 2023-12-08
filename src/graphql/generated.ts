@@ -3696,6 +3696,8 @@ export type Datasources = {
   /** An aggregate relationship */
   dataschemas_aggregate: Dataschemas_Aggregate;
   db_params: Scalars["jsonb"]["output"];
+  /** A computed field, executes function "hide_password" */
+  db_params_computed?: Maybe<Scalars["jsonb"]["output"]>;
   db_type: Scalars["String"]["output"];
   /** An array relationship */
   explorations: Array<Explorations>;
@@ -3758,6 +3760,11 @@ export type DatasourcesDataschemas_AggregateArgs = {
 
 /** columns and relationships of "datasources" */
 export type DatasourcesDb_ParamsArgs = {
+  path?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+/** columns and relationships of "datasources" */
+export type DatasourcesDb_Params_ComputedArgs = {
   path?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -3877,6 +3884,7 @@ export type Datasources_Bool_Exp = {
   dataschemas?: InputMaybe<Dataschemas_Bool_Exp>;
   dataschemas_aggregate?: InputMaybe<Dataschemas_Aggregate_Bool_Exp>;
   db_params?: InputMaybe<Jsonb_Comparison_Exp>;
+  db_params_computed?: InputMaybe<Jsonb_Comparison_Exp>;
   db_type?: InputMaybe<String_Comparison_Exp>;
   explorations?: InputMaybe<Explorations_Bool_Exp>;
   explorations_aggregate?: InputMaybe<Explorations_Aggregate_Bool_Exp>;
@@ -4008,6 +4016,7 @@ export type Datasources_Order_By = {
   created_at?: InputMaybe<Order_By>;
   dataschemas_aggregate?: InputMaybe<Dataschemas_Aggregate_Order_By>;
   db_params?: InputMaybe<Order_By>;
+  db_params_computed?: InputMaybe<Order_By>;
   db_type?: InputMaybe<Order_By>;
   explorations_aggregate?: InputMaybe<Explorations_Aggregate_Order_By>;
   id?: InputMaybe<Order_By>;
@@ -8902,8 +8911,8 @@ export type Request_Logs = {
   start_time: Scalars["timestamptz"]["output"];
   updated_at: Scalars["timestamptz"]["output"];
   /** An object relationship */
-  user: Users;
-  user_id: Scalars["uuid"]["output"];
+  user?: Maybe<Users>;
+  user_id?: Maybe<Scalars["uuid"]["output"]>;
 };
 
 /** columns and relationships of "request_logs" */
@@ -12065,7 +12074,7 @@ export type TeamDataQuery = {
       __typename?: "datasources";
       id: any;
       name: string;
-      db_params: any;
+      db_params_computed?: any | null;
       db_type: string;
       created_at: any;
       updated_at: any;
@@ -12180,7 +12189,7 @@ export type SubTeamDataSubscription = {
       __typename?: "datasources";
       id: any;
       name: string;
-      db_params: any;
+      db_params_computed?: any | null;
       db_type: string;
       created_at: any;
       updated_at: any;
@@ -12325,7 +12334,7 @@ export type DatasourcesQuery = {
     __typename?: "datasources";
     id: any;
     name: string;
-    db_params: any;
+    db_params_computed?: any | null;
     db_type: string;
     created_at: any;
     updated_at: any;
@@ -12361,7 +12370,7 @@ export type AllDataSourcesSubscription = {
     __typename?: "datasources";
     id: any;
     name: string;
-    db_params: any;
+    db_params_computed?: any | null;
     db_type: string;
     created_at: any;
     updated_at: any;
@@ -12422,7 +12431,7 @@ export type CurrentDataSourceQuery = {
     id: any;
     name: string;
     db_type: string;
-    db_params: any;
+    db_params_computed?: any | null;
     created_at: any;
     updated_at: any;
   } | null;
@@ -12624,7 +12633,7 @@ export type DefaultFieldsFragment = {
   end_time: any;
   duration?: any | null;
   path?: string | null;
-  user: { __typename?: "users"; display_name?: string | null };
+  user?: { __typename?: "users"; display_name?: string | null } | null;
   datasource: { __typename?: "datasources"; name: string };
 };
 
@@ -12659,7 +12668,7 @@ export type CurrentLogQuery = {
       timestamp?: any | null;
       error?: string | null;
     }>;
-    user: { __typename?: "users"; display_name?: string | null };
+    user?: { __typename?: "users"; display_name?: string | null } | null;
     datasource: { __typename?: "datasources"; name: string };
   } | null;
 };
@@ -12695,7 +12704,7 @@ export type AllLogsQuery = {
         count: number;
       } | null;
     };
-    user: { __typename?: "users"; display_name?: string | null };
+    user?: { __typename?: "users"; display_name?: string | null } | null;
     datasource: { __typename?: "datasources"; name: string };
   }>;
   request_logs_aggregate: {
@@ -12826,7 +12835,7 @@ export type CredentialsQuery = {
       id: any;
       name: string;
       db_type: string;
-      db_params: any;
+      db_params_computed?: any | null;
     };
   }>;
 };
@@ -13377,7 +13386,7 @@ export const TeamDataDocument = gql`
       datasources(order_by: { created_at: desc }) {
         id
         name
-        db_params
+        db_params_computed
         db_type
         created_at
         updated_at
@@ -13459,7 +13468,7 @@ export const SubTeamDataDocument = gql`
       datasources(order_by: { created_at: desc }) {
         id
         name
-        db_params
+        db_params_computed
         db_type
         created_at
         updated_at
@@ -13599,7 +13608,7 @@ export const DatasourcesDocument = gql`
     ) {
       id
       name
-      db_params
+      db_params_computed
       db_type
       created_at
       updated_at
@@ -13648,7 +13657,7 @@ export const AllDataSourcesDocument = gql`
     ) {
       id
       name
-      db_params
+      db_params_computed
       db_type
       created_at
       updated_at
@@ -13737,7 +13746,7 @@ export const CurrentDataSourceDocument = gql`
       id
       name
       db_type
-      db_params
+      db_params_computed
       created_at
       updated_at
     }
@@ -14258,7 +14267,7 @@ export const CredentialsDocument = gql`
         id
         name
         db_type
-        db_params
+        db_params_computed
       }
     }
   }

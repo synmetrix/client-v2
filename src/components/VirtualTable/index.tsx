@@ -363,66 +363,68 @@ const VirtualTable: FC<VirtualTableProps> = ({
               overflow: "auto",
             }}
           >
-            <Table
-              id={tableId}
-              className={cn(styles.table, tableId && styles.minWidth)}
-              width={tableWidth}
-              height={height}
-              headerHeight={headerHeight}
-              rowHeight={rowHeight}
-              rowCount={rows.length}
-              rowGetter={({ index }) => rows[index]}
-              rowStyle={{ width: tableWidth }}
-              noRowsRenderer={noRowsRenderer}
-              overscanRowCount={3}
-              onScroll={(values) => onScroll?.({ ...values, rowHeight })}
-              scrollToAlignment="start"
-              scrollToIndex={scrollToIndex}
-            >
-              {!hideIndexColumn && (
-                <Column
-                  className={styles.indexColumn}
-                  label="Index"
-                  cellDataGetter={({ rowData }) => rowData.index + 1}
-                  dataKey="index"
-                  width={INDEX_COL_WIDTH}
-                />
-              )}
-              {flatHeaders.map((col) => {
-                const [cube, field, granularity] = col.id.split(".");
-                const columnMemberId = `${cube}.${field}`;
-
-                const value = col.render("Header");
-
-                const colSortConfig = sortBy.find(
-                  (sortItem) => sortItem.id === col.id
-                );
-
-                const sortDirection =
-                  !!colSortConfig &&
-                  ((colSortConfig.desc && SortDirection.DESC) ||
-                    SortDirection.ASC);
-
-                return (
+            <div className={styles.tableWrapper}>
+              <Table
+                id={tableId}
+                className={cn(styles.table, tableId && styles.minWidth)}
+                width={tableWidth}
+                height={height}
+                headerHeight={headerHeight}
+                rowHeight={rowHeight}
+                rowCount={rows.length}
+                rowGetter={({ index }) => rows[index]}
+                rowStyle={{ width: tableWidth }}
+                noRowsRenderer={noRowsRenderer}
+                overscanRowCount={3}
+                onScroll={(values) => onScroll?.({ ...values, rowHeight })}
+                scrollToAlignment="start"
+                scrollToIndex={scrollToIndex}
+              >
+                {!hideIndexColumn && (
                   <Column
-                    key={col.id}
-                    label={value}
-                    dataKey={col.id}
-                    width={COL_WIDTH}
-                    headerRenderer={headerRenderer}
-                    cellDataGetter={cellDataGetter}
-                    cellRenderer={internalCellRenderer}
-                    columnData={{
-                      memberId: columnMemberId,
-                      columnId: col.id,
-                      onSortChange,
-                      sortDirection,
-                      granularity,
-                    }}
+                    className={styles.indexColumn}
+                    label="Index"
+                    cellDataGetter={({ rowData }) => rowData.index + 1}
+                    dataKey="index"
+                    width={INDEX_COL_WIDTH}
                   />
-                );
-              })}
-            </Table>
+                )}
+                {flatHeaders.map((col) => {
+                  const [cube, field, granularity] = col.id.split(".");
+                  const columnMemberId = `${cube}.${field}`;
+
+                  const value = col.render("Header");
+
+                  const colSortConfig = sortBy.find(
+                    (sortItem) => sortItem.id === col.id
+                  );
+
+                  const sortDirection =
+                    !!colSortConfig &&
+                    ((colSortConfig.desc && SortDirection.DESC) ||
+                      SortDirection.ASC);
+
+                  return (
+                    <Column
+                      key={col.id}
+                      label={value}
+                      dataKey={col.id}
+                      width={COL_WIDTH}
+                      headerRenderer={headerRenderer}
+                      cellDataGetter={cellDataGetter}
+                      cellRenderer={internalCellRenderer}
+                      columnData={{
+                        memberId: columnMemberId,
+                        columnId: col.id,
+                        onSortChange,
+                        sortDirection,
+                        granularity,
+                      }}
+                    />
+                  );
+                })}
+              </Table>
+            </div>
           </div>
           {footer?.(rows)}
         </>

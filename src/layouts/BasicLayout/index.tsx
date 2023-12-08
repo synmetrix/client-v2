@@ -21,15 +21,17 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({ header, children }) => {
   const isMobile = responsive.md === false;
 
   return (
-    <Layout className={styles.root}>
-      <Header
-        content={isMobile ? <BurgerMenu>{header}</BurgerMenu> : header}
-        withLogo
-        bordered
-      />
-      <Content>{children}</Content>
-      <Footer />
-    </Layout>
+    <div className={styles.root}>
+      <Layout>
+        <Header
+          content={isMobile ? <BurgerMenu>{header}</BurgerMenu> : header}
+          withLogo
+          bordered
+        />
+        <Content>{children}</Content>
+        <Footer />
+      </Layout>
+    </div>
   );
 };
 

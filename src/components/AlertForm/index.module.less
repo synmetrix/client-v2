@@ -29,6 +29,10 @@
   }
 }
 
+.collapse :global(.ant-collapse-header) {
+  padding-top: 0 !important;
+}
+
 .table {
   background: transparent !important;
   *:not([class*="tag"]) {
@@ -52,10 +56,19 @@
   border-bottom: 0.5px solid rgba(0, 0, 0, 0.1) !important;
 }
 
+.table :global(.ant-table-cell) {
+  padding: 10px !important;
+}
+
 .metrics {
+  margin-bottom: 16px;
   padding: 16px;
   background: #f9f9f9;
   border-radius: 6px;
+}
+
+.metricsTitle {
+  padding-left: 10px;
 }
 
 .input {
@@ -89,4 +102,8 @@
 
 .saveBtn {
   min-width: 141px;
+}
+
+.deliveryInput {
+  margin-top: 10px;
 }

@@ -165,8 +165,10 @@ const AlertForm: FC<AlertFormProps> = ({
           </Col>
         </Row>
 
-        <span className={styles.subtitle}>{t("preview")}</span>
-        <QueryPreview {...query} />
+        <Space direction="vertical" className={styles.space}>
+          <span className={styles.subtitle}>{t("preview")}</span>
+          <QueryPreview {...query} />
+        </Space>
 
         <Space
           className={cn(styles.space, styles.metrics)}

@@ -41,7 +41,7 @@ const Reports: React.FC<ReportsProps> = ({
   const responsive = useResponsive();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
-  const basePath = withAuthPrefix("/reports");
+  const basePath = withAuthPrefix("/signals/reports");
   const { currentUser } = CurrentUserStore();
   const { reportId } = useParams();
 

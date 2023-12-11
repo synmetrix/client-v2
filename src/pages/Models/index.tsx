@@ -41,7 +41,6 @@ import type { MenuProps } from "antd";
 import type { ChangeEvent } from "react";
 
 interface ModelsProps {
-  dataSources: DataSourceInfo[];
   branchMenu: MenuProps["items"];
   ideMenu: MenuProps["items"];
   branches: Branch[];
@@ -78,6 +77,7 @@ interface ModelsProps {
   onGenSubmit: (values: object, format: string) => void;
   onDataSourceChange: (dataSource: DataSourceInfo | null) => void;
   sqlError?: object;
+  dataSources?: DataSourceInfo[];
   onConnect: () => void;
 }
 
@@ -198,7 +198,7 @@ export const Models: React.FC<ModelsProps> = ({
             onCreateBranch={onCreateBranch}
             onCreateFile={onSchemaCreate}
             onSelectFile={openSchema}
-            dataSources={dataSources}
+            dataSources={dataSources || []}
             dataSourceId={dataSource?.id}
           />
         </Spin>
@@ -847,7 +847,7 @@ const ModelsWrapper: React.FC = () => {
       onDataSourceChange={(ds) =>
         setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}/sqlrunner`)
       }
-      dataSources={teamData?.dataSources || []}
+      dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
       onConnect={() => setLocation("/settings/sources?connect=true")}
     />

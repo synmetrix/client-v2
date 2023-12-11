@@ -204,7 +204,7 @@ export const Models: React.FC<ModelsProps> = ({
         </Spin>
       }
     >
-      {!dataSources?.length && !fetching ? (
+      {dataSources && dataSources.length === 0 ? (
         <NoDataSource onConnect={onConnect} />
       ) : (
         <Spin spinning={fetching}>
@@ -552,7 +552,8 @@ const ModelsWrapper: React.FC = () => {
     validateMutation.fetching ||
     genSchemaMutation.fetching ||
     tablesData.fetching ||
-    exportMutation.fetching;
+    exportMutation.fetching ||
+    runQueryMutation.fetching;
 
   if (error) {
     return <ErrorFound status={404} />;
@@ -819,7 +820,7 @@ const ModelsWrapper: React.FC = () => {
       branchMenu={branchMenu}
       ideMenu={ideMenu}
       branches={all}
-      fetching={fetching || runQueryMutation?.fetching}
+      fetching={fetching}
       currentBranch={currentBranch}
       versions={currentBranch?.versions}
       onChangeBranch={(branchId) => {

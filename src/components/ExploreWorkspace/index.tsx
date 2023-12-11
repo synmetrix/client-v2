@@ -235,7 +235,7 @@ const Explore: FC<ExploreProps> = (props) => {
 
   return (
     <Layout
-      title={dataSource?.name}
+      title={dataSource?.name || "Explore"}
       divider={false}
       subTitle={subTitle}
       items={sidebar}

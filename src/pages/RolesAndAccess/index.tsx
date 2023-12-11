@@ -87,6 +87,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   const renderCard = (accessList: AccessList) => {
     return (
       <Card
+        key={accessList.id}
         title={accessList.name}
         titleTooltip={accessList.name}
         onTitleClick={() => !isMember && onEdit?.(accessList.id)}

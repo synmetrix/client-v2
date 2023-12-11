@@ -153,8 +153,20 @@
   margin-top: 2px;
 }
 
+.wrapper {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.wrapper :global(.ant-collapse-header-text) {
+  display: block !important;
+  width: 100% !important;
+}
+
 .optionHeader {
-  max-width: 200px;
+  width: 90%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

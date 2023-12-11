@@ -177,7 +177,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
   }
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       {header && <div className={styles.header}>{header}</div>}
 
       <div className={styles.radio}>

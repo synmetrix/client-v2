@@ -7,6 +7,7 @@ import JSZip from "jszip";
 import { load } from "js-yaml";
 import md5 from "md5";
 
+import AppLayout from "@/layouts/AppLayout";
 import CodeEditor from "@/components/CodeEditor";
 import ErrorFound from "@/components/ErrorFound";
 import ModelsSidebar from "@/components/ModelsSidebar";
@@ -41,7 +42,6 @@ import type { MenuProps } from "antd";
 import type { ChangeEvent } from "react";
 
 interface ModelsProps {
-  dataSources: DataSourceInfo[];
   branchMenu: MenuProps["items"];
   ideMenu: MenuProps["items"];
   branches: Branch[];
@@ -78,6 +78,7 @@ interface ModelsProps {
   onGenSubmit: (values: object, format: string) => void;
   onDataSourceChange: (dataSource: DataSourceInfo | null) => void;
   sqlError?: object;
+  dataSources?: DataSourceInfo[];
   onConnect: () => void;
 }
 
@@ -162,9 +163,12 @@ export const Models: React.FC<ModelsProps> = ({
     }
   }, [dataschemas, dataSchemaName, openTab]);
 
+  const Layout =
+    dataSources && dataSources.length === 0 ? AppLayout : SidebarLayout;
+
   return (
-    <SidebarLayout
-      title={dataSource?.name}
+    <Layout
+      title={dataSource?.name || t("models")}
       subTitle={
         <Space size={7} align="center">
           <ModelsActiveIcon />
@@ -198,13 +202,13 @@ export const Models: React.FC<ModelsProps> = ({
             onCreateBranch={onCreateBranch}
             onCreateFile={onSchemaCreate}
             onSelectFile={openSchema}
-            dataSources={dataSources}
+            dataSources={dataSources || []}
             dataSourceId={dataSource?.id}
           />
         </Spin>
       }
     >
-      {!dataSources?.length && !fetching ? (
+      {dataSources && dataSources.length === 0 ? (
         <NoDataSource onConnect={onConnect} />
       ) : (
         <Spin spinning={fetching}>
@@ -263,7 +267,7 @@ export const Models: React.FC<ModelsProps> = ({
           )}
         </Spin>
       )}
-    </SidebarLayout>
+    </Layout>
   );
 };
 
@@ -552,7 +556,8 @@ const ModelsWrapper: React.FC = () => {
     validateMutation.fetching ||
     genSchemaMutation.fetching ||
     tablesData.fetching ||
-    exportMutation.fetching;
+    exportMutation.fetching ||
+    runQueryMutation.fetching;
 
   if (error) {
     return <ErrorFound status={404} />;
@@ -819,7 +824,7 @@ const ModelsWrapper: React.FC = () => {
       branchMenu={branchMenu}
       ideMenu={ideMenu}
       branches={all}
-      fetching={fetching || runQueryMutation?.fetching}
+      fetching={fetching}
       currentBranch={currentBranch}
       versions={currentBranch?.versions}
       onChangeBranch={(branchId) => {
@@ -846,9 +851,9 @@ const ModelsWrapper: React.FC = () => {
       onDataSourceChange={(ds) =>
         setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}/sqlrunner`)
       }
-      dataSources={teamData?.dataSources || []}
+      dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
-      onConnect={() => setLocation("/settings/sources?connect=true")}
+      onConnect={() => setLocation(withAuthPrefix("/settings/sources/connect"))}
     />
   );
 };

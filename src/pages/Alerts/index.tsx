@@ -117,6 +117,7 @@ const Alerts: React.FC<AlertsProps> = ({
   const renderCard = (alert: Alert) => {
     return (
       <Card
+        key={alert.id}
         title={alert.name}
         titleTooltip={alert.name}
         onTitleClick={() => onEdit(alert)}

@@ -118,6 +118,7 @@ const Reports: React.FC<ReportsProps> = ({
   const renderCard = (report: Alert) => {
     return (
       <Card
+        key={report.id}
         title={report.name}
         titleTooltip={report.name}
         onTitleClick={() => onEdit(report)}

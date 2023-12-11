@@ -77,6 +77,7 @@ export const Members: React.FC<MembersProps> = ({
 
     return (
       <Card
+        key={member.id}
         title={
           <div className={styles.title}>
             <Avatar

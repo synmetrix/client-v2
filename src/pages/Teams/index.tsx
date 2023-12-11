@@ -77,6 +77,7 @@ export const Teams: React.FC<TeamsProps> = ({
 
     return (
       <Card
+        key={team.id}
         title={
           <>
             {team.name}

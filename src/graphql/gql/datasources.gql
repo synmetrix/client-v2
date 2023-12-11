@@ -22,7 +22,7 @@ query Datasources(
   ) {
     id
     name
-    db_params
+    db_params_computed
     db_type
     created_at
     updated_at
@@ -61,7 +61,7 @@ subscription AllDataSources(
   ) {
     id
     name
-    db_params
+    db_params_computed
     db_type
     created_at
     updated_at
@@ -105,7 +105,7 @@ query CurrentDataSource($id: uuid!) {
     id
     name
     db_type
-    db_params
+    db_params_computed
     created_at
     updated_at
   }

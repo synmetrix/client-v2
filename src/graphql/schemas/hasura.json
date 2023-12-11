@@ -24122,6 +24122,29 @@
             "deprecationReason": null
           },
           {
+            "name": "db_params_computed",
+            "description": "A computed field, executes function \"hide_password\"",
+            "args": [
+              {
+                "name": "path",
+                "description": "JSON select path",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "db_type",
             "description": null,
             "args": [],
@@ -25198,6 +25221,16 @@
             "defaultValue": null
           },
           {
+            "name": "db_params_computed",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "jsonb_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "db_type",
             "description": null,
             "type": {
@@ -26124,6 +26157,16 @@
           },
           {
             "name": "db_params",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "db_params_computed",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -56224,13 +56267,9 @@
             "description": "An object relationship",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "users",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "users",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -56240,13 +56279,9 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "uuid",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null

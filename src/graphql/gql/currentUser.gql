@@ -133,7 +133,7 @@ query TeamData($team_id: uuid!) {
     datasources(order_by: { created_at: desc }) {
       id
       name
-      db_params
+      db_params_computed
       db_type
       created_at
       updated_at
@@ -206,7 +206,7 @@ subscription SubTeamData($team_id: uuid!) {
     datasources(order_by: { created_at: desc }) {
       id
       name
-      db_params
+      db_params_computed
       db_type
       created_at
       updated_at

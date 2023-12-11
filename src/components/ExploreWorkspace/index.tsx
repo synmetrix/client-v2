@@ -248,7 +248,9 @@ const Explore: FC<ExploreProps> = (props) => {
         </div>
       ) : (
         <NoDataSource
-          onConnect={() => setLocation(withAuthPrefix("/settings/sources"))}
+          onConnect={() =>
+            setLocation(withAuthPrefix("/settings/sources/connect"))
+          }
         />
       )}
     </Layout>

@@ -7,6 +7,7 @@ import JSZip from "jszip";
 import { load } from "js-yaml";
 import md5 from "md5";
 
+import AppLayout from "@/layouts/AppLayout";
 import CodeEditor from "@/components/CodeEditor";
 import ErrorFound from "@/components/ErrorFound";
 import ModelsSidebar from "@/components/ModelsSidebar";
@@ -162,9 +163,12 @@ export const Models: React.FC<ModelsProps> = ({
     }
   }, [dataschemas, dataSchemaName, openTab]);
 
+  const Layout =
+    dataSources && dataSources.length === 0 ? AppLayout : SidebarLayout;
+
   return (
-    <SidebarLayout
-      title={dataSource?.name}
+    <Layout
+      title={dataSource?.name || t("models")}
       subTitle={
         <Space size={7} align="center">
           <ModelsActiveIcon />
@@ -263,7 +267,7 @@ export const Models: React.FC<ModelsProps> = ({
           )}
         </Spin>
       )}
-    </SidebarLayout>
+    </Layout>
   );
 };
 
@@ -849,7 +853,7 @@ const ModelsWrapper: React.FC = () => {
       }
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
-      onConnect={() => setLocation("/settings/sources?connect=true")}
+      onConnect={() => setLocation("/settings/sources/connect")}
     />
   );
 };

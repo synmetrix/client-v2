@@ -46,7 +46,7 @@ const Reports: React.FC<ReportsProps> = ({
   const { reportId } = useParams();
 
   const reports = useMemo(
-    () => (initialReports?.length ? initialReports : teamData.reports || []),
+    () => (initialReports?.length ? initialReports : teamData?.reports || []),
     [initialReports, teamData]
   ) as Alert[];
 

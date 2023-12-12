@@ -50,8 +50,8 @@ export const Teams: React.FC<TeamsProps> = ({
   onSelect = () => {},
   loading = false,
   isOpen = false,
-  onClose,
-  onOpen,
+  onClose = () => {},
+  onOpen = () => {},
 }) => {
   const { t } = useTranslation(["teams", "pages"]);
 
@@ -59,12 +59,12 @@ export const Teams: React.FC<TeamsProps> = ({
 
   const onEdit = (team: Team) => {
     setSelectedTeam(team);
-    onOpen?.();
+    onOpen();
   };
 
   const onModalClose = () => {
     setSelectedTeam({ name: "" });
-    onClose?.();
+    onClose();
   };
 
   const onSubmit = (data: TeamSettingsForm) => {

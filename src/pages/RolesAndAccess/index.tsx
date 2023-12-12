@@ -1,8 +1,8 @@
 import { Dropdown, Space, Spin, Typography } from "antd";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { SettingOutlined } from "@ant-design/icons";
+import { useParams } from "@vitjs/runtime";
 
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
@@ -49,9 +49,9 @@ interface RolesAndAccessProps {
   onEdit?: (id: string) => void;
   onRemove?: (id: string) => void;
   onFinish?: (data: RoleFormType) => void;
-  isOpen?: boolean;
+  onCreate?: () => void;
   onClose?: () => void;
-  onOpen?: () => void;
+  isOpen?: boolean;
 }
 
 export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
@@ -63,28 +63,24 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   onRemove,
   dataSourceAccess,
   onFinish = () => {},
-  onClose = () => {},
-  onOpen = () => {},
   isOpen = false,
+  onCreate = () => {},
+  onClose = () => {},
 }) => {
   const { t } = useTranslation(["settings", "pages"]);
-  const [, setLocation] = useLocation();
+
+  const onModalOpen = () => {
+    onCreate();
+  };
 
   const onModalClose = () => {
-    onClose?.();
-    setLocation("/settings/access");
+    onClose();
   };
 
   const onFormFinish = (data: RoleFormType) => {
     onFinish(data);
     onClose();
   };
-
-  useEffect(() => {
-    if (initialValues) {
-      onOpen();
-    }
-  }, [initialValues, onOpen]);
 
   const isMember = currentTeam?.role === Roles.member;
 
@@ -174,7 +170,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
         <PageHeader
           title={t("settings:roles_and_access.manage_roles")}
           action={!isMember && t("settings:roles_and_access.create_now")}
-          onClick={onOpen}
+          onClick={onModalOpen}
         />
 
         <Spin spinning={loading}>
@@ -189,7 +185,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
               </ResponsiveMasonry>
             </div>
           ) : (
-            <NoRoles onCreate={onOpen} />
+            <NoRoles onCreate={onModalOpen} />
           )}
         </Spin>
       </Space>
@@ -449,7 +445,7 @@ const RolesAndAccessWrapper: React.FC = () => {
       dataSourceAccess={dataSourceAccess}
       onFinish={onFinish}
       isOpen={!!editId || slug === "new"}
-      onOpen={() => setLocation("/settings/access/new")}
+      onCreate={() => setLocation("/settings/access/new")}
       onClose={() => setLocation("/settings/access")}
     />
   );

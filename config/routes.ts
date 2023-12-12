@@ -74,7 +74,7 @@ export default [
             component: "./pages/DataSources",
           },
           {
-            path: "/settings/members",
+            path: "/settings/members/:slug?",
             component: "./pages/Members",
           },
           {

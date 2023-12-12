@@ -66,7 +66,7 @@ export default [
             component: "./pages/Models",
           },
           {
-            path: "/settings/teams",
+            path: "/settings/teams/:slug?",
             component: "./pages/Teams",
           },
           {

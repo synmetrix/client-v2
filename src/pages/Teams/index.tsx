@@ -1,6 +1,7 @@
 import { Col, Dropdown, Row, Space, Spin, Tag, message } from "antd";
 import { useTranslation } from "react-i18next";
 import { SettingOutlined } from "@ant-design/icons";
+import { useParams } from "@vitjs/runtime";
 
 import Modal from "@/components/Modal";
 import TeamSettings from "@/components/TeamSettings";
@@ -19,6 +20,7 @@ import NoTeams from "@/components/NoTeams";
 import formatTime from "@/utils/helpers/formatTime";
 import type { Member, Team, TeamSettingsForm } from "@/types/team";
 import { Roles } from "@/types/team";
+import useLocation from "@/hooks/useLocation";
 
 import styles from "./index.module.less";
 
@@ -32,6 +34,9 @@ interface TeamsProps {
   onRemoveTeam: (id: string) => void;
   onSelect: (id: string) => void;
   loading: boolean;
+  isOpen?: boolean;
+  onClose?: () => void;
+  onOpen?: () => void;
 }
 
 const AVATAR_COLORS = ["#000000", "#470D69", "#A31BCB"];
@@ -44,29 +49,31 @@ export const Teams: React.FC<TeamsProps> = ({
   onRemoveTeam = () => {},
   onSelect = () => {},
   loading = false,
+  isOpen = false,
+  onClose,
+  onOpen,
 }) => {
   const { t } = useTranslation(["teams", "pages"]);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedTeam, setSelectedTeam] = useState<TeamSettingsForm>();
 
   const onEdit = (team: Team) => {
     setSelectedTeam(team);
-    setIsOpen(true);
+    onOpen?.();
   };
 
-  const onClose = () => {
+  const onModalClose = () => {
     setSelectedTeam({ name: "" });
-    setIsOpen(false);
+    onClose?.();
   };
 
   const onSubmit = (data: TeamSettingsForm) => {
     onCreateOrEditTeam(data);
-    onClose();
+    onClose?.();
   };
 
   const onCreate = () => {
-    setIsOpen(true);
+    onOpen?.();
   };
 
   const renderCard = (team: Team) => {
@@ -206,7 +213,7 @@ export const Teams: React.FC<TeamsProps> = ({
         </Spin>
       </Space>
 
-      <Modal open={isOpen} closable onClose={onClose}>
+      <Modal open={isOpen} closable onClose={onModalClose}>
         <TeamSettings initialValue={selectedTeam} onSubmit={onSubmit} />
       </Modal>
     </>
@@ -220,6 +227,8 @@ const TeamsWrapper: React.FC = () => {
   const [createMutation, execCreateMutation] = useCreateTeamMutation();
   const [updateMutation, execUpdateMutation] = useEditTeamMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteTeamMutation();
+  const { slug } = useParams();
+  const [, setLocation] = useLocation();
 
   useCheckResponse(
     createMutation,
@@ -309,6 +318,9 @@ const TeamsWrapper: React.FC = () => {
       onRemoveTeam={onRemoveTeam}
       onSelect={onSelect}
       loading={isLoading}
+      isOpen={slug === "new"}
+      onClose={() => setLocation("/settings/teams")}
+      onOpen={() => setLocation("/settings/teams/new")}
     />
   );
 };

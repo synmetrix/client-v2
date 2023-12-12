@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import { getOr } from "unchanged";
 
-import useUserData from "@/hooks/useUserData";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 import ErrorFound from "@/components/ErrorFound";
 
 const usePermissions = ({ scope = "" }) => {
   let fallback = null;
 
-  const { currentUser } = useUserData();
+  const { currentUser } = CurrentUserStore();
   const cachedRestrictScopes = (
     localStorage.getItem("restrictScopes") || ""
   ).split(",");

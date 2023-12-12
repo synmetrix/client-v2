@@ -197,6 +197,7 @@ export default () => {
 
   const [teamData, execTeamData] = useTeamDataQuery({
     variables: { team_id: currentTeam?.id },
+    pause: true,
   });
 
   const [subTeamData, execSubTeamData] = useSubTeamDataSubscription({

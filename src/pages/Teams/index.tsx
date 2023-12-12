@@ -36,7 +36,8 @@ interface TeamsProps {
   loading: boolean;
   isOpen?: boolean;
   onClose?: () => void;
-  onOpen?: () => void;
+  onOpen?: (id?: string) => void;
+  editId?: string;
 }
 
 const AVATAR_COLORS = ["#000000", "#470D69", "#A31BCB"];
@@ -52,14 +53,14 @@ export const Teams: React.FC<TeamsProps> = ({
   isOpen = false,
   onClose = () => {},
   onOpen = () => {},
+  editId,
 }) => {
   const { t } = useTranslation(["teams", "pages"]);
 
   const [selectedTeam, setSelectedTeam] = useState<TeamSettingsForm>();
 
   const onEdit = (team: Team) => {
-    setSelectedTeam(team);
-    onOpen();
+    onOpen(team.id);
   };
 
   const onModalClose = () => {
@@ -187,6 +188,12 @@ export const Teams: React.FC<TeamsProps> = ({
     );
   };
 
+  useEffect(() => {
+    if (editId) {
+      setSelectedTeam(teams.find((tm) => tm.id === editId));
+    }
+  }, [editId, teams]);
+
   return (
     <>
       <Space className={styles.wrapper} direction="vertical" size={13}>
@@ -228,7 +235,8 @@ const TeamsWrapper: React.FC = () => {
   const [updateMutation, execUpdateMutation] = useEditTeamMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteTeamMutation();
   const { slug } = useParams();
-  const [, setLocation] = useLocation();
+  const [locaition, setLocation] = useLocation();
+  const teamId = locaition.query.id;
 
   useCheckResponse(
     createMutation,
@@ -309,6 +317,14 @@ const TeamsWrapper: React.FC = () => {
     ]
   );
 
+  const onOpen = (id?: string) => {
+    if (id) {
+      setLocation(`/settings/teams?id=${id}`);
+    } else {
+      setLocation("/settings/teams/new");
+    }
+  };
+
   return (
     <Teams
       userId={currentUser.id}
@@ -318,9 +334,10 @@ const TeamsWrapper: React.FC = () => {
       onRemoveTeam={onRemoveTeam}
       onSelect={onSelect}
       loading={isLoading}
-      isOpen={slug === "new"}
+      isOpen={slug === "new" || !!teamId}
+      editId={teamId}
       onClose={() => setLocation("/settings/teams")}
-      onOpen={() => setLocation("/settings/teams/new")}
+      onOpen={onOpen}
     />
   );
 };

@@ -82,7 +82,7 @@ export default [
             component: "./pages/SqlApi",
           },
           {
-            path: "/settings/access",
+            path: "/settings/access/:slug?",
             component: "./pages/RolesAndAccess",
           },
           {

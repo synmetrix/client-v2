@@ -1,5 +1,6 @@
 import { Dropdown, Space, Spin, Typography } from "antd";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { SettingOutlined } from "@ant-design/icons";
 
@@ -48,6 +49,9 @@ interface RolesAndAccessProps {
   onEdit?: (id: string) => void;
   onRemove?: (id: string) => void;
   onFinish?: (data: RoleFormType) => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  onOpen?: () => void;
 }
 
 export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
@@ -59,15 +63,15 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   onRemove,
   dataSourceAccess,
   onFinish = () => {},
+  onClose = () => {},
+  onOpen = () => {},
+  isOpen = false,
 }) => {
   const { t } = useTranslation(["settings", "pages"]);
   const [, setLocation] = useLocation();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const onOpen = () => setIsOpen(true);
-
-  const onClose = () => {
-    setIsOpen(false);
+  const onModalClose = () => {
+    onClose?.();
     setLocation("/settings/access");
   };
 
@@ -78,9 +82,9 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
 
   useEffect(() => {
     if (initialValues) {
-      setIsOpen(true);
+      onOpen();
     }
-  }, [initialValues, setIsOpen]);
+  }, [initialValues, onOpen]);
 
   const isMember = currentTeam?.role === Roles.member;
 
@@ -193,7 +197,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
       <Modal
         width={1000}
         open={isOpen}
-        onClose={onClose}
+        onClose={onModalClose}
         closable
         destroyOnClose
       >
@@ -259,6 +263,7 @@ const RolesAndAccessWrapper: React.FC = () => {
   const { currentTeam } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { id: editId } = location.query;
+  const { slug } = useParams();
 
   const [createMutation, execCreateMutation] = useCreateAccessListMutation();
   const [updateMutation, execUpdateMutation] = useUpdateAccessListMutation();
@@ -443,6 +448,9 @@ const RolesAndAccessWrapper: React.FC = () => {
       initialValues={initialValues}
       dataSourceAccess={dataSourceAccess}
       onFinish={onFinish}
+      isOpen={!!editId || slug === "new"}
+      onOpen={() => setLocation("/settings/access/new")}
+      onClose={() => setLocation("/settings/access")}
     />
   );
 };

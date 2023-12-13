@@ -240,12 +240,14 @@ const DataSourcesWrapper = () => {
   const { currentUser, currentTeam, teamData, loading, setLoading } =
     CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const { slug, generate } = useParams();
+  const { id: curId } = location.query;
+
   const basePath = withAuthPrefix("/settings/sources");
   const modelsPath = withAuthPrefix("/models");
-  const connect = slug === "connect";
-  const curId = !connect && slug;
+  const connect = slug === "new";
+
   const {
     formState: { step0: dataSource, step1: dataSourceSetup, step3: apiSetup },
     schema,
@@ -474,7 +476,7 @@ const DataSourcesWrapper = () => {
   };
 
   const onEdit = (dataSourceId: string) => {
-    setLocation(`${basePath}/${dataSourceId}`);
+    setLocation(`${basePath}?id=${dataSourceId}`);
   };
 
   useEffect(() => {
@@ -573,7 +575,7 @@ const DataSourcesWrapper = () => {
 
   return (
     <DataSources
-      defaultOpen={!!slug}
+      defaultOpen={!!slug || !!curId}
       disableCreate={isMember}
       dataSources={dataSources}
       loading={loading}

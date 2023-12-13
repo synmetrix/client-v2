@@ -29,7 +29,7 @@ export default [
       },
       {
         path: "/",
-        component: "./layouts/UserDataLayout",
+        component: "./components/UserDataWrapper",
         routes: [
           {
             path: "/models/:dataSourceId?/:branch?/:slug?",

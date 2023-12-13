@@ -2,14 +2,14 @@ import useUserData from "@/hooks/useUserData";
 
 import type { ReactNode } from "react";
 
-export type UserDataLayoutProps = {
+export type UserDataWrapperProps = {
   children: ReactNode;
 };
 
-const UserDataLayout: React.FC<UserDataLayoutProps> = ({ children }) => {
+const UserDataWapper: React.FC<UserDataWrapperProps> = ({ children }) => {
   useUserData();
 
   return <>{children}</>;
 };
 
-export default UserDataLayout;
+export default UserDataWapper;

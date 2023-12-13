@@ -32,10 +32,6 @@ export default [
         component: "./layouts/UserDataLayout",
         routes: [
           {
-            path: "/onboarding",
-            component: "./pages/Onboarding",
-          },
-          {
             path: "/models/:dataSourceId?/:branch?/:slug?",
             component: "./pages/Models",
           },

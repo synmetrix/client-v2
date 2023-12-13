@@ -188,6 +188,7 @@ const ReportForm: FC<ReportFormProps> = ({
                 {schedule && validate.cronExp(schedule)
                   ? construe.toString(schedule, {
                       locale,
+                      throwExceptionOnParseError: false,
                     })
                   : `${t("schedule_not_set")}, ${t("via")} ${capitalize(type)}`}
               </Col>

@@ -18,13 +18,15 @@ import type {
   TeamDataQuery,
   Members as MembersType,
 } from "@/graphql/generated";
-import type { User, UserData } from "@/types/user";
+import type { User, TeamData } from "@/types/user";
 import type { DataSourceInfo } from "@/types/dataSource";
 import { dbTiles } from "@/mocks/dataSources";
 import { Roles } from "@/types/team";
 import type { AccessList, Member, Team, TeamRole } from "@/types/team";
 import type { Alert, RawAlert } from "@/types/alert";
 import type { Report, RawReport } from "@/types/report";
+import type { DataSourceCredentials } from "@/components/CredentialsTable";
+import formatTime from "@/utils/helpers/formatTime";
 
 const DEFAULT_TEAM_NAME = "Default team";
 
@@ -61,7 +63,7 @@ export const prepareDataSourceData = (data: Datasources[] | undefined) => {
         createdAt: d.created_at,
         updatedAt: d.updated_at,
         type: dbTiles.find((tile) => tile.value === d.db_type.toLowerCase()),
-        branch: d.branches?.[0],
+        branches: d.branches,
       } as unknown as DataSourceInfo)
   );
 };
@@ -150,9 +152,31 @@ const prepareUserData = (
   };
 };
 
+const prepareCredentialsData = (
+  data: Datasources[]
+): DataSourceCredentials[] => {
+  if (!data?.length) return [];
+
+  return data.reduce((acc, cur) => {
+    const dataSourceData = prepareDataSourceData([cur])?.[0];
+    const newCredentials = (cur?.sql_credentials || []).map((c) => ({
+      id: c.id,
+      login: c.username,
+      createdAt: formatTime(c.created_at),
+      member: {
+        userId: c?.user?.id,
+        displayName: c.user?.display_name,
+      },
+      dataSourceData,
+    })) as DataSourceCredentials[];
+
+    return [...acc, ...newCredentials] as DataSourceCredentials[];
+  }, [] as DataSourceCredentials[]);
+};
+
 const prepareTeamData = (
   rawData: TeamDataQuery | SubTeamDataSubscription
-): UserData => {
+): TeamData => {
   const rawTeamData = rawData.teams_by_pk || null;
 
   const dataSources = prepareDataSourceData(
@@ -162,12 +186,16 @@ const prepareTeamData = (
   const alerts = prepareAlertData(rawTeamData?.alerts as RawAlert[]);
   const reports = prepareReportData(rawTeamData?.reports as RawReport[]);
   const members = prepareMembersData(rawTeamData?.members as MembersType[]);
+  const sqlCredentials = prepareCredentialsData(
+    rawTeamData?.datasources as Datasources[]
+  );
 
   return {
     dataSources,
     alerts,
     reports,
     members,
+    sqlCredentials,
   };
 };
 

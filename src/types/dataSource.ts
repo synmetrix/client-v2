@@ -71,7 +71,7 @@ export interface DataSourceInfo {
   dbParams: DynamicForm;
   updatedAt: string;
   createdAt: string;
-  branch: Branch;
+  branches: Branch[];
 }
 
 export interface CubeOption {

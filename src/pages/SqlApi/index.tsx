@@ -1,5 +1,5 @@
 import { Col, Dropdown, Row, Space, Spin, message } from "antd";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import { useParams } from "@vitjs/runtime";
@@ -13,18 +13,12 @@ import type { DataSourceCredentials } from "@/components/CredentialsTable";
 import Modal from "@/components/Modal";
 import NoCredentials from "@/components/NoCredentials";
 import PageHeader from "@/components/PageHeader";
-import type { Datasources, Sql_Credentials } from "@/graphql/generated";
 import {
-  Order_By,
-  useCredentialsQuery,
-  useDatasourcesQuery,
   useDeleteCredentialsMutation,
   useInsertSqlCredentialsMutation,
-  useSubCredentialsSubscription,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
-import { prepareDataSourceData } from "@/hooks/useUserData";
 import useAppSettings from "@/hooks/useAppSettings";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { ApiSetupForm, DataSourceInfo } from "@/types/dataSource";
@@ -205,27 +199,6 @@ export const SqlApi = ({
   );
 };
 
-const prepareCredentialsData = (
-  data: Sql_Credentials[]
-): DataSourceCredentials[] => {
-  if (!data?.length) return [];
-  return data.map(
-    (c) =>
-      ({
-        id: c.id,
-        login: c.username,
-        createdAt: formatTime(c.created_at),
-        member: {
-          userId: c?.user?.id,
-          displayName: c.user?.display_name,
-        },
-        dataSourceData: prepareDataSourceData([
-          c.datasource,
-        ])?.[0] as DataSourceInfo,
-      } as DataSourceCredentials)
-  );
-};
-
 export const prepareInitValues = (
   dataSourceId: string | null | undefined,
   dataSourceName: string,
@@ -254,32 +227,6 @@ const SqlApiWrapper = () => {
   const [createMutation, execCreateMutation] =
     useInsertSqlCredentialsMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteCredentialsMutation();
-  const [credentialsData, execCredentialsQuery] = useCredentialsQuery({
-    variables: {
-      teamId: currentTeam?.id,
-    },
-    pause: true,
-  });
-
-  const [dataSourcesData, execDataSourcesQuery] = useDatasourcesQuery({
-    variables: {
-      where: {
-        team_id: {
-          _eq: currentTeam?.id,
-        },
-      },
-      order_by: [
-        {
-          created_at: Order_By.Desc,
-        },
-      ],
-    },
-    pause: true,
-  });
-
-  const [subscriptionData] = useSubCredentialsSubscription({
-    variables: { teamId: currentTeam?.id },
-  });
 
   const onClose = () => {
     setLocation(basePath);
@@ -339,38 +286,17 @@ const SqlApiWrapper = () => {
     }
   };
 
-  useEffect(() => {
-    if (currentTeam?.id) {
-      execDataSourcesQuery();
-    }
-  }, [currentTeam?.id, execCredentialsQuery, execDataSourcesQuery]);
-
-  useEffect(() => {
-    if (subscriptionData.data) {
-      execCredentialsQuery();
-    }
-  }, [execCredentialsQuery, subscriptionData.data]);
-
   const loading = useMemo(
-    () =>
-      credentialsData.fetching ||
-      createMutation.fetching ||
-      deleteMutation.fetching,
-    [createMutation.fetching, credentialsData.fetching, deleteMutation.fetching]
+    () => createMutation.fetching || deleteMutation.fetching,
+    [createMutation.fetching, deleteMutation.fetching]
   );
   const credentials = useMemo(
-    () =>
-      prepareCredentialsData(
-        credentialsData?.data?.sql_credentials as Sql_Credentials[]
-      ),
-    [credentialsData.data]
+    () => teamData?.sqlCredentials || [],
+    [teamData?.sqlCredentials]
   );
   const dataSources = useMemo(
-    () =>
-      prepareDataSourceData(
-        dataSourcesData?.data?.datasources as Datasources[]
-      ),
-    [dataSourcesData.data?.datasources]
+    () => teamData?.dataSources || [],
+    [teamData?.dataSources]
   );
 
   const initialValue = useMemo(() => {

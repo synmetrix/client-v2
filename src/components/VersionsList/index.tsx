@@ -20,10 +20,17 @@ const { Title } = Typography;
 
 interface VersionsListProps {
   versions: Version[];
+  pagination?: any;
+  loading?: boolean;
   onRestore: (checksum: string, dataschemas: Dataschema[]) => void;
 }
 
-const VersionsList: FC<VersionsListProps> = ({ versions, onRestore }) => {
+const VersionsList: FC<VersionsListProps> = ({
+  versions,
+  pagination = false,
+  loading = false,
+  onRestore,
+}) => {
   const { t } = useTranslation(["models", "common"]);
 
   const columns: TableProps<Version>["columns"] = [
@@ -96,6 +103,7 @@ const VersionsList: FC<VersionsListProps> = ({ versions, onRestore }) => {
         rowKey={(rec) => rec.name}
         expandable={{ expandedRowRender: renderFileValue }}
         pagination={false}
+        loading={loading}
       />
     );
   };
@@ -109,6 +117,8 @@ const VersionsList: FC<VersionsListProps> = ({ versions, onRestore }) => {
         dataSource={versions}
         rowKey={(record) => record.id}
         expandable={{ expandedRowRender }}
+        pagination={pagination}
+        loading={loading}
       />
     </Space>
   );

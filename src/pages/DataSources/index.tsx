@@ -309,8 +309,8 @@ const DataSourcesWrapper = () => {
     [curId, dataSourceSetup?.id, dataSources]
   );
   const activeBranchId = useMemo(
-    () => curDataSource?.branch?.id,
-    [curDataSource?.branch?.id]
+    () => curDataSource?.branches?.[0]?.id,
+    [curDataSource?.branches]
   );
 
   const onTestConnection = async (data: DataSourceSetupForm) => {

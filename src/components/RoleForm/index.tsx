@@ -93,7 +93,7 @@ const RoleForm: FC<RoleFormProps> = ({
   const emptyScreen = useMemo(() => {
     if (!dataSourceAccess?.length) {
       return (
-        <NoDataSource onConnect={() => setLocation("/settings/sources")} />
+        <NoDataSource onConnect={() => setLocation("/settings/sources/new")} />
       );
     }
 

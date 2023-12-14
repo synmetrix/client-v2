@@ -31,7 +31,7 @@ import getCurrentBranch from "@/utils/helpers/getCurrentBranch";
 import type { Branch, DataSourceInfo, Schema } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
 import type { Version } from "@/types/version";
-import type { Branches_Insert_Input } from "@/graphql/generated";
+import type { Branches_Insert_Input, Datasources } from "@/graphql/generated";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
@@ -294,7 +294,8 @@ const ModelsWrapper: React.FC = () => {
     [params]
   );
   const dataSource = useMemo(
-    () => teamData?.dataSources?.find((d) => d.id === dataSourceId),
+    () =>
+      teamData?.dataSources?.find((d: Datasources) => d.id === dataSourceId),
     [dataSourceId, teamData]
   );
 
@@ -728,7 +729,7 @@ const ModelsWrapper: React.FC = () => {
   };
 
   const onCreateBranch = async (name: string) => {
-    const newSchemas = dataschemas.map((schema) => ({
+    const newSchemas = dataschemas.map((schema: Dataschema) => ({
       name: schema.name,
       code: schema.code,
       user_id: currentUser.id,
@@ -853,7 +854,7 @@ const ModelsWrapper: React.FC = () => {
       }
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
-      onConnect={() => setLocation(withAuthPrefix("/settings/sources/connect"))}
+      onConnect={() => setLocation(withAuthPrefix("/settings/sources/new"))}
     />
   );
 };

@@ -77,7 +77,7 @@ export const DataSources = ({
 
   const onOpen = () => {
     setIsOnboarding(true);
-    setLocation("/settings/sources/connect");
+    setLocation("/settings/sources/new");
   };
 
   const onClose = useCallback(() => {
@@ -240,13 +240,12 @@ const DataSourcesWrapper = () => {
   const { currentUser, currentTeam, teamData, loading, setLoading } =
     CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
-  const [location, setLocation] = useLocation();
-  const { slug, generate } = useParams();
-  const { id: curId } = location.query;
+  const [, setLocation] = useLocation();
+  const { editId, generate } = useParams();
 
   const basePath = withAuthPrefix("/settings/sources");
   const modelsPath = withAuthPrefix("/models");
-  const connect = slug === "new";
+  const connect = editId === "new";
 
   const {
     formState: { step0: dataSource, step1: dataSourceSetup, step3: apiSetup },
@@ -307,8 +306,12 @@ const DataSourcesWrapper = () => {
   ) as DataSourceInfo[];
   const curDataSource = useMemo(
     () =>
-      dataSources.find((d) => d.id === curId || d.id === dataSourceSetup?.id),
-    [curId, dataSourceSetup?.id, dataSources]
+      !connect
+        ? dataSources.find(
+            (d) => d.id === editId || d.id === dataSourceSetup?.id
+          )
+        : null,
+    [connect, dataSources, editId, dataSourceSetup?.id]
   );
   const activeBranchId = useMemo(
     () => curDataSource?.branch?.id,
@@ -368,7 +371,7 @@ const DataSourcesWrapper = () => {
     setLoading(true);
     let dataSourceId;
 
-    if (!curId && !dataSourceSetup?.id) {
+    if (!editId && !dataSourceSetup?.id) {
       const newData = {
         ...data,
         db_type: dataSource?.value?.toUpperCase(),
@@ -476,14 +479,21 @@ const DataSourcesWrapper = () => {
   };
 
   const onEdit = (dataSourceId: string) => {
-    setLocation(`${basePath}?id=${dataSourceId}`);
+    setLocation(`${basePath}/${dataSourceId}`);
   };
 
   useEffect(() => {
-    if (dataSources.length && curId && !curDataSource) {
+    if (!connect && dataSources.length && editId && !curDataSource) {
       setLocation(basePath);
     }
-  }, [basePath, curDataSource, curId, dataSources.length, setLocation]);
+  }, [
+    basePath,
+    curDataSource,
+    editId,
+    dataSources.length,
+    setLocation,
+    connect,
+  ]);
 
   useEffect(() => {
     if (curDataSource) {
@@ -550,10 +560,10 @@ const DataSourcesWrapper = () => {
   }, [connect, setIsOnboarding]);
 
   useEffect(() => {
-    if (curId && !generate) {
+    if (!connect && editId && !generate) {
       setStep(1);
     }
-  }, [curId, generate, setStep]);
+  }, [connect, editId, generate, setStep]);
 
   useEffect(() => {
     if (generate && generate === "generate") {
@@ -575,7 +585,7 @@ const DataSourcesWrapper = () => {
 
   return (
     <DataSources
-      defaultOpen={!!slug || !!curId}
+      defaultOpen={!!editId}
       disableCreate={isMember}
       dataSources={dataSources}
       loading={loading}

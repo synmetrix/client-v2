@@ -166,7 +166,6 @@ export const Members: React.FC<MembersProps> = ({
                     }
                     options={[
                       {
-                        value: null,
                         label: capitalize(
                           t("common:words.full_access").toUpperCase()
                         ),
@@ -272,8 +271,7 @@ const MembersWrapper = () => {
   const [updateRoleMutation, execUpdateRoleMutation] =
     useUpdateMemberRoleMutation();
   const { slug } = useParams();
-  const [locaition, setLocation] = useLocation();
-  const memberId = locaition.query.id;
+  const [, setLocation] = useLocation();
 
   const [allAccessLists, execAllAccessLists] = useAllAccessListsQuery({
     variables: {
@@ -381,7 +379,7 @@ const MembersWrapper = () => {
       onInviteMember={onInviteMember}
       onRoleChange={onRoleChange}
       onAccessListChange={onAccessListChange}
-      isOpen={slug === "new" || !!memberId}
+      isOpen={slug === "new"}
       onClose={() => setLocation("/settings/members")}
       onOpen={() => setLocation("/settings/members/new")}
     />

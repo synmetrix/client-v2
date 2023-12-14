@@ -257,9 +257,9 @@ const filterEmpty = (data: Cube) =>
 const RolesAndAccessWrapper: React.FC = () => {
   const { t } = useTranslation(["settings", "pages"]);
   const { currentTeam } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
-  const { id: editId } = location.query;
-  const { slug } = useParams();
+  const [, setLocation] = useLocation();
+  const { editId } = useParams();
+  const isNew = editId === "new";
 
   const [createMutation, execCreateMutation] = useCreateAccessListMutation();
   const [updateMutation, execUpdateMutation] = useUpdateAccessListMutation();
@@ -348,7 +348,7 @@ const RolesAndAccessWrapper: React.FC = () => {
       {}
     );
 
-    if (editId) {
+    if (!isNew) {
       execUpdateMutation({
         pk_columns: { id: editId },
         _set: {
@@ -372,7 +372,7 @@ const RolesAndAccessWrapper: React.FC = () => {
   };
 
   const onEdit = (id: string) => {
-    setLocation(`/settings/access?id=${id}`);
+    setLocation(`/settings/access/${id}`);
   };
 
   const onRemove = (id: string) => {
@@ -395,7 +395,7 @@ const RolesAndAccessWrapper: React.FC = () => {
   }, [execAccessLists, subscriptionData.data]);
 
   const initialValues = useMemo(() => {
-    if (editId) {
+    if (!isNew && editId) {
       const curAccessList = accessLists.find((a) => a.id === editId);
 
       if (!curAccessList) {
@@ -418,7 +418,7 @@ const RolesAndAccessWrapper: React.FC = () => {
         access: data,
       } as RoleFormType;
     }
-  }, [accessLists, editId]);
+  }, [accessLists, editId, isNew]);
 
   const loading = useMemo(
     () =>
@@ -444,7 +444,7 @@ const RolesAndAccessWrapper: React.FC = () => {
       initialValues={initialValues}
       dataSourceAccess={dataSourceAccess}
       onFinish={onFinish}
-      isOpen={!!editId || slug === "new"}
+      isOpen={!!editId}
       onCreate={() => setLocation("/settings/access/new")}
       onClose={() => setLocation("/settings/access")}
     />

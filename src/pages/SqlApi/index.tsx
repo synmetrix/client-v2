@@ -43,7 +43,6 @@ interface SqlApiProps {
   dataSources?: DataSourceInfo[];
   isNew?: boolean;
   editId?: string;
-  isOpen?: boolean;
   credentials: DataSourceCredentials[];
   initialValue: ApiSetupForm;
   loading?: boolean;
@@ -61,7 +60,6 @@ export const SqlApi = ({
   credentials = [],
   initialValue,
   isNew,
-  isOpen = false,
   editId,
   loading = false,
   onEdit = () => {},
@@ -189,7 +187,7 @@ export const SqlApi = ({
 
       <Modal
         width={1000}
-        open={isOpen}
+        open={!!editId}
         onClose={onClose}
         closable
         destroyOnClose
@@ -247,11 +245,10 @@ export const prepareInitValues = (
 const SqlApiWrapper = () => {
   const { t } = useTranslation(["apiSetup", "pages"]);
   const { currentTeam, teamData } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const { withAuthPrefix } = useAppSettings();
-  const { slug } = useParams();
-  const isNew = slug === "new";
-  const editId = location.query.id;
+  const { editId } = useParams();
+  const isNew = editId === "new";
   const basePath = withAuthPrefix("/settings/sql-api");
 
   const [createMutation, execCreateMutation] =
@@ -320,7 +317,7 @@ const SqlApiWrapper = () => {
   };
 
   const onEdit = (id: string) => {
-    setLocation(`${basePath}?id=${id}`);
+    setLocation(`${basePath}/${id}`);
   };
 
   const onOpen = () => {
@@ -414,7 +411,6 @@ const SqlApiWrapper = () => {
       onFinish={onFinish}
       onOpen={onOpen}
       onClose={onClose}
-      isOpen={!!editId || isNew}
     />
   );
 };

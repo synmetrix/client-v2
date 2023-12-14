@@ -66,11 +66,11 @@ export default [
             component: "./pages/Models",
           },
           {
-            path: "/settings/teams/:slug?",
+            path: "/settings/teams/:editId?",
             component: "./pages/Teams",
           },
           {
-            path: "/settings/sources/:slug?/:generate?",
+            path: "/settings/sources/:editId?/:generate?",
             component: "./pages/DataSources",
           },
           {
@@ -82,7 +82,7 @@ export default [
             component: "./pages/SqlApi",
           },
           {
-            path: "/settings/access/:slug?",
+            path: "/settings/access/:editId?",
             component: "./pages/RolesAndAccess",
           },
           {

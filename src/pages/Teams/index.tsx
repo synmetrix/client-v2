@@ -234,9 +234,9 @@ const TeamsWrapper: React.FC = () => {
   const [createMutation, execCreateMutation] = useCreateTeamMutation();
   const [updateMutation, execUpdateMutation] = useEditTeamMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteTeamMutation();
-  const { slug } = useParams();
-  const [locaition, setLocation] = useLocation();
-  const teamId = locaition.query.id;
+  const { editId } = useParams();
+  const isNew = editId === "new";
+  const [, setLocation] = useLocation();
 
   useCheckResponse(
     createMutation,
@@ -319,7 +319,7 @@ const TeamsWrapper: React.FC = () => {
 
   const onOpen = (id?: string) => {
     if (id) {
-      setLocation(`/settings/teams?id=${id}`);
+      setLocation(`/settings/teams/${id}`);
     } else {
       setLocation("/settings/teams/new");
     }
@@ -334,8 +334,8 @@ const TeamsWrapper: React.FC = () => {
       onRemoveTeam={onRemoveTeam}
       onSelect={onSelect}
       loading={isLoading}
-      isOpen={slug === "new" || !!teamId}
-      editId={teamId}
+      isOpen={!!editId}
+      editId={isNew ? undefined : editId}
       onClose={() => setLocation("/settings/teams")}
       onOpen={onOpen}
     />

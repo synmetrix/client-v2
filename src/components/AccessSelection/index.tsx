@@ -35,6 +35,7 @@ const AccessSelection: FC<AccessSelectionProps> = ({
       spaceBetween={16}
       freeMode
       modules={[FreeMode]}
+      style={{ paddingLeft: 16 }}
     >
       {items.map((i) => (
         <SwiperSlide key={i.id} className={styles.sliderItem}>

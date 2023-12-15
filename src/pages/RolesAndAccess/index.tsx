@@ -2,6 +2,7 @@ import { Dropdown, Space, Spin, Typography } from "antd";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useTranslation } from "react-i18next";
 import { SettingOutlined } from "@ant-design/icons";
+import { useParams } from "@vitjs/runtime";
 
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
@@ -48,6 +49,9 @@ interface RolesAndAccessProps {
   onEdit?: (id: string) => void;
   onRemove?: (id: string) => void;
   onFinish?: (data: RoleFormType) => void;
+  onCreate?: () => void;
+  onClose?: () => void;
+  isOpen?: boolean;
 }
 
 export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
@@ -59,28 +63,24 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
   onRemove,
   dataSourceAccess,
   onFinish = () => {},
+  isOpen = false,
+  onCreate = () => {},
+  onClose = () => {},
 }) => {
   const { t } = useTranslation(["settings", "pages"]);
-  const [, setLocation] = useLocation();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const onOpen = () => setIsOpen(true);
+  const onModalOpen = () => {
+    onCreate();
+  };
 
-  const onClose = () => {
-    setIsOpen(false);
-    setLocation("/settings/access");
+  const onModalClose = () => {
+    onClose();
   };
 
   const onFormFinish = (data: RoleFormType) => {
     onFinish(data);
     onClose();
   };
-
-  useEffect(() => {
-    if (initialValues) {
-      setIsOpen(true);
-    }
-  }, [initialValues, setIsOpen]);
 
   const isMember = currentTeam?.role === Roles.member;
 
@@ -170,7 +170,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
         <PageHeader
           title={t("settings:roles_and_access.manage_roles")}
           action={!isMember && t("settings:roles_and_access.create_now")}
-          onClick={onOpen}
+          onClick={onModalOpen}
         />
 
         <Spin spinning={loading}>
@@ -185,7 +185,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
               </ResponsiveMasonry>
             </div>
           ) : (
-            <NoRoles onCreate={onOpen} />
+            <NoRoles onCreate={onModalOpen} />
           )}
         </Spin>
       </Space>
@@ -193,7 +193,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
       <Modal
         width={1000}
         open={isOpen}
-        onClose={onClose}
+        onClose={onModalClose}
         closable
         destroyOnClose
       >
@@ -257,8 +257,9 @@ const filterEmpty = (data: Cube) =>
 const RolesAndAccessWrapper: React.FC = () => {
   const { t } = useTranslation(["settings", "pages"]);
   const { currentTeam } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
-  const { id: editId } = location.query;
+  const [, setLocation] = useLocation();
+  const { editId } = useParams();
+  const isNew = editId === "new";
 
   const [createMutation, execCreateMutation] = useCreateAccessListMutation();
   const [updateMutation, execUpdateMutation] = useUpdateAccessListMutation();
@@ -347,7 +348,7 @@ const RolesAndAccessWrapper: React.FC = () => {
       {}
     );
 
-    if (editId) {
+    if (!isNew) {
       execUpdateMutation({
         pk_columns: { id: editId },
         _set: {
@@ -371,7 +372,7 @@ const RolesAndAccessWrapper: React.FC = () => {
   };
 
   const onEdit = (id: string) => {
-    setLocation(`/settings/access?id=${id}`);
+    setLocation(`/settings/access/${id}`);
   };
 
   const onRemove = (id: string) => {
@@ -394,7 +395,7 @@ const RolesAndAccessWrapper: React.FC = () => {
   }, [execAccessLists, subscriptionData.data]);
 
   const initialValues = useMemo(() => {
-    if (editId) {
+    if (!isNew && editId) {
       const curAccessList = accessLists.find((a) => a.id === editId);
 
       if (!curAccessList) {
@@ -417,7 +418,7 @@ const RolesAndAccessWrapper: React.FC = () => {
         access: data,
       } as RoleFormType;
     }
-  }, [accessLists, editId]);
+  }, [accessLists, editId, isNew]);
 
   const loading = useMemo(
     () =>
@@ -443,6 +444,9 @@ const RolesAndAccessWrapper: React.FC = () => {
       initialValues={initialValues}
       dataSourceAccess={dataSourceAccess}
       onFinish={onFinish}
+      isOpen={!!editId}
+      onCreate={() => setLocation("/settings/access/new")}
+      onClose={() => setLocation("/settings/access")}
     />
   );
 };

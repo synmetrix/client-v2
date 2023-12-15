@@ -82,7 +82,9 @@ const ApiSetup: FC<ApiSetupProps> = ({
   onGoBack,
 }) => {
   const { control, handleSubmit, setValue, getValues, watch, resetField } =
-    useForm<ApiSetupForm>();
+    useForm<ApiSetupForm>({
+      values: initialValue,
+    });
 
   const { t } = useTranslation(["apiSetup", "common"]);
   const windowSize = useResponsive();

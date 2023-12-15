@@ -11,11 +11,19 @@ export default {
   component: Teams,
 } as Meta<typeof Teams>;
 
-const Template: StoryFn<typeof Teams> = (args) => (
-  <RootLayout>
-    <Teams {...args} />
-  </RootLayout>
-);
+const Template: StoryFn<typeof Teams> = (args) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  return (
+    <RootLayout>
+      <Teams
+        {...args}
+        isOpen={isOpen}
+        onOpen={() => setIsOpen(true)}
+        onClose={() => setIsOpen(false)}
+      />
+    </RootLayout>
+  );
+};
 
 export const Default = Template.bind({});
 

@@ -1,5 +1,6 @@
 import { Col, Row, Select, Space, Spin, Tag, Typography, message } from "antd";
 import { useTranslation } from "react-i18next";
+import { useParams } from "@vitjs/runtime";
 
 import type { Invite } from "@/components/MembersForm";
 import MembersForm from "@/components/MembersForm";
@@ -28,6 +29,7 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { AccessList, Member } from "@/types/team";
 import { ChangeableRoles, Roles } from "@/types/team";
+import useLocation from "@/hooks/useLocation";
 
 import TrashIcon from "@/assets/trash.svg";
 
@@ -45,6 +47,9 @@ interface MembersProps {
   onInviteMember?: (data: Invite) => void;
   onRoleChange?: (id: string, newRole: ChangeableRoles) => void;
   onAccessListChange?: (id: string, accessListId: string | null) => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  onOpen?: () => void;
 }
 
 export const Members: React.FC<MembersProps> = ({
@@ -57,13 +62,14 @@ export const Members: React.FC<MembersProps> = ({
   onInviteMember = () => {},
   onRoleChange = () => {},
   onAccessListChange = () => {},
+  onClose = () => {},
+  onOpen = () => {},
+  isOpen = false,
 }) => {
   const { t } = useTranslation(["settings", "pages"]);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const onSubmit = (data: Invite) => {
-    setIsOpen(false);
+    onClose();
     onInviteMember(data);
   };
   const onRemove = (member: Member) => onDeleteMember(member.id);
@@ -160,7 +166,6 @@ export const Members: React.FC<MembersProps> = ({
                     }
                     options={[
                       {
-                        value: null,
                         label: capitalize(
                           t("common:words.full_access").toUpperCase()
                         ),
@@ -217,7 +222,7 @@ export const Members: React.FC<MembersProps> = ({
         <PageHeader
           title={t("settings:members.title")}
           action={hasInvitePermissions && t("settings:members.action")}
-          onClick={() => setIsOpen(true)}
+          onClick={onOpen}
         />
 
         <Spin spinning={loading}>
@@ -232,12 +237,12 @@ export const Members: React.FC<MembersProps> = ({
               </Row>
             </div>
           ) : (
-            <NoMember onInvite={() => setIsOpen(true)} />
+            <NoMember onInvite={onOpen} />
           )}
         </Spin>
       </Space>
 
-      <Modal open={isOpen} closable onClose={() => setIsOpen(false)}>
+      <Modal open={isOpen} closable onClose={onClose}>
         <MembersForm onSubmit={onSubmit} inviteRoles={inviteRoles} />
       </Modal>
     </>
@@ -265,6 +270,8 @@ const MembersWrapper = () => {
   const [inviteMutation, execInviteMutation] = useInviteMemberMutation();
   const [updateRoleMutation, execUpdateRoleMutation] =
     useUpdateMemberRoleMutation();
+  const { slug } = useParams();
+  const [, setLocation] = useLocation();
 
   const [allAccessLists, execAllAccessLists] = useAllAccessListsQuery({
     variables: {
@@ -372,6 +379,9 @@ const MembersWrapper = () => {
       onInviteMember={onInviteMember}
       onRoleChange={onRoleChange}
       onAccessListChange={onAccessListChange}
+      isOpen={slug === "new"}
+      onClose={() => setLocation("/settings/members")}
+      onOpen={() => setLocation("/settings/members/new")}
     />
   );
 };

@@ -276,7 +276,7 @@ const RolesAndAccessWrapper: React.FC = () => {
     pause: true,
   });
 
-  const [subscriptionData] = useSubAccessListsSubscription({
+  const [subscriptionData, execSubAccessLists] = useSubAccessListsSubscription({
     variables: {
       where: {
         team_id: {
@@ -284,6 +284,7 @@ const RolesAndAccessWrapper: React.FC = () => {
         },
       },
     },
+    pause: true,
   });
 
   useCheckResponse(createMutation, () => {}, {
@@ -368,9 +369,9 @@ const RolesAndAccessWrapper: React.FC = () => {
 
   useEffect(() => {
     if (currentTeam?.id) {
-      execAccessLists();
+      execSubAccessLists();
     }
-  }, [currentTeam?.id, execAccessLists]);
+  }, [currentTeam?.id, execSubAccessLists]);
 
   useEffect(() => {
     if (subscriptionData.data) {

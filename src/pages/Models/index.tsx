@@ -20,7 +20,6 @@ import NoDataSource from "@/components/NoDataSource";
 import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
 import useModelsIde from "@/hooks/useModelsIde";
-import useModels from "@/hooks/useModels";
 import useSources from "@/hooks/useSources";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import usePermissions from "@/hooks/usePermissions";
@@ -34,6 +33,12 @@ import type { Version } from "@/types/version";
 import type { Branches_Insert_Input } from "@/graphql/generated";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useVersions from "@/hooks/useVersions";
+import {
+  useDeleteSchemaMutation,
+  useCreateBranchMutation,
+  useCreateVersionMutation,
+  useSetDefaultBranchMutation,
+} from "@/graphql/generated";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
 
@@ -289,15 +294,23 @@ const ModelsWrapper: React.FC = () => {
   const { withAuthPrefix } = useAppSettings();
   const basePath = withAuthPrefix("/models");
 
+  const [deleteMutation, execDeleteMutation] = useDeleteSchemaMutation();
+  const [createBranchMutation, execCreateBranchMutation] =
+    useCreateBranchMutation();
+  const [createVersionMutation, execCreateVersionMutation] =
+    useCreateVersionMutation();
+  const [setDefaultMutation, execSetDefaultMutation] =
+    useSetDefaultBranchMutation();
+
   const [isConsoleOpen, toggleConsole] = useState<boolean>(false);
   const [error, setError] = useState(null);
 
   const params = useParams();
   const [dataSourceId, branch, slug] = useMemo<[string, string, string]>(
     () => [
-      getOr("", "dataSourceId", params),
-      getOr("", "branch", params),
-      getOr("", "slug", params),
+      getOr("", "dataSourceId", params) as unknown as string,
+      getOr("", "branch", params) as unknown as string,
+      getOr("", "slug", params) as unknown as string,
     ],
     [params]
   );
@@ -341,25 +354,6 @@ const ModelsWrapper: React.FC = () => {
   const dataSchemaName = (reservedSlugs.indexOf(slug) === -1 && slug) || null;
 
   const {
-    mutations: {
-      deleteMutation,
-      execDeleteMutation,
-      exportMutation,
-      createBranchMutation,
-      execCreateBranchMutation,
-      createVersionMutation,
-      execCreateVersionMutation,
-      setDefaultMutation,
-      execSetDefaultMutation,
-    },
-  } = useModels({
-    params: {
-      dataSourceId,
-    },
-    pauseQueryAll: false,
-  });
-
-  const {
     queries: { tablesData, execQueryTables },
     mutations: {
       runQueryMutation,
@@ -400,7 +394,8 @@ const ModelsWrapper: React.FC = () => {
 
   useEffect(() => {
     if (!branch && !currentBranchId) {
-      const currentId = branches?.[0]?.id;
+      const currentId =
+        branches?.find((b) => b.status === "active")?.id || branches?.[0]?.id;
       setCurrentBranchId(currentId);
       setLocation(`${basePath}/${dataSourceId}/${currentId}`);
     } else if (branch !== currentBranchId) {
@@ -429,7 +424,7 @@ const ModelsWrapper: React.FC = () => {
     () => currentVersion?.dataschemas || [],
     [currentVersion]
   );
-  console.log(branches?.length, currentBranch, currentBranchId);
+
   useCheckResponse(genSchemaMutation, () => {}, {
     successMessage: t("alerts.schema_generated"),
   });
@@ -520,7 +515,6 @@ const ModelsWrapper: React.FC = () => {
     validateMutation.fetching ||
     genSchemaMutation.fetching ||
     tablesData.fetching ||
-    exportMutation.fetching ||
     runQueryMutation.fetching;
 
   if (error) {

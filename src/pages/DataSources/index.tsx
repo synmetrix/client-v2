@@ -309,7 +309,9 @@ const DataSourcesWrapper = () => {
     [curId, dataSourceSetup?.id, dataSources]
   );
   const activeBranchId = useMemo(
-    () => curDataSource?.branches?.[0]?.id,
+    () =>
+      curDataSource?.branches?.find((b) => b.status === "active") ||
+      curDataSource?.branches?.[0]?.id,
     [curDataSource?.branches]
   );
 

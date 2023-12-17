@@ -371,7 +371,7 @@ const DataSourcesWrapper = () => {
     setLoading(true);
     let dataSourceId;
 
-    if (!editId && !dataSourceSetup?.id) {
+    if (editId === "new" && !dataSourceSetup?.id) {
       const newData = {
         ...data,
         db_type: dataSource?.value?.toUpperCase(),
@@ -426,6 +426,8 @@ const DataSourcesWrapper = () => {
     const testResult = await onTestConnection({
       id: resultId,
     } as DataSourceSetupForm);
+
+    setLocation(`${basePath}/${resultId}`);
 
     if (!testResult || isTest) {
       return;

@@ -293,14 +293,19 @@ const ModelsWrapper: React.FC = () => {
     ],
     [params]
   );
-  const dataSource = useMemo(
-    () =>
-      teamData?.dataSources?.find((d: Datasources) => d.id === dataSourceId),
-    [dataSourceId, teamData]
-  );
 
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
     `${dataSourceId}:currentBranch`
+  );
+  const [currentDataSourceId, setCurrentDataSourceId] =
+    useLocalStorageState<string>("currentDataSourceId");
+
+  const dataSource = useMemo(
+    () =>
+      teamData?.dataSources?.find(
+        (d: Datasources) => d.id === currentDataSourceId
+      ),
+    [currentDataSourceId, teamData?.dataSources]
   );
 
   const onModalClose = (goBack: boolean = false) => {
@@ -519,10 +524,25 @@ const ModelsWrapper: React.FC = () => {
   }, [sourceTablesSchema]);
 
   useLayoutEffect(() => {
-    if (!dataSourceId && teamData?.dataSources?.length) {
-      setLocation(`${basePath}/${teamData.dataSources[0].id}`);
+    if (teamData?.dataSources?.length) {
+      if (!dataSourceId && !currentDataSourceId) {
+        setLocation(`${basePath}/${teamData.dataSources[0].id}`);
+        setCurrentDataSourceId(teamData.dataSources[0].id);
+      } else if (dataSourceId && dataSourceId !== currentDataSourceId) {
+        setCurrentDataSourceId(dataSourceId);
+      } else if (!dataSourceId && currentDataSourceId) {
+        setLocation(`${basePath}/${currentDataSourceId}`);
+      }
     }
-  }, [dataSourceId, teamData, basePath, setLocation, dataSource?.branch.id]);
+  }, [
+    dataSourceId,
+    teamData,
+    basePath,
+    setLocation,
+    dataSource?.branch.id,
+    currentDataSourceId,
+    setCurrentDataSourceId,
+  ]);
 
   const inputFile = useRef<HTMLInputElement>(null);
 

@@ -56,6 +56,7 @@ const Explore: FC<ExploreProps> = (props) => {
     header = null,
     subTitle = "Explore",
     source: dataSource,
+    dataSources,
     meta,
     exploration,
     rawSql,
@@ -231,7 +232,8 @@ const Explore: FC<ExploreProps> = (props) => {
     />
   ) : null;
 
-  const Layout = cubesFallback || !dataSource?.id ? AppLayout : SidebarLayout;
+  const Layout =
+    cubesFallback || !!!dataSources?.length ? AppLayout : SidebarLayout;
 
   return (
     <Layout
@@ -242,7 +244,7 @@ const Explore: FC<ExploreProps> = (props) => {
       icon={icon}
       burgerTitle={subTitle as any}
     >
-      {dataSource?.id ? (
+      {!!dataSources?.length ? (
         <div id="data-view" className={styles.dataView}>
           {dataSection} {filtersSection}
         </div>

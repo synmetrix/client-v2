@@ -94,7 +94,11 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
         return (
           <Panel
             key={cube}
-            header={cube}
+            header={
+              <div className={styles.optionHeader} title={cube}>
+                {cube}
+              </div>
+            }
             className={styles.panel}
             extra={
               <Badge
@@ -173,7 +177,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
   }
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       {header && <div className={styles.header}>{header}</div>}
 
       <div className={styles.radio}>

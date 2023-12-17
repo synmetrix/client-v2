@@ -46,7 +46,7 @@ const Reports: React.FC<ReportsProps> = ({
   const { reportId } = useParams();
 
   const reports = useMemo(
-    () => (initialReports?.length ? initialReports : teamData.reports || []),
+    () => (initialReports?.length ? initialReports : teamData?.reports || []),
     [initialReports, teamData]
   ) as Alert[];
 
@@ -118,6 +118,7 @@ const Reports: React.FC<ReportsProps> = ({
   const renderCard = (report: Alert) => {
     return (
       <Card
+        key={report.id}
         title={report.name}
         titleTooltip={report.name}
         onTitleClick={() => onEdit(report)}

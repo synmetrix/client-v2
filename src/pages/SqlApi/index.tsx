@@ -77,6 +77,7 @@ export const SqlApi = ({
   const renderCard = (credential: DataSourceCredentials) => {
     return (
       <Card
+        key={credential.id}
         title={credential.dataSourceData.name}
         titleTooltip={credential.dataSourceData.name}
         onTitleClick={() => credential.id && onEdit(credential.id)}

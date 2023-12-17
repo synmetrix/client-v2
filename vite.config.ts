@@ -70,6 +70,7 @@ export default defineConfig({
     }),
     vitApp({
       routes,
+      reactStrictMode: false,
       dynamicImport: {
         loading: "./components/PageLoading",
       },

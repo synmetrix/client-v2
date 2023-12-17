@@ -44,7 +44,7 @@ const Alerts: React.FC<AlertsProps> = ({
   const { alertId } = useParams();
 
   const alerts = useMemo(
-    () => (initialAlerts?.length ? initialAlerts : teamData.alerts || []),
+    () => (initialAlerts?.length ? initialAlerts : teamData?.alerts || []),
     [initialAlerts, teamData]
   ) as Alert[];
 
@@ -117,6 +117,7 @@ const Alerts: React.FC<AlertsProps> = ({
   const renderCard = (alert: Alert) => {
     return (
       <Card
+        key={alert.id}
         title={alert.name}
         titleTooltip={alert.name}
         onTitleClick={() => onEdit(alert)}

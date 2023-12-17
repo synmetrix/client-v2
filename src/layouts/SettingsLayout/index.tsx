@@ -29,6 +29,7 @@ const SettingsLayout: React.FC<SidebarLayoutProps> = ({
   const splitedPath = (location?.pathname || "").split("/");
   const titleKey = splitedPath?.[2];
   const subKey = splitedPath?.[1];
+
   return (
     <SidebarLayout
       icon={<Icon />}

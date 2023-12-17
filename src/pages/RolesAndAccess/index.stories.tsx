@@ -9,12 +9,20 @@ export default {
   component: RolesAndAccess,
 } as Meta<typeof RolesAndAccess>;
 
-const Template: StoryFn<typeof RolesAndAccess> = (args) => (
-  <RootLayout>
-    <RolesAndAccess {...args} />
-  </RootLayout>
-);
-
+const Template: StoryFn<typeof RolesAndAccess> = (args) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  return (
+    <RootLayout>
+      <RolesAndAccess
+        {...args}
+        isOpen={isOpen}
+        onCreate={() => setIsOpen(true)}
+        onEdit={() => setIsOpen(true)}
+        onClose={() => setIsOpen(false)}
+      />
+    </RootLayout>
+  );
+};
 export const Default = Template.bind({});
 
 Default.args = {

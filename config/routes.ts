@@ -70,15 +70,15 @@ export default [
                 component: "./pages/Models",
               },
               {
-                path: "/settings/teams",
+                path: "/settings/teams/:editId?",
                 component: "./pages/Teams",
               },
               {
-                path: "/settings/sources/:slug?/:generate?",
+                path: "/settings/sources/:editId?/:generate?",
                 component: "./pages/DataSources",
               },
               {
-                path: "/settings/members",
+                path: "/settings/members/:slug?",
                 component: "./pages/Members",
               },
               {
@@ -86,7 +86,7 @@ export default [
                 component: "./pages/SqlApi",
               },
               {
-                path: "/settings/access",
+                path: "/settings/access/:editId?",
                 component: "./pages/RolesAndAccess",
               },
               {

@@ -685,7 +685,7 @@ const ModelsWrapper: React.FC = () => {
   };
 
   const onCreateBranch = async (name: string) => {
-    const newSchemas = dataschemas.map((schema) => ({
+    const newSchemas = dataschemas.map((schema: Dataschema) => ({
       name: schema.name,
       code: schema.code,
       user_id: currentUser.id,
@@ -810,7 +810,7 @@ const ModelsWrapper: React.FC = () => {
       }
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
-      onConnect={() => setLocation(withAuthPrefix("/settings/sources/connect"))}
+      onConnect={() => setLocation(withAuthPrefix("/settings/sources/new"))}
       pagination={{
         pageSize,
         current: currentPage,

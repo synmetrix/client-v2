@@ -306,16 +306,12 @@ const DataSourcesWrapper = () => {
   ) as DataSourceInfo[];
   const curDataSource = useMemo(
     () =>
-      !connect
-        ? dataSources.find(
-            (d) => d.id === editId || d.id === dataSourceSetup?.id
-          )
-        : null,
-    [connect, dataSources, editId, dataSourceSetup?.id]
+      dataSources.find((d) => d.id === editId || d.id === dataSourceSetup?.id),
+    [dataSources, editId, dataSourceSetup?.id]
   );
   const activeBranchId = useMemo(
     () =>
-      curDataSource?.branches?.find((b) => b.status === "active") ||
+      curDataSource?.branches?.find((b) => b.status === "active")?.id ||
       curDataSource?.branches?.[0]?.id,
     [curDataSource?.branches]
   );
@@ -373,7 +369,7 @@ const DataSourcesWrapper = () => {
     setLoading(true);
     let dataSourceId;
 
-    if (!editId && !dataSourceSetup?.id) {
+    if (connect && !dataSourceSetup?.id) {
       const newData = {
         ...data,
         db_type: dataSource?.value?.toUpperCase(),

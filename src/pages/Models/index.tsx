@@ -271,7 +271,7 @@ export const Models: React.FC<ModelsProps> = ({
   );
 };
 
-const reservedSlugs = ["sqlrunner", "genschema", "docs"];
+const reservedSlugs = ["sqlrunner", "genmodels", "docs"];
 
 const ModelsWrapper: React.FC = () => {
   const { t } = useTranslation(["models", "common"]);
@@ -351,7 +351,7 @@ const ModelsWrapper: React.FC = () => {
     disableSubscription: true,
   });
 
-  const genSchemaModalVisible = slug === "genschema";
+  const genSchemaModalVisible = slug === "genmodels";
   const versionsModalVisible = slug === "versions";
 
   useEffect(() => {
@@ -773,7 +773,7 @@ const ModelsWrapper: React.FC = () => {
       key: "gen",
       label: t("ide_menu.generate_schema"),
       onClick: () =>
-        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/genschema`),
+        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/genmodels`),
     },
     {
       key: "import",

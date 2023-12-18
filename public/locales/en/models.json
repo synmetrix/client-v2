@@ -12,7 +12,7 @@
     "is_now_default": "is now default",
     "version_created": "Version created",
     "branch_created": "Branch created",
-    "schema_generated": "Schema generated",
+    "schema_generated": "Models generated",
     "wrong_archive": "Wrong archive",
     "bad_archive": "Bad archive",
     "format_is_unsupported": "Format is unsupported",
@@ -27,7 +27,7 @@
   "ide_menu": {
     "import_models": "Import data models",
     "export_models": "Export data models",
-    "generate_schema": "Generate Schema"
+    "generate_schema": "Generate Models"
   },
   "branch_menu": {
     "show_versions": "Show versions",

@@ -362,19 +362,26 @@ const ExploreWrapper = () => {
         message.error(t("explore:errors.data_source_not_found"));
       }
 
-      setLocation(
-        withAuthPrefix(
-          `/explore/${currentDataSourceId || datasources?.[0]?.id}`
-        )
+      const isExist = teamData?.dataSources?.find(
+        (d) => d.id === currentDataSourceId
       );
+
+      if (isExist) {
+        setLocation(withAuthPrefix(`/explore/${currentDataSourceId}`));
+      } else {
+        setLocation(withAuthPrefix(`/explore/${datasources?.[0]?.id}`));
+        setCurrentDataSourceId(datasources?.[0]?.id);
+      }
     }
   }, [
     curSource,
     currentDataSourceId,
     dataSourceId,
     datasources,
+    setCurrentDataSourceId,
     setLocation,
     t,
+    teamData?.dataSources,
     withAuthPrefix,
   ]);
 

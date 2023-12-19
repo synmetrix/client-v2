@@ -103,7 +103,7 @@ export const Models: React.FC<ModelsProps> = ({
   onChangeBranch,
   onCreateBranch,
   onSetDefault,
-  fetching,
+  fetching = false,
   onSchemaCreate,
   onSchemaDelete,
   onSchemaUpdate,

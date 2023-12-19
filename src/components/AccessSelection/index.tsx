@@ -1,5 +1,4 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useResponsive } from "ahooks";
 import { FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -26,19 +25,20 @@ const AccessSelection: FC<AccessSelectionProps> = ({
   onSelect,
   active,
 }) => {
-  const windowSize = useResponsive();
-  const isLg = windowSize.md === false;
-
   return (
     <Swiper
-      slidesPerView={items.length < 10 && !isLg ? 3 : "auto"}
+      slidesPerView={"auto"}
       spaceBetween={16}
       freeMode
       modules={[FreeMode]}
       style={{ paddingLeft: 16 }}
     >
       {items.map((i) => (
-        <SwiperSlide key={i.id} className={styles.sliderItem}>
+        <SwiperSlide
+          key={i.id}
+          className={styles.sliderItem}
+          style={{ width: 310 }}
+        >
           <AccessCard
             {...i}
             permissions={permissions?.[i.id]}

@@ -17,7 +17,8 @@ interface DataSourceFormProps {
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;
-  withSteps?: boolean;
+  onChangeStep?: (value: number) => void;
+  step?: number;
   bordered?: boolean;
   loading?: boolean;
   shadow?: boolean;
@@ -28,7 +29,8 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
   onTestConnection = () => {},
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
-  withSteps = false,
+  onChangeStep,
+  step: curStep,
   bordered = true,
   loading = false,
   shadow = true,
@@ -36,18 +38,24 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
   const { t } = useTranslation(["dataSourceStepForm"]);
   const { step, setStep } = DataSourceStore();
 
+  useEffect(() => {
+    if (curStep) {
+      setStep(step);
+    }
+  }, [curStep, setStep, step]);
+
   return (
     <Card
       style={shadow === false ? { boxShadow: "0 0 0 0" } : undefined}
       bordered={bordered}
     >
       <Spin spinning={loading}>
-        {withSteps && (
+        {onChangeStep && (
           <div className={styles.header}>
             <StepFormHeader
               currentStep={step}
               steps={[t("step1"), t("step2"), t("step3"), t("step4")]}
-              onChange={setStep}
+              onChange={onChangeStep}
             />
           </div>
         )}

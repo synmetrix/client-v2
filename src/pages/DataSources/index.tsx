@@ -1,7 +1,7 @@
 import { Col, Dropdown, Row, Space, Spin } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { useResponsive } from "ahooks";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 
@@ -13,28 +13,14 @@ import PageHeader from "@/components/PageHeader";
 import formatTime from "@/utils/helpers/formatTime";
 import DataSourceTag from "@/components/DataSourceTag";
 import ConfirmModal from "@/components/ConfirmModal";
-import type {
-  Datasources_Pk_Columns_Input,
-  Datasources_Set_Input,
-} from "@/graphql/generated";
-import {
-  useCheckConnectionMutation,
-  useCreateDataSourceMutation,
-  useDeleteDataSourceMutation,
-  useFetchTablesQuery,
-  useGenDataSchemasMutation,
-  useInsertSqlCredentialsMutation,
-  Branch_Statuses_Enum,
-  useUpdateDataSourceMutation,
-} from "@/graphql/generated";
+import { useDeleteDataSourceMutation } from "@/graphql/generated";
 import useAppSettings from "@/hooks/useAppSettings";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
-import { prepareInitValues } from "@/pages/SqlApi";
+import useOnboarding from "@/hooks/useOnboarding";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
+import DataSourceStore from "@/stores/DataSourceStore";
 import { Roles } from "@/types/team";
-import type { DataSourceState } from "@/stores/DataSourceStore";
 import type {
   DataSourceInfo,
   DataSourceSetupForm,
@@ -237,8 +223,7 @@ export const DataSources = ({
 
 const DataSourcesWrapper = () => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { currentUser, currentTeam, teamData, loading, setLoading } =
-    CurrentUserStore();
+  const { currentTeam, loading, setLoading } = CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const { editId, generate } = useParams();
@@ -248,87 +233,28 @@ const DataSourcesWrapper = () => {
   const connect = editId === "new";
 
   const {
-    formState: { step0: dataSource, step1: dataSourceSetup, step3: apiSetup },
-    schema,
-    step,
-    isOnboarding,
+    formState: { step1: dataSourceSetup },
     isGenerate,
     setIsGenerate,
-    setSchema,
-    setFormStateData,
-    nextStep,
     setStep,
     setIsOnboarding,
     clean,
   } = DataSourceStore();
 
-  const [createMutation, execCreateMutation] = useCreateDataSourceMutation();
-  const [updateMutation, execUpdateMutation] = useUpdateDataSourceMutation();
-  const [deleteMutation, execDeleteMutation] = useDeleteDataSourceMutation();
-  const [checkConnectionMutation, execCheckConnection] =
-    useCheckConnectionMutation();
-  const [genSchemaMutation, execGenSchemaMutation] =
-    useGenDataSchemasMutation();
-  const [, execInsertSqlCredentialsMutation] =
-    useInsertSqlCredentialsMutation();
-  const [fetchTablesQuery, execFetchTables] = useFetchTablesQuery({
-    variables: { id: dataSourceSetup?.id },
-    pause: true,
+  const {
+    dataSources,
+    curDataSource,
+    onDataModelGenerationSubmit,
+    onDataSourceSetupSubmit,
+  } = useOnboarding({
+    editId,
   });
+
+  const [deleteMutation, execDeleteMutation] = useDeleteDataSourceMutation();
 
   useCheckResponse(deleteMutation, () => {}, {
     successMessage: t("datasource_deleted"),
   });
-
-  useCheckResponse(createMutation, () => {}, {
-    successMessage: t("datasource_created"),
-  });
-
-  useCheckResponse(updateMutation, () => {}, {
-    successMessage: t("datasource_updated"),
-  });
-
-  useCheckResponse(fetchTablesQuery, () => {}, {
-    showMessage: false,
-  });
-
-  useCheckResponse(genSchemaMutation, () => {}, {
-    successMessage: t("schema_generated"),
-  });
-
-  useCheckResponse(checkConnectionMutation, () => {}, {
-    successMessage: t("connection_ok"),
-  });
-
-  const dataSources = useMemo(
-    () => teamData?.dataSources || [],
-    [teamData]
-  ) as DataSourceInfo[];
-  const curDataSource = useMemo(
-    () =>
-      !connect
-        ? dataSources.find(
-            (d) => d.id === editId || d.id === dataSourceSetup?.id
-          )
-        : null,
-    [connect, dataSources, editId, dataSourceSetup?.id]
-  );
-  const activeBranchId = useMemo(
-    () => curDataSource?.branch?.id,
-    [curDataSource?.branch?.id]
-  );
-
-  const onTestConnection = async (data: DataSourceSetupForm) => {
-    const test = await execCheckConnection({
-      id: dataSourceSetup?.id || data?.id,
-    });
-
-    setLoading(false);
-    if (!test.data?.check_connection) {
-      return null;
-    }
-    return true;
-  };
 
   const onFinish = useCallback(() => {
     let finishPath = modelsPath;
@@ -340,138 +266,6 @@ const DataSourcesWrapper = () => {
     clean();
     setLocation(finishPath);
   }, [dataSourceSetup?.id, modelsPath, clean, setLocation]);
-
-  const createSQLApi = useCallback(
-    async (dataSourceId: string, dataSourceName: string) => {
-      const apiConfig = prepareInitValues(
-        dataSourceId,
-        dataSourceName,
-        currentUser.id
-      );
-      const credentialParams = {
-        user_id: currentUser.id,
-        datasource_id: dataSourceId,
-        username: apiConfig.db_username,
-        password: apiConfig.password,
-      };
-
-      const sqlApiResult = await execInsertSqlCredentialsMutation({
-        object: credentialParams,
-      });
-      const newSqlApiId = sqlApiResult.data?.insert_sql_credentials_one?.id;
-
-      if (newSqlApiId) {
-        setFormStateData(3, apiConfig);
-      }
-    },
-    [currentUser.id, execInsertSqlCredentialsMutation, setFormStateData]
-  );
-
-  const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
-    setLoading(true);
-    let dataSourceId;
-
-    if (!editId && !dataSourceSetup?.id) {
-      const newData = {
-        ...data,
-        db_type: dataSource?.value?.toUpperCase(),
-      } as Datasources_Set_Input;
-
-      if (currentTeam?.id) {
-        newData.team_id = currentTeam?.id;
-      }
-
-      const result = await execCreateMutation({
-        object: {
-          ...newData,
-          branches: {
-            data: [
-              {
-                status: Branch_Statuses_Enum.Active,
-                user_id: currentUser.id,
-              },
-            ],
-          },
-        },
-      });
-
-      dataSourceId = result?.data?.insert_datasources_one?.id;
-    } else {
-      delete data.id;
-      const newData = {
-        pk_columns: { id: dataSourceSetup?.id } as Datasources_Pk_Columns_Input,
-        _set: data as Datasources_Set_Input,
-      };
-
-      const result = await execUpdateMutation(newData);
-
-      dataSourceId = result?.data?.update_datasources_by_pk?.id;
-    }
-
-    if (dataSourceId) {
-      setFormStateData(1, {
-        ...data,
-        id: dataSourceId,
-      });
-      return dataSourceId;
-    }
-  };
-
-  const onDataSourceSetupSubmit = async (
-    data: DataSourceSetupForm,
-    isTest?: boolean
-  ) => {
-    const resultId = await createOrUpdateDataSource(data);
-
-    const testResult = await onTestConnection({
-      id: resultId,
-    } as DataSourceSetupForm);
-
-    if (!testResult || isTest) {
-      return;
-    }
-
-    if (!apiSetup && isOnboarding) {
-      await createSQLApi(resultId, data.name);
-    }
-
-    nextStep();
-  };
-
-  const onDataModelGenerationSubmit = async (data: DynamicForm) => {
-    setLoading(true);
-
-    let tables = { ...data } as any;
-    delete tables.type;
-    tables = Object.values(tables).reduce(
-      (acc: any, value: any) => [
-        ...acc,
-        ...Object.keys(value).map((v) => ({ name: v })),
-      ],
-      []
-    );
-
-    if (dataSourceSetup) {
-      const res = await execGenSchemaMutation({
-        datasource_id: dataSourceSetup.id,
-        branch_id: activeBranchId,
-        tables,
-        format: data?.type || "yaml",
-        overwrite: true,
-      });
-
-      if (res.error) {
-        return null;
-      }
-
-      if (isOnboarding) {
-        nextStep();
-        return true;
-      }
-
-      onFinish();
-    }
-  };
 
   const onDelete = (dataSourceId: string) => {
     setLoading(true);
@@ -494,64 +288,6 @@ const DataSourcesWrapper = () => {
     setLocation,
     connect,
   ]);
-
-  useEffect(() => {
-    if (curDataSource) {
-      DataSourceStore.setState(
-        (prev) =>
-          ({
-            ...prev,
-            formState: {
-              ...defaultFormState,
-              ...prev.formState,
-              step0: curDataSource.type,
-              step1: {
-                id: curDataSource?.id,
-                db_params: { ...curDataSource.dbParams },
-                name: curDataSource.name,
-              },
-            },
-          } as Partial<DataSourceState>)
-      );
-    }
-  }, [curDataSource]);
-
-  useEffect(() => {
-    const isLoading =
-      loading ||
-      createMutation.fetching ||
-      updateMutation.fetching ||
-      checkConnectionMutation.fetching ||
-      genSchemaMutation.fetching ||
-      fetchTablesQuery.fetching;
-
-    if (isLoading) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [
-    loading,
-    createMutation.fetching,
-    updateMutation.fetching,
-    checkConnectionMutation.fetching,
-    genSchemaMutation.fetching,
-    fetchTablesQuery.fetching,
-    setLoading,
-  ]);
-
-  useEffect(() => {
-    if (step === 2 && dataSourceSetup?.id && !schema) {
-      execFetchTables();
-    }
-  }, [dataSourceSetup?.id, schema, step, execFetchTables]);
-
-  useEffect(() => {
-    if (fetchTablesQuery.data) {
-      setLoading(false);
-      setSchema(fetchTablesQuery.data?.fetch_tables?.schema);
-    }
-  }, [fetchTablesQuery.data, setSchema, setLoading]);
 
   useEffect(() => {
     if (connect) {

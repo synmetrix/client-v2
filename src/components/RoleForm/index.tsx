@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Form, Space, Spin, Empty } from "antd";
+import { Form, Space, Spin, Empty, Alert } from "antd";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 
@@ -56,6 +56,7 @@ const RoleForm: FC<RoleFormProps> = ({
 }) => {
   const { t } = useTranslation(["settings", "common"]);
   const [, setLocation] = useLocation();
+  const [error, setError] = useState(String);
 
   const { control, handleSubmit, setValue, watch } = useForm<RoleFormType>({
     values: initialValues,
@@ -68,6 +69,13 @@ const RoleForm: FC<RoleFormProps> = ({
     },
     pause: true,
   });
+
+  useEffect(() => {
+    if (metaData.error) {
+      setError(metaData.error.toString());
+    }
+  }, [metaData.error]);
+
   const resourceData = useMemo(() => {
     if (resources?.length) {
       return resources.find((r) => r.id === resource?.id);
@@ -155,6 +163,8 @@ const RoleForm: FC<RoleFormProps> = ({
               </Suspense>
             </>
           )}
+
+          {(error && <Alert message={error} type="error" />) || null}
 
           {!dataSourceAccess?.length ? (
             emptyScreen

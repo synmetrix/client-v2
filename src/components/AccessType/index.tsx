@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Spin } from "antd";
+import { Spin, Typography } from "antd";
 
 import { useFetchMetaQuery } from "@/graphql/generated";
 import type { AccessType as Access, DataSourceAccess } from "@/types/access";
@@ -25,6 +25,8 @@ interface AccessTypeWrapperProps {
 
 import type { FC } from "react";
 
+const { Text } = Typography;
+
 const AccessType: FC<AccessTypeProps> = ({ access }) => {
   const { t } = useTranslation(["common"]);
 
@@ -42,6 +44,12 @@ const AccessType: FC<AccessTypeProps> = ({ access }) => {
           <>
             <PartialAccessIcon className={styles.icon} />
             {t("common:words.partial_access")}
+          </>
+        );
+      case "error":
+        return (
+          <>
+            <Text type="danger">{t("common:words.error_access")}</Text>
           </>
         );
 
@@ -93,6 +101,13 @@ export const AccessTypeWrapper: FC<AccessTypeWrapperProps> = ({
     const res = detectSourceAccessType(types);
     setAccess(res);
   }, [dataSourceId, metaData?.data?.fetch_meta?.cubes, permissions]);
+
+  useEffect(() => {
+    if (metaData.error) {
+      console.error(metaData.error);
+      setAccess("error");
+    }
+  }, [metaData.error]);
 
   return (
     <Spin spinning={metaData.fetching}>

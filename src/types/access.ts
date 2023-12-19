@@ -1,6 +1,6 @@
 import type { DataSource } from "./dataSource";
 
-export type AccessType = "partial" | "full" | "no";
+export type AccessType = "partial" | "full" | "no" | "error";
 export type Section = "measures" | "dimensions" | "segments";
 
 export interface DataSourceAccess {

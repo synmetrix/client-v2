@@ -31,14 +31,18 @@ const AccessSelection: FC<AccessSelectionProps> = ({
 
   return (
     <Swiper
-      slidesPerView={items.length < 10 && !isLg ? 3 : "auto"}
+      slidesPerView={"auto"}
       spaceBetween={16}
       freeMode
       modules={[FreeMode]}
       style={{ paddingLeft: 16 }}
     >
       {items.map((i) => (
-        <SwiperSlide key={i.id} className={styles.sliderItem}>
+        <SwiperSlide
+          key={i.id}
+          className={styles.sliderItem}
+          style={{ width: 310 }}
+        >
           <AccessCard
             {...i}
             permissions={permissions?.[i.id]}

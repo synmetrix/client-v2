@@ -84,7 +84,7 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
       dataIndex: "start_time",
       key: "start_time",
       render: (value) => (
-        <span className={cn(styles.cell, styles.startTime)}>
+        <span className={cn(styles.cell, styles.startTime, styles.headerRight)}>
           {formatTime(value)}
         </span>
       ),
@@ -96,7 +96,7 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
       dataIndex: "created_at",
       key: "created_at",
       render: (value) => (
-        <span className={cn(styles.cell, styles.createdAt)}>
+        <span className={cn(styles.cell, styles.createdAt, styles.headerRight)}>
           {formatTime(value)}
         </span>
       ),

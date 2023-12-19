@@ -393,7 +393,7 @@ const ModelsWrapper: React.FC = () => {
         branches?.find((b) => b.status === "active")?.id || branches?.[0]?.id;
       setCurrentBranchId(currentId);
       setLocation(`${basePath}/${dataSourceId}/${currentId}`);
-    } else if (branch !== currentBranchId) {
+    } else if (branch && branch !== currentBranchId) {
       setCurrentBranchId(branch);
     }
   }, [

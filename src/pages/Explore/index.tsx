@@ -355,7 +355,7 @@ const ExploreWrapper = () => {
     }
   }, [currentProgress, execCurrentExploration]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const noCurSource = dataSourceId && !curSource;
     if (datasources.length && (noCurSource || !dataSourceId)) {
       if (noCurSource) {

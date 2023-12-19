@@ -2,14 +2,6 @@ fragment BranchesFields on branches {
   id
   name
   status
-  versions(limit: 1, order_by: { created_at: desc }) {
-    id
-    dataschemas_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
 }
 
 fragment UserTeamFields on teams {
@@ -137,7 +129,7 @@ query TeamData($team_id: uuid!) {
       db_type
       created_at
       updated_at
-      branches(where: { status: { _eq: active } }) {
+      branches(where: { status: { _in: [active, created] } }) {
         ...BranchesFields
       }
       sql_credentials {
@@ -210,7 +202,7 @@ subscription SubTeamData($team_id: uuid!) {
       db_type
       created_at
       updated_at
-      branches(where: { status: { _eq: active } }) {
+      branches(where: { status: { _in: [active, created] } }) {
         ...BranchesFields
       }
       sql_credentials {

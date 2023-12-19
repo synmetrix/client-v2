@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 import BurgerMenu from "@/components/BurgerMenu";
 import SideMenu from "@/components/SideMenu";
 import { userMenu } from "@/mocks/user";
-import useUserData from "@/hooks/useUserData";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 
 import styles from "./index.module.less";
 
@@ -31,7 +31,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   children,
 }) => {
   const responsive = useResponsive();
-  const { currentUser } = useUserData();
+  const { currentUser } = CurrentUserStore();
 
   const content = (
     <Navbar

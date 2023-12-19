@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
       <BasicFooter className={styles.footer}>
         <Row>
           <Col span={24}>
-            <Row
+            {/* <Row
               justify="space-between"
               className={cx(
                 styles.footerTextContainer,
@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
                   <div style={{ height: 10 }} />
                 </div>
               </Col>
-            </Row>
+            </Row> */}
           </Col>
         </Row>
       </BasicFooter>

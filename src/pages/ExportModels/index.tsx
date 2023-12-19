@@ -5,7 +5,7 @@ import { useLocalStorageState } from "ahooks";
 
 import Button from "@/components/Button";
 import AppLayout from "@/layouts/AppLayout";
-import useUserData from "@/hooks/useUserData";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import { useExportDataMutation } from "@/graphql/generated";
 
@@ -14,7 +14,7 @@ import s from "./index.module.less";
 const ExportModels: React.FC = () => {
   const { t } = useTranslation(["export"]);
 
-  const { currentUser } = useUserData();
+  const { teamData } = CurrentUserStore();
   const { dataSourceId } = useParams();
 
   const [currentBranchId] = useLocalStorageState(
@@ -46,7 +46,7 @@ const ExportModels: React.FC = () => {
   return (
     <AppLayout
       title={
-        currentUser?.dataSources?.find((d) => d.id === dataSourceId)?.name || ""
+        teamData?.dataSources?.find((d) => d.id === dataSourceId)?.name || ""
       }
     >
       <Result

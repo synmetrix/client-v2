@@ -1,3 +1,5 @@
+import type { DataSourceCredentials } from "@/components/CredentialsTable";
+
 import type { DataSourceInfo } from "./dataSource";
 import type { Team, Member } from "./team";
 import type { Alert } from "./alert";
@@ -21,9 +23,10 @@ export interface RawUser {
   };
 }
 
-export interface UserData {
+export interface TeamData {
   dataSources: DataSourceInfo[];
   alerts: Alert[];
   reports: Report[];
   members: Member[];
+  sqlCredentials: DataSourceCredentials[];
 }

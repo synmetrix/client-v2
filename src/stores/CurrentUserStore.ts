@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import type { User } from "@/types/user";
+import type { User, TeamData } from "@/types/user";
 import type { Team } from "@/types/team";
 
 const LOADING_TIMEOUT = 5000; // 5 seconds
@@ -10,7 +10,7 @@ interface CurrentUser {
   loading: boolean;
   currentTeam: Team | null;
   currentUser: User;
-  teamData: any | null;
+  teamData: TeamData | null;
   setTeamData: (teamData: any) => void;
   setLoading: (value: boolean) => void;
   setUserData: (currentUser: User) => void;
@@ -24,7 +24,7 @@ const CurrentUserStore = create<CurrentUser>((set, get) => ({
   } as unknown as User,
   currentTeam: null,
   teamData: null,
-  setTeamData: (teamData: any) => set({ teamData, loading: false }),
+  setTeamData: (teamData: TeamData) => set({ teamData, loading: false }),
   setLoading: (value: boolean) => {
     set({ loading: value });
 

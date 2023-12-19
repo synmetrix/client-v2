@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { message } from "antd";
+import { useLocalStorageState } from "ahooks";
 
 import type { FetchDatasetOutput } from "@/graphql/generated";
 import {
@@ -160,6 +161,9 @@ const ExploreWrapper = () => {
   const { teamData } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { screenshotMode } = location.query;
+  const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState(
+    "currentDataSourceId"
+  );
   const { dataSourceId, explorationId, modalType, delivery } = useParams();
 
   const { state: playgroundState } = useAnalyticsQuery();
@@ -248,6 +252,7 @@ const ExploreWrapper = () => {
   );
 
   const onSelectDataSource = (dataSource: DataSourceInfo | null) => {
+    setCurrentDataSourceId(dataSource?.id);
     setLocation(withAuthPrefix(`/explore/${dataSource?.id}`));
   };
 
@@ -357,9 +362,21 @@ const ExploreWrapper = () => {
         message.error(t("explore:errors.data_source_not_found"));
       }
 
-      setLocation(withAuthPrefix(`/explore/${datasources?.[0]?.id}`));
+      setLocation(
+        withAuthPrefix(
+          `/explore/${currentDataSourceId || datasources?.[0]?.id}`
+        )
+      );
     }
-  }, [curSource, dataSourceId, datasources, setLocation, t, withAuthPrefix]);
+  }, [
+    curSource,
+    currentDataSourceId,
+    dataSourceId,
+    datasources,
+    setLocation,
+    t,
+    withAuthPrefix,
+  ]);
 
   const loading =
     currentExploration.fetching ||

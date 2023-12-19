@@ -8,5 +8,5 @@ export default function getCurrentBranch(dataSource: DataSourceInfo | null) {
   );
   return branchFromLocalStorage
     ? JSON.parse(branchFromLocalStorage)
-    : dataSource.branch.id;
+    : dataSource?.branches?.[0].id;
 }

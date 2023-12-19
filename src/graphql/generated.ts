@@ -11861,31 +11861,11 @@ export type CreateBranchMutation = {
   insert_branches_one?: { __typename?: "branches"; id: any } | null;
 };
 
-export type CreateVersionMutationVariables = Exact<{
-  object: Versions_Insert_Input;
-}>;
-
-export type CreateVersionMutation = {
-  __typename?: "mutation_root";
-  insert_versions_one?: { __typename?: "versions"; id: any } | null;
-};
-
 export type BranchesFieldsFragment = {
   __typename?: "branches";
   id: any;
   name: string;
   status: Branch_Statuses_Enum;
-  versions: Array<{
-    __typename?: "versions";
-    id: any;
-    dataschemas_aggregate: {
-      __typename?: "dataschemas_aggregate";
-      aggregate?: {
-        __typename?: "dataschemas_aggregate_fields";
-        count: number;
-      } | null;
-    };
-  }>;
 };
 
 export type UserTeamFieldsFragment = {
@@ -12083,17 +12063,6 @@ export type TeamDataQuery = {
         id: any;
         name: string;
         status: Branch_Statuses_Enum;
-        versions: Array<{
-          __typename?: "versions";
-          id: any;
-          dataschemas_aggregate: {
-            __typename?: "dataschemas_aggregate";
-            aggregate?: {
-              __typename?: "dataschemas_aggregate_fields";
-              count: number;
-            } | null;
-          };
-        }>;
       }>;
       sql_credentials: Array<{
         __typename?: "sql_credentials";
@@ -12198,17 +12167,6 @@ export type SubTeamDataSubscription = {
         id: any;
         name: string;
         status: Branch_Statuses_Enum;
-        versions: Array<{
-          __typename?: "versions";
-          id: any;
-          dataschemas_aggregate: {
-            __typename?: "dataschemas_aggregate";
-            aggregate?: {
-              __typename?: "dataschemas_aggregate_fields";
-              count: number;
-            } | null;
-          };
-        }>;
       }>;
       sql_credentials: Array<{
         __typename?: "sql_credentials";
@@ -12942,19 +12900,64 @@ export type VersionDocSubscription = {
   } | null;
 };
 
+export type CreateVersionMutationVariables = Exact<{
+  object: Versions_Insert_Input;
+}>;
+
+export type CreateVersionMutation = {
+  __typename?: "mutation_root";
+  insert_versions_one?: { __typename?: "versions"; id: any } | null;
+};
+
+export type VersionByBranchIdQueryVariables = Exact<{
+  branch_id: Scalars["uuid"]["input"];
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+}>;
+
+export type VersionByBranchIdQuery = {
+  __typename?: "query_root";
+  versions: Array<{
+    __typename?: "versions";
+    id: any;
+    checksum: string;
+    updated_at: any;
+    created_at: any;
+    user: { __typename?: "users"; display_name?: string | null };
+    dataschemas: Array<{
+      __typename?: "dataschemas";
+      created_at: any;
+      updated_at: any;
+      datasource_id: any;
+      id: any;
+      user_id: any;
+      name: string;
+      code: string;
+      checksum?: string | null;
+      datasource: { __typename?: "datasources"; team_id?: any | null };
+    }>;
+    dataschemas_aggregate: {
+      __typename?: "dataschemas_aggregate";
+      aggregate?: {
+        __typename?: "dataschemas_aggregate_fields";
+        count: number;
+      } | null;
+    };
+  }>;
+  versions_aggregate: {
+    __typename?: "versions_aggregate";
+    aggregate?: {
+      __typename?: "versions_aggregate_fields";
+      count: number;
+    } | null;
+  };
+};
+
 export const BranchesFieldsFragmentDoc = gql`
   fragment BranchesFields on branches {
     id
     name
     status
-    versions(limit: 1, order_by: { created_at: desc }) {
-      id
-      dataschemas_aggregate {
-        aggregate {
-          count
-        }
-      }
-    }
   }
 `;
 export const UserTeamFieldsFragmentDoc = gql`
@@ -13272,20 +13275,6 @@ export function useCreateBranchMutation() {
     CreateBranchDocument
   );
 }
-export const CreateVersionDocument = gql`
-  mutation CreateVersion($object: versions_insert_input!) {
-    insert_versions_one(object: $object) {
-      id
-    }
-  }
-`;
-
-export function useCreateVersionMutation() {
-  return Urql.useMutation<
-    CreateVersionMutation,
-    CreateVersionMutationVariables
-  >(CreateVersionDocument);
-}
 export const CurrentUserDocument = gql`
   query CurrentUser($id: uuid!) {
     users_by_pk(id: $id) {
@@ -13390,7 +13379,7 @@ export const TeamDataDocument = gql`
         db_type
         created_at
         updated_at
-        branches(where: { status: { _eq: active } }) {
+        branches(where: { status: { _in: [active, created] } }) {
           ...BranchesFields
         }
         sql_credentials {
@@ -13472,7 +13461,7 @@ export const SubTeamDataDocument = gql`
         db_type
         created_at
         updated_at
-        branches(where: { status: { _eq: active } }) {
+        branches(where: { status: { _in: [active, created] } }) {
           ...BranchesFields
         }
         sql_credentials {
@@ -14436,6 +14425,69 @@ export function useVersionDocSubscription<TData = VersionDocSubscription>(
     VersionDocSubscriptionVariables
   >({ query: VersionDocDocument, ...options }, handler);
 }
+export const CreateVersionDocument = gql`
+  mutation CreateVersion($object: versions_insert_input!) {
+    insert_versions_one(object: $object) {
+      id
+    }
+  }
+`;
+
+export function useCreateVersionMutation() {
+  return Urql.useMutation<
+    CreateVersionMutation,
+    CreateVersionMutationVariables
+  >(CreateVersionDocument);
+}
+export const VersionByBranchIdDocument = gql`
+  query versionByBranchId($branch_id: uuid!, $limit: Int, $offset: Int) {
+    versions(
+      limit: $limit
+      offset: $offset
+      order_by: { created_at: desc }
+      where: { branch_id: { _eq: $branch_id } }
+    ) {
+      id
+      checksum
+      updated_at
+      created_at
+      user {
+        display_name
+      }
+      dataschemas {
+        created_at
+        updated_at
+        datasource_id
+        id
+        user_id
+        name
+        code
+        checksum
+        datasource {
+          team_id
+        }
+      }
+      dataschemas_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export function useVersionByBranchIdQuery(
+  options: Omit<Urql.UseQueryArgs<VersionByBranchIdQueryVariables>, "query">
+) {
+  return Urql.useQuery<VersionByBranchIdQuery, VersionByBranchIdQueryVariables>(
+    { query: VersionByBranchIdDocument, ...options }
+  );
+}
 export const namedOperations = {
   Query: {
     AllAccessLists: "AllAccessLists",
@@ -14454,6 +14506,7 @@ export const namedOperations = {
     Credentials: "Credentials",
     CurrentTeam: "CurrentTeam",
     GetUsers: "GetUsers",
+    versionByBranchId: "versionByBranchId",
   },
   Mutation: {
     UpdateAccessList: "UpdateAccessList",
@@ -14466,7 +14519,6 @@ export const namedOperations = {
     SetDefaultBranch: "SetDefaultBranch",
     ExportData: "ExportData",
     CreateBranch: "CreateBranch",
-    CreateVersion: "CreateVersion",
     UpdateUserInfo: "UpdateUserInfo",
     CreateDataSource: "CreateDataSource",
     ValidateDataSource: "ValidateDataSource",
@@ -14490,6 +14542,7 @@ export const namedOperations = {
     CreateTeam: "CreateTeam",
     EditTeam: "EditTeam",
     DeleteTeam: "DeleteTeam",
+    CreateVersion: "CreateVersion",
   },
   Subscription: {
     SubAccessLists: "SubAccessLists",

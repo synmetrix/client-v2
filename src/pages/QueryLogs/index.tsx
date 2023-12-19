@@ -7,7 +7,6 @@ import AppLayout from "@/layouts/AppLayout";
 import useLogs from "@/hooks/useLogs";
 import useTableState from "@/hooks/useTableState";
 import useAppSettings from "@/hooks/useAppSettings";
-import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import useLocation from "@/hooks/useLocation";
 import type { Request_Logs } from "@/graphql/generated";
 import QueryFilters from "@/components/QueryFilters";
@@ -20,13 +19,6 @@ import DocsIcon from "@/assets/docs.svg";
 import styles from "./index.module.less";
 
 import type { TablePaginationConfig } from "antd";
-
-const defaultFilterState: QueryFiltersForm = {
-  from: null,
-  to: null,
-  sort: null,
-  dataSourceId: null,
-};
 
 interface QueryLogsProps {
   logs: Request_Logs[];
@@ -75,7 +67,6 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
         <div className={styles.body}>
           <Space size={27} className={styles.space} direction="vertical">
             <QueryFilters
-              defaultValues={defaultFilterState}
               values={filter}
               dataSources={dataSources}
               onChange={onFilterUpdate}
@@ -100,12 +91,18 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
 };
 
 const QueryLogsWrapper = () => {
-  const [filter, setFilter] = useState(defaultFilterState);
-
   const { teamData, currentTeam } = CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const basePath = withAuthPrefix("/logs/query");
+
+  const {
+    dataSourceId = null,
+    from = null,
+    to = null,
+    sort = null,
+  } = location.query as unknown as QueryFiltersForm;
+  const filter: QueryFiltersForm = { dataSourceId, from, to, sort };
 
   const dataSources = useMemo(
     () => teamData?.dataSources || [],
@@ -132,11 +129,13 @@ const QueryLogsWrapper = () => {
   const onClickRow = (recordId: string) =>
     setLocation(`${basePath}/${recordId}`);
 
-  useEffect(() => {
-    if (dataSources) {
-      setFilter((prev) => ({ ...prev, dataSourceId: null }));
-    }
-  }, [dataSources]);
+  const onFilterUpdate = (filters: QueryFiltersForm) => {
+    setLocation(
+      `${basePath}?${new URLSearchParams(
+        Object.entries(filters).filter((f) => f[1])
+      )}`
+    );
+  };
 
   return (
     <QueryLogs
@@ -147,7 +146,7 @@ const QueryLogsWrapper = () => {
       fetching={allData.fetching}
       dataSources={dataSources}
       filter={filter}
-      onFilterUpdate={setFilter}
+      onFilterUpdate={onFilterUpdate}
       onPageChange={onPageChange}
       onClickRow={onClickRow}
     />

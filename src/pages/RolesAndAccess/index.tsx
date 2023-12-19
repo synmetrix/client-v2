@@ -7,11 +7,10 @@ import { useParams } from "@vitjs/runtime";
 import Modal from "@/components/Modal";
 import PageHeader from "@/components/PageHeader";
 import RoleForm from "@/components/RoleForm";
-import type { AllAccessListsQuery, Datasources } from "@/graphql/generated";
+import type { AllAccessListsQuery } from "@/graphql/generated";
 import {
   useAllAccessListsQuery,
   useCreateAccessListMutation,
-  useDatasourcesQuery,
   useDeleteAccessListMutation,
   useSubAccessListsSubscription,
   useUpdateAccessListMutation,
@@ -19,7 +18,6 @@ import {
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
-import { prepareDataSourceData } from "@/hooks/useUserData";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type {
   AccessList,
@@ -256,7 +254,8 @@ const filterEmpty = (data: Cube) =>
 
 const RolesAndAccessWrapper: React.FC = () => {
   const { t } = useTranslation(["settings", "pages"]);
-  const { currentTeam } = CurrentUserStore();
+
+  const { currentTeam, teamData } = CurrentUserStore();
   const [, setLocation] = useLocation();
   const { editId } = useParams();
   const isNew = editId === "new";
@@ -264,15 +263,6 @@ const RolesAndAccessWrapper: React.FC = () => {
   const [createMutation, execCreateMutation] = useCreateAccessListMutation();
   const [updateMutation, execUpdateMutation] = useUpdateAccessListMutation();
   const [deleteMutation, execDeleteMutation] = useDeleteAccessListMutation();
-  const [dataSourcesData, execDataSourcesQuery] = useDatasourcesQuery({
-    variables: {
-      where: {
-        team_id: {
-          _eq: currentTeam?.id,
-        },
-      },
-    },
-  });
 
   const [accessListsData, execAccessLists] = useAllAccessListsQuery({
     variables: {
@@ -288,7 +278,7 @@ const RolesAndAccessWrapper: React.FC = () => {
     pause: true,
   });
 
-  const [subscriptionData] = useSubAccessListsSubscription({
+  const [subscriptionData, execSubAccessLists] = useSubAccessListsSubscription({
     variables: {
       where: {
         team_id: {
@@ -296,6 +286,7 @@ const RolesAndAccessWrapper: React.FC = () => {
         },
       },
     },
+    pause: true,
   });
 
   useCheckResponse(createMutation, () => {}, {
@@ -311,11 +302,8 @@ const RolesAndAccessWrapper: React.FC = () => {
   });
 
   const dataSources = useMemo(
-    () =>
-      prepareDataSourceData(
-        dataSourcesData?.data?.datasources as Datasources[]
-      ),
-    [dataSourcesData.data?.datasources]
+    () => teamData?.dataSources || [],
+    [teamData?.dataSources]
   );
   const dataSourceAccess = useMemo(
     () => prepareDataSourceAccess(dataSources),
@@ -333,7 +321,7 @@ const RolesAndAccessWrapper: React.FC = () => {
 
         if (
           !Object.keys(filteredCubes).length ||
-          !dataSources.find((d) => d.id === id)
+          !dataSources.find((d: DataSourceInfo) => d.id === id)
         ) {
           return acc;
         }
@@ -383,10 +371,9 @@ const RolesAndAccessWrapper: React.FC = () => {
 
   useEffect(() => {
     if (currentTeam?.id) {
-      execAccessLists();
-      execDataSourcesQuery();
+      execSubAccessLists();
     }
-  }, [currentTeam?.id, execAccessLists, execDataSourcesQuery]);
+  }, [currentTeam?.id, execSubAccessLists]);
 
   useEffect(() => {
     if (subscriptionData.data) {

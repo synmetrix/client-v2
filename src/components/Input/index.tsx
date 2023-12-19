@@ -14,6 +14,9 @@ import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import ru from "antd/es/date-picker/locale/ru_RU";
 import en from "antd/es/date-picker/locale/en_US";
+import dayjs, { extend } from "dayjs";
+import weekday from "dayjs/plugin/weekday";
+import localeData from "dayjs/plugin/localeData";
 
 import formatTime from "@/utils/helpers/formatTime";
 
@@ -33,6 +36,9 @@ import type {
 import type { Control, Path, PathValue, FieldValues } from "react-hook-form";
 import type { PasswordProps } from "antd/es/input/Password";
 import type { ReactNode } from "react";
+
+extend(weekday);
+extend(localeData);
 
 type ParentProps = BasicCheckboxProps &
   BasicInputProps &
@@ -303,6 +309,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 placeholder={
                   !value ? placeholder : formatTime(value, "YYYY-MM-DD")
                 }
+                value={Date.parse(value) ? dayjs(value) : undefined}
                 status={invalid ? "error" : undefined}
               />
               <span className={styles.error}>{error?.message}</span>

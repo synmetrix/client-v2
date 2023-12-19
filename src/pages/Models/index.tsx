@@ -341,6 +341,7 @@ const ModelsWrapper: React.FC = () => {
     totalCount,
     queries: {
       allData: { fetching: versionsLoading },
+      execQueryAll: execVersionsAll,
     },
   } = useVersions({
     branchId: currentBranchId,
@@ -513,13 +514,15 @@ const ModelsWrapper: React.FC = () => {
   const onGenSubmit = async (values: object, format: string) => {
     const tables = getTables(values);
 
-    execGenSchemaMutation({
+    await execGenSchemaMutation({
       datasource_id: dataSourceId,
       branch_id: currentBranchId,
       tables,
       format,
       overwrite: true,
     });
+
+    execVersionsAll();
 
     onModalClose(true);
   };
@@ -574,6 +577,7 @@ const ModelsWrapper: React.FC = () => {
     }
 
     await execCreateVersionMutation({ object: versionData });
+    execVersionsAll();
   };
 
   const onClickCreate = async (values: Partial<Dataschema>) => {

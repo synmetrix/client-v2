@@ -284,7 +284,7 @@ export const Models: React.FC<ModelsProps> = ({
   );
 };
 
-const reservedSlugs = ["sqlrunner", "genschema", "docs"];
+const reservedSlugs = ["sqlrunner", "genmodels", "docs"];
 
 const ModelsWrapper: React.FC = () => {
   const { t } = useTranslation(["models", "common"]);
@@ -327,6 +327,8 @@ const ModelsWrapper: React.FC = () => {
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
     `${dataSourceId}:currentBranch`
   );
+  const [currentDataSourceId, setCurrentDataSourceId] =
+    useLocalStorageState<string>("currentDataSourceId");
 
   const {
     tableState: { paginationVars, pageSize, currentPage },
@@ -369,7 +371,7 @@ const ModelsWrapper: React.FC = () => {
     },
   });
 
-  const genSchemaModalVisible = slug === "genschema";
+  const genSchemaModalVisible = slug === "genmodels";
   const versionsModalVisible = slug === "versions";
 
   useEffect(() => {
@@ -477,10 +479,24 @@ const ModelsWrapper: React.FC = () => {
   }, [sourceTablesSchema]);
 
   useLayoutEffect(() => {
-    if (!dataSourceId && teamData?.dataSources?.length) {
-      setLocation(`${basePath}/${teamData.dataSources[0].id}`);
+    if (teamData?.dataSources?.length) {
+      if (!dataSourceId && !currentDataSourceId) {
+        setLocation(`${basePath}/${teamData.dataSources[0].id}`);
+        setCurrentDataSourceId(teamData.dataSources[0].id);
+      } else if (dataSourceId && dataSourceId !== currentDataSourceId) {
+        setCurrentDataSourceId(dataSourceId);
+      } else if (!dataSourceId && currentDataSourceId) {
+        setLocation(`${basePath}/${currentDataSourceId}`);
+      }
     }
-  }, [dataSourceId, teamData, basePath, setLocation]);
+  }, [
+    dataSourceId,
+    teamData,
+    basePath,
+    setLocation,
+    currentDataSourceId,
+    setCurrentDataSourceId,
+  ]);
 
   const inputFile = useRef<HTMLInputElement>(null);
 
@@ -729,7 +745,7 @@ const ModelsWrapper: React.FC = () => {
       key: "gen",
       label: t("ide_menu.generate_schema"),
       onClick: () =>
-        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/genschema`),
+        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/genmodels`),
     },
     {
       key: "import",

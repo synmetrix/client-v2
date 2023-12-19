@@ -425,6 +425,8 @@ const DataSourcesWrapper = () => {
       id: resultId,
     } as DataSourceSetupForm);
 
+    setLocation(`${basePath}/${resultId}`);
+
     if (!testResult || isTest) {
       return;
     }

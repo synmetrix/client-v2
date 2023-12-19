@@ -372,6 +372,8 @@ const ExploreWrapper = () => {
         setLocation(withAuthPrefix(`/explore/${datasources?.[0]?.id}`));
         setCurrentDataSourceId(datasources?.[0]?.id);
       }
+    } else if (!datasources?.length && dataSourceId) {
+      setLocation("/explore");
     }
   }, [
     curSource,

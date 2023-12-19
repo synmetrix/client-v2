@@ -490,6 +490,8 @@ const ModelsWrapper: React.FC = () => {
       } else if (!dataSourceId && currentDataSourceId) {
         setLocation(`${basePath}/${currentDataSourceId}`);
       }
+    } else if (dataSourceId) {
+      setLocation(basePath);
     } else {
       setCurrentDataSourceId(null);
     }

@@ -1,7 +1,7 @@
 import { Space, Spin, Typography, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
-import { useLocalStorageState, useTrackedEffect } from "ahooks";
+import { useLocalStorageState } from "ahooks";
 import { getOr } from "unchanged";
 import JSZip from "jszip";
 import { load } from "js-yaml";
@@ -136,7 +136,6 @@ export const Models: React.FC<ModelsProps> = ({
     openTab,
     openedTabs,
     openSchema,
-    resetTabs,
   } = useModelsIde({
     dataSourceId: dataSource?.id || "",
     branchId: currentBranch?.id,
@@ -149,15 +148,6 @@ export const Models: React.FC<ModelsProps> = ({
         .filter(Boolean),
     [dataschemas, openedTabs]
   ) as Dataschema[];
-
-  useTrackedEffect(
-    (changes, prevDeps, currDeps) => {
-      if (prevDeps?.[0]?.id !== currDeps?.[0]?.id) {
-        resetTabs();
-      }
-    },
-    [currentVersion]
-  );
 
   useEffect(() => {
     if (dataSchemaName) {

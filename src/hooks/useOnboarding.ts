@@ -87,11 +87,14 @@ export default ({ editId }: Props) => {
     [editId, dataSourceSetup?.id, dataSources]
   );
   const activeBranchId = useMemo(
-    () => curDataSource?.branch?.id,
-    [curDataSource?.branch?.id]
+    () => curDataSource?.branches?.find((b) => b.status === "active")?.id,
+    [curDataSource?.branches]
   );
 
-  const onDataModelGenerationSubmit = async (data: DynamicForm) => {
+  const onDataModelGenerationSubmit = async (
+    data: DynamicForm,
+    callback?: () => void
+  ) => {
     setLoading(true);
 
     let tables = { ...data } as any;
@@ -114,6 +117,11 @@ export default ({ editId }: Props) => {
       });
 
       if (res.error) {
+        return null;
+      }
+
+      if (callback) {
+        callback();
         return null;
       }
 
@@ -214,7 +222,8 @@ export default ({ editId }: Props) => {
 
   const onDataSourceSetupSubmit = async (
     data: DataSourceSetupForm,
-    isTest?: boolean
+    isTest?: boolean,
+    callback?: () => void
   ) => {
     const resultId = await createOrUpdateDataSource(data);
 
@@ -230,7 +239,7 @@ export default ({ editId }: Props) => {
       await createSQLApi(resultId, data.name);
     }
 
-    nextStep();
+    callback?.();
   };
 
   useEffect(() => {

@@ -8,25 +8,30 @@ import useLocation from "@/hooks/useLocation";
 import DataSourceStore from "@/stores/DataSourceStore";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useOnboarding from "@/hooks/useOnboarding";
+import type {
+  DataSource,
+  DataSourceSetupForm,
+  DynamicForm,
+} from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
 interface OnboardingProps {
-  step: number;
   loading: boolean;
   onFinish: () => void;
-  onTestConnection: () => void;
-  onDataSourceSetupSubmit: () => void;
-  onDataModelGenerationSubmit: () => void;
+  onDataSourceSelect: (data: DataSource) => void;
+  onTestConnection: (data: DataSourceSetupForm) => void;
+  onDataSourceSetupSubmit: (data: DataSourceSetupForm) => void;
+  onDataModelGenerationSubmit: (data: DynamicForm) => void;
   onChangeStep: (value: number) => void;
 }
 
 const Onboarding: React.FC<OnboardingProps> = ({
-  step = 0,
   loading = false,
   onFinish = () => {},
   onChangeStep = () => {},
   onTestConnection = () => {},
+  onDataSourceSelect = () => {},
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
 }) => {
@@ -35,10 +40,10 @@ const Onboarding: React.FC<OnboardingProps> = ({
       <Row className={styles.container}>
         <Col xs={24}>
           <DataSourceForm
-            step={step}
             onChangeStep={onChangeStep}
             loading={loading}
             onFinish={onFinish}
+            onDataSourceSelect={onDataSourceSelect}
             onTestConnection={onTestConnection}
             onDataSourceSetupSubmit={onDataSourceSetupSubmit}
             onDataModelGenerationSubmit={onDataModelGenerationSubmit}
@@ -56,13 +61,14 @@ const OnboardingWrapper = () => {
   const { withAuthPrefix } = useAppSettings();
   const basePath = withAuthPrefix("/onboarding");
 
-  // 0 - 3
   const step = useMemo(() => parseInt(pageStep || "0", 10) - 1, [pageStep]);
 
   const {
     formState: { step0, step1 },
-    step: curStep,
+    isOnboarding,
+    setIsOnboarding,
     setStep,
+    setFormStateData,
   } = DataSourceStore();
 
   const { onDataModelGenerationSubmit, onDataSourceSetupSubmit } =
@@ -75,6 +81,33 @@ const OnboardingWrapper = () => {
   const onChangeStep = (value: number) => {
     setLocation(`${basePath}/${value + 1}`);
   };
+
+  const onNextStep = () => {
+    setLocation(`${basePath}/${step + 2}`);
+  };
+
+  const onDataSourceSelect = (value: DataSource) => {
+    setFormStateData(0, value);
+    onNextStep();
+  };
+
+  const onDatasourceSetup = async (data: DataSourceSetupForm) => {
+    await onDataSourceSetupSubmit(data, false, onNextStep);
+  };
+
+  const onDataModelGeneration = async (data: DynamicForm) => {
+    await onDataModelGenerationSubmit(data, onNextStep);
+  };
+
+  const onTestConnection = async (data: DataSourceSetupForm) => {
+    await onDataSourceSetupSubmit(data, true, onNextStep);
+  };
+
+  useEffect(() => {
+    if (step >= 0) {
+      setStep(step);
+    }
+  }, [setStep, step]);
 
   useEffect(() => {
     if (step < 0 || step > 4 || isNaN(step)) {
@@ -90,15 +123,21 @@ const OnboardingWrapper = () => {
     }
   }, [basePath, setLocation, step, step0, step1]);
 
+  useEffect(() => {
+    if (!isOnboarding) {
+      setIsOnboarding(true);
+    }
+  }, [isOnboarding, setIsOnboarding]);
+
   return (
     <Onboarding
-      step={pageStep}
       loading={loading}
       onFinish={onFinish}
       onChangeStep={onChangeStep}
-      onTestConnection={onDataSourceSetupSubmit}
-      onDataSourceSetupSubmit={onDataSourceSetupSubmit}
-      onDataModelGenerationSubmit={onDataModelGenerationSubmit}
+      onDataSourceSelect={onDataSourceSelect}
+      onTestConnection={onTestConnection}
+      onDataSourceSetupSubmit={onDatasourceSetup}
+      onDataModelGenerationSubmit={onDataModelGeneration}
     />
   );
 };

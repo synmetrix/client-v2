@@ -22,6 +22,7 @@ interface DataSourceFormBodyProps {
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;
+  onDataSourceSelect?: (value: DataSource) => void;
 }
 
 const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
@@ -31,6 +32,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   onTestConnection = () => {},
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
+  onDataSourceSelect = () => {},
 }) => {
   const {
     step,
@@ -39,17 +41,10 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
     formState: formData,
     schema,
     setStep,
-    nextStep,
-    setFormStateData,
   } = DataSourceStore();
 
   const onGoBack = () => setStep(step - 1);
   const onSkip = () => setStep(step + 1);
-
-  const onDataSourceSelect = (value: DataSource) => {
-    setFormStateData(0, value);
-    nextStep();
-  };
 
   const onDataSourceSetup = async (data: DataSourceSetupForm) => {
     await onDataSourceSetupSubmit(data);

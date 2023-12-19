@@ -5,7 +5,11 @@ import { useTranslation } from "react-i18next";
 import StepFormHeader from "@/components/StepFormHeader";
 import BouncingDotsLoader from "@/components/BouncingDotsLoader";
 import DataSourceFormBody from "@/components/DataSourceFormBody";
-import type { DataSourceSetupForm, DynamicForm } from "@/types/dataSource";
+import type {
+  DataSource,
+  DataSourceSetupForm,
+  DynamicForm,
+} from "@/types/dataSource";
 import DataSourceStore from "@/stores/DataSourceStore";
 
 import styles from "./index.module.less";
@@ -14,11 +18,11 @@ import type { FC } from "react";
 
 interface DataSourceFormProps {
   onFinish: () => void;
+  onDataSourceSelect?: (data: DataSource) => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;
   onChangeStep?: (value: number) => void;
-  step?: number;
   bordered?: boolean;
   loading?: boolean;
   shadow?: boolean;
@@ -26,23 +30,17 @@ interface DataSourceFormProps {
 
 const DataSourceForm: FC<DataSourceFormProps> = ({
   onFinish = () => {},
+  onDataSourceSelect = () => {},
   onTestConnection = () => {},
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
   onChangeStep,
-  step: curStep,
   bordered = true,
   loading = false,
   shadow = true,
 }) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { step, setStep } = DataSourceStore();
-
-  useEffect(() => {
-    if (curStep) {
-      setStep(step);
-    }
-  }, [curStep, setStep, step]);
+  const { step } = DataSourceStore();
 
   return (
     <Card
@@ -62,6 +60,7 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
         <Suspense fallback={<BouncingDotsLoader />}>
           <DataSourceFormBody
             onFinish={onFinish}
+            onDataSourceSelect={onDataSourceSelect}
             onTestConnection={onTestConnection}
             onDataSourceSetupSubmit={onDataSourceSetupSubmit}
             onDataModelGenerationSubmit={onDataModelGenerationSubmit}

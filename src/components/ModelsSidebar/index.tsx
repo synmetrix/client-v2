@@ -297,7 +297,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                           onConfirm={(e) => {
                             e?.preventDefault();
                             e?.stopPropagation();
-                            onSchemaDelete(f.id);
+                            onSchemaDelete(f);
                           }}
                           okText={t("common:words.remove")}
                           cancelText={t("common:words.cancel")}

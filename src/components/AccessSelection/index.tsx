@@ -1,5 +1,4 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useResponsive } from "ahooks";
 import { FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -26,9 +25,6 @@ const AccessSelection: FC<AccessSelectionProps> = ({
   onSelect,
   active,
 }) => {
-  const windowSize = useResponsive();
-  const isLg = windowSize.md === false;
-
   return (
     <Swiper
       slidesPerView={"auto"}

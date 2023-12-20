@@ -59,6 +59,7 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
         )}
         <Suspense fallback={<BouncingDotsLoader />}>
           <DataSourceFormBody
+            onChangeStep={onChangeStep}
             onFinish={onFinish}
             onDataSourceSelect={onDataSourceSelect}
             onTestConnection={onTestConnection}

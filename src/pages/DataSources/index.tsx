@@ -22,6 +22,7 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import DataSourceStore from "@/stores/DataSourceStore";
 import { Roles } from "@/types/team";
 import type {
+  DataSource,
   DataSourceInfo,
   DataSourceSetupForm,
   DynamicForm,
@@ -35,6 +36,7 @@ interface DataSourcesProps {
   loading?: boolean;
   defaultOpen?: boolean;
   onFinish: () => void;
+  onDataSourceSelect?: (value: DataSource) => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;
@@ -48,6 +50,7 @@ export const DataSources = ({
   disableCreate = false,
   loading = false,
   defaultOpen = false,
+  onDataSourceSelect = () => {},
   onTestConnection = () => {},
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
@@ -209,6 +212,7 @@ export const DataSources = ({
       >
         <DataSourceForm
           onFinish={onFormFinish}
+          onDataSourceSelect={onDataSourceSelect}
           onTestConnection={onTestConnection}
           onDataSourceSetupSubmit={onDataSourceSetupSubmit}
           onDataModelGenerationSubmit={onDataModelGenerationSubmit}
@@ -239,6 +243,8 @@ const DataSourcesWrapper = () => {
     setStep,
     setIsOnboarding,
     clean,
+    nextStep,
+    setFormStateData,
   } = DataSourceStore();
 
   const {
@@ -289,6 +295,23 @@ const DataSourcesWrapper = () => {
     connect,
   ]);
 
+  const onDataSourceSelect = (value: DataSource) => {
+    setFormStateData(0, value);
+    nextStep();
+  };
+
+  const onDatasourceSetup = async (data: DataSourceSetupForm) => {
+    await onDataSourceSetupSubmit(data, false, nextStep);
+  };
+
+  const onDataModelGeneration = async (data: DynamicForm) => {
+    await onDataModelGenerationSubmit(data, nextStep);
+  };
+
+  const onTestConnection = async (data: DataSourceSetupForm) => {
+    await onDataSourceSetupSubmit(data, true, nextStep);
+  };
+
   useEffect(() => {
     if (connect) {
       setIsOnboarding(true);
@@ -329,9 +352,10 @@ const DataSourcesWrapper = () => {
       onDelete={onDelete}
       onFinish={onFinish}
       onGenerate={onGenerate}
-      onTestConnection={onDataSourceSetupSubmit}
-      onDataSourceSetupSubmit={onDataSourceSetupSubmit}
-      onDataModelGenerationSubmit={onDataModelGenerationSubmit}
+      onTestConnection={onTestConnection}
+      onDataSourceSelect={onDataSourceSelect}
+      onDataSourceSetupSubmit={onDatasourceSetup}
+      onDataModelGenerationSubmit={onDataModelGeneration}
     />
   );
 };

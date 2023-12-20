@@ -18,6 +18,7 @@ import type { FC } from "react";
 interface DataSourceFormBodyProps {
   activeStep?: number;
   formState?: FormState;
+  onChangeStep?: (value: number) => void;
   onFinish: () => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
@@ -28,6 +29,7 @@ interface DataSourceFormBodyProps {
 const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   activeStep,
   formState,
+  onChangeStep,
   onFinish = () => {},
   onTestConnection = () => {},
   onDataSourceSetupSubmit = () => {},
@@ -43,8 +45,8 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
     setStep,
   } = DataSourceStore();
 
-  const onGoBack = () => setStep(step - 1);
-  const onSkip = () => setStep(step + 1);
+  const onGoBack = () => onChangeStep?.(step - 1) || setStep(step - 1);
+  const onSkip = () => onChangeStep?.(step + 1) || setStep(step + 1);
 
   const onDataSourceSetup = async (data: DataSourceSetupForm) => {
     await onDataSourceSetupSubmit(data);

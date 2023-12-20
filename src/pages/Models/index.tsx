@@ -252,6 +252,7 @@ export const Models: React.FC<ModelsProps> = ({
             width={1004}
             open={versionsModalVisible}
             onClose={onModalClose}
+            destroyOnClose
           >
             <VersionsList
               onRestore={onSaveVersion}

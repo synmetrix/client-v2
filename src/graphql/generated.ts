@@ -12939,6 +12939,13 @@ export type VersionByBranchIdQuery = {
       checksum?: string | null;
     }>;
   }>;
+  versions_aggregate: {
+    __typename?: "versions_aggregate";
+    aggregate?: {
+      __typename?: "versions_aggregate_fields";
+      count: number;
+    } | null;
+  };
 };
 
 export type CurrentVersionQueryVariables = Exact<{
@@ -12963,21 +12970,6 @@ export type CurrentVersionQuery = {
       checksum?: string | null;
     }>;
   }>;
-};
-
-export type VersionsCountQueryVariables = Exact<{
-  branch_id: Scalars["uuid"]["input"];
-}>;
-
-export type VersionsCountQuery = {
-  __typename?: "query_root";
-  versions_aggregate: {
-    __typename?: "versions_aggregate";
-    aggregate?: {
-      __typename?: "versions_aggregate_fields";
-      count: number;
-    } | null;
-  };
 };
 
 export const BranchesFieldsFragmentDoc = gql`
@@ -14492,6 +14484,11 @@ export const VersionByBranchIdDocument = gql`
         checksum
       }
     }
+    versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
+      aggregate {
+        count
+      }
+    }
   }
 `;
 
@@ -14534,24 +14531,6 @@ export function useCurrentVersionQuery(
     ...options,
   });
 }
-export const VersionsCountDocument = gql`
-  query VersionsCount($branch_id: uuid!) {
-    versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-export function useVersionsCountQuery(
-  options: Omit<Urql.UseQueryArgs<VersionsCountQueryVariables>, "query">
-) {
-  return Urql.useQuery<VersionsCountQuery, VersionsCountQueryVariables>({
-    query: VersionsCountDocument,
-    ...options,
-  });
-}
 export const namedOperations = {
   Query: {
     AllAccessLists: "AllAccessLists",
@@ -14572,7 +14551,6 @@ export const namedOperations = {
     GetUsers: "GetUsers",
     versionByBranchId: "versionByBranchId",
     CurrentVersion: "CurrentVersion",
-    VersionsCount: "VersionsCount",
   },
   Mutation: {
     UpdateAccessList: "UpdateAccessList",

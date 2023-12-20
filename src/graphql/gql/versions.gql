@@ -29,6 +29,11 @@ query versionByBranchId($branch_id: uuid!, $limit: Int, $offset: Int) {
       checksum
     }
   }
+  versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
+    aggregate {
+      count
+    }
+  }
 }
 
 query CurrentVersion($branch_id: uuid!) {
@@ -49,14 +54,6 @@ query CurrentVersion($branch_id: uuid!) {
       name
       code
       checksum
-    }
-  }
-}
-
-query VersionsCount($branch_id: uuid!) {
-  versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
-    aggregate {
-      count
     }
   }
 }

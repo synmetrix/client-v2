@@ -6,7 +6,6 @@ import Button from "@/components/Button";
 import Copy from "@/components/Copy";
 import formatTime from "@/utils/helpers/formatTime";
 import type { Dataschema } from "@/types/dataschema";
-import { useVersionsCountQuery } from "@/graphql/generated";
 import type { Version } from "@/types/version";
 import useVersions from "@/hooks/useVersions";
 import useTableState from "@/hooks/useTableState";
@@ -34,14 +33,9 @@ const VersionsList: FC<VersionsListProps> = ({ onRestore, branch }) => {
     onPageChange,
   } = useTableState({ customPageSize: 5 });
 
-  const [countData, execQueryCount] = useVersionsCountQuery({
-    variables: {
-      branch_id: branch,
-    },
-  });
-
   const {
     versions,
+    totalCount,
     queries: {
       allData: { fetching },
     },
@@ -49,12 +43,6 @@ const VersionsList: FC<VersionsListProps> = ({ onRestore, branch }) => {
     branchId: branch,
     pagination: paginationVars,
   });
-
-  const loading = countData.fetching || fetching;
-
-  useEffect(() => {
-    execQueryCount();
-  }, [execQueryCount]);
 
   const columns: TableProps<Version>["columns"] = [
     {
@@ -126,7 +114,7 @@ const VersionsList: FC<VersionsListProps> = ({ onRestore, branch }) => {
         rowKey={(rec) => rec.name}
         expandable={{ expandedRowRender: renderFileValue }}
         pagination={false}
-        loading={loading}
+        loading={fetching}
       />
     );
   };
@@ -144,10 +132,10 @@ const VersionsList: FC<VersionsListProps> = ({ onRestore, branch }) => {
           pageSize,
           current: currentPage,
           onChange: (current: number) => onPageChange({ current }),
-          total: countData.data?.versions_aggregate.aggregate?.count,
+          total: totalCount,
           showSizeChanger: false,
         }}
-        loading={loading}
+        loading={fetching}
       />
     </Space>
   );

@@ -15,6 +15,8 @@ import SearchInput from "@/components/SearchInput";
 import PopoverButton from "@/components/PopoverButton";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
 import DataSchemaForm from "@/components/DataSchemaForm";
+import useSubstringSearch from "@/hooks/useSubstringSearch";
+import Highlight from "@/components/Highlight";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
 
@@ -77,12 +79,16 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   const isMobile = windowSize.md === false;
 
   const [isCreateFormOpen, setIsCreateFormOpen] = useState<boolean>(false);
-  const [searchValue, setSearchValue] = useState<string>("");
   const [newBranchName, setNewBranchName] = useState<string>("");
   const [editPopover, setEditPopover] = useState<{
     id: string;
     type: "remove" | "edit";
   } | null>(null);
+  const {
+    term: searchTerm,
+    matchedItems: filteredSchemas,
+    setTerm,
+  } = useSubstringSearch(files, "code");
 
   const onPopoverChange =
     (file: Dataschema, type: "remove" | "edit") => (isVisible: boolean) => {
@@ -193,8 +199,8 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
         <Space className={styles.space} size={16} direction="vertical">
           <div className={cn(styles.row, styles.searchRow)}>
             <SearchInput
-              value={searchValue}
-              onChange={setSearchValue}
+              value={searchTerm}
+              onChange={(val) => setTerm(val.toLowerCase())}
               placeholder={t("common:form.placeholders.search")}
             />
 
@@ -231,84 +237,91 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
             )}
           </div>
 
-          {files
-            .filter((f) =>
-              f.name.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            .map((f) => {
-              return (
-                <div
-                  key={f.id}
-                  className={styles.fileBtn}
-                  onClick={() => onSelectFile(f.name)}
-                >
-                  <Row justify={"space-between"} wrap={false}>
-                    <Col className={styles.file} span={18} title={f.name}>
-                      {icons[f.name.split(".")[1] as keyof typeof icons]}{" "}
-                      <span className={styles.fileNameText}>{f.name}</span>
-                    </Col>
+          {((searchTerm && filteredSchemas) || files).map((f) => {
+            return (
+              <div
+                key={f.id}
+                className={styles.fileBtn}
+                onClick={() => onSelectFile(f.name)}
+              >
+                <Row justify={"space-between"} wrap={false}>
+                  <Col className={styles.file} span={18} title={f.name}>
+                    {icons[f.name.split(".")[1] as keyof typeof icons]}{" "}
+                    <span className={styles.fileNameText}>{f.name}</span>
+                  </Col>
 
-                    <Col
-                      span={6}
-                      style={{ display: "flex", justifyContent: "end" }}
-                    >
-                      <Space align="center" size={8}>
-                        <PopoverButton
-                          className={styles.edit}
-                          trigger={["click"]}
-                          icon={<EditOutlined />}
-                          isVisible={
-                            editPopover?.id === f.id &&
-                            editPopover?.type === "edit"
-                          }
-                          onVisibleChange={onPopoverChange(f, "edit")}
-                          content={
-                            <DataSchemaForm
-                              defaultValues={f}
-                              onSubmit={(d) =>
-                                onSchemaUpdate(f.id, {
-                                  ...f,
-                                  ...d,
-                                })
-                              }
-                            />
-                          }
-                          buttonProps={{
-                            size: "small",
-                            type: "link",
-                            className: styles.fileControl,
-                          }}
-                        />
+                  <Col
+                    span={6}
+                    style={{ display: "flex", justifyContent: "end" }}
+                  >
+                    <Space align="center" size={8}>
+                      <PopoverButton
+                        className={styles.edit}
+                        trigger={["click"]}
+                        icon={<EditOutlined />}
+                        isVisible={
+                          editPopover?.id === f.id &&
+                          editPopover?.type === "edit"
+                        }
+                        onVisibleChange={onPopoverChange(f, "edit")}
+                        content={
+                          <DataSchemaForm
+                            defaultValues={f}
+                            onSubmit={(d) =>
+                              onSchemaUpdate(f.id, {
+                                ...f,
+                                ...d,
+                              })
+                            }
+                          />
+                        }
+                        buttonProps={{
+                          size: "small",
+                          type: "link",
+                          className: styles.fileControl,
+                        }}
+                      />
 
-                        <PopoverButton
-                          popoverType="popconfirm"
-                          title={t("sure_delete")}
-                          buttonProps={{
-                            size: "small",
-                            type: "link",
-                            className: styles.fileControl,
-                          }}
-                          isVisible={
-                            editPopover?.id === f.id &&
-                            editPopover?.type === "remove"
-                          }
-                          onVisibleChange={onPopoverChange(f, "remove")}
-                          trigger={"click"}
-                          onConfirm={(e) => {
-                            e?.preventDefault();
-                            e?.stopPropagation();
-                            onSchemaDelete(f);
-                          }}
-                          okText={t("common:words.remove")}
-                          cancelText={t("common:words.cancel")}
-                          icon={<DeleteOutlined />}
-                        />
-                      </Space>
-                    </Col>
-                  </Row>
-                </div>
-              );
-            })}
+                      <PopoverButton
+                        popoverType="popconfirm"
+                        title={t("sure_delete")}
+                        buttonProps={{
+                          size: "small",
+                          type: "link",
+                          className: styles.fileControl,
+                        }}
+                        isVisible={
+                          editPopover?.id === f.id &&
+                          editPopover?.type === "remove"
+                        }
+                        onVisibleChange={onPopoverChange(f, "remove")}
+                        trigger={"click"}
+                        onConfirm={(e) => {
+                          e?.preventDefault();
+                          e?.stopPropagation();
+                          onSchemaDelete(f);
+                        }}
+                        okText={t("common:words.remove")}
+                        cancelText={t("common:words.cancel")}
+                        icon={<DeleteOutlined />}
+                      />
+                    </Space>
+                  </Col>
+                </Row>
+                {"matchedLines" in f &&
+                  Object.entries(f.matchedLines || {}).map(
+                    ([lineIndex, match]) => (
+                      <Highlight
+                        key={lineIndex}
+                        index={Number(lineIndex)}
+                        text={match.line}
+                        indices={match.indices}
+                      />
+                    )
+                  )}
+              </div>
+            );
+          })}
         </Space>
       </div>
     </Space>

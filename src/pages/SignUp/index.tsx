@@ -32,7 +32,7 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    setLocation("/settings/sources/connect");
+    setLocation("/onboarding");
   };
 
   return (

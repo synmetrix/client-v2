@@ -103,6 +103,10 @@ export default [
                 component: "./pages/Home",
               },
               {
+                path: "/onboarding/:step?",
+                component: "./pages/Onboarding",
+              },
+              {
                 path: "/explore/:dataSourceId?/:explorationId?/:modalType?/:delivery?",
                 component: "./pages/Explore",
               },

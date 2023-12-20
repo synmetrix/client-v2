@@ -27,9 +27,6 @@ query versionByBranchId($branch_id: uuid!, $limit: Int, $offset: Int) {
       name
       code
       checksum
-      datasource {
-        team_id
-      }
     }
   }
 }
@@ -43,11 +40,6 @@ query CurrentVersion($branch_id: uuid!) {
   ) {
     id
     checksum
-    updated_at
-    created_at
-    user {
-      display_name
-    }
     dataschemas {
       created_at
       updated_at
@@ -57,9 +49,6 @@ query CurrentVersion($branch_id: uuid!) {
       name
       code
       checksum
-      datasource {
-        team_id
-      }
     }
   }
 }

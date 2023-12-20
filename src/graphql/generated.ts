@@ -12937,7 +12937,6 @@ export type VersionByBranchIdQuery = {
       name: string;
       code: string;
       checksum?: string | null;
-      datasource: { __typename?: "datasources"; team_id?: any | null };
     }>;
   }>;
 };
@@ -12952,9 +12951,6 @@ export type CurrentVersionQuery = {
     __typename?: "versions";
     id: any;
     checksum: string;
-    updated_at: any;
-    created_at: any;
-    user: { __typename?: "users"; display_name?: string | null };
     dataschemas: Array<{
       __typename?: "dataschemas";
       created_at: any;
@@ -12965,7 +12961,6 @@ export type CurrentVersionQuery = {
       name: string;
       code: string;
       checksum?: string | null;
-      datasource: { __typename?: "datasources"; team_id?: any | null };
     }>;
   }>;
 };
@@ -14495,9 +14490,6 @@ export const VersionByBranchIdDocument = gql`
         name
         code
         checksum
-        datasource {
-          team_id
-        }
       }
     }
   }
@@ -14520,11 +14512,6 @@ export const CurrentVersionDocument = gql`
     ) {
       id
       checksum
-      updated_at
-      created_at
-      user {
-        display_name
-      }
       dataschemas {
         created_at
         updated_at
@@ -14534,9 +14521,6 @@ export const CurrentVersionDocument = gql`
         name
         code
         checksum
-        datasource {
-          team_id
-        }
       }
     }
   }

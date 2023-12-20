@@ -32,7 +32,7 @@ const VersionsList: FC<VersionsListProps> = ({ onRestore, branch }) => {
   const {
     tableState: { paginationVars, pageSize, currentPage },
     onPageChange,
-  } = useTableState({});
+  } = useTableState({ customPageSize: 5 });
 
   const [countData, execQueryCount] = useVersionsCountQuery({
     variables: {
@@ -145,6 +145,7 @@ const VersionsList: FC<VersionsListProps> = ({ onRestore, branch }) => {
           current: currentPage,
           onChange: (current: number) => onPageChange({ current }),
           total: countData.data?.versions_aggregate.aggregate?.count,
+          showSizeChanger: false,
         }}
         loading={loading}
       />

@@ -2,16 +2,19 @@ import gql from "graphql-tag";
 import * as Urql from "urql";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends Record<string, unknown>> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]?: Maybe<T[SubKey]>;
 };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
-export type MakeEmpty<T extends Record<string, unknown>, K extends keyof T> = {
-  [_ in K]?: never;
-};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T
+> = { [_ in K]?: never };
 export type Incremental<T> =
   | T
   | {
@@ -12881,7 +12884,7 @@ export type CurrentTeamQuery = {
   } | null;
 };
 
-export type GetUsersQueryVariables = Exact<Record<string, never>>;
+export type GetUsersQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUsersQuery = {
   __typename?: "query_root";
@@ -12936,13 +12939,6 @@ export type VersionByBranchIdQuery = {
       checksum?: string | null;
       datasource: { __typename?: "datasources"; team_id?: any | null };
     }>;
-    dataschemas_aggregate: {
-      __typename?: "dataschemas_aggregate";
-      aggregate?: {
-        __typename?: "dataschemas_aggregate_fields";
-        count: number;
-      } | null;
-    };
   }>;
   versions_aggregate: {
     __typename?: "versions_aggregate";
@@ -14465,11 +14461,6 @@ export const VersionByBranchIdDocument = gql`
         checksum
         datasource {
           team_id
-        }
-      }
-      dataschemas_aggregate {
-        aggregate {
-          count
         }
       }
     }

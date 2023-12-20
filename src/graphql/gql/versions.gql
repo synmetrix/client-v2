@@ -31,11 +31,6 @@ query versionByBranchId($branch_id: uuid!, $limit: Int, $offset: Int) {
         team_id
       }
     }
-    dataschemas_aggregate {
-      aggregate {
-        count
-      }
-    }
   }
   versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
     aggregate {

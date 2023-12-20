@@ -4,8 +4,13 @@ mutation CreateVersion($object: versions_insert_input!) {
   }
 }
 
-query versionByBranchId ($branch_id: uuid!, $limit: Int, $offset: Int) {
-  versions(limit: $limit, offset: $offset, order_by: { created_at: desc }, where: { branch_id: { _eq: $branch_id }}) {
+query versionByBranchId($branch_id: uuid!, $limit: Int, $offset: Int) {
+  versions(
+    limit: $limit
+    offset: $offset
+    order_by: { created_at: desc }
+    where: { branch_id: { _eq: $branch_id } }
+  ) {
     id
     checksum
     updated_at
@@ -32,7 +37,7 @@ query versionByBranchId ($branch_id: uuid!, $limit: Int, $offset: Int) {
       }
     }
   }
-  versions_aggregate (where: { branch_id: { _eq: $branch_id }}) {
+  versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
     aggregate {
       count
     }

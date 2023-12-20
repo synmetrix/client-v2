@@ -1,7 +1,7 @@
 import { Space, Spin, Typography, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
-import { useLocalStorageState, useTrackedEffect } from "ahooks";
+import { useLocalStorageState } from "ahooks";
 import { getOr } from "unchanged";
 import JSZip from "jszip";
 import { load } from "js-yaml";
@@ -136,7 +136,6 @@ export const Models: React.FC<ModelsProps> = ({
     openTab,
     openedTabs,
     openSchema,
-    resetTabs,
   } = useModelsIde({
     dataSourceId: dataSource?.id || "",
     branchId: currentBranch?.id,
@@ -149,15 +148,6 @@ export const Models: React.FC<ModelsProps> = ({
         .filter(Boolean),
     [dataschemas, openedTabs]
   ) as Dataschema[];
-
-  useTrackedEffect(
-    (changes, prevDeps, currDeps) => {
-      if (prevDeps?.[0]?.id !== currDeps?.[0]?.id) {
-        resetTabs();
-      }
-    },
-    [currentVersion]
-  );
 
   useEffect(() => {
     if (dataSchemaName) {
@@ -341,6 +331,7 @@ const ModelsWrapper: React.FC = () => {
     totalCount,
     queries: {
       allData: { fetching: versionsLoading },
+      execQueryAll: execVersionsAll,
     },
   } = useVersions({
     branchId: currentBranchId,
@@ -394,26 +385,6 @@ const ModelsWrapper: React.FC = () => {
       successMessage: null,
     }
   );
-
-  useEffect(() => {
-    if (!dataSourceId) return;
-    if (!branch && !currentBranchId) {
-      const currentId =
-        branches?.find((b) => b.status === "active")?.id || branches?.[0]?.id;
-      setCurrentBranchId(currentId);
-      setLocation(`${basePath}/${dataSourceId}/${currentId}`);
-    } else if (branch !== currentBranchId) {
-      setCurrentBranchId(branch);
-    }
-  }, [
-    branches,
-    basePath,
-    branch,
-    currentBranchId,
-    dataSourceId,
-    setCurrentBranchId,
-    setLocation,
-  ]);
 
   const currentBranch = useMemo(
     () =>
@@ -481,19 +452,31 @@ const ModelsWrapper: React.FC = () => {
   }, [sourceTablesSchema]);
 
   useLayoutEffect(() => {
-    if (teamData?.dataSources?.length) {
-      if (!dataSourceId && !currentDataSourceId) {
-        setLocation(`${basePath}/${teamData.dataSources[0].id}`);
-        setCurrentDataSourceId(teamData.dataSources[0].id);
-      } else if (dataSourceId && dataSourceId !== currentDataSourceId) {
-        setCurrentDataSourceId(dataSourceId);
-      } else if (!dataSourceId && currentDataSourceId) {
+    if (!dataSourceId && teamData?.dataSources?.length) {
+      const isExist = teamData?.dataSources?.find(
+        (ds) => ds.id === currentDataSourceId
+      );
+      if (isExist) {
         setLocation(`${basePath}/${currentDataSourceId}`);
+      } else {
+        setCurrentDataSourceId(teamData?.dataSources?.[0]?.id);
       }
-    } else if (dataSourceId) {
+    }
+
+    if (dataSourceId && !teamData?.dataSources?.length) {
       setLocation(basePath);
-    } else {
-      setCurrentDataSourceId(null);
+    }
+
+    if (dataSourceId) {
+      const isExist = teamData?.dataSources?.find((d) => d.id === dataSourceId);
+
+      if (isExist) {
+        if (!branch && currentBranchId) {
+          setLocation(`${basePath}/${dataSourceId}/${currentBranchId}`);
+        }
+      } else {
+        setLocation(basePath);
+      }
     }
   }, [
     dataSourceId,
@@ -502,6 +485,8 @@ const ModelsWrapper: React.FC = () => {
     setLocation,
     currentDataSourceId,
     setCurrentDataSourceId,
+    branch,
+    currentBranchId,
   ]);
 
   const inputFile = useRef<HTMLInputElement>(null);
@@ -513,13 +498,15 @@ const ModelsWrapper: React.FC = () => {
   const onGenSubmit = async (values: object, format: string) => {
     const tables = getTables(values);
 
-    execGenSchemaMutation({
+    await execGenSchemaMutation({
       datasource_id: dataSourceId,
       branch_id: currentBranchId,
       tables,
       format,
       overwrite: true,
     });
+
+    execVersionsAll();
 
     onModalClose(true);
   };
@@ -574,6 +561,7 @@ const ModelsWrapper: React.FC = () => {
     }
 
     await execCreateVersionMutation({ object: versionData });
+    execVersionsAll();
   };
 
   const onClickCreate = async (values: Partial<Dataschema>) => {
@@ -808,7 +796,7 @@ const ModelsWrapper: React.FC = () => {
       versions={versions}
       onChangeBranch={(branchId) => {
         setCurrentBranchId(branchId);
-        setLocation(`${basePath}/${dataSourceId}/${branchId}/sqlrunner`);
+        setLocation(`${basePath}/${dataSourceId}/${branchId}`);
       }}
       onSetDefault={onSetDefault}
       onCreateBranch={onCreateBranch}

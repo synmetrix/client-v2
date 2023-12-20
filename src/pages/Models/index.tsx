@@ -23,7 +23,6 @@ import useModelsIde from "@/hooks/useModelsIde";
 import useSources from "@/hooks/useSources";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import usePermissions from "@/hooks/usePermissions";
-import useTableState from "@/hooks/useTableState";
 import calcChecksum from "@/utils/helpers/dataschemasChecksum";
 import getTables from "@/utils/helpers/getTables";
 import getCurrentBranch from "@/utils/helpers/getCurrentBranch";
@@ -32,12 +31,12 @@ import type { Dataschema } from "@/types/dataschema";
 import type { Version } from "@/types/version";
 import type { Branches_Insert_Input } from "@/graphql/generated";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import useVersions from "@/hooks/useVersions";
 import {
   useDeleteSchemaMutation,
   useCreateBranchMutation,
   useCreateVersionMutation,
   useSetDefaultBranchMutation,
+  useCurrentVersionQuery,
 } from "@/graphql/generated";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
@@ -57,7 +56,6 @@ interface ModelsProps {
   onSchemaDelete: (id: string) => void;
   onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
   dataSource?: DataSourceInfo;
-  versions?: Version[];
   currentBranch?: Branch;
   currentVersion?: Version;
   dataschemas?: Dataschema[];
@@ -86,14 +84,12 @@ interface ModelsProps {
   sqlError?: object;
   dataSources?: DataSourceInfo[];
   onConnect: () => void;
-  pagination?: any;
 }
 
 const { Title } = Typography;
 
 export const Models: React.FC<ModelsProps> = ({
   dataSource,
-  versions,
   dataSchemaName,
   branchMenu,
   ideMenu,
@@ -125,7 +121,6 @@ export const Models: React.FC<ModelsProps> = ({
   dataSources,
   sqlError,
   onConnect,
-  pagination,
 }) => {
   const { t } = useTranslation(["pages"]);
 
@@ -253,21 +248,17 @@ export const Models: React.FC<ModelsProps> = ({
               />
             </Modal>
           )}
-
-          {versions && (
-            <Modal
-              width={1004}
-              open={versionsModalVisible}
-              onClose={onModalClose}
-            >
-              <VersionsList
-                loading={fetching}
-                versions={versions}
-                pagination={pagination}
-                onRestore={onSaveVersion}
-              />
-            </Modal>
-          )}
+          <Modal
+            width={1004}
+            open={versionsModalVisible}
+            onClose={onModalClose}
+            destroyOnClose
+          >
+            <VersionsList
+              onRestore={onSaveVersion}
+              branch={currentBranch?.id}
+            />
+          </Modal>
         </Spin>
       )}
     </Layout>
@@ -321,21 +312,8 @@ const ModelsWrapper: React.FC = () => {
     string | null
   >("currentDataSourceId");
 
-  const {
-    tableState: { paginationVars, pageSize, currentPage },
-    onPageChange,
-  } = useTableState({});
-
-  const {
-    versions,
-    totalCount,
-    queries: {
-      allData: { fetching: versionsLoading },
-      execQueryAll: execVersionsAll,
-    },
-  } = useVersions({
-    branchId: currentBranchId,
-    pagination: paginationVars,
+  const [version, execVersionAll] = useCurrentVersionQuery({
+    variables: { branch_id: currentBranchId },
   });
 
   const onModalClose = (goBack: boolean = false) => {
@@ -392,8 +370,8 @@ const ModelsWrapper: React.FC = () => {
     [branches, currentBranchId]
   );
   const currentVersion = useMemo(
-    () => versions?.[0] || ({} as Version),
-    [versions]
+    () => version?.data?.versions[0] || ({} as Version),
+    [version]
   );
   const dataschemas = useMemo(
     () => currentVersion?.dataschemas || [],
@@ -506,7 +484,7 @@ const ModelsWrapper: React.FC = () => {
       overwrite: true,
     });
 
-    execVersionsAll();
+    execVersionAll();
 
     onModalClose(true);
   };
@@ -518,7 +496,7 @@ const ModelsWrapper: React.FC = () => {
   }
 
   const fetching =
-    versionsLoading ||
+    version?.fetching ||
     deleteMutation.fetching ||
     setDefaultMutation.fetching ||
     validateMutation.fetching ||
@@ -561,7 +539,7 @@ const ModelsWrapper: React.FC = () => {
     }
 
     await execCreateVersionMutation({ object: versionData });
-    execVersionsAll();
+    execVersionAll();
   };
 
   const onClickCreate = async (values: Partial<Dataschema>) => {
@@ -793,7 +771,6 @@ const ModelsWrapper: React.FC = () => {
       branches={branches}
       fetching={fetching}
       currentBranch={currentBranch}
-      versions={versions}
       onChangeBranch={(branchId) => {
         setCurrentBranchId(branchId);
         setLocation(`${basePath}/${dataSourceId}/${branchId}`);
@@ -821,12 +798,6 @@ const ModelsWrapper: React.FC = () => {
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
       onConnect={() => setLocation(withAuthPrefix("/settings/sources/new"))}
-      pagination={{
-        pageSize,
-        current: currentPage,
-        total: totalCount,
-        onChange: (current: number) => onPageChange({ current }),
-      }}
     />
   );
 };

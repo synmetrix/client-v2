@@ -7,6 +7,8 @@ import Copy from "@/components/Copy";
 import formatTime from "@/utils/helpers/formatTime";
 import type { Dataschema } from "@/types/dataschema";
 import type { Version } from "@/types/version";
+import useVersions from "@/hooks/useVersions";
+import useTableState from "@/hooks/useTableState";
 
 import DocsIcon from "@/assets/docs.svg";
 import YAMLIcon from "@/assets/yml-flie.svg";
@@ -19,19 +21,28 @@ import type { TableProps } from "antd";
 const { Title } = Typography;
 
 interface VersionsListProps {
-  versions: Version[];
-  pagination?: any;
-  loading?: boolean;
+  branch?: string;
   onRestore: (checksum: string, dataschemas: Dataschema[]) => void;
 }
 
-const VersionsList: FC<VersionsListProps> = ({
-  versions,
-  pagination = false,
-  loading = false,
-  onRestore,
-}) => {
+const VersionsList: FC<VersionsListProps> = ({ onRestore, branch }) => {
   const { t } = useTranslation(["models", "common"]);
+
+  const {
+    tableState: { paginationVars, pageSize, currentPage },
+    onPageChange,
+  } = useTableState({ customPageSize: 5 });
+
+  const {
+    versions,
+    totalCount,
+    queries: {
+      allData: { fetching },
+    },
+  } = useVersions({
+    branchId: branch,
+    pagination: paginationVars,
+  });
 
   const columns: TableProps<Version>["columns"] = [
     {
@@ -103,7 +114,7 @@ const VersionsList: FC<VersionsListProps> = ({
         rowKey={(rec) => rec.name}
         expandable={{ expandedRowRender: renderFileValue }}
         pagination={false}
-        loading={loading}
+        loading={fetching}
       />
     );
   };
@@ -117,8 +128,14 @@ const VersionsList: FC<VersionsListProps> = ({
         dataSource={versions}
         rowKey={(record) => record.id}
         expandable={{ expandedRowRender }}
-        pagination={pagination}
-        loading={loading}
+        pagination={{
+          pageSize,
+          current: currentPage,
+          onChange: (current: number) => onPageChange({ current }),
+          total: totalCount,
+          showSizeChanger: false,
+        }}
+        loading={fetching}
       />
     </Space>
   );

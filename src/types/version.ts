@@ -1,4 +1,3 @@
-import type { AllDataSchemasQuery } from "@/graphql/generated";
+import type { CurrentVersionQuery } from "@/graphql/generated";
 
-export type Version =
-  AllDataSchemasQuery["branches"][number]["versions"][number];
+export type Version = CurrentVersionQuery["versions"][number];

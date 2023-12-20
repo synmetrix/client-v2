@@ -2,16 +2,19 @@ import gql from "graphql-tag";
 import * as Urql from "urql";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends Record<string, unknown>> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]?: Maybe<T[SubKey]>;
 };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
-export type MakeEmpty<T extends Record<string, unknown>, K extends keyof T> = {
-  [_ in K]?: never;
-};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T
+> = { [_ in K]?: never };
 export type Incremental<T> =
   | T
   | {
@@ -12881,7 +12884,7 @@ export type CurrentTeamQuery = {
   } | null;
 };
 
-export type GetUsersQueryVariables = Exact<Record<string, never>>;
+export type GetUsersQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUsersQuery = {
   __typename?: "query_root";
@@ -12934,15 +12937,7 @@ export type VersionByBranchIdQuery = {
       name: string;
       code: string;
       checksum?: string | null;
-      datasource: { __typename?: "datasources"; team_id?: any | null };
     }>;
-    dataschemas_aggregate: {
-      __typename?: "dataschemas_aggregate";
-      aggregate?: {
-        __typename?: "dataschemas_aggregate_fields";
-        count: number;
-      } | null;
-    };
   }>;
   versions_aggregate: {
     __typename?: "versions_aggregate";
@@ -12951,6 +12946,30 @@ export type VersionByBranchIdQuery = {
       count: number;
     } | null;
   };
+};
+
+export type CurrentVersionQueryVariables = Exact<{
+  branch_id: Scalars["uuid"]["input"];
+}>;
+
+export type CurrentVersionQuery = {
+  __typename?: "query_root";
+  versions: Array<{
+    __typename?: "versions";
+    id: any;
+    checksum: string;
+    dataschemas: Array<{
+      __typename?: "dataschemas";
+      created_at: any;
+      updated_at: any;
+      datasource_id: any;
+      id: any;
+      user_id: any;
+      name: string;
+      code: string;
+      checksum?: string | null;
+    }>;
+  }>;
 };
 
 export const BranchesFieldsFragmentDoc = gql`
@@ -14463,14 +14482,6 @@ export const VersionByBranchIdDocument = gql`
         name
         code
         checksum
-        datasource {
-          team_id
-        }
-      }
-      dataschemas_aggregate {
-        aggregate {
-          count
-        }
       }
     }
     versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
@@ -14487,6 +14498,38 @@ export function useVersionByBranchIdQuery(
   return Urql.useQuery<VersionByBranchIdQuery, VersionByBranchIdQueryVariables>(
     { query: VersionByBranchIdDocument, ...options }
   );
+}
+export const CurrentVersionDocument = gql`
+  query CurrentVersion($branch_id: uuid!) {
+    versions(
+      limit: 1
+      offset: 0
+      order_by: { created_at: desc }
+      where: { branch_id: { _eq: $branch_id } }
+    ) {
+      id
+      checksum
+      dataschemas {
+        created_at
+        updated_at
+        datasource_id
+        id
+        user_id
+        name
+        code
+        checksum
+      }
+    }
+  }
+`;
+
+export function useCurrentVersionQuery(
+  options: Omit<Urql.UseQueryArgs<CurrentVersionQueryVariables>, "query">
+) {
+  return Urql.useQuery<CurrentVersionQuery, CurrentVersionQueryVariables>({
+    query: CurrentVersionDocument,
+    ...options,
+  });
 }
 export const namedOperations = {
   Query: {
@@ -14507,6 +14550,7 @@ export const namedOperations = {
     CurrentTeam: "CurrentTeam",
     GetUsers: "GetUsers",
     versionByBranchId: "versionByBranchId",
+    CurrentVersion: "CurrentVersion",
   },
   Mutation: {
     UpdateAccessList: "UpdateAccessList",

@@ -76,7 +76,7 @@ export default ({ dataSourceId, branchId }: Props) => {
         const tabIdx = tabs.indexOf(id);
         closeTab(id);
 
-        const anyOtherTabIdx = tabIdx > 0 ? tabIdx - 1 : tabIdx + 1;
+        const anyOtherTabIdx = tabIdx > 1 ? tabIdx - 1 : tabIdx + 1;
         const anyOtherTabName = tabs[anyOtherTabIdx] || defaultTabId;
 
         // if we're closing the active tab and there are any other tabs

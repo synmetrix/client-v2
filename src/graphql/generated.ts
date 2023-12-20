@@ -12940,6 +12940,14 @@ export type VersionByBranchIdQuery = {
       datasource: { __typename?: "datasources"; team_id?: any | null };
     }>;
   }>;
+};
+
+export type VersionsCountQueryVariables = Exact<{
+  branch_id: Scalars["uuid"]["input"];
+}>;
+
+export type VersionsCountQuery = {
+  __typename?: "query_root";
   versions_aggregate: {
     __typename?: "versions_aggregate";
     aggregate?: {
@@ -14464,11 +14472,6 @@ export const VersionByBranchIdDocument = gql`
         }
       }
     }
-    versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
-      aggregate {
-        count
-      }
-    }
   }
 `;
 
@@ -14478,6 +14481,24 @@ export function useVersionByBranchIdQuery(
   return Urql.useQuery<VersionByBranchIdQuery, VersionByBranchIdQueryVariables>(
     { query: VersionByBranchIdDocument, ...options }
   );
+}
+export const VersionsCountDocument = gql`
+  query VersionsCount($branch_id: uuid!) {
+    versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export function useVersionsCountQuery(
+  options: Omit<Urql.UseQueryArgs<VersionsCountQueryVariables>, "query">
+) {
+  return Urql.useQuery<VersionsCountQuery, VersionsCountQueryVariables>({
+    query: VersionsCountDocument,
+    ...options,
+  });
 }
 export const namedOperations = {
   Query: {
@@ -14498,6 +14519,7 @@ export const namedOperations = {
     CurrentTeam: "CurrentTeam",
     GetUsers: "GetUsers",
     versionByBranchId: "versionByBranchId",
+    VersionsCount: "VersionsCount",
   },
   Mutation: {
     UpdateAccessList: "UpdateAccessList",

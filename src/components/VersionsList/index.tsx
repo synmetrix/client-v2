@@ -6,6 +6,7 @@ import Button from "@/components/Button";
 import Copy from "@/components/Copy";
 import formatTime from "@/utils/helpers/formatTime";
 import type { Dataschema } from "@/types/dataschema";
+import { useVersionsCountQuery } from "@/graphql/generated";
 import type { Version } from "@/types/version";
 
 import DocsIcon from "@/assets/docs.svg";
@@ -20,6 +21,7 @@ const { Title } = Typography;
 
 interface VersionsListProps {
   versions: Version[];
+  branch?: string;
   pagination?: any;
   loading?: boolean;
   onRestore: (checksum: string, dataschemas: Dataschema[]) => void;
@@ -30,8 +32,19 @@ const VersionsList: FC<VersionsListProps> = ({
   pagination = false,
   loading = false,
   onRestore,
+  branch,
 }) => {
   const { t } = useTranslation(["models", "common"]);
+
+  const [allData, execQueryAll] = useVersionsCountQuery({
+    variables: {
+      branch_id: branch,
+    },
+  });
+
+  useEffect(() => {
+    execQueryAll();
+  }, [execQueryAll]);
 
   const columns: TableProps<Version>["columns"] = [
     {
@@ -117,7 +130,10 @@ const VersionsList: FC<VersionsListProps> = ({
         dataSource={versions}
         rowKey={(record) => record.id}
         expandable={{ expandedRowRender }}
-        pagination={pagination}
+        pagination={{
+          ...pagination,
+          total: allData.data?.versions_aggregate.aggregate?.count,
+        }}
         loading={loading}
       />
     </Space>

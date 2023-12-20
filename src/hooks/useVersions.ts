@@ -46,14 +46,9 @@ export default ({ branchId, pagination }: Props) => {
     () => allData.data?.versions || ([] as Version[]),
     [allData.data]
   );
-  const totalCount = useMemo(
-    () => allData.data?.versions_aggregate.aggregate?.count || 0,
-    [allData.data?.versions_aggregate.aggregate?.count]
-  );
 
   return {
     versions,
-    totalCount,
     queries: {
       allData,
       execQueryAll,

@@ -265,6 +265,7 @@ export const Models: React.FC<ModelsProps> = ({
                 versions={versions}
                 pagination={pagination}
                 onRestore={onSaveVersion}
+                branch={currentBranch?.id}
               />
             </Modal>
           )}
@@ -328,7 +329,6 @@ const ModelsWrapper: React.FC = () => {
 
   const {
     versions,
-    totalCount,
     queries: {
       allData: { fetching: versionsLoading },
       execQueryAll: execVersionsAll,
@@ -824,7 +824,6 @@ const ModelsWrapper: React.FC = () => {
       pagination={{
         pageSize,
         current: currentPage,
-        total: totalCount,
         onChange: (current: number) => onPageChange({ current }),
       }}
     />

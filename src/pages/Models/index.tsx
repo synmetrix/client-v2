@@ -386,26 +386,6 @@ const ModelsWrapper: React.FC = () => {
     }
   );
 
-  useEffect(() => {
-    if (!dataSourceId) return;
-    if (!branch && !currentBranchId) {
-      const currentId =
-        branches?.find((b) => b.status === "active")?.id || branches?.[0]?.id;
-      setCurrentBranchId(currentId);
-      setLocation(`${basePath}/${dataSourceId}/${currentId}`);
-    } else if (branch && branch !== currentBranchId) {
-      setCurrentBranchId(branch);
-    }
-  }, [
-    branches,
-    basePath,
-    branch,
-    currentBranchId,
-    dataSourceId,
-    setCurrentBranchId,
-    setLocation,
-  ]);
-
   const currentBranch = useMemo(
     () =>
       (branches || []).find((b) => b.id === currentBranchId) || branches?.[0],
@@ -472,19 +452,31 @@ const ModelsWrapper: React.FC = () => {
   }, [sourceTablesSchema]);
 
   useLayoutEffect(() => {
-    if (teamData?.dataSources?.length) {
-      if (!dataSourceId && !currentDataSourceId) {
-        setLocation(`${basePath}/${teamData.dataSources[0].id}`);
-        setCurrentDataSourceId(teamData.dataSources[0].id);
-      } else if (dataSourceId && dataSourceId !== currentDataSourceId) {
-        setCurrentDataSourceId(dataSourceId);
-      } else if (!dataSourceId && currentDataSourceId) {
+    if (!dataSourceId && teamData?.dataSources?.length) {
+      const isExist = teamData?.dataSources?.find(
+        (ds) => ds.id === currentDataSourceId
+      );
+      if (isExist) {
         setLocation(`${basePath}/${currentDataSourceId}`);
+      } else {
+        setCurrentDataSourceId(teamData?.dataSources?.[0]?.id);
       }
-    } else if (dataSourceId) {
+    }
+
+    if (dataSourceId && !teamData?.dataSources?.length) {
       setLocation(basePath);
-    } else {
-      setCurrentDataSourceId(null);
+    }
+
+    if (dataSourceId) {
+      const isExist = teamData?.dataSources?.find((d) => d.id === dataSourceId);
+
+      if (isExist) {
+        if (!branch && currentBranchId) {
+          setLocation(`${basePath}/${dataSourceId}/${currentBranchId}`);
+        }
+      } else {
+        setLocation(basePath);
+      }
     }
   }, [
     dataSourceId,
@@ -493,6 +485,8 @@ const ModelsWrapper: React.FC = () => {
     setLocation,
     currentDataSourceId,
     setCurrentDataSourceId,
+    branch,
+    currentBranchId,
   ]);
 
   const inputFile = useRef<HTMLInputElement>(null);
@@ -802,7 +796,7 @@ const ModelsWrapper: React.FC = () => {
       versions={versions}
       onChangeBranch={(branchId) => {
         setCurrentBranchId(branchId);
-        setLocation(`${basePath}/${dataSourceId}/${branchId}/sqlrunner`);
+        setLocation(`${basePath}/${dataSourceId}/${branchId}`);
       }}
       onSetDefault={onSetDefault}
       onCreateBranch={onCreateBranch}

@@ -12942,6 +12942,34 @@ export type VersionByBranchIdQuery = {
   }>;
 };
 
+export type CurrentVersionQueryVariables = Exact<{
+  branch_id: Scalars["uuid"]["input"];
+}>;
+
+export type CurrentVersionQuery = {
+  __typename?: "query_root";
+  versions: Array<{
+    __typename?: "versions";
+    id: any;
+    checksum: string;
+    updated_at: any;
+    created_at: any;
+    user: { __typename?: "users"; display_name?: string | null };
+    dataschemas: Array<{
+      __typename?: "dataschemas";
+      created_at: any;
+      updated_at: any;
+      datasource_id: any;
+      id: any;
+      user_id: any;
+      name: string;
+      code: string;
+      checksum?: string | null;
+      datasource: { __typename?: "datasources"; team_id?: any | null };
+    }>;
+  }>;
+};
+
 export type VersionsCountQueryVariables = Exact<{
   branch_id: Scalars["uuid"]["input"];
 }>;
@@ -14482,6 +14510,46 @@ export function useVersionByBranchIdQuery(
     { query: VersionByBranchIdDocument, ...options }
   );
 }
+export const CurrentVersionDocument = gql`
+  query CurrentVersion($branch_id: uuid!) {
+    versions(
+      limit: 1
+      offset: 0
+      order_by: { created_at: desc }
+      where: { branch_id: { _eq: $branch_id } }
+    ) {
+      id
+      checksum
+      updated_at
+      created_at
+      user {
+        display_name
+      }
+      dataschemas {
+        created_at
+        updated_at
+        datasource_id
+        id
+        user_id
+        name
+        code
+        checksum
+        datasource {
+          team_id
+        }
+      }
+    }
+  }
+`;
+
+export function useCurrentVersionQuery(
+  options: Omit<Urql.UseQueryArgs<CurrentVersionQueryVariables>, "query">
+) {
+  return Urql.useQuery<CurrentVersionQuery, CurrentVersionQueryVariables>({
+    query: CurrentVersionDocument,
+    ...options,
+  });
+}
 export const VersionsCountDocument = gql`
   query VersionsCount($branch_id: uuid!) {
     versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
@@ -14519,6 +14587,7 @@ export const namedOperations = {
     CurrentTeam: "CurrentTeam",
     GetUsers: "GetUsers",
     versionByBranchId: "versionByBranchId",
+    CurrentVersion: "CurrentVersion",
     VersionsCount: "VersionsCount",
   },
   Mutation: {

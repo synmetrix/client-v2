@@ -8,6 +8,8 @@ import formatTime from "@/utils/helpers/formatTime";
 import type { Dataschema } from "@/types/dataschema";
 import { useVersionsCountQuery } from "@/graphql/generated";
 import type { Version } from "@/types/version";
+import useVersions from "@/hooks/useVersions";
+import useTableState from "@/hooks/useTableState";
 
 import DocsIcon from "@/assets/docs.svg";
 import YAMLIcon from "@/assets/yml-flie.svg";
@@ -20,31 +22,39 @@ import type { TableProps } from "antd";
 const { Title } = Typography;
 
 interface VersionsListProps {
-  versions: Version[];
   branch?: string;
-  pagination?: any;
-  loading?: boolean;
   onRestore: (checksum: string, dataschemas: Dataschema[]) => void;
 }
 
-const VersionsList: FC<VersionsListProps> = ({
-  versions,
-  pagination = false,
-  loading = false,
-  onRestore,
-  branch,
-}) => {
+const VersionsList: FC<VersionsListProps> = ({ onRestore, branch }) => {
   const { t } = useTranslation(["models", "common"]);
 
-  const [allData, execQueryAll] = useVersionsCountQuery({
+  const {
+    tableState: { paginationVars, pageSize, currentPage },
+    onPageChange,
+  } = useTableState({});
+
+  const [countData, execQueryCount] = useVersionsCountQuery({
     variables: {
       branch_id: branch,
     },
   });
 
+  const {
+    versions,
+    queries: {
+      allData: { fetching },
+    },
+  } = useVersions({
+    branchId: branch,
+    pagination: paginationVars,
+  });
+
+  const loading = countData.fetching || fetching;
+
   useEffect(() => {
-    execQueryAll();
-  }, [execQueryAll]);
+    execQueryCount();
+  }, [execQueryCount]);
 
   const columns: TableProps<Version>["columns"] = [
     {
@@ -131,8 +141,10 @@ const VersionsList: FC<VersionsListProps> = ({
         rowKey={(record) => record.id}
         expandable={{ expandedRowRender }}
         pagination={{
-          ...pagination,
-          total: allData.data?.versions_aggregate.aggregate?.count,
+          pageSize,
+          current: currentPage,
+          onChange: (current: number) => onPageChange({ current }),
+          total: countData.data?.versions_aggregate.aggregate?.count,
         }}
         loading={loading}
       />

@@ -103,7 +103,7 @@ export const Models: React.FC<ModelsProps> = ({
   onChangeBranch,
   onCreateBranch,
   onSetDefault,
-  fetching,
+  fetching = false,
   onSchemaCreate,
   onSchemaDelete,
   onSchemaUpdate,
@@ -216,7 +216,7 @@ export const Models: React.FC<ModelsProps> = ({
         </Spin>
       }
     >
-      {dataSources && dataSources.length === 0 ? (
+      {!dataSources?.length ? (
         <NoDataSource onConnect={onConnect} />
       ) : (
         <Spin spinning={fetching}>
@@ -327,8 +327,9 @@ const ModelsWrapper: React.FC = () => {
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
     `${dataSourceId}:currentBranch`
   );
-  const [currentDataSourceId, setCurrentDataSourceId] =
-    useLocalStorageState<string>("currentDataSourceId");
+  const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState<
+    string | null
+  >("currentDataSourceId");
 
   const {
     tableState: { paginationVars, pageSize, currentPage },
@@ -395,6 +396,7 @@ const ModelsWrapper: React.FC = () => {
   );
 
   useEffect(() => {
+    if (!dataSourceId) return;
     if (!branch && !currentBranchId) {
       const currentId =
         branches?.find((b) => b.status === "active")?.id || branches?.[0]?.id;
@@ -488,6 +490,10 @@ const ModelsWrapper: React.FC = () => {
       } else if (!dataSourceId && currentDataSourceId) {
         setLocation(`${basePath}/${currentDataSourceId}`);
       }
+    } else if (dataSourceId) {
+      setLocation(basePath);
+    } else {
+      setCurrentDataSourceId(null);
     }
   }, [
     dataSourceId,

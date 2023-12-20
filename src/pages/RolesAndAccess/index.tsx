@@ -360,7 +360,7 @@ const RolesAndAccessWrapper: React.FC = () => {
   };
 
   const onEdit = (id: string) => {
-    setLocation(`/settings/access/${id}`);
+    setLocation(`/settings/roles/${id}`);
   };
 
   const onRemove = (id: string) => {
@@ -432,8 +432,8 @@ const RolesAndAccessWrapper: React.FC = () => {
       dataSourceAccess={dataSourceAccess}
       onFinish={onFinish}
       isOpen={!!editId}
-      onCreate={() => setLocation("/settings/access/new")}
-      onClose={() => setLocation("/settings/access")}
+      onCreate={() => setLocation("/settings/roles/new")}
+      onClose={() => setLocation("/settings/roles")}
     />
   );
 };

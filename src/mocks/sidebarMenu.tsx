@@ -38,9 +38,9 @@ export const settingsMenuItems: SidebarMenuItem[] = [
     icon: <MembersIcon />,
   },
   {
-    key: "access",
+    key: "roles",
     label: "Roles and Access",
-    href: "/settings/access",
+    href: "/settings/roles",
     icon: <RolesAndAccessIcon />,
   },
   {

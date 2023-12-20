@@ -86,7 +86,7 @@ export default [
                 component: "./pages/SqlApi",
               },
               {
-                path: "/settings/access/:editId?",
+                path: "/settings/roles/:editId?",
                 component: "./pages/RolesAndAccess",
               },
               {

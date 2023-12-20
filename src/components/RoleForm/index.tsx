@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Form, Space, Spin, Empty } from "antd";
+import { Form, Space, Spin, Empty, Alert } from "antd";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 
@@ -56,6 +56,7 @@ const RoleForm: FC<RoleFormProps> = ({
 }) => {
   const { t } = useTranslation(["settings", "common"]);
   const [, setLocation] = useLocation();
+  const [error, setError] = useState(String);
 
   const { control, handleSubmit, setValue, watch } = useForm<RoleFormType>({
     values: initialValues,
@@ -68,6 +69,13 @@ const RoleForm: FC<RoleFormProps> = ({
     },
     pause: true,
   });
+
+  useEffect(() => {
+    if (metaData.error) {
+      setError(metaData.error.toString());
+    }
+  }, [metaData.error]);
+
   const resourceData = useMemo(() => {
     if (resources?.length) {
       return resources.find((r) => r.id === resource?.id);
@@ -126,26 +134,26 @@ const RoleForm: FC<RoleFormProps> = ({
             rules={{ required: true }}
           />
 
+          <Form.Item
+            className={styles.label}
+            label={t("roles_and_access.form.labels.2")}
+          >
+            <Controller
+              control={control}
+              name="resource"
+              render={({ field: { onChange, value } }) => (
+                <AccessSelection
+                  items={dataSourceAccess}
+                  permissions={accessWatch}
+                  onSelect={onChange}
+                  active={value?.id}
+                />
+              )}
+            />
+          </Form.Item>
+
           {!!resourceData?.dataModels?.length && (
             <>
-              <Form.Item
-                className={styles.label}
-                label={t("roles_and_access.form.labels.2")}
-              >
-                <Controller
-                  control={control}
-                  name="resource"
-                  render={({ field: { onChange, value } }) => (
-                    <AccessSelection
-                      items={dataSourceAccess}
-                      permissions={accessWatch}
-                      onSelect={onChange}
-                      active={value?.id}
-                    />
-                  )}
-                />
-              </Form.Item>
-
               <Suspense>
                 <AccessController
                   control={control}
@@ -156,6 +164,8 @@ const RoleForm: FC<RoleFormProps> = ({
             </>
           )}
 
+          {(error && <Alert message={error} type="error" />) || null}
+
           {!dataSourceAccess?.length ? (
             emptyScreen
           ) : (
@@ -164,6 +174,7 @@ const RoleForm: FC<RoleFormProps> = ({
               type="primary"
               size="large"
               onClick={handleSubmit(onSubmit)}
+              disabled={!resourceData?.dataModels?.length}
             >
               {initialValues
                 ? t("common:words.save")

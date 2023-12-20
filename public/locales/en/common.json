@@ -46,6 +46,7 @@
     "email": "Email",
     "actions": "Actions",
     "partial_access": "Partial access",
+    "error_access": "Error",
     "full_access": "Full access",
     "no_access": "No access",
     "data_models": "Data models",

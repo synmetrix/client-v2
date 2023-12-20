@@ -232,8 +232,10 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
           </div>
 
           {files
-            .filter((f) =>
-              f.name.toLowerCase().includes(searchValue.toLowerCase())
+            .filter(
+              (f) =>
+                f.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                f.code.toLowerCase().includes(searchValue.toLowerCase())
             )
             .map((f) => {
               return (

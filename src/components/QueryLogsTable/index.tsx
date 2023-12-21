@@ -75,6 +75,12 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
               </Space>
             </span>
           );
+        } else {
+          return (
+            <span className={cn(styles.cell, styles.creator)}>
+              <span>{value}</span>
+            </span>
+          );
         }
       },
     },

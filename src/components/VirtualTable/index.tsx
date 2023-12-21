@@ -7,7 +7,7 @@ import {
 import { getOr } from "unchanged";
 import cn from "classnames";
 import { Alert, Empty, Spin, Tooltip, Typography, message } from "antd";
-import { useTable } from "react-table";
+import { useTable, useSortBy } from "react-table";
 import copy from "copy-to-clipboard";
 import {
   Column,
@@ -134,6 +134,7 @@ interface VirtualTableProps {
   tableId?: string;
   className?: string;
   settings?: QuerySettings;
+  sortinMode?: "client-side" | "server-side";
 }
 
 const VirtualTable: FC<VirtualTableProps> = ({
@@ -160,6 +161,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
   orderByFn,
   loading,
   loadingTip,
+  sortinMode = "client-side",
 }) => {
   const defaultColumns = useMemo(
     () =>
@@ -178,10 +180,19 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
   const columns: any = userColumns || defaultColumns;
 
-  const { rows, flatHeaders } = useTable({
-    columns,
-    data,
-  });
+  const {
+    rows,
+    flatHeaders,
+    state,
+    //@ts-ignore
+    setSortBy,
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy
+  );
 
   const headerRenderer: TableHeaderRenderer = ({ label, columnData }) => {
     const { sortDirection, onSortChange, columnId, granularity } = columnData;
@@ -271,7 +282,13 @@ const VirtualTable: FC<VirtualTableProps> = ({
   };
 
   const onSortChange = (direction: string, columnId: string) => {
-    const sortBySet = new SortBySet(sortBy);
+    let sortBySet: SortBySet;
+    if (sortinMode === "client-side") {
+      //@ts-ignore
+      sortBySet = new SortBySet(state.sortBy);
+    } else {
+      sortBySet = new SortBySet(sortBy);
+    }
 
     if (direction) {
       sortBySet.add({
@@ -290,6 +307,10 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
     const nextSortBy = [...sortBySet];
     onSortUpdate(nextSortBy);
+
+    if (sortinMode === "client-side") {
+      return setSortBy(nextSortBy);
+    }
   };
 
   const noRowsRenderer = () => {

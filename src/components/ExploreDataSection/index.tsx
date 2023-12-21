@@ -205,6 +205,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
 
     return (
       <VirtualTable
+        sortinMode="server-side"
         tableId={screenshotMode ? "explorationTable" : undefined}
         messages={messages}
         loading={screenshotMode ? false : loading}

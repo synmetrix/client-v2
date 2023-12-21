@@ -111,7 +111,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
       },
     },
     hideCubeNames: {
-      name: "hide_index_column",
+      name: "hide_cube_names",
       section: t("data_section.settings"),
       label: t("data_section.hide_cube_names"),
       type: "checkbox",

@@ -1,16 +1,14 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { set } from "unchanged";
 import { useTrackedEffect } from "ahooks";
 
 import equals from "@/utils/helpers/equals";
 import {
   useAllLogsQuery,
-  useCurrentLogQuery,
   useSubAllLogsSubscription,
 } from "@/graphql/generated";
 import type {
   AllLogsQueryVariables,
-  Request_Logs,
   SubAllLogsSubscription,
 } from "@/graphql/generated";
 import type { QueryFiltersForm } from "@/types/queryFilter";
@@ -73,7 +71,6 @@ interface Props {
 
 export default ({
   pauseQueryAll = false,
-  rowId = null,
   pagination = {},
   params = {},
 }: Props) => {
@@ -84,12 +81,6 @@ export default ({
     },
     handleSubscription
   );
-
-  const [currentData, execQueryCurrent] = useCurrentLogQuery({
-    variables: { id: rowId },
-    pause: true,
-    requestPolicy: "cache-and-network",
-  });
 
   const [allData, execQueryAll] = useAllLogsQuery({
     variables: getListVariables(pagination, params),
@@ -116,12 +107,6 @@ export default ({
     [subscription.data, execQueryAll]
   );
 
-  useEffect(() => {
-    if (rowId) {
-      execQueryCurrent();
-    }
-  }, [rowId, execQueryCurrent]);
-
   const allLogs = useMemo(
     () => allData.data?.request_logs || [],
     [allData.data]
@@ -130,20 +115,12 @@ export default ({
     () => allData.data?.request_logs_aggregate?.aggregate?.count || 0,
     [allData.data]
   );
-  const current = useMemo(
-    () => (currentData.data?.request_logs_by_pk || {}) as Partial<Request_Logs>,
-    [currentData]
-  );
-
   return {
     allLogs,
-    current,
     totalCount,
     queries: {
       allData,
       execQueryAll,
-      currentData,
-      execQueryCurrent,
     },
     subscriptions: {
       subscription,

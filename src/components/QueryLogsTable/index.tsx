@@ -44,10 +44,12 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
     },
     {
       title: t("query.table.events"),
-      dataIndex: "request_event_logs",
-      key: "request_event_logs",
+      dataIndex: "request_event_logs_aggregate",
+      key: "request_event_logs_aggregate",
       render: (value) => (
-        <span className={cn(styles.cell, styles.events)}>{value?.length}</span>
+        <span className={cn(styles.cell, styles.events)}>
+          {value?.aggregate?.count}
+        </span>
       ),
     },
     {

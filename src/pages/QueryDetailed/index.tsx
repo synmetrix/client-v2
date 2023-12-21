@@ -7,12 +7,12 @@ import RequestInfo from "@/components/RequestInfo";
 import QueryDetails from "@/components/QueryDetails";
 import PageLoading from "@/components/PageLoading";
 import AppLayout from "@/layouts/AppLayout";
-import useLogs from "@/hooks/useLogs";
 import type { QueryState } from "@/types/queryState";
-import type {
-  Maybe,
-  Request_Event_Logs,
-  Request_Logs,
+import {
+  useCurrentLogQuery,
+  type Maybe,
+  type Request_Event_Logs,
+  type Request_Logs,
 } from "@/graphql/generated";
 
 import DocsIcon from "@/assets/docs.svg";
@@ -79,13 +79,24 @@ export const QueryDetailed: React.FC<QueryDetailedProps> = ({
 const QueryDetailedWrapper = () => {
   const { id } = useParams();
 
-  const {
-    current,
-    queries: { currentData },
-  } = useLogs({
-    pauseQueryAll: true,
-    rowId: id,
+  const [currentData, execQueryCurrent] = useCurrentLogQuery({
+    variables: { id },
+    pause: true,
+    requestPolicy: "cache-and-network",
   });
+
+  useEffect(() => {
+    if (id) {
+      execQueryCurrent();
+    }
+  }, [id, execQueryCurrent]);
+
+  const current = useMemo(
+    () => (currentData.data?.request_logs_by_pk || {}) as Partial<Request_Logs>,
+    [currentData]
+  );
+
+  console.log(current);
 
   const { events, querySql, queryKeyMd5, error } = useMemo(() => {
     let eventLogs = current?.request_event_logs || [];

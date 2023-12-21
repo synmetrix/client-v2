@@ -80,6 +80,7 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
                   current: currentPage,
                   total: logsCount,
                   onChange: (current) => onPageChange({ current }),
+                  showSizeChanger: false,
                 }}
               />
             </Spin>
@@ -112,7 +113,7 @@ const QueryLogsWrapper = () => {
   const {
     tableState: { pageSize, currentPage, paginationVars },
     onPageChange,
-  } = useTableState({});
+  } = useTableState({ customPageSize: 10 });
 
   const {
     allLogs,

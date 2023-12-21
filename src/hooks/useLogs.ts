@@ -1,16 +1,14 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { set } from "unchanged";
 import { useTrackedEffect } from "ahooks";
 
 import equals from "@/utils/helpers/equals";
 import {
   useAllLogsQuery,
-  useCurrentLogQuery,
   useSubAllLogsSubscription,
 } from "@/graphql/generated";
 import type {
   AllLogsQueryVariables,
-  Request_Logs,
   SubAllLogsSubscription,
 } from "@/graphql/generated";
 import type { QueryFiltersForm } from "@/types/queryFilter";
@@ -73,7 +71,6 @@ interface Props {
 
 export default ({
   pauseQueryAll = false,
-  rowId = null,
   pagination = {},
   params = {},
 }: Props) => {
@@ -85,12 +82,6 @@ export default ({
     handleSubscription
   );
 
-  const [currentData, execQueryCurrent] = useCurrentLogQuery({
-    variables: { id: rowId },
-    pause: true,
-    requestPolicy: "cache-and-network",
-  });
-
   const [allData, execQueryAll] = useAllLogsQuery({
     variables: getListVariables(pagination, params),
     pause: pauseQueryAll,
@@ -99,28 +90,24 @@ export default ({
 
   useTrackedEffect(
     (changes, previousDeps, currentDeps) => {
-      const prevData = previousDeps?.[0];
-      const currData = currentDeps?.[0];
+      if (!equals(previousDeps?.[0], currentDeps?.[0])) {
+        const prevData = previousDeps?.[1];
+        const currData = currentDeps?.[1];
 
-      let dataDiff = false;
-      if (!prevData || !currData) {
-        dataDiff = false;
-      } else {
-        dataDiff = !equals(prevData, currData);
-      }
+        let dataDiff = false;
+        if (!prevData || !currData) {
+          dataDiff = false;
+        } else {
+          dataDiff = !equals(prevData, currData);
+        }
 
-      if (dataDiff) {
-        execQueryAll({ requestPolicy: "network-only" });
+        if (dataDiff) {
+          execQueryAll({ requestPolicy: "network-only" });
+        }
       }
     },
-    [subscription.data, execQueryAll]
+    [pagination, subscription.data, execQueryAll]
   );
-
-  useEffect(() => {
-    if (rowId) {
-      execQueryCurrent();
-    }
-  }, [rowId, execQueryCurrent]);
 
   const allLogs = useMemo(
     () => allData.data?.request_logs || [],
@@ -130,20 +117,13 @@ export default ({
     () => allData.data?.request_logs_aggregate?.aggregate?.count || 0,
     [allData.data]
   );
-  const current = useMemo(
-    () => (currentData.data?.request_logs_by_pk || {}) as Partial<Request_Logs>,
-    [currentData]
-  );
 
   return {
     allLogs,
-    current,
     totalCount,
     queries: {
       allData,
       execQueryAll,
-      currentData,
-      execQueryCurrent,
     },
     subscriptions: {
       subscription,

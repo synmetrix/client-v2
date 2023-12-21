@@ -12588,14 +12588,11 @@ export type DefaultFieldsFragment = {
   __typename?: "request_logs";
   id: any;
   created_at: any;
-  updated_at: any;
-  request_id: string;
   start_time: any;
-  end_time: any;
   duration?: any | null;
   path?: string | null;
-  user?: { __typename?: "users"; display_name?: string | null } | null;
-  datasource: { __typename?: "datasources"; name: string };
+  user_id?: any | null;
+  datasource_id: any;
 };
 
 export type CurrentLogQueryVariables = Exact<{
@@ -12606,14 +12603,16 @@ export type CurrentLogQuery = {
   __typename?: "query_root";
   request_logs_by_pk?: {
     __typename?: "request_logs";
+    end_time: any;
+    request_id: string;
+    updated_at: any;
     id: any;
     created_at: any;
-    updated_at: any;
-    request_id: string;
     start_time: any;
-    end_time: any;
     duration?: any | null;
     path?: string | null;
+    user_id?: any | null;
+    datasource_id: any;
     request_event_logs: Array<{
       __typename?: "request_event_logs";
       id: any;
@@ -12629,8 +12628,6 @@ export type CurrentLogQuery = {
       timestamp?: any | null;
       error?: string | null;
     }>;
-    user?: { __typename?: "users"; display_name?: string | null } | null;
-    datasource: { __typename?: "datasources"; name: string };
   } | null;
 };
 
@@ -12647,17 +12644,11 @@ export type AllLogsQuery = {
     __typename?: "request_logs";
     id: any;
     created_at: any;
-    updated_at: any;
-    request_id: string;
     start_time: any;
-    end_time: any;
     duration?: any | null;
     path?: string | null;
-    request_event_logs: Array<{
-      __typename?: "request_event_logs";
-      path?: string | null;
-      error?: string | null;
-    }>;
+    user_id?: any | null;
+    datasource_id: any;
     request_event_logs_aggregate: {
       __typename?: "request_event_logs_aggregate";
       aggregate?: {
@@ -12665,8 +12656,6 @@ export type AllLogsQuery = {
         count: number;
       } | null;
     };
-    user?: { __typename?: "users"; display_name?: string | null } | null;
-    datasource: { __typename?: "datasources"; name: string };
   }>;
   request_logs_aggregate: {
     __typename?: "request_logs_aggregate";
@@ -13033,18 +13022,11 @@ export const DefaultFieldsFragmentDoc = gql`
   fragment DefaultFields on request_logs {
     id
     created_at
-    updated_at
-    request_id
     start_time
-    end_time
     duration
     path
-    user {
-      display_name
-    }
-    datasource {
-      name
-    }
+    user_id
+    datasource_id
   }
 `;
 export const AllAccessListsDocument = gql`
@@ -14022,6 +14004,9 @@ export const CurrentLogDocument = gql`
   query CurrentLog($id: uuid!) {
     request_logs_by_pk(id: $id) {
       ...DefaultFields
+      end_time
+      request_id
+      updated_at
       request_event_logs(order_by: { timestamp: desc }) {
         id
         duration
@@ -14063,10 +14048,6 @@ export const AllLogsDocument = gql`
       order_by: $order_by
     ) {
       ...DefaultFields
-      request_event_logs(order_by: { timestamp: desc }) {
-        path
-        error
-      }
       request_event_logs_aggregate {
         aggregate {
           count

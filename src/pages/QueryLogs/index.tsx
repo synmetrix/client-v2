@@ -13,6 +13,7 @@ import QueryFilters from "@/components/QueryFilters";
 import type { QueryFiltersForm } from "@/types/queryFilter";
 import type { DataSourceInfo } from "@/types/dataSource";
 import CurrentUserStore from "@/stores/CurrentUserStore";
+import type { Member } from "@/types/team";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -29,6 +30,7 @@ interface QueryLogsProps {
   dataSources: DataSourceInfo[];
   onClickRow: (recordId: string) => void;
   filter: QueryFiltersForm;
+  members: Member[];
   onFilterUpdate: (filters: QueryFiltersForm) => void;
   onPageChange: ({ current }: TablePaginationConfig) => void;
 }
@@ -41,6 +43,7 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
   fetching = false,
   dataSources,
   filter,
+  members,
   onFilterUpdate = () => {},
   onPageChange = () => {},
   onClickRow = () => {},
@@ -75,6 +78,8 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
               <QueryLogsTable
                 logs={logs}
                 onClickRow={onClickRow}
+                members={members}
+                dataSources={dataSources}
                 pagination={{
                   pageSize,
                   current: currentPage,
@@ -146,6 +151,7 @@ const QueryLogsWrapper = () => {
       pageSize={pageSize}
       fetching={allData.fetching}
       dataSources={dataSources}
+      members={teamData?.members || []}
       filter={filter}
       onFilterUpdate={onFilterUpdate}
       onPageChange={onPageChange}

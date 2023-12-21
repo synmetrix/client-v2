@@ -96,8 +96,6 @@ const QueryDetailedWrapper = () => {
     [currentData]
   );
 
-  console.log(current);
-
   const { events, querySql, queryKeyMd5, error } = useMemo(() => {
     let eventLogs = current?.request_event_logs || [];
     eventLogs = eventLogs.map((e, i) => {

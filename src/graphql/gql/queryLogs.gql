@@ -4,12 +4,8 @@ fragment DefaultFields on request_logs {
   start_time
   duration
   path
-  user {
-    display_name
-  }
-  datasource {
-    name
-  }
+  user_id
+  datasource_id
 }
 
 query CurrentLog($id: uuid!) {

@@ -5,6 +5,8 @@ import cn from "classnames";
 import Avatar from "@/components/Avatar";
 import formatTime from "@/utils/helpers/formatTime";
 import type { Request_Logs } from "@/graphql/generated";
+import type { Member } from "@/types/team";
+import type { DataSourceInfo } from "@/types/dataSource";
 
 import styles from "./index.module.less";
 
@@ -13,6 +15,8 @@ import type { FC } from "react";
 
 interface QueryLogsTableProps {
   logs: Request_Logs[];
+  dataSources: DataSourceInfo[];
+  members: Member[];
   pagination?: TableProps<Request_Logs>["pagination"];
   onChange?: TableProps<Request_Logs>["onChange"];
   onClickRow?: (rowId: string) => void;
@@ -22,16 +26,20 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
   logs,
   onChange,
   onClickRow,
+  dataSources,
+  members,
   pagination = false,
 }) => {
   const { t } = useTranslation(["logs"]);
   const columns: TableProps<Request_Logs>["columns"] = [
     {
       title: t("query.table.data_source"),
-      dataIndex: "datasource",
-      key: "datasource",
+      dataIndex: "datasource_id",
+      key: "datasource_id",
       render: (value) => (
-        <span className={cn(styles.cell, styles.dataSource)}>{value.name}</span>
+        <span className={cn(styles.cell, styles.dataSource)}>
+          {dataSources.find((ds) => ds.id === value)?.name}
+        </span>
       ),
     },
     {
@@ -54,15 +62,16 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
     },
     {
       title: t("query.table.creator"),
-      dataIndex: "user",
-      key: "user",
+      dataIndex: "user_id",
+      key: "user_id",
       render: (value) => {
-        if (value?.display_name) {
+        const user = members.find((m) => m.user_id === value);
+        if (user) {
           return (
             <span className={cn(styles.cell, styles.creator)}>
               <Space size={10}>
-                <Avatar img={value?.avatarUrl} username={value?.display_name} />
-                <span>{value?.display_name}</span>
+                <Avatar img={user?.avatarUrl} username={user?.displayName} />
+                <span>{user?.displayName}</span>
               </Space>
             </span>
           );

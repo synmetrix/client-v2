@@ -12591,8 +12591,8 @@ export type DefaultFieldsFragment = {
   start_time: any;
   duration?: any | null;
   path?: string | null;
-  user?: { __typename?: "users"; display_name?: string | null } | null;
-  datasource: { __typename?: "datasources"; name: string };
+  user_id?: any | null;
+  datasource_id: any;
 };
 
 export type CurrentLogQueryVariables = Exact<{
@@ -12611,6 +12611,8 @@ export type CurrentLogQuery = {
     start_time: any;
     duration?: any | null;
     path?: string | null;
+    user_id?: any | null;
+    datasource_id: any;
     request_event_logs: Array<{
       __typename?: "request_event_logs";
       id: any;
@@ -12626,8 +12628,6 @@ export type CurrentLogQuery = {
       timestamp?: any | null;
       error?: string | null;
     }>;
-    user?: { __typename?: "users"; display_name?: string | null } | null;
-    datasource: { __typename?: "datasources"; name: string };
   } | null;
 };
 
@@ -12647,6 +12647,8 @@ export type AllLogsQuery = {
     start_time: any;
     duration?: any | null;
     path?: string | null;
+    user_id?: any | null;
+    datasource_id: any;
     request_event_logs_aggregate: {
       __typename?: "request_event_logs_aggregate";
       aggregate?: {
@@ -12654,8 +12656,6 @@ export type AllLogsQuery = {
         count: number;
       } | null;
     };
-    user?: { __typename?: "users"; display_name?: string | null } | null;
-    datasource: { __typename?: "datasources"; name: string };
   }>;
   request_logs_aggregate: {
     __typename?: "request_logs_aggregate";
@@ -13025,12 +13025,8 @@ export const DefaultFieldsFragmentDoc = gql`
     start_time
     duration
     path
-    user {
-      display_name
-    }
-    datasource {
-      name
-    }
+    user_id
+    datasource_id
   }
 `;
 export const AllAccessListsDocument = gql`

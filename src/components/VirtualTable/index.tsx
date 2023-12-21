@@ -7,7 +7,7 @@ import {
 import { getOr } from "unchanged";
 import cn from "classnames";
 import { Alert, Empty, Spin, Tooltip, Typography, message } from "antd";
-import { useTable, useSortBy } from "react-table";
+import { useTable } from "react-table";
 import copy from "copy-to-clipboard";
 import {
   Column,
@@ -178,19 +178,10 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
   const columns: any = userColumns || defaultColumns;
 
-  const {
-    rows,
-    flatHeaders,
-    state,
-    //@ts-ignore
-    setSortBy,
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useSortBy
-  );
+  const { rows, flatHeaders } = useTable({
+    columns,
+    data,
+  });
 
   const headerRenderer: TableHeaderRenderer = ({ label, columnData }) => {
     const { sortDirection, onSortChange, columnId, granularity } = columnData;
@@ -280,8 +271,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
   };
 
   const onSortChange = (direction: string, columnId: string) => {
-    //@ts-ignore
-    const sortBySet = new SortBySet(state.sortBy);
+    const sortBySet = new SortBySet(sortBy);
 
     if (direction) {
       sortBySet.add({
@@ -300,8 +290,6 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
     const nextSortBy = [...sortBySet];
     onSortUpdate(nextSortBy);
-
-    return setSortBy(nextSortBy);
   };
 
   const noRowsRenderer = () => {

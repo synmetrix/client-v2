@@ -134,6 +134,7 @@ interface VirtualTableProps {
   tableId?: string;
   className?: string;
   settings?: QuerySettings;
+  sortinMode?: "client-side" | "server-side";
 }
 
 const VirtualTable: FC<VirtualTableProps> = ({
@@ -160,6 +161,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
   orderByFn,
   loading,
   loadingTip,
+  sortinMode = "client-side",
 }) => {
   const defaultColumns = useMemo(
     () =>
@@ -212,6 +214,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
     ];
 
     let icon = <MoreOutlined />;
+
     if (sortDirection) {
       icon =
         sortDirection === SortDirection.DESC ? (
@@ -280,8 +283,13 @@ const VirtualTable: FC<VirtualTableProps> = ({
   };
 
   const onSortChange = (direction: string, columnId: string) => {
-    //@ts-ignore
-    const sortBySet = new SortBySet(state.sortBy);
+    let sortBySet: SortBySet;
+    if (sortinMode === "client-side") {
+      //@ts-ignore
+      sortBySet = new SortBySet(state.sortBy);
+    } else {
+      sortBySet = new SortBySet(sortBy);
+    }
 
     if (direction) {
       sortBySet.add({
@@ -301,7 +309,9 @@ const VirtualTable: FC<VirtualTableProps> = ({
     const nextSortBy = [...sortBySet];
     onSortUpdate(nextSortBy);
 
-    return setSortBy(nextSortBy);
+    if (sortinMode === "client-side") {
+      return setSortBy(nextSortBy);
+    }
   };
 
   const noRowsRenderer = () => {
@@ -395,15 +405,17 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
                   const value = col.render("Header");
 
-                  const colSortConfig = sortBy.find(
-                    (sortItem) => sortItem.id === col.id
-                  );
+                  console.log(sortBy);
+
+                  const colSortConfig =
+                    sortBy.find((sortItem) => sortItem.id === col.id) ||
+                    //@ts-ignore
+                    state.sortBy.find((sortItem) => sortItem.id === col.id);
 
                   const sortDirection =
                     !!colSortConfig &&
                     ((colSortConfig.desc && SortDirection.DESC) ||
                       SortDirection.ASC);
-
                   return (
                     <Column
                       key={col.id}

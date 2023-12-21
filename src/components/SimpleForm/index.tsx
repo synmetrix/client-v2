@@ -131,21 +131,23 @@ const SimpleForm: (props: SimpleFormProps) => JSX.Element = (props) => {
           );
           res = (
             <div className={s.subSection}>
-              {sectionFormItems.map(([itemKey, item]) => (
-                <Input
-                  className={cx(cls, s.subSectionInput)}
-                  key={itemKey}
-                  control={control}
-                  min={item?.min}
-                  max={item?.max}
-                  name={itemKey}
-                  rules={item?.rules}
-                  label={item.label}
-                  defaultValue={item.defaultValue}
-                  fieldType={item.type}
-                  size={item.size}
-                />
-              ))}
+              {sectionFormItems.map(([itemKey, item]) => {
+                return (
+                  <Input
+                    className={cx(cls, s.subSectionInput)}
+                    key={itemKey}
+                    control={control}
+                    min={item?.min}
+                    max={item?.max}
+                    name={itemKey}
+                    rules={item?.rules}
+                    label={item.label}
+                    defaultValue={item.defaultValue}
+                    fieldType={item.type}
+                    size={item.size}
+                  />
+                );
+              })}
             </div>
           );
         }

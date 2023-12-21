@@ -98,14 +98,30 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit, isMagicLink }) => {
             name="privacy"
             fieldType="checkbox"
           >
-            {t("sign_up.privacy_text_1")}{" "}
-            <Button className={cn(styles.link, styles.privacyLink)} type="link">
-              {t("sign_up.privacy_link_1")}
-            </Button>{" "}
-            {t("sign_up.privacy_text_2")}{" "}
-            <Button className={cn(styles.link, styles.privacyLink)} type="link">
-              {t("sign_up.privacy_link_2")}
-            </Button>
+            <span>
+              {t("sign_up.privacy_text_1")}{" "}
+              <Button
+                className={cn(styles.link, styles.privacyLink)}
+                type="link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                {t("sign_up.privacy_link_1")}
+              </Button>{" "}
+              {t("sign_up.privacy_text_2")}{" "}
+              <Button
+                className={cn(styles.link, styles.privacyLink)}
+                type="link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                {t("sign_up.privacy_link_2")}
+              </Button>
+            </span>
           </Input>
         </div>
 

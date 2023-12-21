@@ -38,7 +38,7 @@ const QueryLogsTable: FC<QueryLogsTableProps> = ({
       key: "datasource_id",
       render: (value) => (
         <span className={cn(styles.cell, styles.dataSource)}>
-          {dataSources.find((ds) => ds.id === value)?.name}
+          {dataSources.find((ds) => ds.id === value)?.name || value}
         </span>
       ),
     },

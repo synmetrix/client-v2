@@ -214,6 +214,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
     ];
 
     let icon = <MoreOutlined />;
+
     if (sortDirection) {
       icon =
         sortDirection === SortDirection.DESC ? (
@@ -404,15 +405,17 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
                   const value = col.render("Header");
 
-                  const colSortConfig = sortBy.find(
-                    (sortItem) => sortItem.id === col.id
-                  );
+                  console.log(sortBy);
+
+                  const colSortConfig =
+                    sortBy.find((sortItem) => sortItem.id === col.id) ||
+                    //@ts-ignore
+                    state.sortBy.find((sortItem) => sortItem.id === col.id);
 
                   const sortDirection =
                     !!colSortConfig &&
                     ((colSortConfig.desc && SortDirection.DESC) ||
                       SortDirection.ASC);
-
                   return (
                     <Column
                       key={col.id}

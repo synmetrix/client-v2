@@ -90,21 +90,23 @@ export default ({
 
   useTrackedEffect(
     (changes, previousDeps, currentDeps) => {
-      const prevData = previousDeps?.[0];
-      const currData = currentDeps?.[0];
+      if (!equals(previousDeps?.[0], currentDeps?.[0])) {
+        const prevData = previousDeps?.[1];
+        const currData = currentDeps?.[1];
 
-      let dataDiff = false;
-      if (!prevData || !currData) {
-        dataDiff = false;
-      } else {
-        dataDiff = !equals(prevData, currData);
-      }
+        let dataDiff = false;
+        if (!prevData || !currData) {
+          dataDiff = false;
+        } else {
+          dataDiff = !equals(prevData, currData);
+        }
 
-      if (dataDiff) {
-        execQueryAll({ requestPolicy: "network-only" });
+        if (dataDiff) {
+          execQueryAll({ requestPolicy: "network-only" });
+        }
       }
     },
-    [subscription.data, execQueryAll]
+    [pagination, subscription.data, execQueryAll]
   );
 
   const allLogs = useMemo(
@@ -115,6 +117,7 @@ export default ({
     () => allData.data?.request_logs_aggregate?.aggregate?.count || 0,
     [allData.data]
   );
+
   return {
     allLogs,
     totalCount,

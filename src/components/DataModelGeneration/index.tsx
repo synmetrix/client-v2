@@ -51,9 +51,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   onSkip,
   isGenerate = false,
   isOnboarding = false,
-  initialValue = {
-    type: "js",
-  },
+  initialValue = {},
   loading = false,
   resetOnSubmit = false,
 }) => {

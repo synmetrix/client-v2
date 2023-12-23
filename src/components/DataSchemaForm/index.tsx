@@ -1,10 +1,18 @@
-import { Form, Input, Space } from "antd";
+import { Form, Space } from "antd";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
 
 import Button from "@/components/Button";
+import Input from "@/components/Input";
 import type { Dataschema } from "@/types/dataschema";
 
 import type { FC } from "react";
+
+const fileTypes = ["yml", "js"];
+
+interface DataSchemaFormValues extends Partial<Dataschema> {
+  type: (typeof fileTypes)[number];
+}
 
 interface DataSchemaFormProps {
   defaultValues?: Partial<Dataschema>;
@@ -14,41 +22,50 @@ interface DataSchemaFormProps {
 const DataSchemaForm: FC<DataSchemaFormProps> = ({
   defaultValues = {
     name: "",
-  },
+    type: fileTypes[0],
+  } as DataSchemaFormValues,
   onSubmit,
 }) => {
   const { t } = useTranslation(["common"]);
-  const [value, setValue] = useState<string>(defaultValues.name || "");
-  const [error, setError] = useState<boolean>(false);
 
-  const onFormSubmit = () => {
-    if (!value) {
-      setError(true);
-      return;
-    }
+  const { control, handleSubmit, reset } = useForm<DataSchemaFormValues>({
+    defaultValues,
+  });
 
-    onSubmit({ name: value });
+  const onFormSubmit = (data: DataSchemaFormValues) => {
+    const name = `${data.name}.${data.type}`;
+    onSubmit({ name } as Partial<Dataschema>);
+    reset();
   };
 
   return (
     <Space direction="vertical" size={0}>
-      <Form layout="vertical">
-        <Form.Item label={`* ${t("common:words.filename")}:`}>
-          <Input
-            status={error ? "error" : undefined}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-        </Form.Item>
+      <Form id="dataschema-form" layout="vertical">
+        <Input
+          rules={{ required: true }}
+          name="name"
+          control={control}
+          label={t("common:words.filename")}
+          addonAfter={
+            <Input
+              name="type"
+              fieldType="select"
+              control={control}
+              defaultValue={fileTypes[0]}
+              options={fileTypes.map((type) => ({
+                label: `.${type}`,
+                value: type,
+              }))}
+            />
+          }
+        />
       </Form>
 
       <Button
         type="primary"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onFormSubmit();
-        }}
+        htmlType="submit"
+        form="dataschema-form"
+        onClick={handleSubmit(onFormSubmit)}
       >
         {t("common:words.save")}
       </Button>

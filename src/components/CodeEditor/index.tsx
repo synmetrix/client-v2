@@ -2,7 +2,7 @@ import { Col, Form, InputNumber, Row, Space, Tooltip } from "antd";
 import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
-import { useResponsive } from "ahooks";
+import { useResponsive, useTrackedEffect } from "ahooks";
 import cn from "classnames";
 
 import Button from "@/components/Button";
@@ -10,6 +10,7 @@ import PopoverButton from "@/components/PopoverButton";
 import SQLRunner from "@/components/SQLRunner";
 import { MONACO_OPTIONS } from "@/utils/constants/monaco";
 import type { Dataschema } from "@/types/dataschema";
+import equals from "@/utils/helpers/equals";
 
 import styles from "./index.module.less";
 
@@ -68,6 +69,16 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
     onRunSQL(query, limit);
   };
+
+  useTrackedEffect(
+    (changes, previousDeps, currentDeps) => {
+      if (!equals(previousDeps?.[0], currentDeps?.[0]) && active) {
+        const code = files?.[active]?.code ?? "";
+        setContent(code);
+      }
+    },
+    [schemas]
+  );
 
   const defaultButtons = [
     <Button

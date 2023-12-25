@@ -364,11 +364,14 @@ const ModelsWrapper: React.FC = () => {
     }
   );
 
-  const currentBranch = useMemo(
-    () =>
-      (branches || []).find((b) => b.id === currentBranchId) || branches?.[0],
-    [branches, currentBranchId]
-  );
+  const currentBranch = useMemo(() => {
+    const curBranch =
+      (branches || []).find((b) => b.id === currentBranchId) || branches?.[0];
+    if (curBranch?.id && curBranch?.id !== currentBranchId) {
+      setCurrentBranchId(curBranch?.id);
+    }
+    return curBranch;
+  }, [branches, currentBranchId, setCurrentBranchId]);
   const currentVersion = useMemo(
     () => version?.data?.versions[0] || ({} as Version),
     [version]

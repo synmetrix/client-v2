@@ -210,7 +210,9 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
             allowClear
           />
 
-          {!!metaError && <Alert type="error" message={metaError} />}
+          {!!metaError && (
+            <Alert className={styles.alert} type="error" message={metaError} />
+          )}
           <Collapse
             className={styles.collapse}
             bordered={false}

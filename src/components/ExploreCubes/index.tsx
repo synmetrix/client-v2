@@ -7,14 +7,13 @@ import cn from "classnames";
 import useCubesList from "@/hooks/useCubesList";
 import ExploreCubesSection from "@/components//ExploreCubesSection";
 import type { Cube, CubeMember } from "@/types/cube";
-import type { DataSchemaValidation } from "@/types/exploration";
 
 import SearchIcon from "@/assets/search.svg";
 
 import styles from "./index.module.less";
 
 import type { ChangeEventHandler, FC, ReactNode } from "react";
-import type { RadioChangeEvent, AlertProps } from "antd";
+import type { RadioChangeEvent } from "antd";
 
 interface ExploreCubesProps {
   onMemberSelect: (
@@ -30,7 +29,7 @@ interface ExploreCubesProps {
     Record<string, Record<string, CubeMember>>
   >;
   selectedQueryMembers: Record<string, CubeMember[]>;
-  dataSchemaValidation?: DataSchemaValidation;
+  metaError?: string;
   header?: ReactNode;
 }
 
@@ -42,7 +41,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
   onMemberSelect,
   availableQueryMembers,
   selectedQueryMembers,
-  dataSchemaValidation,
+  metaError,
   header,
 }) => {
   const { t } = useTranslation(["explore", "common"]);
@@ -169,13 +168,6 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
     }));
   };
 
-  const dataSchemaError: AlertProps = { type: "error", message: "" };
-  if (dataSchemaValidation?.error) {
-    dataSchemaError.message = `${t("Bad Data Schema")}.\n${
-      dataSchemaValidation.error.message
-    }`;
-  }
-
   return (
     <div className={styles.wrapper}>
       {header && <div className={styles.header}>{header}</div>}
@@ -218,7 +210,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
             allowClear
           />
 
-          {dataSchemaValidation?.error && <Alert {...dataSchemaError} />}
+          {!!metaError && <Alert type="error" message={metaError} />}
           <Collapse
             className={styles.collapse}
             bordered={false}

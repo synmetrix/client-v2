@@ -9,7 +9,6 @@ import {
   useFetchMetaQuery,
   useCurrentExplorationQuery,
   useGenSqlMutation,
-  useValidateDataSourceMutation,
   useCreateExplorationMutation,
 } from "@/graphql/generated";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
@@ -26,11 +25,7 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import useAppSettings from "@/hooks/useAppSettings";
 import useReports from "@/hooks/useReports";
 import useAlerts from "@/hooks/useAlerts";
-import type {
-  Exploration,
-  RawSql,
-  DataSchemaValidation,
-} from "@/types/exploration";
+import type { Exploration, RawSql } from "@/types/exploration";
 import type { AlertFormType, AlertType } from "@/types/alert";
 import type { ReportFormType } from "@/types/report";
 
@@ -48,11 +43,11 @@ interface ExploreProps {
   dataSource?: DataSourceInfo;
   exploration?: Exploration;
   meta: Record<string, any>[];
+  metaError?: string;
   dataSet?: FetchDatasetOutput;
   rawSql?: RawSql;
   metaLoading?: boolean;
   testLoading?: boolean;
-  dataSchemaValidation?: DataSchemaValidation;
   onOpenModal?: (type: string) => void;
   onCloseModal?: () => void;
   onChangeStep?: (step: number) => void;
@@ -68,13 +63,13 @@ interface ExploreProps {
 export const Explore = ({
   loading = false,
   meta = [],
+  metaError,
   metaLoading = false,
   dataSource,
   dataSources = [],
   exploration,
   rawSql,
   dataSet,
-  dataSchemaValidation,
   params,
   testLoading = false,
   onChangeStep = () => {},
@@ -122,8 +117,8 @@ export const Explore = ({
         onOpenModal={onOpenModal}
         source={dataSource}
         dataSources={dataSources}
-        dataSchemaValidation={dataSchemaValidation}
         meta={meta}
+        metaError={metaError}
         metaLoading={metaLoading}
         dataSet={dataSet}
         loading={loading}
@@ -169,7 +164,6 @@ const ExploreWrapper = () => {
   const { state: playgroundState } = useAnalyticsQuery();
   const { withAuthPrefix } = useAppSettings();
   const [createData, execCreateMutation] = useCreateExplorationMutation();
-  const [validateData, execValidateMutation] = useValidateDataSourceMutation();
   const [sqlData, execSqlGenMutation] = useGenSqlMutation();
   const [currentExploration, execCurrentExploration] =
     useCurrentExplorationQuery({
@@ -307,12 +301,6 @@ const ExploreWrapper = () => {
   }, [dataSourceId, execMetaQuery]);
 
   useEffect(() => {
-    if (dataSourceId) {
-      execValidateMutation({ id: dataSourceId });
-    }
-  }, [dataSourceId, execValidateMutation]);
-
-  useEffect(() => {
     if (explorationId) {
       execSqlGenMutation({
         exploration_id: explorationId,
@@ -342,10 +330,6 @@ const ExploreWrapper = () => {
   const rawSql = useMemo(
     () => sqlData.data?.gen_sql?.result || {},
     [sqlData.data?.gen_sql?.result]
-  );
-  const dataSchemaValidation = useMemo(
-    () => validateData.data?.validate_datasource as DataSchemaValidation,
-    [validateData.data?.validate_datasource]
   );
   const currentProgress = useMemo(() => dataSet?.progress || {}, [dataSet]);
 
@@ -388,10 +372,7 @@ const ExploreWrapper = () => {
   ]);
 
   const loading =
-    currentExploration.fetching ||
-    validateData.fetching ||
-    createData.fetching ||
-    sqlData.fetching;
+    currentExploration.fetching || createData.fetching || sqlData.fetching;
 
   const isScreenshotMode = screenshotMode !== undefined;
 
@@ -399,6 +380,7 @@ const ExploreWrapper = () => {
     <Explore
       loading={loading}
       meta={metaData?.data?.fetch_meta?.cubes || []}
+      metaError={metaData?.error?.message}
       metaLoading={metaData.fetching}
       testLoading={sendTestMutationData.fetching}
       dataSources={datasources}
@@ -411,7 +393,6 @@ const ExploreWrapper = () => {
       onCloseModal={onCloseModal}
       onChangeStep={onChangeStep}
       onSelectDelivery={onSelectDelivery}
-      dataSchemaValidation={dataSchemaValidation}
       onSelectDataSource={onSelectDataSource}
       onCreateAlert={createAlert}
       onSendTest={onSendTest}

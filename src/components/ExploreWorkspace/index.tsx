@@ -15,11 +15,7 @@ import pickKeys from "@/utils/helpers/pickKeys";
 import useAppSettings from "@/hooks/useAppSettings";
 import type { DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
-import type {
-  Exploration,
-  RawSql,
-  DataSchemaValidation,
-} from "@/types/exploration";
+import type { Exploration, RawSql } from "@/types/exploration";
 
 import NoDataSource from "../NoDataSource";
 
@@ -32,6 +28,7 @@ const DEFAULT_ROW_HEIGHT = 20;
 interface ExploreProps {
   loading: boolean;
   meta: Record<string, any>[];
+  metaError?: string;
   metaLoading?: boolean;
   params: {
     screenshotMode: boolean;
@@ -41,7 +38,6 @@ interface ExploreProps {
   exploration?: Exploration;
   rawSql?: RawSql;
   dataSet: any;
-  dataSchemaValidation?: DataSchemaValidation;
   runQuery: (state: object, settings: QuerySettings) => void;
   onOpenModal: (type: string) => void;
   header?: ReactNode;
@@ -56,10 +52,10 @@ const Explore: FC<ExploreProps> = (props) => {
     source: dataSource,
     dataSources,
     meta,
+    metaError,
     exploration,
     rawSql,
     dataSet,
-    dataSchemaValidation,
     runQuery = () => {},
     onOpenModal = () => {},
     loading = false,
@@ -193,7 +189,7 @@ const Explore: FC<ExploreProps> = (props) => {
           availableQueryMembers={availableQueryMembers}
           selectedQueryMembers={selectedQueryMembers}
           onMemberSelect={updateMember}
-          dataSchemaValidation={dataSchemaValidation}
+          metaError={metaError}
         />
       </Spin>
     </>

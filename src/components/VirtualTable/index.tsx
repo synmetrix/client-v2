@@ -405,8 +405,6 @@ const VirtualTable: FC<VirtualTableProps> = ({
 
                   const value = col.render("Header");
 
-                  console.log(sortBy);
-
                   const colSortConfig =
                     sortBy.find((sortItem) => sortItem.id === col.id) ||
                     //@ts-ignore

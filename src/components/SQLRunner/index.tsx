@@ -57,6 +57,7 @@ const SQLRunner: FC<SQLRunnerProps> = ({
               <Alert
                 style={{ borderRadius: 0 }}
                 type="error"
+                role="error"
                 message={sqlError.toString()}
                 closable
               />

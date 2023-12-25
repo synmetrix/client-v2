@@ -1,6 +1,6 @@
 import React from "react";
 import { ResizableBox } from "react-resizable";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent, screen, act } from "@testing-library/react";
 import { vi, describe, test, expect } from "vitest";
 
 import SQLRunner from "./";
@@ -58,6 +58,18 @@ describe("SQLRunner", () => {
   test("renders a resizable box", () => {
     render(<SQLRunner {...defaultProps} />);
     expect(ResizableBox).toHaveBeenCalled();
+  });
+
+  test("updates layout when ResizableBox size changes", () => {
+    render(<SQLRunner {...defaultProps} />);
+    act(() => {
+      // @ts-ignore
+      ResizableBox.mock.calls[0][0].onResize(null, {
+        size: { width: 100, height: 222 },
+      });
+    });
+
+    expect(screen.getByTestId("monaco-editor")).toHaveStyle({ height: 222 });
   });
 
   test("renders VirtualTable when showData is true", () => {

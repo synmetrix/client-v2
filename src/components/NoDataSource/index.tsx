@@ -15,7 +15,8 @@ interface NoDataSourceProps {
 }
 
 const NoDataSource: FC<NoDataSourceProps> = ({ onConnect }) => {
-  const { t } = useTranslation(["settings", "common"]);
+  const { t } = useTranslation(["settings", "common"], { useSuspense: false });
+
   return (
     <div className={styles.wrapper}>
       <img className={styles.img} src={NoDataSourceImg} alt="" />

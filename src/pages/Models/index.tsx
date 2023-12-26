@@ -22,7 +22,6 @@ import useLocation from "@/hooks/useLocation";
 import useModelsIde from "@/hooks/useModelsIde";
 import useSources from "@/hooks/useSources";
 import useCheckResponse from "@/hooks/useCheckResponse";
-import usePermissions from "@/hooks/usePermissions";
 import calcChecksum from "@/utils/helpers/dataschemasChecksum";
 import getTables from "@/utils/helpers/getTables";
 import getCurrentBranch from "@/utils/helpers/getCurrentBranch";
@@ -491,12 +490,6 @@ const ModelsWrapper: React.FC = () => {
 
     onModalClose(true);
   };
-
-  const { fallback } = usePermissions({ scope: "dataschemas" });
-
-  if (fallback) {
-    return fallback;
-  }
 
   const fetching =
     version?.fetching ||

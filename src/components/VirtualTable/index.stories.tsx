@@ -45,4 +45,5 @@ Default.args = {
       date: "date3",
     },
   ],
+  loading: false,
 };

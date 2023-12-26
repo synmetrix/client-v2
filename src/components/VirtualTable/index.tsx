@@ -373,7 +373,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
               overflow: "auto",
             }}
           >
-            <div className={styles.tableWrapper}>
+            <div className={styles.tableWrapper} role="table">
               <Table
                 id={tableId}
                 className={cn(styles.table, tableId && styles.minWidth)}

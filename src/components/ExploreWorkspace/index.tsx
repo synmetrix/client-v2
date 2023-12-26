@@ -5,7 +5,6 @@ import ExploreDataSection from "@/components/ExploreDataSection";
 import ErrorFound from "@/components/ErrorFound";
 import ExploreCubes from "@/components/ExploreCubes";
 import usePlayground, { queryStateKeys } from "@/hooks/usePlayground";
-import usePermissions from "@/hooks/usePermissions";
 import useExploreWorkspace from "@/hooks/useExploreWorkspace";
 import useDimensions from "@/hooks/useDimensions";
 import useLocation from "@/hooks/useLocation";
@@ -144,13 +143,6 @@ const Explore: FC<ExploreProps> = (props) => {
     [dispatchSettings, setLimit, setOffset, setOrderBy, setPage]
   );
 
-  const { fallback: cubesFallback } = usePermissions({
-    scope: "explore/workspace/cubes",
-  });
-  const { fallback: filtersFallback } = usePermissions({
-    scope: "explore/workspace/filters",
-  });
-
   if (Object.keys(dataSource || {}).length && !availableQueryMembers) {
     return <ErrorFound status={500} />;
   }
@@ -195,20 +187,7 @@ const Explore: FC<ExploreProps> = (props) => {
     </>
   );
 
-  const filtersSection = !filtersFallback ? (
-    <ExploreFiltersSection
-      key="filtersSec"
-      availableQueryMembers={availableQueryMembers}
-      selectedQueryMembers={selectedQueryMembers}
-      onToggleSection={onToggleSection}
-      onMemberChange={updateMember}
-      state={state}
-      isActive={collapseState.activePanelKey.includes("filtersSec")}
-    />
-  ) : null;
-
-  const Layout =
-    cubesFallback || !!!dataSources?.length ? AppLayout : SidebarLayout;
+  const Layout = !!!dataSources?.length ? AppLayout : SidebarLayout;
 
   return (
     <Layout
@@ -221,7 +200,17 @@ const Explore: FC<ExploreProps> = (props) => {
     >
       {!!dataSources?.length ? (
         <div id="data-view" className={styles.dataView}>
-          {dataSection} {filtersSection}
+          {dataSection}
+
+          <ExploreFiltersSection
+            key="filtersSec"
+            availableQueryMembers={availableQueryMembers}
+            selectedQueryMembers={selectedQueryMembers}
+            onToggleSection={onToggleSection}
+            onMemberChange={updateMember}
+            state={state}
+            isActive={collapseState.activePanelKey.includes("filtersSec")}
+          />
         </div>
       ) : (
         <NoDataSource

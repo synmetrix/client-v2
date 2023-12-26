@@ -5,7 +5,6 @@ import { useSetState } from "ahooks";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
-import usePermissions from "@/hooks/usePermissions";
 import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
 import Button from "@/components/Button";
 import PopoverButton from "@/components/PopoverButton";
@@ -154,9 +153,6 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     });
   }, [updateState, workspaceState?.dataSection]);
 
-  const { fallback: querySettingsFallback } = usePermissions({
-    scope: "explore/workspace/querySettings",
-  });
   const {
     baseMembers: { index: membersIndex },
   } = useAnalyticsQueryMembers({
@@ -169,7 +165,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const Table = useMemo(() => {
     const messages: ErrorMessage[] = [];
 
-    if (hitLimit && !querySettingsFallback) {
+    if (hitLimit) {
       messages.push({
         type: "warning",
         text: `${t("data_section.limit_error_1")} ${limit} ${t(
@@ -233,7 +229,6 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     );
   }, [
     hitLimit,
-    querySettingsFallback,
     skippedMembers,
     progress,
     error,

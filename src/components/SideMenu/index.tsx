@@ -6,26 +6,80 @@ import Button from "@/components/Button";
 import { items } from "@/mocks/sideMenu";
 import type { SidebarItem } from "@/mocks/sideMenu";
 import useLocation from "@/hooks/useLocation";
+import CurrentUserStore from "@/stores/CurrentUserStore";
+import { Roles } from "@/types/team";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
+import type { ButtonProps } from "antd";
 
 interface SideMenuProps {}
 
 const SideMenu: FC<SideMenuProps> = () => {
   const [location, setLocation] = useLocation();
+  const { currentTeam } = CurrentUserStore();
 
   const windowSize = useResponsive();
   const isMobile = windowSize.sm === false;
 
-  const onClick = (menuItem: SidebarItem) => {
-    const href = menuItem.href;
+  const onClick = useCallback(
+    (menuItem: SidebarItem) => {
+      const href = menuItem.href;
 
-    if (href) {
-      setLocation(href);
-    }
-  };
+      if (href) {
+        setLocation(href);
+      }
+    },
+    [setLocation]
+  );
+
+  const buttons = useMemo(
+    () =>
+      items
+        .map((item) => {
+          if (currentTeam?.role === Roles.member && item.key === "models") {
+            return false;
+          }
+
+          const isActive = location?.pathname?.includes(item.href!);
+          const buttonProps = {
+            className: cn(
+              styles.btn,
+              isMobile && styles.mobile,
+              isActive && styles.active
+            ),
+            type: "text",
+            onClick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClick(item);
+            },
+          } as ButtonProps;
+
+          if (isMobile) {
+            return (
+              <Tooltip
+                placement="right"
+                title={item.label}
+                trigger="focus"
+                key={item.key}
+              >
+                <Button {...buttonProps} icon={item.icon} />
+              </Tooltip>
+            );
+          }
+
+          return (
+            <Button {...buttonProps} href={item.href} key={item.key}>
+              {item.icon}
+              <span className={styles.label}>{item.label}</span>
+            </Button>
+          );
+        })
+        .filter(Boolean),
+    [currentTeam?.role, isMobile, location?.pathname, onClick]
+  );
 
   return (
     <div className={styles.wrapper}>
@@ -37,52 +91,7 @@ const SideMenu: FC<SideMenuProps> = () => {
             src="/logo_bg.png"
           />
 
-          <div className={styles.items}>
-            {items.map((i) =>
-              isMobile ? (
-                <Tooltip
-                  placement="right"
-                  key={i.key}
-                  title={i.label}
-                  trigger={"focus"}
-                >
-                  <Button
-                    className={cn(
-                      styles.btn,
-                      isMobile && styles.mobile,
-                      location?.pathname?.includes(i.href!) && styles.active
-                    )}
-                    type="text"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      onClick(i);
-                    }}
-                    icon={i.icon}
-                  />
-                </Tooltip>
-              ) : (
-                <Button
-                  key={i.key}
-                  className={cn(
-                    styles.btn,
-                    isMobile && styles.mobile,
-                    location.pathname.includes(i.href!) && styles.active
-                  )}
-                  type="text"
-                  href={i.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onClick(i);
-                  }}
-                >
-                  {i.icon}
-                  <span className={styles.label}>{i.label}</span>
-                </Button>
-              )
-            )}
-          </div>
+          <div className={styles.items}>{buttons}</div>
         </div>
       </Space>
     </div>

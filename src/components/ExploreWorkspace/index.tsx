@@ -25,7 +25,7 @@ import type { FC, ReactNode } from "react";
 
 const DEFAULT_ROW_HEIGHT = 20;
 
-interface ExploreProps {
+interface ExploreWorkspaceProps {
   loading: boolean;
   meta: Record<string, any>[];
   metaError?: string;
@@ -45,7 +45,7 @@ interface ExploreProps {
   icon?: ReactNode;
 }
 
-const Explore: FC<ExploreProps> = (props) => {
+const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
   const {
     header = null,
     subTitle = "Explore",
@@ -232,4 +232,4 @@ const Explore: FC<ExploreProps> = (props) => {
   );
 };
 
-export default Explore;
+export default ExploreWorkspace;

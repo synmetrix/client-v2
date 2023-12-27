@@ -14,7 +14,7 @@ import pickKeys from "@/utils/helpers/pickKeys";
 import useAppSettings from "@/hooks/useAppSettings";
 import type { DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
-import type { Exploration, RawSql } from "@/types/exploration";
+import type { ExplorationData, RawSql } from "@/types/exploration";
 import type { Meta } from "@/types/cube";
 
 import NoDataSource from "../NoDataSource";
@@ -30,9 +30,8 @@ interface ExploreWorkspaceProps {
   meta: Meta;
   source?: DataSourceInfo;
   dataSources?: DataSourceInfo[];
-  exploration?: Exploration;
+  explorationData?: ExplorationData;
   rawSql?: RawSql;
-  dataSet: any;
   runQuery: (state: object, settings: QuerySettings) => void;
   onOpenModal: (type: string) => void;
   header?: ReactNode;
@@ -47,9 +46,8 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     source: dataSource,
     dataSources,
     meta,
-    exploration,
+    explorationData,
     rawSql,
-    dataSet,
     runQuery = () => {},
     onOpenModal = () => {},
     loading = false,
@@ -83,13 +81,10 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     settings,
     dispatchSettings,
   } = usePlayground({
-    exploration,
+    explorationData,
     meta: meta.data,
     rawSql,
-    dataSet,
   });
-
-  const explorationRowId = useMemo(() => exploration?.id, [exploration]);
 
   const { collapseState, state, onToggleSection } = useExploreWorkspace({
     selectedQueryMembers,
@@ -155,7 +150,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
       state={state}
       loading={loading}
       queryState={explorationState}
-      explorationRowId={explorationRowId}
+      disableButtons={!!explorationData?.exploration?.id}
       screenshotMode={isScreenshotMode}
       rowHeight={DEFAULT_ROW_HEIGHT}
       onToggleSection={onToggleSection}

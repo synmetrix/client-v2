@@ -23,7 +23,7 @@ import type { QuerySettings } from "@/types/querySettings";
 import useAnalyticsQuery from "@/hooks/useAnalyticsQuery";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useAppSettings from "@/hooks/useAppSettings";
-import type { Exploration, RawSql } from "@/types/exploration";
+import type { Exploration, ExplorationData, RawSql } from "@/types/exploration";
 import type { AlertType } from "@/types/alert";
 import type { Meta } from "@/types/cube";
 
@@ -38,8 +38,7 @@ interface ExploreProps {
   loading?: boolean;
   dataSources?: DataSourceInfo[];
   dataSource?: DataSourceInfo;
-  exploration?: Exploration;
-  dataSet?: FetchDatasetOutput;
+  explorationData?: ExplorationData;
   rawSql?: RawSql;
   meta: Meta;
   onOpenModal?: (type: string) => void;
@@ -55,9 +54,8 @@ export const Explore = ({
   loading = false,
   dataSource,
   dataSources = [],
-  exploration,
+  explorationData,
   rawSql,
-  dataSet,
   params,
   meta,
   onChangeStep = () => {},
@@ -91,18 +89,17 @@ export const Explore = ({
         subTitle={t("pages:explore")}
         icon={<ExploreIcon />}
         rawSql={rawSql}
-        exploration={exploration}
+        explorationData={explorationData}
         runQuery={runQuery}
         onOpenModal={onOpenModal}
         source={dataSource}
         dataSources={dataSources}
         meta={meta}
-        dataSet={dataSet}
         loading={loading}
       />
 
       <AlertModal
-        exploration={exploration}
+        exploration={explorationData?.exploration}
         isOpen={isAlertOpen}
         onClose={onCloseModal}
         onChangeStep={onChangeStep}
@@ -111,7 +108,7 @@ export const Explore = ({
       />
 
       <ReportModal
-        exploration={exploration}
+        exploration={explorationData?.exploration}
         isOpen={isReportOpen}
         onClose={onCloseModal}
         onChangeStep={onChangeStep}
@@ -247,26 +244,28 @@ const ExploreWrapper = () => {
     () => (datasources || []).find((d) => d.id === dataSourceId),
     [dataSourceId, datasources]
   );
-  const exploration = useMemo(() => {
+  const explorationData: ExplorationData | undefined = useMemo(() => {
     if (explorationId && currentExploration?.data) {
-      return currentExploration?.data?.explorations_by_pk as Exploration;
+      return {
+        exploration: currentExploration?.data
+          ?.explorations_by_pk as Exploration,
+        dataSet: currentExploration.data?.fetch_dataset as FetchDatasetOutput,
+      };
     }
   }, [currentExploration?.data, explorationId]);
-  const dataSet = useMemo(
-    () => currentExploration.data?.fetch_dataset as FetchDatasetOutput,
-    [currentExploration.data?.fetch_dataset]
-  );
   const rawSql = useMemo(
     () => sqlData.data?.gen_sql?.result || {},
     [sqlData.data?.gen_sql?.result]
   );
-  const currentProgress = useMemo(() => dataSet?.progress || {}, [dataSet]);
 
   useEffect(() => {
-    if (currentProgress && currentProgress.loading) {
+    if (
+      explorationData?.dataSet &&
+      explorationData?.dataSet?.progress.loading
+    ) {
       execCurrentExploration();
     }
-  }, [currentProgress, execCurrentExploration]);
+  }, [explorationData?.dataSet, execCurrentExploration]);
 
   useLayoutEffect(() => {
     const noCurSource = dataSourceId && !curSource;
@@ -315,9 +314,8 @@ const ExploreWrapper = () => {
       meta={meta}
       dataSources={datasources}
       dataSource={curSource}
-      exploration={exploration}
+      explorationData={explorationData}
       rawSql={rawSql}
-      dataSet={dataSet}
       runQuery={runQuery}
       onOpenModal={onOpenModal}
       onCloseModal={onCloseModal}

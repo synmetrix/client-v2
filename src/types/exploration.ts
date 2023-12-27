@@ -1,3 +1,5 @@
+import type { FetchDatasetOutput } from "@/graphql/generated";
+
 import type { CubeMember } from "./cube";
 import type { LoadingProgress } from "./loading";
 import type { QuerySettings } from "./querySettings";
@@ -52,4 +54,9 @@ export interface DataSchemaValidation {
   error?: {
     message: string;
   };
+}
+
+export interface ExplorationData {
+  exploration: Exploration;
+  dataSet: FetchDatasetOutput;
 }

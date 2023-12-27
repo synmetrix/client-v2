@@ -13,7 +13,7 @@ import type { CubeMembers } from "@/types/cube";
 import { getTitle } from "@/utils/helpers/getTitles";
 import type { QuerySettings } from "@/types/querySettings";
 import type {
-  Exploration,
+  ExplorationData,
   ExplorationState,
   PlaygroundState,
   RawSql,
@@ -85,12 +85,13 @@ export const getColumns = (selectedQueryMembers: CubeMembers, settings = {}) =>
 
 interface Props {
   meta?: Record<string, any>[];
-  exploration?: Exploration;
+  explorationData?: ExplorationData;
   rawSql?: RawSql;
   dataSet?: any;
 }
 
-export default ({ meta = [], exploration, rawSql, dataSet }: Props) => {
+export default ({ meta = [], explorationData, rawSql }: Props) => {
+  const { exploration, dataSet } = explorationData || {};
   const [settings, dispatchSettings] = useReducer(reducer, initialSettings);
 
   const playgroundSettings = useMemo(

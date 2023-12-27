@@ -19,17 +19,22 @@ const Console: FC<ConsoleProps> = ({ errors, onClose }) => {
         hideAdd
         tabBarExtraContent={
           <Button
+            data-testid="close-console"
             style={{ marginRight: 18 }}
             size="small"
             icon={<CloseOutlined />}
             onClick={onClose}
           />
         }
-      >
-        <Tabs.TabPane tab="Errors" key="errors" closable={false}>
-          <div className={s.errorText}>{errors}</div>
-        </Tabs.TabPane>
-      </Tabs>
+        items={[
+          {
+            key: "errors",
+            label: "Errors",
+            closable: false,
+            children: <div className={s.errorText}>{errors}</div>,
+          },
+        ]}
+      />
     </Card>
   );
 };

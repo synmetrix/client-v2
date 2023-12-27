@@ -34,6 +34,7 @@ const Modal: FC<ModalProps> = ({
             <Button
               className={styles.closeBtn}
               onClick={props.onClose}
+              data-testid="modal-close-button"
               type="text"
             >
               <CloseIcon className={styles.closeIcon} />

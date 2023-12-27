@@ -124,7 +124,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
     : "sql";
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-testid="code-editor">
       <Row
         className={styles.nav}
         justify="space-between"
@@ -147,6 +147,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
                   <Tooltip title={t("common:words.close")}>
                     <CloseOutlined
                       className={styles.closeIcon}
+                      data-testid="close-icon"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();

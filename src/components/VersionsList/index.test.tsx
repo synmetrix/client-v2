@@ -3,12 +3,6 @@ import { expect, vi, test, describe } from "vitest";
 
 import VersionsList from "./";
 
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
-
 // Mock data
 const mockVersions = [
   {

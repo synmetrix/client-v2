@@ -150,7 +150,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
       state={state}
       loading={loading}
       queryState={explorationState}
-      disableButtons={!!explorationData?.exploration?.id}
+      disableButtons={!explorationData?.exploration?.id}
       screenshotMode={isScreenshotMode}
       rowHeight={DEFAULT_ROW_HEIGHT}
       onToggleSection={onToggleSection}

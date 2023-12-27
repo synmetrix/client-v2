@@ -212,13 +212,7 @@ const ExploreWrapper = () => {
       delete createData.data;
       setLocation(withAuthPrefix(`${dataSourcePath}/${newExplorationId}`));
     }
-  }, [
-    createData.data,
-    createData.data?.insert_explorations_one?.id,
-    dataSourcePath,
-    setLocation,
-    withAuthPrefix,
-  ]);
+  }, [createData.data, dataSourcePath, setLocation, withAuthPrefix]);
 
   useEffect(() => {
     if (dataSourceId) {
@@ -228,17 +222,12 @@ const ExploreWrapper = () => {
 
   useEffect(() => {
     if (explorationId) {
+      execCurrentExploration();
       execSqlGenMutation({
         exploration_id: explorationId,
       });
     }
-  }, [execSqlGenMutation, explorationId]);
-
-  useEffect(() => {
-    if (explorationId) {
-      execCurrentExploration();
-    }
-  }, [execCurrentExploration, explorationId]);
+  }, [execCurrentExploration, execSqlGenMutation, explorationId]);
 
   const curSource = useMemo(
     () => (datasources || []).find((d) => d.id === dataSourceId),
@@ -261,7 +250,7 @@ const ExploreWrapper = () => {
   useEffect(() => {
     if (
       explorationData?.dataSet &&
-      explorationData?.dataSet?.progress.loading
+      explorationData?.dataSet?.progress?.loading
     ) {
       execCurrentExploration();
     }

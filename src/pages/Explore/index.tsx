@@ -23,16 +23,13 @@ import type { QuerySettings } from "@/types/querySettings";
 import useAnalyticsQuery from "@/hooks/useAnalyticsQuery";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useAppSettings from "@/hooks/useAppSettings";
-import useReports from "@/hooks/useReports";
-import useAlerts from "@/hooks/useAlerts";
 import type { Exploration, RawSql } from "@/types/exploration";
-import type { AlertFormType, AlertType } from "@/types/alert";
-import type { ReportFormType } from "@/types/report";
+import type { AlertType } from "@/types/alert";
+import type { Meta } from "@/types/cube";
 
 import ExploreIcon from "@/assets/explore-active.svg";
 
 export interface Params {
-  screenshotMode: boolean;
   modalType?: string;
   delivery?: AlertType;
 }
@@ -42,53 +39,36 @@ interface ExploreProps {
   dataSources?: DataSourceInfo[];
   dataSource?: DataSourceInfo;
   exploration?: Exploration;
-  meta: Record<string, any>[];
-  metaError?: string;
   dataSet?: FetchDatasetOutput;
   rawSql?: RawSql;
-  metaLoading?: boolean;
-  testLoading?: boolean;
+  meta: Meta;
   onOpenModal?: (type: string) => void;
   onCloseModal?: () => void;
   onChangeStep?: (step: number) => void;
   onSelectDelivery?: (del: string) => void;
   runQuery?: (state: object, settings: QuerySettings) => void;
   onSelectDataSource?: (dataSource: DataSourceInfo | null) => void;
-  onCreateAlert?: (values: AlertFormType) => void;
-  onSendTest?: (values: AlertFormType | ReportFormType) => void;
-  onCreateReport?: (values: ReportFormType) => void;
   params: Params;
 }
 
 export const Explore = ({
   loading = false,
-  meta = [],
-  metaError,
-  metaLoading = false,
   dataSource,
   dataSources = [],
   exploration,
   rawSql,
   dataSet,
   params,
-  testLoading = false,
+  meta,
   onChangeStep = () => {},
   onOpenModal = () => {},
   onCloseModal = () => {},
   onSelectDelivery = () => {},
   runQuery = () => {},
   onSelectDataSource = () => {},
-  onCreateAlert = () => {},
-  onSendTest = () => {},
-  onCreateReport = () => {},
 }: ExploreProps) => {
   const { t } = useTranslation();
   const { modalType } = params;
-
-  const query = useMemo(
-    () => exploration?.playground_state || {},
-    [exploration?.playground_state]
-  );
 
   const header = useMemo(
     () => (
@@ -112,39 +92,30 @@ export const Explore = ({
         icon={<ExploreIcon />}
         rawSql={rawSql}
         exploration={exploration}
-        params={params}
         runQuery={runQuery}
         onOpenModal={onOpenModal}
         source={dataSource}
         dataSources={dataSources}
         meta={meta}
-        metaError={metaError}
-        metaLoading={metaLoading}
         dataSet={dataSet}
         loading={loading}
       />
 
       <AlertModal
+        exploration={exploration}
         isOpen={isAlertOpen}
         onClose={onCloseModal}
-        query={query}
         onChangeStep={onChangeStep}
         onSelectDelivery={onSelectDelivery}
-        onSendTest={onSendTest}
-        onSubmit={onCreateAlert}
-        loading={testLoading}
         params={params}
       />
 
       <ReportModal
+        exploration={exploration}
         isOpen={isReportOpen}
         onClose={onCloseModal}
-        query={query}
         onChangeStep={onChangeStep}
         onSelectDelivery={onSelectDelivery}
-        onSendTest={onSendTest}
-        onSubmit={onCreateReport}
-        loading={testLoading}
         params={params}
       />
     </>
@@ -154,8 +125,7 @@ export const Explore = ({
 const ExploreWrapper = () => {
   const { t } = useTranslation(["explore", "alerts", "reports"]);
   const { teamData } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
-  const { screenshotMode } = location.query;
+  const [, setLocation] = useLocation();
   const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState(
     "currentDataSourceId"
   );
@@ -175,49 +145,8 @@ const ExploreWrapper = () => {
       pause: true,
     });
 
-  const {
-    createAlert,
-    onSendTest,
-    mutations: {
-      createMutationData: createAlertMutationData,
-      sendTestMutationData,
-    },
-  } = useAlerts({
-    explorationId,
-  });
-
-  const {
-    createReport,
-    mutations: { createMutationData: createReportMutationData },
-  } = useReports({
-    explorationId,
-  });
-
   const dataSourcePath = `/explore/${dataSourceId}`;
   const explorePath = `${dataSourcePath}/${explorationId}`;
-  useCheckResponse(
-    createAlertMutationData,
-    () => {
-      setLocation(explorePath);
-    },
-    {
-      successMessage: t("alerts:alert_created"),
-    }
-  );
-
-  useCheckResponse(
-    createReportMutationData,
-    () => {
-      setLocation(explorePath);
-    },
-    {
-      successMessage: t("reports:report_created"),
-    }
-  );
-
-  useCheckResponse(sendTestMutationData, () => {}, {
-    successMessage: t("alerts:test_alert_sent"),
-  });
 
   const datasources = useMemo(
     () => teamData?.dataSources || [],
@@ -371,18 +300,19 @@ const ExploreWrapper = () => {
     withAuthPrefix,
   ]);
 
+  const meta = {
+    data: metaData?.data?.fetch_meta?.cubes || [],
+    error: metaData?.error?.message,
+    loading: metaData?.fetching,
+  } as Meta;
+
   const loading =
     currentExploration.fetching || createData.fetching || sqlData.fetching;
-
-  const isScreenshotMode = screenshotMode !== undefined;
 
   return (
     <Explore
       loading={loading}
-      meta={metaData?.data?.fetch_meta?.cubes || []}
-      metaError={metaData?.error?.message}
-      metaLoading={metaData.fetching}
-      testLoading={sendTestMutationData.fetching}
+      meta={meta}
       dataSources={datasources}
       dataSource={curSource}
       exploration={exploration}
@@ -394,11 +324,7 @@ const ExploreWrapper = () => {
       onChangeStep={onChangeStep}
       onSelectDelivery={onSelectDelivery}
       onSelectDataSource={onSelectDataSource}
-      onCreateAlert={createAlert}
-      onSendTest={onSendTest}
-      onCreateReport={createReport}
       params={{
-        screenshotMode: isScreenshotMode,
         modalType: modalType?.toLowerCase(),
         delivery: delivery?.toUpperCase() as AlertType,
       }}

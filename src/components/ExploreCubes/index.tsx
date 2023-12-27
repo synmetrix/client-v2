@@ -29,7 +29,7 @@ interface ExploreCubesProps {
     Record<string, Record<string, CubeMember>>
   >;
   selectedQueryMembers: Record<string, CubeMember[]>;
-  metaError?: string;
+  error?: string;
   header?: ReactNode;
 }
 
@@ -41,7 +41,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
   onMemberSelect,
   availableQueryMembers,
   selectedQueryMembers,
-  metaError,
+  error,
   header,
 }) => {
   const { t } = useTranslation(["explore", "common"]);
@@ -210,8 +210,8 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
             allowClear
           />
 
-          {!!metaError && (
-            <Alert className={styles.alert} type="error" message={metaError} />
+          {!!error && (
+            <Alert className={styles.alert} type="error" message={error} />
           )}
           <Collapse
             className={styles.collapse}

@@ -5,10 +5,12 @@ import Modal from "@/components/Modal";
 import AlertForm from "@/components/AlertForm";
 import InfoBlock from "@/components/InfoBlock";
 import AlertTypeSelection from "@/components/AlertTypeSelection";
+import useAlerts from "@/hooks/useAlerts";
+import useCheckResponse from "@/hooks/useCheckResponse";
 import { alertTypes } from "@/mocks/alertTypes";
 import type { AlertFormType } from "@/types/alert";
-import type { QueryState } from "@/types/queryState";
 import type { Params } from "@/pages/Explore";
+import type { Exploration } from "@/types/exploration";
 import { DOCS_CREATE_ALERT_LINK } from "@/utils/constants/links";
 
 import styles from "./index.module.less";
@@ -17,31 +19,41 @@ const { Title } = Typography;
 
 interface AlertModalProps {
   alert?: AlertFormType;
-  query: QueryState;
   isOpen: boolean;
-  loading: boolean;
   params?: Params;
+  exploration?: Exploration;
   onClose: () => void;
-  onSendTest: (values: AlertFormType) => void;
-  onSubmit: (values: AlertFormType) => void;
   onSelectDelivery?: (type: string) => void;
   onChangeStep?: (step: number) => void;
 }
 
 const AlertModal: React.FC<AlertModalProps> = ({
   alert,
-  query,
   isOpen,
   onClose,
-  onSendTest,
-  onSubmit,
   onChangeStep,
   onSelectDelivery,
-  loading,
+  exploration,
   params = {} as Params,
 }) => {
   const { t } = useTranslation(["alerts", "common"]);
   const { delivery } = params;
+
+  const {
+    createAlert,
+    onSendTest,
+    mutations: { createMutationData, sendTestMutationData },
+  } = useAlerts({
+    explorationId: exploration?.id,
+  });
+
+  useCheckResponse(createMutationData, () => onClose(), {
+    successMessage: t("alerts:alert_created"),
+  });
+
+  useCheckResponse(sendTestMutationData, () => {}, {
+    successMessage: t("alerts:test_alert_sent"),
+  });
 
   return (
     <Modal
@@ -63,13 +75,13 @@ const AlertModal: React.FC<AlertModalProps> = ({
       </div>
       {alert || delivery ? (
         <AlertForm
-          query={query}
+          query={exploration?.playground_state || {}}
           onChangeStep={onChangeStep}
           onTest={onSendTest}
           type={alert?.type || delivery}
-          onSubmit={onSubmit}
+          onSubmit={createAlert}
           initialValue={alert}
-          isSendTestLoading={loading}
+          isSendTestLoading={sendTestMutationData.fetching}
         />
       ) : (
         <AlertTypeSelection

@@ -55,7 +55,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
   } = props;
 
   const [location, setLocation] = useLocation();
-  const { screenshotMode } = location.query;
+  const { screenshotMode } = location?.query || {};
   const isScreenshotMode = screenshotMode !== undefined;
   const selector = isScreenshotMode
     ? document.querySelector(".ant-layout-content")

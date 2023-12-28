@@ -1,7 +1,12 @@
 import type { CubeMember } from "@/types/cube";
 import usePlayground from "@/hooks/usePlayground";
 import RootLayout from "@/layouts/RootLayout";
-import { availableQueryMembers, dataSectionProps, meta } from "@/mocks/explore";
+import {
+  availableQueryMembers,
+  dataSectionProps,
+  exploreMock,
+  meta,
+} from "@/mocks/explore";
 
 import ExploreFiltersSection from ".";
 
@@ -17,8 +22,11 @@ const Template: StoryFn<typeof ExploreFiltersSection> = (args) => {
     selectedQueryMembers = {},
     analyticsQuery: { updateMember },
   } = usePlayground({
-    dataSourceId: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
-    editId: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
+    explorationData: {
+      exploration: exploreMock.exploration.data.explorations_by_pk,
+      dataset: exploreMock.exploration.data.fetch_dataset,
+    },
+    rawSql: exploreMock.sql.data.gen_sql.result,
     meta,
   });
   const [isActive, setIsActive] = useState(false);

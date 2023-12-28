@@ -80,5 +80,5 @@ export interface CubeMembers {
 export interface Meta {
   loading?: boolean;
   error?: string;
-  data?: Record<string, CubeMember>[];
+  data?: Record<string, any>[];
 }

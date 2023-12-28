@@ -14,6 +14,7 @@ import type { QueryFiltersForm } from "@/types/queryFilter";
 import type { DataSourceInfo } from "@/types/dataSource";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { Member } from "@/types/team";
+import { QUERY_LOGS } from "@/utils/constants/paths";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -100,7 +101,7 @@ const QueryLogsWrapper = () => {
   const { teamData, currentTeam } = CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
   const [location, setLocation] = useLocation();
-  const basePath = withAuthPrefix("/logs/query");
+  const basePath = withAuthPrefix(QUERY_LOGS);
 
   const {
     dataSourceId = null,

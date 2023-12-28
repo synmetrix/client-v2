@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { Spin, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import Modal from "@/components/Modal";
@@ -41,9 +41,11 @@ const AlertModal: React.FC<AlertModalProps> = ({
 
   const {
     createAlert,
+    updateAlert,
     onSendTest,
-    mutations: { createMutationData, sendTestMutationData },
+    mutations: { createMutationData, updateMutationData, sendTestMutationData },
   } = useAlerts({
+    alertId: alert?.id,
     explorationId: exploration?.id,
   });
 
@@ -51,9 +53,24 @@ const AlertModal: React.FC<AlertModalProps> = ({
     successMessage: t("alerts:alert_created"),
   });
 
+  useCheckResponse(updateMutationData, () => onClose(), {
+    successMessage: t("alert_updated"),
+  });
+
   useCheckResponse(sendTestMutationData, () => {}, {
     successMessage: t("alerts:test_alert_sent"),
   });
+
+  const onSubmit = (values: AlertFormType) => {
+    const doesReportExist = Boolean(alert?.id);
+
+    if (doesReportExist) {
+      updateAlert(values);
+      return;
+    }
+
+    createAlert(values);
+  };
 
   return (
     <Modal
@@ -74,15 +91,19 @@ const AlertModal: React.FC<AlertModalProps> = ({
         />
       </div>
       {alert || delivery ? (
-        <AlertForm
-          query={exploration?.playground_state || {}}
-          onChangeStep={onChangeStep}
-          onTest={onSendTest}
-          type={alert?.type || delivery}
-          onSubmit={createAlert}
-          initialValue={alert}
-          isSendTestLoading={sendTestMutationData.fetching}
-        />
+        <Spin
+          spinning={createMutationData.fetching || updateMutationData.fetching}
+        >
+          <AlertForm
+            query={exploration?.playground_state || {}}
+            onChangeStep={onChangeStep}
+            onTest={onSendTest}
+            type={alert?.type || delivery}
+            onSubmit={onSubmit}
+            initialValue={alert}
+            isSendTestLoading={sendTestMutationData.fetching}
+          />
+        </Spin>
       ) : (
         <AlertTypeSelection
           options={alertTypes}

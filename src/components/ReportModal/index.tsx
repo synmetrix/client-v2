@@ -1,4 +1,4 @@
-import { Typography } from "antd";
+import { Spin, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import Modal from "@/components/Modal";
@@ -42,8 +42,10 @@ const ReportModal: React.FC<ReportModalProps> = ({
 
   const {
     createReport,
-    mutations: { createMutationData: createReportMutationData },
+    updateReport,
+    mutations: { createMutationData, updateMutationData },
   } = useReports({
+    reportId: report?.id,
     explorationId: exploration?.id,
   });
 
@@ -54,9 +56,28 @@ const ReportModal: React.FC<ReportModalProps> = ({
     explorationId: exploration?.id,
   });
 
-  useCheckResponse(createReportMutationData, () => onClose(), {
+  useCheckResponse(createMutationData, () => onClose(), {
     successMessage: t("reports:report_created"),
   });
+
+  useCheckResponse(updateMutationData, () => onClose(), {
+    successMessage: t("report_updated"),
+  });
+
+  useCheckResponse(sendTestMutationData, () => {}, {
+    successMessage: t("alerts:test_alert_sent"),
+  });
+
+  const onSubmit = (values: ReportFormType) => {
+    const doesReportExist = Boolean(report?.id);
+
+    if (doesReportExist) {
+      updateReport(values);
+      return;
+    }
+
+    createReport(values);
+  };
 
   return (
     <Modal
@@ -77,15 +98,19 @@ const ReportModal: React.FC<ReportModalProps> = ({
         />
       </div>
       {report || delivery ? (
-        <ReportForm
-          query={exploration?.playground_state || {}}
-          onTest={onSendTest}
-          onChangeStep={onChangeStep}
-          type={report?.type || delivery}
-          onSubmit={createReport}
-          initialValue={report}
-          isSendTestLoading={sendTestMutationData.fetching}
-        />
+        <Spin
+          spinning={createMutationData.fetching || updateMutationData.fetching}
+        >
+          <ReportForm
+            query={exploration?.playground_state || {}}
+            onTest={onSendTest}
+            onChangeStep={onChangeStep}
+            type={report?.type || delivery}
+            onSubmit={onSubmit}
+            initialValue={report}
+            isSendTestLoading={sendTestMutationData.fetching}
+          />
+        </Spin>
       ) : (
         <AlertTypeSelection
           type="report"

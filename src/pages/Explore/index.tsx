@@ -239,7 +239,7 @@ const ExploreWrapper = () => {
       return {
         exploration: currentExploration?.data
           ?.explorations_by_pk as Exploration,
-        dataSet: currentExploration.data?.fetch_dataset as FetchDatasetOutput,
+        dataset: currentExploration.data?.fetch_dataset as FetchDatasetOutput,
       };
     }
   }, [currentExploration?.data, explorationId]);
@@ -250,12 +250,12 @@ const ExploreWrapper = () => {
 
   useEffect(() => {
     if (
-      explorationData?.dataSet &&
-      explorationData?.dataSet?.progress?.loading
+      explorationData?.dataset &&
+      explorationData?.dataset?.progress?.loading
     ) {
       execCurrentExploration();
     }
-  }, [explorationData?.dataSet, execCurrentExploration]);
+  }, [explorationData?.dataset, execCurrentExploration]);
 
   useLayoutEffect(() => {
     const noCurSource = dataSourceId && !curSource;

@@ -87,11 +87,11 @@ interface Props {
   meta?: Record<string, any>[];
   explorationData?: ExplorationData;
   rawSql?: RawSql;
-  dataSet?: any;
+  dataset?: any;
 }
 
 export default ({ meta = [], explorationData, rawSql }: Props) => {
-  const { exploration, dataSet } = explorationData || {};
+  const { exploration, dataset } = explorationData || {};
   const [settings, dispatchSettings] = useReducer(reducer, initialSettings);
 
   const playgroundSettings = useMemo(
@@ -123,7 +123,7 @@ export default ({ meta = [], explorationData, rawSql }: Props) => {
   });
 
   const { rows, hitLimit, skippedMembers } = useExplorationData({
-    explorationResult: dataSet,
+    explorationResult: dataset,
   });
 
   const columns: object[] = useMemo(() => {
@@ -136,7 +136,7 @@ export default ({ meta = [], explorationData, rawSql }: Props) => {
 
   const explorationState: ExplorationState = useMemo(
     () => ({
-      progress: dataSet?.progress,
+      progress: dataset?.progress,
       hitLimit,
       columns,
       rows,
@@ -146,7 +146,7 @@ export default ({ meta = [], explorationData, rawSql }: Props) => {
       settings,
     }),
     [
-      dataSet?.progress,
+      dataset?.progress,
       rawSql,
       hitLimit,
       columns,

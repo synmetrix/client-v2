@@ -16,6 +16,7 @@ import type { DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
 import type { ExplorationData, RawSql } from "@/types/exploration";
 import type { Meta } from "@/types/cube";
+import { SOURCES } from "@/utils/constants/paths";
 
 import NoDataSource from "../NoDataSource";
 
@@ -204,7 +205,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
         </div>
       ) : (
         <NoDataSource
-          onConnect={() => setLocation(withAuthPrefix("/settings/sources/new"))}
+          onConnect={() => setLocation(withAuthPrefix(`${SOURCES}/new`))}
         />
       )}
     </Layout>

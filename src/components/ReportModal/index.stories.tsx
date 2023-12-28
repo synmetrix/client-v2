@@ -1,6 +1,6 @@
 import RootLayout from "@/layouts/RootLayout";
 import { alerts } from "@/mocks/alerts";
-import { queryStateMock } from "@/mocks/queryState";
+import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 
 import ReportModal from ".";
 
@@ -22,5 +22,5 @@ export const Default = Template.bind({});
 Default.args = {
   isOpen: true,
   report: alerts?.[0],
-  query: queryStateMock,
+  exploration: SAMPLE_EXPLORATION,
 };

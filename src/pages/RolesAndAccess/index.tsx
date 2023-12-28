@@ -32,6 +32,7 @@ import NoRoles from "@/components/NoRoles";
 import { AccessTypeWrapper } from "@/components/AccessType";
 import type { Team } from "@/types/team";
 import { Roles } from "@/types/team";
+import { ROLES } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -360,7 +361,7 @@ const RolesAndAccessWrapper: React.FC = () => {
   };
 
   const onEdit = (id: string) => {
-    setLocation(`/settings/roles/${id}`);
+    setLocation(`${ROLES}/${id}`);
   };
 
   const onRemove = (id: string) => {
@@ -432,8 +433,8 @@ const RolesAndAccessWrapper: React.FC = () => {
       dataSourceAccess={dataSourceAccess}
       onFinish={onFinish}
       isOpen={!!editId}
-      onCreate={() => setLocation("/settings/roles/new")}
-      onClose={() => setLocation("/settings/roles")}
+      onCreate={() => setLocation(`${ROLES}/new`)}
+      onClose={() => setLocation(ROLES)}
     />
   );
 };

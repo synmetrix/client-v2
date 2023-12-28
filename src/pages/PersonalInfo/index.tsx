@@ -12,6 +12,7 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import CurrentUserStore from "@/stores/CurrentUserStore";
+import { SIGNIN } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -86,7 +87,7 @@ const PersonalInfoWrapper = () => {
   const onLogout = async () => {
     await logout();
     cleanTokens();
-    setLocation("/auth/signin");
+    setLocation(SIGNIN);
   };
 
   const initialValue = {

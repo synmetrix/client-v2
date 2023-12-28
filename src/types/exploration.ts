@@ -58,5 +58,5 @@ export interface DataSchemaValidation {
 
 export interface ExplorationData {
   exploration: Exploration;
-  dataSet: FetchDatasetOutput;
+  dataset: FetchDatasetOutput;
 }

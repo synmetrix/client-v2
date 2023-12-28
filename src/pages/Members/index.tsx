@@ -30,6 +30,7 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { AccessList, Member } from "@/types/team";
 import { ChangeableRoles, Roles } from "@/types/team";
 import useLocation from "@/hooks/useLocation";
+import { MEMBERS } from "@/utils/constants/paths";
 
 import TrashIcon from "@/assets/trash.svg";
 
@@ -381,8 +382,8 @@ const MembersWrapper = () => {
       onRoleChange={onRoleChange}
       onAccessListChange={onAccessListChange}
       isOpen={slug === "new"}
-      onClose={() => setLocation("/settings/members")}
-      onOpen={() => setLocation("/settings/members/new")}
+      onClose={() => setLocation(MEMBERS)}
+      onOpen={() => setLocation(`${MEMBERS}/new`)}
     />
   );
 };

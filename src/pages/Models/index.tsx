@@ -37,6 +37,7 @@ import {
   useSetDefaultBranchMutation,
   useCurrentVersionQuery,
 } from "@/graphql/generated";
+import { EXPORT, MODELS, SOURCES } from "@/utils/constants/paths";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
 
@@ -272,7 +273,7 @@ const ModelsWrapper: React.FC = () => {
   const { currentUser, teamData } = CurrentUserStore();
   const [, setLocation] = useLocation();
   const { withAuthPrefix } = useAppSettings();
-  const basePath = withAuthPrefix("/models");
+  const basePath = withAuthPrefix(MODELS);
 
   const [deleteMutation, execDeleteMutation] = useDeleteSchemaMutation();
   const [createBranchMutation, execCreateBranchMutation] =
@@ -734,7 +735,7 @@ const ModelsWrapper: React.FC = () => {
     {
       key: "export",
       label: t("ide_menu.export_models"),
-      onClick: () => window.open(`/export/${dataSourceId}`),
+      onClick: () => window.open(`${EXPORT}/${dataSourceId}`),
     },
   ] as MenuProps["items"];
 
@@ -793,7 +794,7 @@ const ModelsWrapper: React.FC = () => {
       }
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
-      onConnect={() => setLocation(withAuthPrefix("/settings/sources/new"))}
+      onConnect={() => setLocation(withAuthPrefix(`${SOURCES}/new`))}
     />
   );
 };

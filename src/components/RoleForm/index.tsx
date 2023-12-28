@@ -17,6 +17,7 @@ import type {
   RoleForm as RoleFormType,
 } from "@/types/access";
 import type { Cube } from "@/types/dataSource";
+import { MODELS, SOURCES } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -100,9 +101,7 @@ const RoleForm: FC<RoleFormProps> = ({
 
   const emptyScreen = useMemo(() => {
     if (!dataSourceAccess?.length) {
-      return (
-        <NoDataSource onConnect={() => setLocation("/settings/sources/new")} />
-      );
+      return <NoDataSource onConnect={() => setLocation(`${SOURCES}/new`)} />;
     }
 
     return (
@@ -114,7 +113,7 @@ const RoleForm: FC<RoleFormProps> = ({
           <Button
             type="primary"
             className={styles.btn}
-            onClick={() => setLocation("/models")}
+            onClick={() => setLocation(MODELS)}
           >
             {t("common:words.generate")}
           </Button>

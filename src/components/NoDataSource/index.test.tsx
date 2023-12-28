@@ -3,12 +3,6 @@ import { vi, expect, describe, it } from "vitest";
 
 import NoDataSource from ".";
 
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
-
 describe("NoDataSource Component", () => {
   it("renders without crashing", () => {
     render(<NoDataSource />);

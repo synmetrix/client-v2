@@ -1,5 +1,11 @@
 import { defaultTableCellRenderer } from "react-virtualized";
-import { render, fireEvent, screen, act } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  screen,
+  act,
+  waitFor,
+} from "@testing-library/react";
 import { describe, expect, test, vi } from "vitest";
 
 import VirtualTable, { SortBySet, cellRenderer } from "./";
@@ -162,9 +168,11 @@ describe("<VirtualTable />", () => {
         data={data}
       />
     );
-    act(() => {
-      fireEvent.click(screen.getByText("Column 1").nextElementSibling!);
-    });
+    waitFor(() =>
+      act(() => {
+        fireEvent.click(screen.getByText("Column 1").nextElementSibling!);
+      })
+    );
     act(() => {
       fireEvent.click(screen.getByText("Sort DESC"));
     });
@@ -181,7 +189,9 @@ describe("<VirtualTable />", () => {
         sortDisabled={true}
       />
     );
-    fireEvent.click(screen.getByText(/Column 1/i));
+    act(() => {
+      fireEvent.click(screen.getByText(/Column 1/i));
+    });
     expect(handleSortUpdate).not.toHaveBeenCalled();
   });
 

@@ -30,7 +30,6 @@ const Template: StoryFn<typeof Models> = (args) => {
 export const Default = Template.bind({});
 
 Default.args = {
-  versions,
   branches: branchesMock,
   currentBranch: branchesMock[0],
   currentVersion: versions[0],

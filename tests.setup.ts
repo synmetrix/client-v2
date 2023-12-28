@@ -28,9 +28,20 @@ const { getComputedStyle } = window;
 window.getComputedStyle = (elt) => getComputedStyle(elt);
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
+  // this mock makes sure any components using the translate hook can use it without a warning being shown
+  useTranslation: () => {
+    return {
+      t: (str: string) => str,
+      i18n: {
+        changeLanguage: () => new Promise(() => {}),
+        language: "en",
+      },
+    };
+  },
+  initReactI18next: {
+    type: "3rdParty",
+    init: () => {},
+  },
 }));
 
 // runs a cleanup after each test case (e.g. clearing jsdom)

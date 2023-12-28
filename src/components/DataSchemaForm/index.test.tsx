@@ -3,13 +3,6 @@ import { beforeEach, afterEach, describe, test, vi, expect } from "vitest";
 
 import DataSchemaForm from "./index";
 
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-    i18n: { language: "en" },
-  }),
-}));
-
 describe("DataSchemaForm", () => {
   const onSubmitMock = vi.fn();
 

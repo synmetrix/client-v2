@@ -1,6 +1,7 @@
 import { Result } from "antd";
 import { useTranslation } from "react-i18next";
 
+import { EXPLORE, SIGNIN } from "@/utils/constants/paths";
 import BasicLayout from "@/layouts/BasicLayout";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import Button from "@/components/Button";
@@ -26,7 +27,7 @@ const Callback: React.FC = () => {
         accessToken: result.jwt_token,
         refreshToken: result.refresh_token,
       });
-      setLocation("/explore");
+      setLocation(EXPLORE);
     }
   };
 
@@ -42,11 +43,7 @@ const Callback: React.FC = () => {
         title={error ? t("error.title") : t("title")}
         subTitle={error ? t("error.subtitle") : t("subtitle")}
         extra={[
-          <Button
-            type="primary"
-            key="back"
-            onClick={() => setLocation("/auth/signin")}
-          >
+          <Button type="primary" key="back" onClick={() => setLocation(SIGNIN)}>
             {t("action")}
           </Button>,
         ]}

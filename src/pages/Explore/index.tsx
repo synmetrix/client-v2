@@ -26,6 +26,7 @@ import useAppSettings from "@/hooks/useAppSettings";
 import type { Exploration, ExplorationData, RawSql } from "@/types/exploration";
 import type { AlertType } from "@/types/alert";
 import type { Meta } from "@/types/cube";
+import { EXPLORE } from "@/utils/constants/paths";
 
 import ExploreIcon from "@/assets/explore-active.svg";
 
@@ -142,7 +143,7 @@ const ExploreWrapper = () => {
       pause: true,
     });
 
-  const dataSourcePath = `/explore/${dataSourceId}`;
+  const dataSourcePath = `${EXPLORE}/${dataSourceId}`;
   const explorePath = `${dataSourcePath}/${explorationId}`;
 
   const datasources = useMemo(
@@ -173,7 +174,7 @@ const ExploreWrapper = () => {
 
   const onSelectDataSource = (dataSource: DataSourceInfo | null) => {
     setCurrentDataSourceId(dataSource?.id);
-    setLocation(withAuthPrefix(`/explore/${dataSource?.id}`));
+    setLocation(withAuthPrefix(`${EXPLORE}/${dataSource?.id}`));
   };
 
   const runQuery = (explorationQueryState: any, settings: any) => {
@@ -268,13 +269,13 @@ const ExploreWrapper = () => {
       );
 
       if (isExist) {
-        setLocation(withAuthPrefix(`/explore/${currentDataSourceId}`));
+        setLocation(withAuthPrefix(`${EXPLORE}/${currentDataSourceId}`));
       } else {
-        setLocation(withAuthPrefix(`/explore/${datasources?.[0]?.id}`));
+        setLocation(withAuthPrefix(`${EXPLORE}/${datasources?.[0]?.id}`));
         setCurrentDataSourceId(datasources?.[0]?.id);
       }
     } else if (!datasources?.length && dataSourceId) {
-      setLocation("/explore");
+      setLocation(EXPLORE);
     }
   }, [
     curSource,

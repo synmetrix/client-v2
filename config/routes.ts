@@ -1,4 +1,4 @@
-import * as paths from "@/utils/constants/paths";
+import * as paths from "../src/utils/constants/paths";
 
 export default [
   {

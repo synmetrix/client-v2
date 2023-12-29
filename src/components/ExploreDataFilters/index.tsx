@@ -39,7 +39,7 @@ const ExploreDataFilters: FC<ExploreDataFiltersProps> = ({
   }, [availableQueryMembers]);
 
   if (!filters.length) {
-    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+    return <Empty data-testid="empty" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   }
 
   return (

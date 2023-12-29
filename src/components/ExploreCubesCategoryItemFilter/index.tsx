@@ -1,4 +1,3 @@
-import { PlusOutlined } from "@ant-design/icons";
 import cn from "classnames";
 import { Button } from "antd";
 
@@ -57,6 +56,7 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
         className={cn(s.filter, { active: selectedFilterIndex > -1 })}
         onClick={toggleFilter}
         onMouseDown={(e) => e.preventDefault()}
+        data-testid="remove-filter-button"
       >
         <FilterIcon className={s.filterIcon} />
       </Button>

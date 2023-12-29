@@ -9,6 +9,7 @@ const ErrorFound: FC<ErrorFoundProps> = ({ status }) => {
   if (status === 500) {
     return (
       <Result
+        data-testid="error-found-500"
         status="500"
         title="500"
         subTitle={t("Sorry, something went wrong")}

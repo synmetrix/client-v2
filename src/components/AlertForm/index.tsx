@@ -126,7 +126,12 @@ const AlertForm: FC<AlertFormProps> = ({
   ];
 
   return (
-    <Form className={styles.space} layout="vertical" id="alert-form">
+    <Form
+      className={styles.space}
+      layout="vertical"
+      id="alert-form"
+      data-testid="alert-form"
+    >
       {!initialValue && (
         <div className={styles.header}>
           <StepFormHeader

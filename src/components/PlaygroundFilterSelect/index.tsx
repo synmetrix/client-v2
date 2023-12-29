@@ -14,8 +14,6 @@ interface PlaygroundFilterSelectProps {
   value?: string;
 }
 
-const { Option } = Select;
-
 const PlaygroundFilterSelect: FC<PlaygroundFilterSelectProps> = ({
   availableMembers,
   value,
@@ -42,7 +40,7 @@ const PlaygroundFilterSelect: FC<PlaygroundFilterSelectProps> = ({
   return (
     <Select
       showSearch
-      value={value}
+      value={value || undefined}
       defaultActiveFirstOption={false}
       filterOption={false}
       onSearch={handleSearch}
@@ -53,9 +51,9 @@ const PlaygroundFilterSelect: FC<PlaygroundFilterSelectProps> = ({
       suffixIcon={<ArrowBottom />}
     >
       {data.map((d) => (
-        <Option key={d.title} value={d.name}>
+        <Select.Option key={d.title} value={d.name}>
           {d.title}
-        </Option>
+        </Select.Option>
       ))}
     </Select>
   );

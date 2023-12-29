@@ -57,7 +57,7 @@ const ReportForm: FC<ReportFormProps> = ({
   }, [type]);
 
   return (
-    <Form layout="vertical">
+    <Form layout="vertical" data-testid="report-form">
       <Space className={cn(styles.space, styles.body)} size={16}>
         {!initialValue && (
           <div className={styles.header}>

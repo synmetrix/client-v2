@@ -22,10 +22,16 @@ const FilterGroup: FC<FilterGroupProps> = ({
   const { t } = useTranslation(["common"]);
 
   return (
-    <Space direction="vertical" size={16} className={s.space}>
+    <Space
+      direction="vertical"
+      size={16}
+      className={s.space}
+      data-testid="filter-group"
+    >
       {members.map((m) => (
         <Space key={m.index} size={10} align="center">
           <Button
+            data-testid="filter-remove-button"
             danger
             icon={<CloseOutlined />}
             size="large"
@@ -44,6 +50,7 @@ const FilterGroup: FC<FilterGroupProps> = ({
             }}
           />
           <Select
+            data-testid="filter-operator-select"
             value={t(`common:operators.${m.operator!}`, m.operator!)}
             onChange={(operator) => updateMethods.update(m, { ...m, operator })}
             className={s.select}

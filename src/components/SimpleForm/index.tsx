@@ -101,6 +101,7 @@ const SimpleForm: (props: SimpleFormProps) => JSX.Element = (props) => {
             return (
               <Collapse
                 ghost
+                data-testid="simple-form"
                 key={`${subSectionKey}_collapse`}
                 className={s.collapse}
                 bordered={false}

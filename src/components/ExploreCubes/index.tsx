@@ -169,7 +169,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-testid="explore-cubes">
       {header && <div className={styles.header}>{header}</div>}
 
       <div className={styles.radio}>
@@ -202,6 +202,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
       <div className={cn(styles.body, !responsive.lg && styles.bodyMobile)}>
         <div className={styles.cubes}>
           <Input
+            data-testid="explore-cubes-search-input"
             className={styles.searchInput}
             bordered={false}
             prefix={<SearchIcon />}

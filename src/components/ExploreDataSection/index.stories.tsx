@@ -14,8 +14,6 @@ export default {
 const Template: StoryFn<typeof ExploreDataSection> = (args) => {
   const [isActive, setIsActive] = useState(false);
   const { state: explorationState, dispatchSettings } = usePlayground({
-    dataSourceId: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
-    editId: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
     meta,
   });
 

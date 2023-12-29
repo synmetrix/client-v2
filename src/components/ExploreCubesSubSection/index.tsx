@@ -31,7 +31,7 @@ const ExploreCubesSubSection: FC<ExploreCubesSubSectionProps> = ({
 
   if (subSectionType === "time") {
     const member = subSection.members.find((item) => !item.granularity);
-    const selectedFilterIndex = selectedFilters.indexOf(member!.name);
+    const selectedFilterIndex = selectedFilters.indexOf(member?.name || "");
 
     extra = (
       <CategoryItemFilter

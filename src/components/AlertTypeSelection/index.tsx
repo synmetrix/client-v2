@@ -32,7 +32,12 @@ const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
   };
 
   return (
-    <Space className={styles.wrapper} direction="vertical" size={24}>
+    <Space
+      className={styles.wrapper}
+      direction="vertical"
+      size={24}
+      data-testid="alert-type-selection"
+    >
       <Row>
         <div className={styles.header}>
           <StepFormHeader

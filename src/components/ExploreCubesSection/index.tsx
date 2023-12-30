@@ -319,7 +319,11 @@ const Cube = ({
     );
   };
 
-  return <div className={s.root}>{SHOWN_CATEGORIES.map(getCategory)}</div>;
+  return (
+    <div className={s.root} data-testid={"cube"}>
+      {SHOWN_CATEGORIES.map(getCategory)}
+    </div>
+  );
 };
 
 interface CubeProps {

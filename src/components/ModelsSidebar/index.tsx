@@ -103,7 +103,12 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
     };
 
   return (
-    <Space className={styles.wrapper} size={16} direction="vertical">
+    <Space
+      className={styles.wrapper}
+      size={16}
+      direction="vertical"
+      data-testid="models-sidebar"
+    >
       <div className={styles.dataSourceMenu}>
         <DataSourcesMenu
           selectedId={dataSourceId}

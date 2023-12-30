@@ -1,4 +1,6 @@
 import RootLayout from "@/layouts/RootLayout";
+import { branchesMock } from "@/mocks/branches";
+import { dataschemasMock } from "@/mocks/dataschemas";
 
 import ModelsSidebar from ".";
 
@@ -18,11 +20,10 @@ const Template: StoryFn<typeof ModelsSidebar> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  branches: ["main-default", "dev"],
+  branches: branchesMock,
   version: "34f34fjn5g4j5g95jf3ef4t4ht5",
   docs: "https://google.com",
-  files: ["GithubEvents.yml", "Stackoverflow.yml", "Stock.yml"],
+  files: dataschemasMock,
   onCreateFile: console.log,
   onSelectFile: console.log,
-  onSetDefaultVersion: console.log,
 };

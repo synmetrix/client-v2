@@ -271,136 +271,138 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   };
 
   return (
-    <Collapse
-      expandIcon={({ isActive: isPanelActive }) => (
-        <RightOutlined className={s.arrow} rotate={isPanelActive ? 90 : 0} />
-      )}
-      {...restProps}
-      className={cn(s.collapse, className)}
-      activeKey={isActive ? "dataSec" : []}
-    >
-      <Panel
-        header={
-          <div className={s.header}>
-            <Row justify={"space-between"} gutter={[16, 16]}>
-              <Col>
-                <Space wrap>
-                  <Button
-                    className={s.dataBtn}
-                    type="dashed"
-                    onClick={() => onToggleSection("dataSec")}
-                  >
-                    {t("data_section.data")}
-                  </Button>
-
-                  <Radio.Group
-                    value={currState.section}
-                    onChange={onRadioClick}
-                    disabled={disableSectionChange}
-                    className={s.buttonGroup}
-                  >
-                    <Radio.Button value="results">
-                      {t("data_section.results")}
-                    </Radio.Button>
-                    <Radio.Button value="sql">
-                      {t("data_section.sql")}
-                    </Radio.Button>
-                  </Radio.Group>
-
-                  <Space align="center">
-                    <Button
-                      className={s.run}
-                      type="primary"
-                      onClick={onExec}
-                      disabled={
-                        !queryState?.columns?.length || disabled || loading
-                      }
-                    >
-                      {t("data_section.run_query")}
-                      <RightOutlined />
-                    </Button>
-
-                    {!disableSettings && (
-                      <PopoverButton
-                        icon={<SettingOutlined />}
-                        style={{
-                          borderColor: "transparent",
-                          boxShadow: "none",
-                          color: "rgba(0, 0, 0, 0.25)",
-                        }}
-                        placement="bottom"
-                        buttonProps={{
-                          size: "middle",
-                          type: "link",
-                          className: s.settingsBtn,
-                        }}
-                        content={
-                          <div className={s.popoverInner}>
-                            <SimpleForm
-                              layout="vertical"
-                              config={formConfig}
-                              onSubmit={onSubmit}
-                              initialValues={
-                                {
-                                  rows: limit,
-                                  offset,
-                                  hideCubeNames,
-                                  hideIndexColumn,
-                                } as unknown as Record<string, string>
-                              }
-                              autoSubmit
-                            />
-                          </div>
-                        }
-                        trigger="click"
-                      />
-                    )}
-                  </Space>
-                </Space>
-              </Col>
-
-              <Col style={{ alignSelf: "end", justifySelf: "end" }}>
-                <Space wrap>
-                  <CSVLink
-                    data={rows}
-                    filename={`exploration-${genName(5)}.csv`}
-                  >
-                    <Button className={s.csvBtn} disabled={disableButtons}>
-                      {t("data_section.export")} .CSV
-                    </Button>
-                  </CSVLink>
-
-                  <Button
-                    icon={<AlertIcon />}
-                    className={s.alertButton}
-                    type="primary"
-                    onClick={() => onOpenModal("alert")}
-                    disabled={disableButtons}
-                  >
-                    {t("data_section.create_alert")}
-                  </Button>
-                  <Button
-                    icon={<ReportIcon />}
-                    className={s.alertButton}
-                    type="primary"
-                    onClick={() => onOpenModal("report")}
-                    disabled={disableButtons}
-                  >
-                    {t("data_section.create_report")}
-                  </Button>
-                </Space>
-              </Col>
-            </Row>
-          </div>
-        }
-        key="dataSec"
+    <div data-testid="explore-data-section">
+      <Collapse
+        expandIcon={({ isActive: isPanelActive }) => (
+          <RightOutlined className={s.arrow} rotate={isPanelActive ? 90 : 0} />
+        )}
+        {...restProps}
+        className={cn(s.collapse, className)}
+        activeKey={isActive ? "dataSec" : []}
       >
-        <ComponentSwitcher
-          activeItemIndex={currState.section === "sql" ? 1 : 0}
-          items={[Table, Sql]}
-        />
-      </Panel>
-    </Collapse>
+        <Panel
+          header={
+            <div className={s.header}>
+              <Row justify={"space-between"} gutter={[16, 16]}>
+                <Col>
+                  <Space wrap>
+                    <Button
+                      className={s.dataBtn}
+                      type="dashed"
+                      onClick={() => onToggleSection("dataSec")}
+                    >
+                      {t("data_section.data")}
+                    </Button>
+
+                    <Radio.Group
+                      value={currState.section}
+                      onChange={onRadioClick}
+                      disabled={disableSectionChange}
+                      className={s.buttonGroup}
+                    >
+                      <Radio.Button value="results">
+                        {t("data_section.results")}
+                      </Radio.Button>
+                      <Radio.Button value="sql">
+                        {t("data_section.sql")}
+                      </Radio.Button>
+                    </Radio.Group>
+
+                    <Space align="center">
+                      <Button
+                        className={s.run}
+                        type="primary"
+                        onClick={onExec}
+                        disabled={
+                          !queryState?.columns?.length || disabled || loading
+                        }
+                      >
+                        {t("data_section.run_query")}
+                        <RightOutlined />
+                      </Button>
+
+                      {!disableSettings && (
+                        <PopoverButton
+                          icon={<SettingOutlined />}
+                          style={{
+                            borderColor: "transparent",
+                            boxShadow: "none",
+                            color: "rgba(0, 0, 0, 0.25)",
+                          }}
+                          placement="bottom"
+                          buttonProps={{
+                            size: "middle",
+                            type: "link",
+                            className: s.settingsBtn,
+                          }}
+                          content={
+                            <div className={s.popoverInner}>
+                              <SimpleForm
+                                layout="vertical"
+                                config={formConfig}
+                                onSubmit={onSubmit}
+                                initialValues={
+                                  {
+                                    rows: limit,
+                                    offset,
+                                    hideCubeNames,
+                                    hideIndexColumn,
+                                  } as unknown as Record<string, string>
+                                }
+                                autoSubmit
+                              />
+                            </div>
+                          }
+                          trigger="click"
+                        />
+                      )}
+                    </Space>
+                  </Space>
+                </Col>
+
+                <Col style={{ alignSelf: "end", justifySelf: "end" }}>
+                  <Space wrap>
+                    <CSVLink
+                      data={rows}
+                      filename={`exploration-${genName(5)}.csv`}
+                    >
+                      <Button className={s.csvBtn} disabled={disableButtons}>
+                        {t("data_section.export")} .CSV
+                      </Button>
+                    </CSVLink>
+
+                    <Button
+                      icon={<AlertIcon />}
+                      className={s.alertButton}
+                      type="primary"
+                      onClick={() => onOpenModal("alert")}
+                      disabled={disableButtons}
+                    >
+                      {t("data_section.create_alert")}
+                    </Button>
+                    <Button
+                      icon={<ReportIcon />}
+                      className={s.alertButton}
+                      type="primary"
+                      onClick={() => onOpenModal("report")}
+                      disabled={disableButtons}
+                    >
+                      {t("data_section.create_report")}
+                    </Button>
+                  </Space>
+                </Col>
+              </Row>
+            </div>
+          }
+          key="dataSec"
+        >
+          <ComponentSwitcher
+            activeItemIndex={currState.section === "sql" ? 1 : 0}
+            items={[Table, Sql]}
+          />
+        </Panel>
+      </Collapse>
+    </div>
   );
 };
 

@@ -23,6 +23,7 @@
 }
 
 .panel :global(.ant-collapse-header) {
+  padding: 4px !important;
   background: linear-gradient(
       0deg,
       rgba(71, 13, 105, 0.1) 0%,
@@ -85,17 +86,12 @@
 
 .buttonGroup {
   display: flex !important;
+  height: 40px;
+  margin: 12px;
+  padding: 4px;
+  background-color: rgba(0, 0, 0, 0.05);
 
-  margin-bottom: 16px;
-  padding: 12px 0 12px;
-  padding-right: 25px;
-  text-align: center;
-  background: transparent;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-
-  * {
-    background: transparent;
-  }
+  border-radius: 6px;
 
   span {
     color: rgba(0, 0, 0, 0.5);
@@ -105,10 +101,17 @@
 
 .buttonGroup :global(.ant-radio-button-wrapper) {
   flex: 1;
+  height: 32px;
+  font-size: 10px;
+  line-height: 32px;
+  text-align: center;
+  background: transparent;
+  border-radius: 4px;
 }
 
 .buttonGroup :global(.ant-radio-button-wrapper-checked) {
-  background: transparent;
+  background: white;
+
   &::before {
     display: none;
   }
@@ -121,17 +124,6 @@
   & > span:nth-child(2) {
     position: relative;
     display: inline-block;
-
-    &::after {
-      position: absolute;
-      bottom: -14px;
-      left: 50%;
-      width: calc(100% + 18px);
-      height: 2px;
-      background: #a31bcb;
-      transform: translateX(-50%);
-      content: "";
-    }
   }
 }
 

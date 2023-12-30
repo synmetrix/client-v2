@@ -15,6 +15,7 @@ import DataSourcesMenu from "@/components/DataSourcesMenu";
 import ExploreWorkspace from "@/components/ExploreWorkspace";
 import AlertModal from "@/components/AlertModal";
 import ReportModal from "@/components/ReportModal";
+import BranchSelection from "@/components/BranchSelection";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
 import trackEvent from "@/utils/helpers/trackEvent";
@@ -42,12 +43,15 @@ interface ExploreProps {
   explorationData?: ExplorationData;
   rawSql?: RawSql;
   meta: Meta;
+  branches: any;
+  currentBranch: any;
   onOpenModal?: (type: string) => void;
   onCloseModal?: () => void;
   onChangeStep?: (step: number) => void;
   onSelectDelivery?: (del: string) => void;
   runQuery?: (state: object, settings: QuerySettings) => void;
   onSelectDataSource?: (dataSource: DataSourceInfo | null) => void;
+  onChangeBranch?: (id: string) => void;
   params: Params;
 }
 
@@ -59,25 +63,43 @@ export const Explore = ({
   rawSql,
   params,
   meta,
+  branches,
+  currentBranch,
   onChangeStep = () => {},
   onOpenModal = () => {},
   onCloseModal = () => {},
   onSelectDelivery = () => {},
   runQuery = () => {},
   onSelectDataSource = () => {},
+  onChangeBranch = () => {},
 }: ExploreProps) => {
   const { t } = useTranslation();
   const { modalType } = params;
 
   const header = useMemo(
     () => (
-      <DataSourcesMenu
-        selectedId={dataSource?.id as string}
-        entities={dataSources || []}
-        onChange={onSelectDataSource}
-      />
+      <>
+        <DataSourcesMenu
+          selectedId={dataSource?.id as string}
+          entities={dataSources || []}
+          onChange={onSelectDataSource}
+        />
+        <BranchSelection
+          branches={branches}
+          currentBranch={currentBranch}
+          onChangeBranch={onChangeBranch}
+          disableCreate
+        />
+      </>
     ),
-    [dataSource?.id, dataSources, onSelectDataSource]
+    [
+      branches,
+      currentBranch,
+      dataSource?.id,
+      dataSources,
+      onChangeBranch,
+      onSelectDataSource,
+    ]
   );
 
   const isAlertOpen = modalType === "alert";
@@ -127,7 +149,11 @@ const ExploreWrapper = () => {
   const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState(
     "currentDataSourceId"
   );
-  const { dataSourceId, explorationId, modalType, delivery } = useParams();
+  const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
+    `${currentDataSourceId}:exploreCurrentBranch`
+  );
+  const { dataSourceId, branchId, explorationId, modalType, delivery } =
+    useParams();
 
   const { state: playgroundState } = useAnalyticsQuery();
   const { withAuthPrefix } = useAppSettings();
@@ -143,7 +169,7 @@ const ExploreWrapper = () => {
       pause: true,
     });
 
-  const dataSourcePath = `${EXPLORE}/${dataSourceId}`;
+  const dataSourcePath = withAuthPrefix(`${EXPLORE}/${dataSourceId}`);
   const explorePath = `${dataSourcePath}/${explorationId}`;
 
   const datasources = useMemo(
@@ -163,7 +189,7 @@ const ExploreWrapper = () => {
     (res, err) => {
       if (!res?.explorations_by_pk || err) {
         message.error(t("explore:errors.exploration_not_found"));
-        setLocation(withAuthPrefix(dataSourcePath));
+        setLocation(dataSourcePath);
       }
     },
     {
@@ -174,7 +200,7 @@ const ExploreWrapper = () => {
 
   const onSelectDataSource = (dataSource: DataSourceInfo | null) => {
     setCurrentDataSourceId(dataSource?.id);
-    setLocation(withAuthPrefix(`${EXPLORE}/${dataSource?.id}`));
+    setLocation(`${EXPLORE}/${dataSource?.id}`);
   };
 
   const runQuery = (explorationQueryState: any, settings: any) => {
@@ -207,13 +233,25 @@ const ExploreWrapper = () => {
     }
   };
 
+  const onChangeBranch = (id: string) => {
+    // if (currentBranchId !== id) {
+    //   setCurrentBranchId(id);
+    // }
+  };
+
+  // useEffect(() => {
+  //   if (currentBranchId) {
+  //     setLocation(dataSourcePath);
+  //   }
+  // }, [currentBranchId, dataSourcePath, setLocation]);
+
   useEffect(() => {
     const newExplorationId = createData.data?.insert_explorations_one?.id;
     if (newExplorationId) {
       delete createData.data;
-      setLocation(withAuthPrefix(`${dataSourcePath}/${newExplorationId}`));
+      setLocation(`${dataSourcePath}/${newExplorationId}`);
     }
-  }, [createData.data, dataSourcePath, setLocation, withAuthPrefix]);
+  }, [createData.data, dataSourcePath, setLocation]);
 
   useEffect(() => {
     if (dataSourceId) {
@@ -234,6 +272,15 @@ const ExploreWrapper = () => {
     () => (datasources || []).find((d) => d.id === dataSourceId),
     [dataSourceId, datasources]
   );
+  const currentBranch = useMemo(() => {
+    const curBranch =
+      (curSource?.branches || []).find((b) => b.id === currentBranchId) ||
+      curSource?.branches?.[0];
+    // if (curBranch?.id && curBranch?.id !== currentBranchId) {
+    //   setCurrentBranchId(curBranch?.id);
+    // }
+    return curBranch;
+  }, [curSource?.branches, currentBranchId]);
   const explorationData: ExplorationData | undefined = useMemo(() => {
     if (explorationId && currentExploration?.data) {
       return {
@@ -269,9 +316,9 @@ const ExploreWrapper = () => {
       );
 
       if (isExist) {
-        setLocation(withAuthPrefix(`${EXPLORE}/${currentDataSourceId}`));
+        setLocation(`${EXPLORE}/${currentDataSourceId}`);
       } else {
-        setLocation(withAuthPrefix(`${EXPLORE}/${datasources?.[0]?.id}`));
+        setLocation(`${EXPLORE}/${datasources?.[0]?.id}`);
         setCurrentDataSourceId(datasources?.[0]?.id);
       }
     } else if (!datasources?.length && dataSourceId) {
@@ -286,7 +333,6 @@ const ExploreWrapper = () => {
     setLocation,
     t,
     teamData?.dataSources,
-    withAuthPrefix,
   ]);
 
   const meta = {
@@ -312,6 +358,9 @@ const ExploreWrapper = () => {
       onChangeStep={onChangeStep}
       onSelectDelivery={onSelectDelivery}
       onSelectDataSource={onSelectDataSource}
+      branches={curSource?.branches || []}
+      onChangeBranch={onChangeBranch}
+      currentBranch={currentBranch?.id}
       params={{
         modalType: modalType?.toLowerCase(),
         delivery: delivery?.toUpperCase() as AlertType,

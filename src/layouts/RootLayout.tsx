@@ -6,7 +6,7 @@ import en from "antd/locale/en_US";
 import { locale } from "dayjs";
 import "dayjs/locale/ru";
 
-import URQLClient from "../../config/URQLClient";
+import URQLClient from "@/URQLClient";
 
 export type RootLayoutProps = {
   children: React.ReactNode;

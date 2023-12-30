@@ -13,7 +13,7 @@ import type { CubeMembers } from "@/types/cube";
 import { getTitle } from "@/utils/helpers/getTitles";
 import type { QuerySettings } from "@/types/querySettings";
 import type {
-  Exploration,
+  ExplorationData,
   ExplorationState,
   PlaygroundState,
   RawSql,
@@ -85,12 +85,13 @@ export const getColumns = (selectedQueryMembers: CubeMembers, settings = {}) =>
 
 interface Props {
   meta?: Record<string, any>[];
-  exploration?: Exploration;
+  explorationData?: ExplorationData;
   rawSql?: RawSql;
-  dataSet?: any;
+  dataset?: any;
 }
 
-export default ({ meta = [], exploration, rawSql, dataSet }: Props) => {
+export default ({ meta = [], explorationData, rawSql }: Props) => {
+  const { exploration, dataset } = explorationData || {};
   const [settings, dispatchSettings] = useReducer(reducer, initialSettings);
 
   const playgroundSettings = useMemo(
@@ -122,7 +123,7 @@ export default ({ meta = [], exploration, rawSql, dataSet }: Props) => {
   });
 
   const { rows, hitLimit, skippedMembers } = useExplorationData({
-    explorationResult: dataSet,
+    explorationResult: dataset,
   });
 
   const columns: object[] = useMemo(() => {
@@ -135,7 +136,7 @@ export default ({ meta = [], exploration, rawSql, dataSet }: Props) => {
 
   const explorationState: ExplorationState = useMemo(
     () => ({
-      progress: dataSet?.progress,
+      progress: dataset?.progress,
       hitLimit,
       columns,
       rows,
@@ -145,7 +146,7 @@ export default ({ meta = [], exploration, rawSql, dataSet }: Props) => {
       settings,
     }),
     [
-      dataSet?.progress,
+      dataset?.progress,
       rawSql,
       hitLimit,
       columns,

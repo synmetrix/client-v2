@@ -1,4 +1,4 @@
-import type { AllDataSchemasQuery } from "@/graphql/generated";
+import type { Branch_Statuses_Enum } from "@/graphql/generated";
 
 import type { ReactNode } from "react";
 
@@ -101,4 +101,8 @@ export interface Version {
   dataSchemas: DataSchema[];
 }
 
-export type Branch = AllDataSchemasQuery["branches"][number];
+export interface Branch {
+  id: string;
+  name: string;
+  status: Branch_Statuses_Enum;
+}

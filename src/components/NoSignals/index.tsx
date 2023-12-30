@@ -2,6 +2,7 @@ import { Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { Link } from "@vitjs/runtime";
 
+import { EXPLORE } from "@/utils/constants/paths";
 import NoAlertsImg from "@/assets/no-alerts.png";
 import Button from "@/components/Button";
 
@@ -28,7 +29,7 @@ const NoSignals: FC<NoSignalsProps> = ({ type = "alerts" }) => {
         {type === "alerts" ? t("not_found.text") : t("reports:not.text")}
       </Text>
       <Button size="large" type="primary">
-        <Link to={"/explore"}>{t("not_found.explore_btn")}</Link>
+        <Link to={EXPLORE}>{t("not_found.explore_btn")}</Link>
       </Button>
     </div>
   );

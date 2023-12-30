@@ -7,6 +7,7 @@ import useAuth from "@/hooks/useAuth";
 import useLocation from "@/hooks/useLocation";
 import type { SignInFormType } from "@/components/SignInForm";
 import AuthLinks from "@/components/AuthLinks";
+import { SOURCES } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -33,7 +34,7 @@ const SignIn: React.FC = () => {
     }
 
     if (!res.magicLink) {
-      setLocation("/settings/sources");
+      setLocation(SOURCES);
     }
   };
 

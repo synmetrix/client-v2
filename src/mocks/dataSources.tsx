@@ -1,4 +1,5 @@
-import type { DataSoureSetupField } from "@/types/dataSource";
+import type { DataSourceInfo, DataSoureSetupField } from "@/types/dataSource";
+import { Branch_Statuses_Enum } from "@/graphql/generated";
 
 import Postgres from "@/assets/databases/postgre.svg";
 import Mysql from "@/assets/databases/my-sql.svg";
@@ -19,6 +20,100 @@ import Crate from "@/assets/databases/crate.svg";
 import Quest from "@/assets/databases/quest.svg";
 import Snowflake from "@/assets/databases/snowflake.svg";
 import Materialize from "@/assets/databases/materialize.svg";
+
+export const dataSourcesMock: DataSourceInfo[] = [
+  {
+    id: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
+    name: "github.demo.altinity.cloud",
+    dbParams: {
+      ssl: true,
+      host: "github.demo.altinity.cloud",
+      port: "8443",
+      user: "demo",
+      database: "default",
+      password: "demo",
+    },
+    createdAt: "2021-09-09T11:52:58.347143+00:00",
+    updatedAt: "2023-08-25T07:04:44.238898+00:00",
+    type: {
+      name: "ClickHouse",
+      value: "clickhouse",
+      icon: { key: null, ref: null, props: {}, _owner: null, _store: {} },
+    },
+    branches: [
+      {
+        id: "0630a814-c97d-47c1-8330-1831031dd44a",
+        name: "Default branch",
+        status: Branch_Statuses_Enum.Active,
+      },
+      {
+        id: "12305404-7167-4e54-88ae-a073eadf6f95",
+        name: "New branch",
+        status: Branch_Statuses_Enum.Created,
+      },
+    ],
+  },
+  {
+    id: "d6ac8421-57a6-41a8-a8cb-d1cb416146eb",
+    name: "gh-api.clickhouse.tech (Yandex Demo)",
+    dbParams: {
+      ssl: true,
+      host: "gh-api.clickhouse.tech",
+      port: "443",
+      user: "play",
+      database: "default",
+    },
+    createdAt: "2021-09-30T08:49:58.660791+00:00",
+    updatedAt: "2023-08-25T11:01:50.311173+00:00",
+    type: {
+      name: "ClickHouse",
+      value: "clickhouse",
+      icon: { key: null, ref: null, props: {}, _owner: null, _store: {} },
+    },
+    branches: [
+      {
+        id: "56a3bd18-4191-406d-b26c-de22c622844f",
+        name: "Default branch",
+        status: Branch_Statuses_Enum.Active,
+      },
+      {
+        id: "abf9cb43-7801-406a-a4d2-48c020f49ac2",
+        name: "New branch",
+        status: Branch_Statuses_Enum.Created,
+      },
+    ],
+  },
+  {
+    id: "7d7eea55-ad47-4456-8a1b-badef7cf7270",
+    name: "Ecom (demo db)",
+    dbParams: {
+      host: "demo-db.cube.dev",
+      port: "5432",
+      user: "cube",
+      database: "ecom",
+      password: "12345",
+    },
+    createdAt: "2023-05-05T16:17:29.337004+00:00",
+    updatedAt: "2023-10-07T05:38:58.088981+00:00",
+    type: {
+      name: "Postgres",
+      value: "postgres",
+      icon: { key: null, ref: null, props: {}, _owner: null, _store: {} },
+    },
+    branches: [
+      {
+        id: "a38906c5-f8af-41f3-9af6-c6ce0925484a",
+        name: "Default branch",
+        status: Branch_Statuses_Enum.Active,
+      },
+      {
+        id: "4142faf4-a1ee-4d77-a5e4-5476e1054916",
+        name: "New branch",
+        status: Branch_Statuses_Enum.Created,
+      },
+    ],
+  },
+];
 
 export const dbTiles = [
   { name: "Postgres", value: "postgres", icon: <Postgres /> },

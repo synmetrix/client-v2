@@ -42,7 +42,7 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   disabled: boolean;
   state: ExploreWorkspaceState;
   queryState: ExplorationState;
-  explorationRowId?: string;
+  disableButtons?: boolean;
   selectedQueryMembers: Record<string, CubeMember[]>;
   isActive: boolean;
   disableSectionChange?: boolean;
@@ -77,7 +77,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     rowHeight,
     disabled,
     loading = false,
-    explorationRowId,
+    disableButtons,
     ...restProps
   } = props;
   const { t } = useTranslation(["explore", "common"]);
@@ -366,7 +366,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                       data={rows}
                       filename={`exploration-${genName(5)}.csv`}
                     >
-                      <Button className={s.csvBtn} disabled={!explorationRowId}>
+                      <Button className={s.csvBtn} disabled={disableButtons}>
                         {t("data_section.export")} .CSV
                       </Button>
                     </CSVLink>
@@ -376,7 +376,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                       className={s.alertButton}
                       type="primary"
                       onClick={() => onOpenModal("alert")}
-                      disabled={!explorationRowId}
+                      disabled={disableButtons}
                     >
                       {t("data_section.create_alert")}
                     </Button>
@@ -385,7 +385,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                       className={s.alertButton}
                       type="primary"
                       onClick={() => onOpenModal("report")}
-                      disabled={!explorationRowId}
+                      disabled={disableButtons}
                     >
                       {t("data_section.create_report")}
                     </Button>

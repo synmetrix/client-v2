@@ -27,6 +27,7 @@ import type {
   DataSourceSetupForm,
   DynamicForm,
 } from "@/types/dataSource";
+import { MODELS, SOURCES } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -66,11 +67,11 @@ export const DataSources = ({
 
   const onOpen = () => {
     setIsOnboarding(true);
-    setLocation("/settings/sources/new");
+    setLocation(`${SOURCES}/new`);
   };
 
   const onClose = useCallback(() => {
-    setLocation("/settings/sources");
+    setLocation(SOURCES);
   }, [setLocation]);
 
   const onFormFinish = () => {
@@ -232,8 +233,8 @@ const DataSourcesWrapper = () => {
   const [, setLocation] = useLocation();
   const { editId, generate } = useParams();
 
-  const basePath = withAuthPrefix("/settings/sources");
-  const modelsPath = withAuthPrefix("/models");
+  const basePath = withAuthPrefix(SOURCES);
+  const modelsPath = withAuthPrefix(MODELS);
   const connect = editId === "new";
 
   const {

@@ -1,18 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import { expect, vi, test, describe } from "vitest";
 
-import { dbMock } from "@/mocks/db";
+import { dataSourcesMock } from "@/mocks/dataSources";
 
 import DataSourcesMenu from "./";
 
 describe("DataSourcesMenu Component", () => {
-  const selectedId = dbMock[0].id;
+  const selectedId = dataSourcesMock[0].id;
   const onChange = vi.fn();
 
   test("renders the DataSourcesMenu component", () => {
     render(
       <DataSourcesMenu
-        entities={dbMock}
+        entities={dataSourcesMock}
         selectedId={selectedId}
         onChange={onChange}
       />
@@ -22,7 +22,7 @@ describe("DataSourcesMenu Component", () => {
   });
 
   test("renders the default value when no datasource is selected", () => {
-    render(<DataSourcesMenu entities={dbMock} onChange={onChange} />);
+    render(<DataSourcesMenu entities={dataSourcesMock} onChange={onChange} />);
     const valueElement = screen.getByText("Select datasource");
     expect(valueElement).toBeDefined();
   });

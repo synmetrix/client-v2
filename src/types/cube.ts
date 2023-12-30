@@ -76,3 +76,9 @@ export interface CubeMembers {
   segments?: Record<string, CubeMember>;
   filters?: Record<string, CubeMember>;
 }
+
+export interface Meta {
+  loading?: boolean;
+  error?: string;
+  data?: Record<string, any>[];
+}

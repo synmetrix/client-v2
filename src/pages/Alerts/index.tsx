@@ -7,20 +7,20 @@ import { useParams } from "@vitjs/runtime";
 import PageHeader from "@/components/PageHeader";
 import NoSignals from "@/components/NoSignals";
 import AlertModal from "@/components/AlertModal";
-import type { Alert, AlertFormType } from "@/types/alert";
-import type { QueryState } from "@/types/queryState";
+import type { Alert } from "@/types/alert";
 import ConfirmModal from "@/components/ConfirmModal";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
 import useAppSettings from "@/hooks/useAppSettings";
 import useAlerts from "@/hooks/useAlerts";
 import useCheckResponse from "@/hooks/useCheckResponse";
-import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 import { DOCS_CREATE_ALERT_LINK } from "@/utils/constants/links";
 import Card from "@/components/Card";
 import Avatar from "@/components/Avatar";
 import formatTime from "@/utils/helpers/formatTime";
 import StatusBadge from "@/components/StatusBadge";
+import { ALERTS } from "@/utils/constants/paths";
+import type { Exploration } from "@/types/exploration";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -28,18 +28,18 @@ import styles from "./index.module.less";
 
 interface AlertsProps {
   alerts: Alert[];
-  query: QueryState;
+  exploration: Exploration;
 }
 
 const Alerts: React.FC<AlertsProps> = ({
   alerts: initialAlerts,
-  query: initialQuery,
+  exploration,
 }) => {
   const { t } = useTranslation(["alerts", "pages"]);
   const responsive = useResponsive();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
-  const basePath = withAuthPrefix("/signals/alerts");
+  const basePath = withAuthPrefix(ALERTS);
   const { teamData } = CurrentUserStore();
   const { alertId } = useParams();
 
@@ -54,25 +54,8 @@ const Alerts: React.FC<AlertsProps> = ({
   );
 
   const {
-    updateAlert,
-    onSendTest,
-    mutations: {
-      updateMutationData,
-      deleteMutationData,
-      execDeleteMutation,
-      sendTestMutationData,
-    },
-  } = useAlerts({
-    alertId,
-  });
-
-  const query = useMemo(() => {
-    if (curAlert) {
-      return curAlert?.exploration?.playground_state;
-    }
-
-    return initialQuery || SAMPLE_EXPLORATION.playground_state;
-  }, [curAlert, initialQuery]);
+    mutations: { deleteMutationData, execDeleteMutation },
+  } = useAlerts({});
 
   const onEdit = (alert: Alert) => {
     setLocation(`${basePath}/${alert.id}`);
@@ -86,26 +69,9 @@ const Alerts: React.FC<AlertsProps> = ({
     setLocation(basePath);
   };
 
-  useCheckResponse(updateMutationData, () => onClose(), {
-    successMessage: t("alert_updated"),
-  });
-
   useCheckResponse(deleteMutationData, () => {}, {
     successMessage: t("alert_deleted"),
   });
-
-  useCheckResponse(sendTestMutationData, () => {}, {
-    successMessage: t("test_alert_sent"),
-  });
-
-  const onSubmit = (values: AlertFormType) => {
-    const doesAlertExist = Boolean(curAlert?.id);
-
-    if (doesAlertExist) {
-      updateAlert(values);
-      return;
-    }
-  };
 
   useEffect(() => {
     if (alerts?.length && alertId && !curAlert) {
@@ -254,12 +220,9 @@ const Alerts: React.FC<AlertsProps> = ({
 
       <AlertModal
         alert={curAlert}
-        query={query}
+        exploration={curAlert?.exploration || exploration}
         isOpen={!!curAlert}
-        loading={sendTestMutationData.fetching}
         onClose={onClose}
-        onSendTest={onSendTest}
-        onSubmit={onSubmit}
       />
     </>
   );

@@ -1,5 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
-import { queryFiltersMock } from "@/mocks/queryFilters";
+import { dataSourcesMock } from "@/mocks/dataSources";
 
 import QueryFilters from ".";
 
@@ -19,6 +19,6 @@ const Template: StoryFn<typeof QueryFilters> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  dataSources: queryFiltersMock,
+  dataSources: dataSourcesMock,
   onChange: console.log,
 };

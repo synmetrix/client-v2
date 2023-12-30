@@ -1,3 +1,11 @@
+import {
+  ALERTS,
+  EXPLORE,
+  MODELS,
+  QUERY_LOGS,
+  SOURCES,
+} from "@/utils/constants/paths";
+
 import ExploreIcon from "@/assets/explore.svg";
 import ModelsIcon from "@/assets/models.svg";
 import ReportsIcon from "@/assets/reports.svg";
@@ -25,25 +33,25 @@ export const items: SidebarItem[] = [
   {
     key: "explore",
     label: "Explore",
-    href: "/explore",
+    href: EXPLORE,
     icon: <ExploreIcon />,
   },
   {
     key: "models",
     label: "Models",
-    href: "/models",
+    href: MODELS,
     icon: <ModelsIcon />,
   },
   {
     key: "signals",
     label: "Signals",
-    href: "/signals/alerts",
+    href: ALERTS,
     icon: <AlertsIcon />,
   },
   {
     key: "logs",
     label: "Logs",
-    href: "/logs/query",
+    href: QUERY_LOGS,
     icon: <LogsIcon />,
     activeIcon: <LogsActiveIcon />,
     //   items: [
@@ -70,7 +78,7 @@ export const items: SidebarItem[] = [
   {
     key: "settings",
     label: "Settings",
-    href: "/settings/sources",
+    href: SOURCES,
     icon: <SettingsIcon />,
     activeIcon: <SettingsActiveIcon />,
   },

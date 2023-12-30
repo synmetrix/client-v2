@@ -4,8 +4,8 @@ import RootLayout from "@/layouts/RootLayout";
 import { versions } from "@/mocks/versions";
 import { branchesMock } from "@/mocks/branches";
 import { dataschemasMock } from "@/mocks/dataschemas";
-import { dbMock } from "@/mocks/db";
 import { sqlMock } from "@/mocks/sqlResult";
+import { dataSourcesMock } from "@/mocks/dataSources";
 
 import { Models } from ".";
 
@@ -33,8 +33,8 @@ Default.args = {
   branches: branchesMock,
   currentBranch: branchesMock[0],
   currentVersion: versions[0],
-  dataSources: dbMock,
-  dataSource: dbMock[0],
+  dataSources: dataSourcesMock,
+  dataSource: dataSourcesMock[0],
   dataschemas: dataschemasMock,
   fetching: false,
 };

@@ -6,6 +6,7 @@ import AuthTokensStore from "@/stores/AuthTokensStore";
 import useLocation from "@/hooks/useLocation";
 import Button from "@/components/Button";
 import BasicLayout from "@/layouts/BasicLayout";
+import { SIGNIN } from "@/utils/constants/paths";
 
 import s from "./index.module.less";
 
@@ -18,7 +19,7 @@ const Logout: React.FC = () => {
   const onLogout = async () => {
     await logout();
     cleanTokens();
-    setLocation("/auth/signin");
+    setLocation(SIGNIN);
   };
 
   useEffect(() => {

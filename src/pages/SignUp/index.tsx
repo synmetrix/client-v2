@@ -7,6 +7,7 @@ import type { SignUpFormType } from "@/components/SignUpForm";
 import useAuth from "@/hooks/useAuth";
 import useLocation from "@/hooks/useLocation";
 import AuthLinks from "@/components/AuthLinks";
+import { ONBOARDING } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -32,7 +33,7 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    setLocation("/onboarding");
+    setLocation(ONBOARDING);
   };
 
   return (

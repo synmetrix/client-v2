@@ -14,7 +14,9 @@ import pickKeys from "@/utils/helpers/pickKeys";
 import useAppSettings from "@/hooks/useAppSettings";
 import type { DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
-import type { Exploration, RawSql } from "@/types/exploration";
+import type { ExplorationData, RawSql } from "@/types/exploration";
+import type { Meta } from "@/types/cube";
+import { SOURCES } from "@/utils/constants/paths";
 
 import NoDataSource from "../NoDataSource";
 
@@ -26,17 +28,11 @@ const DEFAULT_ROW_HEIGHT = 20;
 
 interface ExploreWorkspaceProps {
   loading: boolean;
-  meta: Record<string, any>[];
-  metaError?: string;
-  metaLoading?: boolean;
-  params: {
-    screenshotMode: boolean;
-  };
+  meta: Meta;
   source?: DataSourceInfo;
   dataSources?: DataSourceInfo[];
-  exploration?: Exploration;
+  explorationData?: ExplorationData;
   rawSql?: RawSql;
-  dataSet: any;
   runQuery: (state: object, settings: QuerySettings) => void;
   onOpenModal: (type: string) => void;
   header?: ReactNode;
@@ -51,23 +47,21 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     source: dataSource,
     dataSources,
     meta,
-    metaError,
-    exploration,
+    explorationData,
     rawSql,
-    dataSet,
     runQuery = () => {},
     onOpenModal = () => {},
     loading = false,
-    metaLoading = false,
-    params: { screenshotMode } = {},
     icon,
   } = props;
 
-  const selector = screenshotMode
+  const [location, setLocation] = useLocation();
+  const { screenshotMode } = location?.query || {};
+  const isScreenshotMode = screenshotMode !== undefined;
+  const selector = isScreenshotMode
     ? document.querySelector(".ant-layout-content")
     : document.querySelector("#data-view");
 
-  const [, setLocation] = useLocation();
   const { withAuthPrefix } = useAppSettings();
   const { size } = useDimensions(selector);
   const width = size?.width;
@@ -88,13 +82,10 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     settings,
     dispatchSettings,
   } = usePlayground({
-    exploration,
-    meta,
+    explorationData,
+    meta: meta.data,
     rawSql,
-    dataSet,
   });
-
-  const explorationRowId = useMemo(() => exploration?.id, [exploration]);
 
   const { collapseState, state, onToggleSection } = useExploreWorkspace({
     selectedQueryMembers,
@@ -151,7 +142,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     <ExploreDataSection
       key="dataSec"
       width={width}
-      height={screenshotMode ? tableHeight : undefined}
+      height={isScreenshotMode ? tableHeight : undefined}
       selectedQueryMembers={selectedQueryMembers}
       onExec={onRunQuery}
       onQueryChange={onQueryChange}
@@ -160,8 +151,8 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
       state={state}
       loading={loading}
       queryState={explorationState}
-      explorationRowId={explorationRowId}
-      screenshotMode={screenshotMode}
+      disableButtons={!explorationData?.exploration?.id}
+      screenshotMode={isScreenshotMode}
       rowHeight={DEFAULT_ROW_HEIGHT}
       onToggleSection={onToggleSection}
       onSectionChange={(e) => onToggleSection(e.target.value)}
@@ -169,19 +160,19 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     />
   );
 
-  if (screenshotMode) {
+  if (isScreenshotMode) {
     return dataSection;
   }
 
   const sidebar = (
     <>
       {header}
-      <Spin spinning={metaLoading} wrapperClassName={styles.spinWrapper}>
+      <Spin spinning={meta.loading} wrapperClassName={styles.spinWrapper}>
         <ExploreCubes
           availableQueryMembers={availableQueryMembers}
           selectedQueryMembers={selectedQueryMembers}
           onMemberSelect={updateMember}
-          metaError={metaError}
+          error={meta.error}
         />
       </Spin>
     </>
@@ -214,7 +205,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
         </div>
       ) : (
         <NoDataSource
-          onConnect={() => setLocation(withAuthPrefix("/settings/sources/new"))}
+          onConnect={() => setLocation(withAuthPrefix(`${SOURCES}/new`))}
         />
       )}
     </Layout>

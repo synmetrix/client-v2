@@ -13,6 +13,7 @@ import type {
   DataSourceSetupForm,
   DynamicForm,
 } from "@/types/dataSource";
+import { MODELS, ONBOARDING } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -59,7 +60,7 @@ const OnboardingWrapper = () => {
   const [, setLocation] = useLocation();
   const { loading } = CurrentUserStore();
   const { withAuthPrefix } = useAppSettings();
-  const basePath = withAuthPrefix("/onboarding");
+  const basePath = withAuthPrefix(ONBOARDING);
 
   const step = useMemo(() => parseInt(pageStep || "0", 10) - 1, [pageStep]);
 
@@ -75,7 +76,7 @@ const OnboardingWrapper = () => {
     useOnboarding({});
 
   const onFinish = () => {
-    setLocation(withAuthPrefix("/models"));
+    setLocation(withAuthPrefix(MODELS));
   };
 
   const onChangeStep = (value: number) => {

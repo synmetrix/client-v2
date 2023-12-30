@@ -8,21 +8,20 @@ import PageHeader from "@/components/PageHeader";
 import ReportModal from "@/components/ReportModal";
 import NoSignals from "@/components/NoSignals";
 import type { Alert } from "@/types/alert";
-import type { Report, ReportFormType } from "@/types/report";
-import type { QueryState } from "@/types/queryState";
+import type { Report } from "@/types/report";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useCheckResponse from "@/hooks/useCheckResponse";
-import useAlerts from "@/hooks/useAlerts";
 import useReports from "@/hooks/useReports";
 import useLocation from "@/hooks/useLocation";
 import useAppSettings from "@/hooks/useAppSettings";
-import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 import { DOCS_CREATE_REPORT_LINK } from "@/utils/constants/links";
 import StatusBadge from "@/components/StatusBadge";
 import formatTime from "@/utils/helpers/formatTime";
 import Avatar from "@/components/Avatar";
 import ConfirmModal from "@/components/ConfirmModal";
 import Card from "@/components/Card";
+import { REPORTS } from "@/utils/constants/paths";
+import type { Exploration } from "@/types/exploration";
 
 import DocsIcon from "@/assets/docs.svg";
 
@@ -30,20 +29,20 @@ import styles from "./index.module.less";
 
 interface ReportsProps {
   alerts: Alert[];
-  query: QueryState;
+  exploration: Exploration;
 }
 
 const Reports: React.FC<ReportsProps> = ({
   alerts: initialReports,
-  query: initialQuery,
+  exploration,
 }) => {
   const { t } = useTranslation(["reports", "pages"]);
   const responsive = useResponsive();
   const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
-  const basePath = withAuthPrefix("/signals/reports");
+  const basePath = withAuthPrefix(REPORTS);
   const { teamData } = CurrentUserStore();
-  const { reportId } = useParams();
+  const { reportId } = useParams?.() || {};
 
   const reports = useMemo(
     () => (initialReports?.length ? initialReports : teamData?.reports || []),
@@ -56,24 +55,8 @@ const Reports: React.FC<ReportsProps> = ({
   );
 
   const {
-    mutations: { sendTestMutationData },
-    onSendTest,
-  } = useAlerts({});
-
-  const {
-    mutations: { updateMutationData, deleteMutationData, execDeleteMutation },
-    updateReport,
-  } = useReports({
-    reportId,
-  });
-
-  const query = useMemo(() => {
-    if (curReport) {
-      return curReport?.exploration?.playground_state;
-    }
-
-    return initialQuery || SAMPLE_EXPLORATION.playground_state;
-  }, [curReport, initialQuery]);
+    mutations: { deleteMutationData, execDeleteMutation },
+  } = useReports({});
 
   const onEdit = (report: Report) => {
     setLocation(`${basePath}/${report.id}`);
@@ -87,26 +70,9 @@ const Reports: React.FC<ReportsProps> = ({
     setLocation(basePath);
   };
 
-  useCheckResponse(updateMutationData, () => onClose(), {
-    successMessage: t("report_updated"),
-  });
-
   useCheckResponse(deleteMutationData, () => {}, {
     successMessage: t("report_deleted"),
   });
-
-  useCheckResponse(sendTestMutationData, () => {}, {
-    successMessage: t("test_report_sent"),
-  });
-
-  const onSubmit = (values: ReportFormType) => {
-    const doesReportExist = Boolean(curReport?.id);
-
-    if (doesReportExist) {
-      updateReport(values);
-      return;
-    }
-  };
 
   useEffect(() => {
     if (reports?.length && reportId && !curReport) {
@@ -255,12 +221,9 @@ const Reports: React.FC<ReportsProps> = ({
 
       <ReportModal
         report={curReport}
+        exploration={curReport?.exploration || exploration}
         isOpen={!!curReport}
         onClose={onClose}
-        query={query}
-        onSendTest={onSendTest}
-        onSubmit={onSubmit}
-        loading={false}
       />
     </>
   );

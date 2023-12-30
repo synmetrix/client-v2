@@ -23,16 +23,14 @@ import type { QuerySettings } from "@/types/querySettings";
 import useAnalyticsQuery from "@/hooks/useAnalyticsQuery";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useAppSettings from "@/hooks/useAppSettings";
-import useReports from "@/hooks/useReports";
-import useAlerts from "@/hooks/useAlerts";
-import type { Exploration, RawSql } from "@/types/exploration";
-import type { AlertFormType, AlertType } from "@/types/alert";
-import type { ReportFormType } from "@/types/report";
+import type { Exploration, ExplorationData, RawSql } from "@/types/exploration";
+import type { AlertType } from "@/types/alert";
+import type { Meta } from "@/types/cube";
+import { EXPLORE } from "@/utils/constants/paths";
 
 import ExploreIcon from "@/assets/explore-active.svg";
 
 export interface Params {
-  screenshotMode: boolean;
   modalType?: string;
   delivery?: AlertType;
 }
@@ -41,54 +39,35 @@ interface ExploreProps {
   loading?: boolean;
   dataSources?: DataSourceInfo[];
   dataSource?: DataSourceInfo;
-  exploration?: Exploration;
-  meta: Record<string, any>[];
-  metaError?: string;
-  dataSet?: FetchDatasetOutput;
+  explorationData?: ExplorationData;
   rawSql?: RawSql;
-  metaLoading?: boolean;
-  testLoading?: boolean;
+  meta: Meta;
   onOpenModal?: (type: string) => void;
   onCloseModal?: () => void;
   onChangeStep?: (step: number) => void;
   onSelectDelivery?: (del: string) => void;
   runQuery?: (state: object, settings: QuerySettings) => void;
   onSelectDataSource?: (dataSource: DataSourceInfo | null) => void;
-  onCreateAlert?: (values: AlertFormType) => void;
-  onSendTest?: (values: AlertFormType | ReportFormType) => void;
-  onCreateReport?: (values: ReportFormType) => void;
   params: Params;
 }
 
 export const Explore = ({
   loading = false,
-  meta = [],
-  metaError,
-  metaLoading = false,
   dataSource,
   dataSources = [],
-  exploration,
+  explorationData,
   rawSql,
-  dataSet,
   params,
-  testLoading = false,
+  meta,
   onChangeStep = () => {},
   onOpenModal = () => {},
   onCloseModal = () => {},
   onSelectDelivery = () => {},
   runQuery = () => {},
   onSelectDataSource = () => {},
-  onCreateAlert = () => {},
-  onSendTest = () => {},
-  onCreateReport = () => {},
 }: ExploreProps) => {
   const { t } = useTranslation();
   const { modalType } = params;
-
-  const query = useMemo(
-    () => exploration?.playground_state || {},
-    [exploration?.playground_state]
-  );
 
   const header = useMemo(
     () => (
@@ -111,40 +90,30 @@ export const Explore = ({
         subTitle={t("pages:explore")}
         icon={<ExploreIcon />}
         rawSql={rawSql}
-        exploration={exploration}
-        params={params}
+        explorationData={explorationData}
         runQuery={runQuery}
         onOpenModal={onOpenModal}
         source={dataSource}
         dataSources={dataSources}
         meta={meta}
-        metaError={metaError}
-        metaLoading={metaLoading}
-        dataSet={dataSet}
         loading={loading}
       />
 
       <AlertModal
+        exploration={explorationData?.exploration}
         isOpen={isAlertOpen}
         onClose={onCloseModal}
-        query={query}
         onChangeStep={onChangeStep}
         onSelectDelivery={onSelectDelivery}
-        onSendTest={onSendTest}
-        onSubmit={onCreateAlert}
-        loading={testLoading}
         params={params}
       />
 
       <ReportModal
+        exploration={explorationData?.exploration}
         isOpen={isReportOpen}
         onClose={onCloseModal}
-        query={query}
         onChangeStep={onChangeStep}
         onSelectDelivery={onSelectDelivery}
-        onSendTest={onSendTest}
-        onSubmit={onCreateReport}
-        loading={testLoading}
         params={params}
       />
     </>
@@ -154,8 +123,7 @@ export const Explore = ({
 const ExploreWrapper = () => {
   const { t } = useTranslation(["explore", "alerts", "reports"]);
   const { teamData } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
-  const { screenshotMode } = location.query;
+  const [, setLocation] = useLocation();
   const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState(
     "currentDataSourceId"
   );
@@ -175,49 +143,8 @@ const ExploreWrapper = () => {
       pause: true,
     });
 
-  const {
-    createAlert,
-    onSendTest,
-    mutations: {
-      createMutationData: createAlertMutationData,
-      sendTestMutationData,
-    },
-  } = useAlerts({
-    explorationId,
-  });
-
-  const {
-    createReport,
-    mutations: { createMutationData: createReportMutationData },
-  } = useReports({
-    explorationId,
-  });
-
-  const dataSourcePath = `/explore/${dataSourceId}`;
+  const dataSourcePath = `${EXPLORE}/${dataSourceId}`;
   const explorePath = `${dataSourcePath}/${explorationId}`;
-  useCheckResponse(
-    createAlertMutationData,
-    () => {
-      setLocation(explorePath);
-    },
-    {
-      successMessage: t("alerts:alert_created"),
-    }
-  );
-
-  useCheckResponse(
-    createReportMutationData,
-    () => {
-      setLocation(explorePath);
-    },
-    {
-      successMessage: t("reports:report_created"),
-    }
-  );
-
-  useCheckResponse(sendTestMutationData, () => {}, {
-    successMessage: t("alerts:test_alert_sent"),
-  });
 
   const datasources = useMemo(
     () => teamData?.dataSources || [],
@@ -247,7 +174,7 @@ const ExploreWrapper = () => {
 
   const onSelectDataSource = (dataSource: DataSourceInfo | null) => {
     setCurrentDataSourceId(dataSource?.id);
-    setLocation(withAuthPrefix(`/explore/${dataSource?.id}`));
+    setLocation(withAuthPrefix(`${EXPLORE}/${dataSource?.id}`));
   };
 
   const runQuery = (explorationQueryState: any, settings: any) => {
@@ -286,13 +213,7 @@ const ExploreWrapper = () => {
       delete createData.data;
       setLocation(withAuthPrefix(`${dataSourcePath}/${newExplorationId}`));
     }
-  }, [
-    createData.data,
-    createData.data?.insert_explorations_one?.id,
-    dataSourcePath,
-    setLocation,
-    withAuthPrefix,
-  ]);
+  }, [createData.data, dataSourcePath, setLocation, withAuthPrefix]);
 
   useEffect(() => {
     if (dataSourceId) {
@@ -302,42 +223,39 @@ const ExploreWrapper = () => {
 
   useEffect(() => {
     if (explorationId) {
+      execCurrentExploration();
       execSqlGenMutation({
         exploration_id: explorationId,
       });
     }
-  }, [execSqlGenMutation, explorationId]);
-
-  useEffect(() => {
-    if (explorationId) {
-      execCurrentExploration();
-    }
-  }, [execCurrentExploration, explorationId]);
+  }, [execCurrentExploration, execSqlGenMutation, explorationId]);
 
   const curSource = useMemo(
     () => (datasources || []).find((d) => d.id === dataSourceId),
     [dataSourceId, datasources]
   );
-  const exploration = useMemo(() => {
+  const explorationData: ExplorationData | undefined = useMemo(() => {
     if (explorationId && currentExploration?.data) {
-      return currentExploration?.data?.explorations_by_pk as Exploration;
+      return {
+        exploration: currentExploration?.data
+          ?.explorations_by_pk as Exploration,
+        dataset: currentExploration.data?.fetch_dataset as FetchDatasetOutput,
+      };
     }
   }, [currentExploration?.data, explorationId]);
-  const dataSet = useMemo(
-    () => currentExploration.data?.fetch_dataset as FetchDatasetOutput,
-    [currentExploration.data?.fetch_dataset]
-  );
   const rawSql = useMemo(
     () => sqlData.data?.gen_sql?.result || {},
     [sqlData.data?.gen_sql?.result]
   );
-  const currentProgress = useMemo(() => dataSet?.progress || {}, [dataSet]);
 
   useEffect(() => {
-    if (currentProgress && currentProgress.loading) {
+    if (
+      explorationData?.dataset &&
+      explorationData?.dataset?.progress?.loading
+    ) {
       execCurrentExploration();
     }
-  }, [currentProgress, execCurrentExploration]);
+  }, [explorationData?.dataset, execCurrentExploration]);
 
   useLayoutEffect(() => {
     const noCurSource = dataSourceId && !curSource;
@@ -351,13 +269,13 @@ const ExploreWrapper = () => {
       );
 
       if (isExist) {
-        setLocation(withAuthPrefix(`/explore/${currentDataSourceId}`));
+        setLocation(withAuthPrefix(`${EXPLORE}/${currentDataSourceId}`));
       } else {
-        setLocation(withAuthPrefix(`/explore/${datasources?.[0]?.id}`));
+        setLocation(withAuthPrefix(`${EXPLORE}/${datasources?.[0]?.id}`));
         setCurrentDataSourceId(datasources?.[0]?.id);
       }
     } else if (!datasources?.length && dataSourceId) {
-      setLocation("/explore");
+      setLocation(EXPLORE);
     }
   }, [
     curSource,
@@ -371,34 +289,30 @@ const ExploreWrapper = () => {
     withAuthPrefix,
   ]);
 
+  const meta = {
+    data: metaData?.data?.fetch_meta?.cubes || [],
+    error: metaData?.error?.message,
+    loading: metaData?.fetching,
+  } as Meta;
+
   const loading =
     currentExploration.fetching || createData.fetching || sqlData.fetching;
-
-  const isScreenshotMode = screenshotMode !== undefined;
 
   return (
     <Explore
       loading={loading}
-      meta={metaData?.data?.fetch_meta?.cubes || []}
-      metaError={metaData?.error?.message}
-      metaLoading={metaData.fetching}
-      testLoading={sendTestMutationData.fetching}
+      meta={meta}
       dataSources={datasources}
       dataSource={curSource}
-      exploration={exploration}
+      explorationData={explorationData}
       rawSql={rawSql}
-      dataSet={dataSet}
       runQuery={runQuery}
       onOpenModal={onOpenModal}
       onCloseModal={onCloseModal}
       onChangeStep={onChangeStep}
       onSelectDelivery={onSelectDelivery}
       onSelectDataSource={onSelectDataSource}
-      onCreateAlert={createAlert}
-      onSendTest={onSendTest}
-      onCreateReport={createReport}
       params={{
-        screenshotMode: isScreenshotMode,
         modalType: modalType?.toLowerCase(),
         delivery: delivery?.toUpperCase() as AlertType,
       }}

@@ -1,7 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import { dbMock } from "@/mocks/db";
+import { dataSourcesMock } from "@/mocks/dataSources";
 
 import ExploreWorkspace from "./";
 
@@ -21,9 +21,9 @@ describe("ExploreWorkspace", () => {
         }}
         runQuery={() => {}}
         onOpenModal={() => {}}
-        source={dbMock[0]}
+        source={dataSourcesMock[0]}
       />
     );
-    expect(screen.getByText(dbMock[0].name)).toBeInTheDocument();
+    expect(screen.getByText(dataSourcesMock[0].name)).toBeInTheDocument();
   });
 });

@@ -3,10 +3,11 @@ import { useCallback } from "react";
 import useLocation from "@/hooks/useLocation";
 import useTabs from "@/hooks/useTabs";
 import useAppSettings from "@/hooks/useAppSettings";
+import { MODELS } from "@/utils/constants/paths";
 
 interface Props {
   dataSourceId: string;
-  branchId: string;
+  branchId?: string;
 }
 
 interface Tab {
@@ -30,7 +31,7 @@ export default ({ dataSourceId, branchId }: Props) => {
   const changePath = useCallback(
     (activeKey?: string) => {
       const basePath = [
-        withAuthPrefix("/models"),
+        withAuthPrefix(MODELS),
         dataSourceId,
         branchId,
         activeKey,

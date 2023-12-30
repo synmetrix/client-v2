@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import useLocation from "@/hooks/useLocation";
 import validate from "@/utils/validations";
+import { SIGNIN, SIGNUP } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -49,8 +50,8 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit, isMagicLink }) => {
           block
           onClick={() =>
             isMagicLink
-              ? setLocation("/auth/signup")
-              : setLocation("/auth/signup?magicLink")
+              ? setLocation(SIGNUP)
+              : setLocation(`${SIGNUP}?magicLink`)
           }
         >
           {isMagicLink ? t("sign_up.sign_up") : t("sign_up.magic_link_login")}
@@ -140,7 +141,7 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit, isMagicLink }) => {
           <Button
             className={styles.link}
             type="link"
-            onClick={() => setLocation("/auth/signin")}
+            onClick={() => setLocation(SIGNIN)}
           >
             {t("sign_up.sign_in_link")}
           </Button>

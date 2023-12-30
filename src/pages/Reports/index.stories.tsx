@@ -1,6 +1,6 @@
 import RootLayout from "@/layouts/RootLayout";
 import { alerts } from "@/mocks/alerts";
-import { queryStateMock } from "@/mocks/queryState";
+import { SAMPLE_EXPLORATION } from "@/mocks/exploration";
 
 import Reports from ".";
 
@@ -21,5 +21,5 @@ export const Default = Template.bind({});
 
 Default.args = {
   alerts,
-  query: queryStateMock,
+  exploration: SAMPLE_EXPLORATION,
 };

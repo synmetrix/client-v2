@@ -28,6 +28,7 @@ import genName from "@/utils/helpers/genName";
 import DataSourceTag from "@/components/DataSourceTag";
 import ConfirmModal from "@/components/ConfirmModal";
 import Card from "@/components/Card";
+import { SQL_API } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -222,7 +223,7 @@ const SqlApiWrapper = () => {
   const { withAuthPrefix } = useAppSettings();
   const { editId } = useParams();
   const isNew = editId === "new";
-  const basePath = withAuthPrefix("/settings/sql-api");
+  const basePath = withAuthPrefix(SQL_API);
 
   const [createMutation, execCreateMutation] =
     useInsertSqlCredentialsMutation();

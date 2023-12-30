@@ -21,6 +21,7 @@ import formatTime from "@/utils/helpers/formatTime";
 import type { Member, Team, TeamSettingsForm } from "@/types/team";
 import { Roles } from "@/types/team";
 import useLocation from "@/hooks/useLocation";
+import { TEAMS } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -319,9 +320,9 @@ const TeamsWrapper: React.FC = () => {
 
   const onOpen = (id?: string) => {
     if (id) {
-      setLocation(`/settings/teams/${id}`);
+      setLocation(`${TEAMS}/${id}`);
     } else {
-      setLocation("/settings/teams/new");
+      setLocation(`${TEAMS}/new`);
     }
   };
 
@@ -336,7 +337,7 @@ const TeamsWrapper: React.FC = () => {
       loading={isLoading}
       isOpen={!!editId}
       editId={isNew ? undefined : editId}
-      onClose={() => setLocation("/settings/teams")}
+      onClose={() => setLocation(TEAMS)}
       onOpen={onOpen}
     />
   );

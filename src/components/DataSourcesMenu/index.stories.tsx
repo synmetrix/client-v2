@@ -1,5 +1,5 @@
 import RootLayout from "@/layouts/RootLayout";
-import { dbMock } from "@/mocks/db";
+import { dataSourcesMock } from "@/mocks/dataSources";
 
 import DataSourcesMenu from ".";
 
@@ -14,7 +14,11 @@ const Template: StoryFn<typeof DataSourcesMenu> = (args) => {
   const [selected, setSelected] = useState<string>("");
   return (
     <RootLayout>
-      <DataSourcesMenu {...args} selectedId={selected} onChange={setSelected} />
+      <DataSourcesMenu
+        {...args}
+        selectedId={selected}
+        onChange={(dataSource) => setSelected(dataSource?.id || "")}
+      />
     </RootLayout>
   );
 };
@@ -22,5 +26,5 @@ const Template: StoryFn<typeof DataSourcesMenu> = (args) => {
 export const Default = Template.bind({});
 
 Default.args = {
-  entities: dbMock,
+  entities: dataSourcesMock,
 };

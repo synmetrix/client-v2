@@ -183,14 +183,14 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
   return (
     <Layout
       title={dataSource?.name || "Explore"}
-      divider={!dataSources?.length}
+      divider
       subTitle={subTitle}
       items={sidebar}
       icon={icon}
       burgerTitle={subTitle as any}
     >
       {!!dataSources?.length ? (
-        <div id="data-view" className={styles.dataView}>
+        <div id="data-view">
           {dataSection}
 
           <ExploreFiltersSection

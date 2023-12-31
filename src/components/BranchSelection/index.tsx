@@ -37,7 +37,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
   const isMobile = windowSize.md === false;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.wrapper}>
       <BranchIcon />
       <Select
         className={cn(styles.select, isMobile && styles.selectMobile)}

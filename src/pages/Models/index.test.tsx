@@ -5,10 +5,6 @@ import { branchesMock } from "@/mocks/branches";
 
 import { Models } from ".";
 
-vi.mock("@vitjs/runtime", () => ({
-  __esModule: true,
-}));
-
 describe("<Models />", () => {
   const defaultProps = {
     branchMenu: [],

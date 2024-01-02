@@ -1,24 +1,16 @@
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { dataSourcesMock } from "@/mocks/dataSources";
 
 import ExploreWorkspace from "./";
 
-vi.mock("@vitjs/runtime", () => ({
-  __esModule: true,
-}));
-
 describe("ExploreWorkspace", () => {
   test("renders without error", () => {
     render(
       <ExploreWorkspace
         loading={false}
-        meta={[]}
-        dataSet={[]}
-        params={{
-          screenshotMode: false,
-        }}
+        meta={{}}
         runQuery={() => {}}
         onOpenModal={() => {}}
         source={dataSourcesMock[0]}

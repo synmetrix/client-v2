@@ -2,14 +2,26 @@ import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 
 import { alerts } from "@/mocks/alerts";
-import { queryStateMock } from "@/mocks/queryState";
 
 import ReportModal from "./";
 
+vi.mock("@/hooks/useReports", () => ({
+  default: () => ({
+    createReport: () => {},
+    updateReport: () => {},
+    mutations: { createMutationData: () => {}, updateMutationData: () => {} },
+  }),
+}));
+
+vi.mock("@/hooks/useAlerts", () => ({
+  default: () => ({
+    onSendTest: () => {},
+    mutations: { sendTestMutationData: () => {} },
+  }),
+}));
+
 describe("ReportModal", () => {
   const mockReport = alerts?.[0];
-
-  const mockQuery = queryStateMock;
 
   const mockParams: any = {
     screenshotMode: false,
@@ -18,8 +30,6 @@ describe("ReportModal", () => {
   };
 
   const mockOnClose = vi.fn();
-  const mockOnSendTest = vi.fn();
-  const mockOnSubmit = vi.fn();
   const mockOnChangeStep = vi.fn();
   const mockOnSelectDelivery = vi.fn();
 
@@ -27,14 +37,10 @@ describe("ReportModal", () => {
     render(
       <ReportModal
         report={mockReport}
-        query={mockQuery}
         isOpen={true}
         onClose={mockOnClose}
-        onSendTest={mockOnSendTest}
-        onSubmit={mockOnSubmit}
         onChangeStep={mockOnChangeStep}
         onSelectDelivery={mockOnSelectDelivery}
-        loading={false}
         params={mockParams}
       />
     );
@@ -63,14 +69,10 @@ describe("ReportModal", () => {
     render(
       <ReportModal
         report={undefined}
-        query={mockQuery}
         isOpen={true}
         onClose={mockOnClose}
-        onSendTest={mockOnSendTest}
-        onSubmit={mockOnSubmit}
         onChangeStep={mockOnChangeStep}
         onSelectDelivery={mockOnSelectDelivery}
-        loading={false}
         params={mockParams}
       />
     );

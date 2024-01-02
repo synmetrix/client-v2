@@ -17,11 +17,12 @@ const themeProvider = {
     // fontFamily: 'Gotham Pro, sans-serif',
     fontFamily: "Manrope",
     colorPrimary: "#470D69",
+    motion: false,
   },
   components: {
     Layout: {
-      colorBgHeader: "transparent",
-      colorBgBody: "transparent",
+      headerBg: "transparent",
+      bodyBg: "transparent",
     },
   },
 };

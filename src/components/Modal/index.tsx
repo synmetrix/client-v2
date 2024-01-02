@@ -25,8 +25,8 @@ const Modal: FC<ModalProps> = ({
       {...props}
       footer={footer}
       onCancel={props.onCancel || props.onClose}
-      closable={false}
-      maskStyle={{ backdropFilter: "blur(10px)" }}
+      closable={closable}
+      centered
     >
       <Suspense>
         <div className={styles.overlay} onClick={props.onClose}>

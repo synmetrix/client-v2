@@ -10,7 +10,7 @@ import type { FC } from "react";
 import type { ModalProps as BasicModalProps } from "react-responsive-modal";
 
 interface ModalProps extends BasicModalProps {
-  width?: number;
+  width?: number | string;
   closable?: boolean;
   afterClose?: () => void;
 }
@@ -24,7 +24,7 @@ const Modal: FC<ModalProps> = ({
 }) => {
   const onClose = () => {
     props.onClose?.();
-    const timeout = setTimeout(() => {
+    setTimeout(() => {
       afterClose();
     }, props.animationDuration || 300);
   };

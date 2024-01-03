@@ -80,14 +80,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
   };
 
   return (
-    <Modal
-      open={isOpen}
-      closable
-      onClose={onClose}
-      className={styles.modal}
-      width={"100%"}
-      destroyOnClose
-    >
+    <Modal open={isOpen} closable onClose={onClose} width={"100%"}>
       <div className={styles.modalHeader}>
         <Title className={styles.title} level={3}>
           {report ? t("reports:edit_report") : t("reports:new_report")}

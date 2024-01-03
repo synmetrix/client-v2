@@ -17,7 +17,7 @@ interface ModalProps extends BasicModalProps {
 
 const Modal: FC<ModalProps> = ({
   children,
-  width = 800,
+  width = 1000,
   closable = false,
   afterClose = () => {},
   ...props
@@ -38,7 +38,8 @@ const Modal: FC<ModalProps> = ({
         }}
         styles={{
           modal: {
-            width,
+            width: "calc(100% - 100px)",
+            maxWidth: width,
           },
         }}
         onClose={onClose}

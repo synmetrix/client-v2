@@ -48,7 +48,14 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
             db.name?.toLowerCase().includes(keyword.toLowerCase())
           )
           .map((tile) => (
-            <Col className={styles.tile} key={tile.name} span={4}>
+            <Col
+              className={styles.tile}
+              key={tile.name}
+              xs={24}
+              sm={12}
+              md={8}
+              lg={4}
+            >
               <FormTile
                 title={tile.name || ""}
                 icon={tile.icon}

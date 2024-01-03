@@ -13,6 +13,7 @@ mutation GenSQL ($exploration_id: uuid!) {
 query CurrentExploration ($id: uuid!, $offset: Int, $limit: Int) {
   explorations_by_pk(id: $id) {
     id
+    branch_id
     datasource_id
     playground_state
     playground_settings

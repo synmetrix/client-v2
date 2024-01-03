@@ -94,27 +94,25 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
   return (
     <Space
-      className={styles.wrapper}
-      size={16}
+      size="middle"
       direction="vertical"
       data-testid="models-sidebar"
+      style={{ display: "flex" }}
     >
-      <div className={styles.dataSourceMenu}>
-        <DataSourcesMenu
-          selectedId={dataSourceId}
-          entities={dataSources}
-          onChange={onDataSourceChange}
-        />
-      </div>
-      <div className={styles.inner}>
-        <BranchSelection
-          branchMenu={branchMenu}
-          branches={branches}
-          currentBranch={currentBranch}
-          onChangeBranch={onChangeBranch}
-          onCreateBranch={onCreateBranch}
-        />
+      <DataSourcesMenu
+        selectedId={dataSourceId}
+        entities={dataSources}
+        onChange={onDataSourceChange}
+      />
+      <BranchSelection
+        branchMenu={branchMenu}
+        branches={branches}
+        currentBranch={currentBranch}
+        onChangeBranch={onChangeBranch}
+        onCreateBranch={onCreateBranch}
+      />
 
+      <div className={styles.inner}>
         <Space
           className={cn(styles.space, styles.versionRow)}
           size={10}

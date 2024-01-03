@@ -33,7 +33,6 @@ export type Scalars = {
   json: { input: any; output: any };
   jsonb: { input: any; output: any };
   numeric: { input: any; output: any };
-  timestamp: { input: any; output: any };
   timestamptz: { input: any; output: any };
   uuid: { input: any; output: any };
 };
@@ -1823,228 +1822,6 @@ export type Auth_Accounts_Updates = {
   where: Auth_Accounts_Bool_Exp;
 };
 
-/** columns and relationships of "auth.migrations" */
-export type Auth_Migrations = {
-  __typename?: "auth_migrations";
-  executed_at?: Maybe<Scalars["timestamp"]["output"]>;
-  hash: Scalars["String"]["output"];
-  id: Scalars["Int"]["output"];
-  name: Scalars["String"]["output"];
-};
-
-/** aggregated selection of "auth.migrations" */
-export type Auth_Migrations_Aggregate = {
-  __typename?: "auth_migrations_aggregate";
-  aggregate?: Maybe<Auth_Migrations_Aggregate_Fields>;
-  nodes: Array<Auth_Migrations>;
-};
-
-/** aggregate fields of "auth.migrations" */
-export type Auth_Migrations_Aggregate_Fields = {
-  __typename?: "auth_migrations_aggregate_fields";
-  avg?: Maybe<Auth_Migrations_Avg_Fields>;
-  count: Scalars["Int"]["output"];
-  max?: Maybe<Auth_Migrations_Max_Fields>;
-  min?: Maybe<Auth_Migrations_Min_Fields>;
-  stddev?: Maybe<Auth_Migrations_Stddev_Fields>;
-  stddev_pop?: Maybe<Auth_Migrations_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Auth_Migrations_Stddev_Samp_Fields>;
-  sum?: Maybe<Auth_Migrations_Sum_Fields>;
-  var_pop?: Maybe<Auth_Migrations_Var_Pop_Fields>;
-  var_samp?: Maybe<Auth_Migrations_Var_Samp_Fields>;
-  variance?: Maybe<Auth_Migrations_Variance_Fields>;
-};
-
-/** aggregate fields of "auth.migrations" */
-export type Auth_Migrations_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Auth_Migrations_Select_Column>>;
-  distinct?: InputMaybe<Scalars["Boolean"]["input"]>;
-};
-
-/** aggregate avg on columns */
-export type Auth_Migrations_Avg_Fields = {
-  __typename?: "auth_migrations_avg_fields";
-  id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** Boolean expression to filter rows from the table "auth.migrations". All fields are combined with a logical 'AND'. */
-export type Auth_Migrations_Bool_Exp = {
-  _and?: InputMaybe<Array<Auth_Migrations_Bool_Exp>>;
-  _not?: InputMaybe<Auth_Migrations_Bool_Exp>;
-  _or?: InputMaybe<Array<Auth_Migrations_Bool_Exp>>;
-  executed_at?: InputMaybe<Timestamp_Comparison_Exp>;
-  hash?: InputMaybe<String_Comparison_Exp>;
-  id?: InputMaybe<Int_Comparison_Exp>;
-  name?: InputMaybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "auth.migrations" */
-export enum Auth_Migrations_Constraint {
-  /** unique or primary key constraint on columns "name" */
-  MigrationsNameKey = "migrations_name_key",
-  /** unique or primary key constraint on columns "id" */
-  MigrationsPkey = "migrations_pkey",
-}
-
-/** input type for incrementing numeric columns in table "auth.migrations" */
-export type Auth_Migrations_Inc_Input = {
-  id?: InputMaybe<Scalars["Int"]["input"]>;
-};
-
-/** input type for inserting data into table "auth.migrations" */
-export type Auth_Migrations_Insert_Input = {
-  executed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
-  hash?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["Int"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** aggregate max on columns */
-export type Auth_Migrations_Max_Fields = {
-  __typename?: "auth_migrations_max_fields";
-  executed_at?: Maybe<Scalars["timestamp"]["output"]>;
-  hash?: Maybe<Scalars["String"]["output"]>;
-  id?: Maybe<Scalars["Int"]["output"]>;
-  name?: Maybe<Scalars["String"]["output"]>;
-};
-
-/** aggregate min on columns */
-export type Auth_Migrations_Min_Fields = {
-  __typename?: "auth_migrations_min_fields";
-  executed_at?: Maybe<Scalars["timestamp"]["output"]>;
-  hash?: Maybe<Scalars["String"]["output"]>;
-  id?: Maybe<Scalars["Int"]["output"]>;
-  name?: Maybe<Scalars["String"]["output"]>;
-};
-
-/** response of any mutation on the table "auth.migrations" */
-export type Auth_Migrations_Mutation_Response = {
-  __typename?: "auth_migrations_mutation_response";
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars["Int"]["output"];
-  /** data from the rows affected by the mutation */
-  returning: Array<Auth_Migrations>;
-};
-
-/** on_conflict condition type for table "auth.migrations" */
-export type Auth_Migrations_On_Conflict = {
-  constraint: Auth_Migrations_Constraint;
-  update_columns?: Array<Auth_Migrations_Update_Column>;
-  where?: InputMaybe<Auth_Migrations_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "auth.migrations". */
-export type Auth_Migrations_Order_By = {
-  executed_at?: InputMaybe<Order_By>;
-  hash?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: auth.migrations */
-export type Auth_Migrations_Pk_Columns_Input = {
-  id: Scalars["Int"]["input"];
-};
-
-/** select columns of table "auth.migrations" */
-export enum Auth_Migrations_Select_Column {
-  /** column name */
-  ExecutedAt = "executed_at",
-  /** column name */
-  Hash = "hash",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Name = "name",
-}
-
-/** input type for updating data in table "auth.migrations" */
-export type Auth_Migrations_Set_Input = {
-  executed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
-  hash?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["Int"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** aggregate stddev on columns */
-export type Auth_Migrations_Stddev_Fields = {
-  __typename?: "auth_migrations_stddev_fields";
-  id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Auth_Migrations_Stddev_Pop_Fields = {
-  __typename?: "auth_migrations_stddev_pop_fields";
-  id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Auth_Migrations_Stddev_Samp_Fields = {
-  __typename?: "auth_migrations_stddev_samp_fields";
-  id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** Streaming cursor of the table "auth_migrations" */
-export type Auth_Migrations_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Auth_Migrations_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Auth_Migrations_Stream_Cursor_Value_Input = {
-  executed_at?: InputMaybe<Scalars["timestamp"]["input"]>;
-  hash?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["Int"]["input"]>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-/** aggregate sum on columns */
-export type Auth_Migrations_Sum_Fields = {
-  __typename?: "auth_migrations_sum_fields";
-  id?: Maybe<Scalars["Int"]["output"]>;
-};
-
-/** update columns of table "auth.migrations" */
-export enum Auth_Migrations_Update_Column {
-  /** column name */
-  ExecutedAt = "executed_at",
-  /** column name */
-  Hash = "hash",
-  /** column name */
-  Id = "id",
-  /** column name */
-  Name = "name",
-}
-
-export type Auth_Migrations_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Auth_Migrations_Inc_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Auth_Migrations_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Auth_Migrations_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Auth_Migrations_Var_Pop_Fields = {
-  __typename?: "auth_migrations_var_pop_fields";
-  id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** aggregate var_samp on columns */
-export type Auth_Migrations_Var_Samp_Fields = {
-  __typename?: "auth_migrations_var_samp_fields";
-  id?: Maybe<Scalars["Float"]["output"]>;
-};
-
-/** aggregate variance on columns */
-export type Auth_Migrations_Variance_Fields = {
-  __typename?: "auth_migrations_variance_fields";
-  id?: Maybe<Scalars["Float"]["output"]>;
-};
-
 /** columns and relationships of "auth.providers" */
 export type Auth_Providers = {
   __typename?: "auth_providers";
@@ -2585,29 +2362,7 @@ export type Auth_Roles_Updates = {
 /** columns and relationships of "branch_statuses" */
 export type Branch_Statuses = {
   __typename?: "branch_statuses";
-  /** An array relationship */
-  branches: Array<Branches>;
-  /** An aggregate relationship */
-  branches_aggregate: Branches_Aggregate;
   status: Scalars["String"]["output"];
-};
-
-/** columns and relationships of "branch_statuses" */
-export type Branch_StatusesBranchesArgs = {
-  distinct_on?: InputMaybe<Array<Branches_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Branches_Order_By>>;
-  where?: InputMaybe<Branches_Bool_Exp>;
-};
-
-/** columns and relationships of "branch_statuses" */
-export type Branch_StatusesBranches_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Branches_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Branches_Order_By>>;
-  where?: InputMaybe<Branches_Bool_Exp>;
 };
 
 /** aggregated selection of "branch_statuses" */
@@ -2636,8 +2391,6 @@ export type Branch_Statuses_Bool_Exp = {
   _and?: InputMaybe<Array<Branch_Statuses_Bool_Exp>>;
   _not?: InputMaybe<Branch_Statuses_Bool_Exp>;
   _or?: InputMaybe<Array<Branch_Statuses_Bool_Exp>>;
-  branches?: InputMaybe<Branches_Bool_Exp>;
-  branches_aggregate?: InputMaybe<Branches_Aggregate_Bool_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -2664,7 +2417,6 @@ export type Branch_Statuses_Enum_Comparison_Exp = {
 
 /** input type for inserting data into table "branch_statuses" */
 export type Branch_Statuses_Insert_Input = {
-  branches?: InputMaybe<Branches_Arr_Rel_Insert_Input>;
   status?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -2705,7 +2457,6 @@ export type Branch_Statuses_On_Conflict = {
 
 /** Ordering options when selecting data from "branch_statuses". */
 export type Branch_Statuses_Order_By = {
-  branches_aggregate?: InputMaybe<Branches_Aggregate_Order_By>;
   status?: InputMaybe<Order_By>;
 };
 
@@ -2760,6 +2511,10 @@ export type Branches = {
   /** An object relationship */
   datasource: Datasources;
   datasource_id: Scalars["uuid"]["output"];
+  /** An array relationship */
+  explorations: Array<Explorations>;
+  /** An aggregate relationship */
+  explorations_aggregate: Explorations_Aggregate;
   id: Scalars["uuid"]["output"];
   name: Scalars["String"]["output"];
   status: Branch_Statuses_Enum;
@@ -2771,6 +2526,24 @@ export type Branches = {
   versions: Array<Versions>;
   /** An aggregate relationship */
   versions_aggregate: Versions_Aggregate;
+};
+
+/** columns and relationships of "branches" */
+export type BranchesExplorationsArgs = {
+  distinct_on?: InputMaybe<Array<Explorations_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Explorations_Order_By>>;
+  where?: InputMaybe<Explorations_Bool_Exp>;
+};
+
+/** columns and relationships of "branches" */
+export type BranchesExplorations_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Explorations_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Explorations_Order_By>>;
+  where?: InputMaybe<Explorations_Bool_Exp>;
 };
 
 /** columns and relationships of "branches" */
@@ -2846,6 +2619,8 @@ export type Branches_Bool_Exp = {
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   datasource?: InputMaybe<Datasources_Bool_Exp>;
   datasource_id?: InputMaybe<Uuid_Comparison_Exp>;
+  explorations?: InputMaybe<Explorations_Bool_Exp>;
+  explorations_aggregate?: InputMaybe<Explorations_Aggregate_Bool_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   status?: InputMaybe<Branch_Statuses_Enum_Comparison_Exp>;
@@ -2868,6 +2643,7 @@ export type Branches_Insert_Input = {
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   datasource?: InputMaybe<Datasources_Obj_Rel_Insert_Input>;
   datasource_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  explorations?: InputMaybe<Explorations_Arr_Rel_Insert_Input>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   status?: InputMaybe<Branch_Statuses_Enum>;
@@ -2948,6 +2724,7 @@ export type Branches_Order_By = {
   created_at?: InputMaybe<Order_By>;
   datasource?: InputMaybe<Datasources_Order_By>;
   datasource_id?: InputMaybe<Order_By>;
+  explorations_aggregate?: InputMaybe<Explorations_Aggregate_Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
@@ -4406,6 +4183,9 @@ export type Explorations = {
   alerts: Array<Alerts>;
   /** An aggregate relationship */
   alerts_aggregate: Alerts_Aggregate;
+  /** An object relationship */
+  branch?: Maybe<Branches>;
+  branch_id?: Maybe<Scalars["uuid"]["output"]>;
   created_at: Scalars["timestamptz"]["output"];
   /** An object relationship */
   datasource: Datasources;
@@ -4548,6 +4328,8 @@ export type Explorations_Bool_Exp = {
   _or?: InputMaybe<Array<Explorations_Bool_Exp>>;
   alerts?: InputMaybe<Alerts_Bool_Exp>;
   alerts_aggregate?: InputMaybe<Alerts_Aggregate_Bool_Exp>;
+  branch?: InputMaybe<Branches_Bool_Exp>;
+  branch_id?: InputMaybe<Uuid_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   datasource?: InputMaybe<Datasources_Bool_Exp>;
   datasource_id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -4589,6 +4371,8 @@ export type Explorations_Delete_Key_Input = {
 /** input type for inserting data into table "explorations" */
 export type Explorations_Insert_Input = {
   alerts?: InputMaybe<Alerts_Arr_Rel_Insert_Input>;
+  branch?: InputMaybe<Branches_Obj_Rel_Insert_Input>;
+  branch_id?: InputMaybe<Scalars["uuid"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   datasource?: InputMaybe<Datasources_Obj_Rel_Insert_Input>;
   datasource_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -4604,6 +4388,7 @@ export type Explorations_Insert_Input = {
 /** aggregate max on columns */
 export type Explorations_Max_Fields = {
   __typename?: "explorations_max_fields";
+  branch_id?: Maybe<Scalars["uuid"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
   datasource_id?: Maybe<Scalars["uuid"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
@@ -4613,6 +4398,7 @@ export type Explorations_Max_Fields = {
 
 /** order by max() on columns of table "explorations" */
 export type Explorations_Max_Order_By = {
+  branch_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   datasource_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -4623,6 +4409,7 @@ export type Explorations_Max_Order_By = {
 /** aggregate min on columns */
 export type Explorations_Min_Fields = {
   __typename?: "explorations_min_fields";
+  branch_id?: Maybe<Scalars["uuid"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
   datasource_id?: Maybe<Scalars["uuid"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
@@ -4632,6 +4419,7 @@ export type Explorations_Min_Fields = {
 
 /** order by min() on columns of table "explorations" */
 export type Explorations_Min_Order_By = {
+  branch_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   datasource_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -4665,6 +4453,8 @@ export type Explorations_On_Conflict = {
 /** Ordering options when selecting data from "explorations". */
 export type Explorations_Order_By = {
   alerts_aggregate?: InputMaybe<Alerts_Aggregate_Order_By>;
+  branch?: InputMaybe<Branches_Order_By>;
+  branch_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   datasource?: InputMaybe<Datasources_Order_By>;
   datasource_id?: InputMaybe<Order_By>;
@@ -4691,6 +4481,8 @@ export type Explorations_Prepend_Input = {
 /** select columns of table "explorations" */
 export enum Explorations_Select_Column {
   /** column name */
+  BranchId = "branch_id",
+  /** column name */
   CreatedAt = "created_at",
   /** column name */
   DatasourceId = "datasource_id",
@@ -4708,6 +4500,7 @@ export enum Explorations_Select_Column {
 
 /** input type for updating data in table "explorations" */
 export type Explorations_Set_Input = {
+  branch_id?: InputMaybe<Scalars["uuid"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   datasource_id?: InputMaybe<Scalars["uuid"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -4727,6 +4520,7 @@ export type Explorations_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Explorations_Stream_Cursor_Value_Input = {
+  branch_id?: InputMaybe<Scalars["uuid"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   datasource_id?: InputMaybe<Scalars["uuid"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -4738,6 +4532,8 @@ export type Explorations_Stream_Cursor_Value_Input = {
 
 /** update columns of table "explorations" */
 export enum Explorations_Update_Column {
+  /** column name */
+  BranchId = "branch_id",
   /** column name */
   CreatedAt = "created_at",
   /** column name */
@@ -5332,10 +5128,6 @@ export type Mutation_Root = {
   delete_auth_accounts?: Maybe<Auth_Accounts_Mutation_Response>;
   /** delete single row from the table: "auth.accounts" */
   delete_auth_accounts_by_pk?: Maybe<Auth_Accounts>;
-  /** delete data from the table: "auth.migrations" */
-  delete_auth_migrations?: Maybe<Auth_Migrations_Mutation_Response>;
-  /** delete single row from the table: "auth.migrations" */
-  delete_auth_migrations_by_pk?: Maybe<Auth_Migrations>;
   /** delete data from the table: "auth.providers" */
   delete_auth_providers?: Maybe<Auth_Providers_Mutation_Response>;
   /** delete single row from the table: "auth.providers" */
@@ -5443,10 +5235,6 @@ export type Mutation_Root = {
   insert_auth_accounts?: Maybe<Auth_Accounts_Mutation_Response>;
   /** insert a single row into the table: "auth.accounts" */
   insert_auth_accounts_one?: Maybe<Auth_Accounts>;
-  /** insert data into the table: "auth.migrations" */
-  insert_auth_migrations?: Maybe<Auth_Migrations_Mutation_Response>;
-  /** insert a single row into the table: "auth.migrations" */
-  insert_auth_migrations_one?: Maybe<Auth_Migrations>;
   /** insert data into the table: "auth.providers" */
   insert_auth_providers?: Maybe<Auth_Providers_Mutation_Response>;
   /** insert a single row into the table: "auth.providers" */
@@ -5571,14 +5359,6 @@ export type Mutation_Root = {
   /** update multiples rows of table: "auth.accounts" */
   update_auth_accounts_many?: Maybe<
     Array<Maybe<Auth_Accounts_Mutation_Response>>
-  >;
-  /** update data of the table: "auth.migrations" */
-  update_auth_migrations?: Maybe<Auth_Migrations_Mutation_Response>;
-  /** update single row of the table: "auth.migrations" */
-  update_auth_migrations_by_pk?: Maybe<Auth_Migrations>;
-  /** update multiples rows of table: "auth.migrations" */
-  update_auth_migrations_many?: Maybe<
-    Array<Maybe<Auth_Migrations_Mutation_Response>>
   >;
   /** update data of the table: "auth.providers" */
   update_auth_providers?: Maybe<Auth_Providers_Mutation_Response>;
@@ -5790,16 +5570,6 @@ export type Mutation_RootDelete_Auth_AccountsArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Auth_Accounts_By_PkArgs = {
   id: Scalars["uuid"]["input"];
-};
-
-/** mutation root */
-export type Mutation_RootDelete_Auth_MigrationsArgs = {
-  where: Auth_Migrations_Bool_Exp;
-};
-
-/** mutation root */
-export type Mutation_RootDelete_Auth_Migrations_By_PkArgs = {
-  id: Scalars["Int"]["input"];
 };
 
 /** mutation root */
@@ -6089,18 +5859,6 @@ export type Mutation_RootInsert_Auth_AccountsArgs = {
 export type Mutation_RootInsert_Auth_Accounts_OneArgs = {
   object: Auth_Accounts_Insert_Input;
   on_conflict?: InputMaybe<Auth_Accounts_On_Conflict>;
-};
-
-/** mutation root */
-export type Mutation_RootInsert_Auth_MigrationsArgs = {
-  objects: Array<Auth_Migrations_Insert_Input>;
-  on_conflict?: InputMaybe<Auth_Migrations_On_Conflict>;
-};
-
-/** mutation root */
-export type Mutation_RootInsert_Auth_Migrations_OneArgs = {
-  object: Auth_Migrations_Insert_Input;
-  on_conflict?: InputMaybe<Auth_Migrations_On_Conflict>;
 };
 
 /** mutation root */
@@ -6490,25 +6248,6 @@ export type Mutation_RootUpdate_Auth_Accounts_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Auth_Accounts_ManyArgs = {
   updates: Array<Auth_Accounts_Updates>;
-};
-
-/** mutation root */
-export type Mutation_RootUpdate_Auth_MigrationsArgs = {
-  _inc?: InputMaybe<Auth_Migrations_Inc_Input>;
-  _set?: InputMaybe<Auth_Migrations_Set_Input>;
-  where: Auth_Migrations_Bool_Exp;
-};
-
-/** mutation root */
-export type Mutation_RootUpdate_Auth_Migrations_By_PkArgs = {
-  _inc?: InputMaybe<Auth_Migrations_Inc_Input>;
-  _set?: InputMaybe<Auth_Migrations_Set_Input>;
-  pk_columns: Auth_Migrations_Pk_Columns_Input;
-};
-
-/** mutation root */
-export type Mutation_RootUpdate_Auth_Migrations_ManyArgs = {
-  updates: Array<Auth_Migrations_Updates>;
 };
 
 /** mutation root */
@@ -7326,12 +7065,6 @@ export type Query_Root = {
   auth_accounts_aggregate: Auth_Accounts_Aggregate;
   /** fetch data from the table: "auth.accounts" using primary key columns */
   auth_accounts_by_pk?: Maybe<Auth_Accounts>;
-  /** fetch data from the table: "auth.migrations" */
-  auth_migrations: Array<Auth_Migrations>;
-  /** fetch aggregated fields from the table: "auth.migrations" */
-  auth_migrations_aggregate: Auth_Migrations_Aggregate;
-  /** fetch data from the table: "auth.migrations" using primary key columns */
-  auth_migrations_by_pk?: Maybe<Auth_Migrations>;
   /** fetch data from the table: "auth.providers" */
   auth_providers: Array<Auth_Providers>;
   /** fetch aggregated fields from the table: "auth.providers" */
@@ -7564,26 +7297,6 @@ export type Query_RootAuth_Accounts_AggregateArgs = {
 
 export type Query_RootAuth_Accounts_By_PkArgs = {
   id: Scalars["uuid"]["input"];
-};
-
-export type Query_RootAuth_MigrationsArgs = {
-  distinct_on?: InputMaybe<Array<Auth_Migrations_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Auth_Migrations_Order_By>>;
-  where?: InputMaybe<Auth_Migrations_Bool_Exp>;
-};
-
-export type Query_RootAuth_Migrations_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Auth_Migrations_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Auth_Migrations_Order_By>>;
-  where?: InputMaybe<Auth_Migrations_Bool_Exp>;
-};
-
-export type Query_RootAuth_Migrations_By_PkArgs = {
-  id: Scalars["Int"]["input"];
 };
 
 export type Query_RootAuth_ProvidersArgs = {
@@ -9295,6 +9008,8 @@ export enum Sql_Credentials_Constraint {
   SqlCredentialsDatasourceIdUserIdUsernameKey = "sql_credentials_datasource_id_user_id_username_key",
   /** unique or primary key constraint on columns "id" */
   SqlCredentialsPkey = "sql_credentials_pkey",
+  /** unique or primary key constraint on columns "username" */
+  SqlCredentialsUsernameKey = "sql_credentials_username_key",
 }
 
 /** input type for inserting data into table "sql_credentials" */
@@ -9505,14 +9220,6 @@ export type Subscription_Root = {
   auth_accounts_by_pk?: Maybe<Auth_Accounts>;
   /** fetch data from the table in a streaming manner: "auth.accounts" */
   auth_accounts_stream: Array<Auth_Accounts>;
-  /** fetch data from the table: "auth.migrations" */
-  auth_migrations: Array<Auth_Migrations>;
-  /** fetch aggregated fields from the table: "auth.migrations" */
-  auth_migrations_aggregate: Auth_Migrations_Aggregate;
-  /** fetch data from the table: "auth.migrations" using primary key columns */
-  auth_migrations_by_pk?: Maybe<Auth_Migrations>;
-  /** fetch data from the table in a streaming manner: "auth.migrations" */
-  auth_migrations_stream: Array<Auth_Migrations>;
   /** fetch data from the table: "auth.providers" */
   auth_providers: Array<Auth_Providers>;
   /** fetch aggregated fields from the table: "auth.providers" */
@@ -9812,32 +9519,6 @@ export type Subscription_RootAuth_Accounts_StreamArgs = {
   batch_size: Scalars["Int"]["input"];
   cursor: Array<InputMaybe<Auth_Accounts_Stream_Cursor_Input>>;
   where?: InputMaybe<Auth_Accounts_Bool_Exp>;
-};
-
-export type Subscription_RootAuth_MigrationsArgs = {
-  distinct_on?: InputMaybe<Array<Auth_Migrations_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Auth_Migrations_Order_By>>;
-  where?: InputMaybe<Auth_Migrations_Bool_Exp>;
-};
-
-export type Subscription_RootAuth_Migrations_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Auth_Migrations_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Auth_Migrations_Order_By>>;
-  where?: InputMaybe<Auth_Migrations_Bool_Exp>;
-};
-
-export type Subscription_RootAuth_Migrations_By_PkArgs = {
-  id: Scalars["Int"]["input"];
-};
-
-export type Subscription_RootAuth_Migrations_StreamArgs = {
-  batch_size: Scalars["Int"]["input"];
-  cursor: Array<InputMaybe<Auth_Migrations_Stream_Cursor_Input>>;
-  where?: InputMaybe<Auth_Migrations_Bool_Exp>;
 };
 
 export type Subscription_RootAuth_ProvidersArgs = {
@@ -10939,19 +10620,6 @@ export type Teams_Updates = {
   _set?: InputMaybe<Teams_Set_Input>;
   /** filter the rows which have to be updated */
   where: Teams_Bool_Exp;
-};
-
-/** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
-export type Timestamp_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _gt?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _gte?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _in?: InputMaybe<Array<Scalars["timestamp"]["input"]>>;
-  _is_null?: InputMaybe<Scalars["Boolean"]["input"]>;
-  _lt?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _lte?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _neq?: InputMaybe<Scalars["timestamp"]["input"]>;
-  _nin?: InputMaybe<Array<Scalars["timestamp"]["input"]>>;
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
@@ -12490,6 +12158,7 @@ export type CurrentExplorationQuery = {
   explorations_by_pk?: {
     __typename?: "explorations";
     id: any;
+    branch_id?: any | null;
     datasource_id: any;
     playground_state: any;
     playground_settings: any;
@@ -13872,6 +13541,7 @@ export const CurrentExplorationDocument = gql`
   query CurrentExploration($id: uuid!, $offset: Int, $limit: Int) {
     explorations_by_pk(id: $id) {
       id
+      branch_id
       datasource_id
       playground_state
       playground_settings

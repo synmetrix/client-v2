@@ -109,7 +109,7 @@ export default [
                 component: "./pages/Onboarding",
               },
               {
-                path: `${paths.EXPLORE}/:dataSourceId?/:branchId?/:explorationId?/:modalType?/:delivery?`,
+                path: `${paths.EXPLORE}/:dataSourceId?/:explorationId?/:modalType?/:delivery?`,
                 component: "./pages/Explore",
               },
               {

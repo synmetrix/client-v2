@@ -32,5 +32,9 @@
   "errors": {
     "exploration_not_found": "Exploration not found",
     "data_source_not_found": "Data source not found"
+  },
+  "no_query": {
+    "header": "Select Models, Dimensions, Measures",
+    "text": "And Run Query"
   }
 }

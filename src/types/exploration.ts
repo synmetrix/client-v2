@@ -41,6 +41,7 @@ export interface ExplorationState extends PlaygroundState {
 
 export interface Exploration {
   id: string;
+  branch_id: string;
   datasource_id: string;
   playground_settings: PlaygroundState;
   playground_state: QueryState;

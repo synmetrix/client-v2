@@ -106,7 +106,6 @@
   gap: 10px;
   justify-content: left;
 
-  margin-bottom: 16px;
   padding: 12px;
   padding-right: 25px;
   text-align: center;
@@ -159,4 +158,30 @@
 
 .radioButton {
   border: none !important;
+}
+
+.table :global(.ReactVirtualized__Table__headerRow) {
+  padding: 6px 0;
+  border-radius: 0;
+}
+
+.tableFooter,
+.table :global(.ReactVirtualized__Table__row) span {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.tableFooter {
+  margin-top: 16px;
+  margin-left: 20px;
+}
+
+.wrapper {
+  padding: 16px;
+}
+
+.sqlHeader {
+  font-weight: 700;
+  font-size: 14px;
 }

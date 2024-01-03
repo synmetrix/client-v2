@@ -6,6 +6,7 @@ import cn from "classnames";
 
 import Select from "@/components/Select";
 import PopoverButton from "@/components/PopoverButton";
+import type { Branch } from "@/types/dataSource";
 
 import BranchIcon from "@/assets/branch-colored.svg";
 import VerticalDots from "@/assets/dots-vertical.svg";
@@ -14,8 +15,8 @@ import styles from "./index.module.less";
 
 interface BranchSelectionProps {
   branchMenu?: any;
-  branches: any[];
-  currentBranch: any;
+  branches: Branch[];
+  currentBranch?: Branch;
   disableCreate?: boolean;
   onChangeBranch: (id: string) => void;
   onCreateBranch?: (name: string) => void;

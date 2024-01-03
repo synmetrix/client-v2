@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
-import { message } from "antd";
+import { Space, message } from "antd";
 import { useLocalStorageState } from "ahooks";
 
 import type { FetchDatasetOutput } from "@/graphql/generated";
@@ -10,6 +10,7 @@ import {
   useCurrentExplorationQuery,
   useGenSqlMutation,
   useCreateExplorationMutation,
+  Branch_Statuses_Enum,
 } from "@/graphql/generated";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
 import ExploreWorkspace from "@/components/ExploreWorkspace";
@@ -19,7 +20,7 @@ import BranchSelection from "@/components/BranchSelection";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
 import trackEvent from "@/utils/helpers/trackEvent";
-import type { DataSourceInfo } from "@/types/dataSource";
+import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
 import useAnalyticsQuery from "@/hooks/useAnalyticsQuery";
 import useCheckResponse from "@/hooks/useCheckResponse";
@@ -30,6 +31,8 @@ import type { Meta } from "@/types/cube";
 import { EXPLORE } from "@/utils/constants/paths";
 
 import ExploreIcon from "@/assets/explore-active.svg";
+
+import styles from "./index.module.less";
 
 export interface Params {
   modalType?: string;
@@ -43,8 +46,8 @@ interface ExploreProps {
   explorationData?: ExplorationData;
   rawSql?: RawSql;
   meta: Meta;
-  branches: any;
-  currentBranch: any;
+  branches: Branch[];
+  currentBranch?: Branch;
   onOpenModal?: (type: string) => void;
   onCloseModal?: () => void;
   onChangeStep?: (step: number) => void;
@@ -78,7 +81,7 @@ export const Explore = ({
 
   const header = useMemo(
     () => (
-      <>
+      <Space className={styles.wrapper} size={16} direction="vertical">
         <DataSourcesMenu
           selectedId={dataSource?.id as string}
           entities={dataSources || []}
@@ -90,7 +93,7 @@ export const Explore = ({
           onChangeBranch={onChangeBranch}
           disableCreate
         />
-      </>
+      </Space>
     ),
     [
       branches,
@@ -145,15 +148,16 @@ export const Explore = ({
 const ExploreWrapper = () => {
   const { t } = useTranslation(["explore", "alerts", "reports"]);
   const { teamData } = CurrentUserStore();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+  const { branchId } = location.query;
+
   const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState(
     "currentDataSourceId"
   );
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
     `${currentDataSourceId}:exploreCurrentBranch`
   );
-  const { dataSourceId, branchId, explorationId, modalType, delivery } =
-    useParams();
+  const { dataSourceId, explorationId, modalType, delivery } = useParams();
 
   const { state: playgroundState } = useAnalyticsQuery();
   const { withAuthPrefix } = useAppSettings();
@@ -207,6 +211,7 @@ const ExploreWrapper = () => {
     trackEvent("Run Query");
 
     const newExplorationObj = {
+      branch_id: currentBranchId,
       datasource_id: dataSourceId,
       playground_state: explorationQueryState,
       playground_settings: settings,
@@ -234,16 +239,22 @@ const ExploreWrapper = () => {
   };
 
   const onChangeBranch = (id: string) => {
-    // if (currentBranchId !== id) {
-    //   setCurrentBranchId(id);
-    // }
+    setCurrentBranchId(id);
+    setLocation(dataSourcePath);
   };
 
-  // useEffect(() => {
-  //   if (currentBranchId) {
-  //     setLocation(dataSourcePath);
-  //   }
-  // }, [currentBranchId, dataSourcePath, setLocation]);
+  useEffect(() => {
+    if (branchId) {
+      setCurrentBranchId(branchId);
+      setLocation(dataSourcePath);
+    }
+  }, [
+    branchId,
+    currentBranchId,
+    dataSourcePath,
+    setCurrentBranchId,
+    setLocation,
+  ]);
 
   useEffect(() => {
     const newExplorationId = createData.data?.insert_explorations_one?.id;
@@ -272,15 +283,21 @@ const ExploreWrapper = () => {
     () => (datasources || []).find((d) => d.id === dataSourceId),
     [dataSourceId, datasources]
   );
+
   const currentBranch = useMemo(() => {
     const curBranch =
       (curSource?.branches || []).find((b) => b.id === currentBranchId) ||
-      curSource?.branches?.[0];
-    // if (curBranch?.id && curBranch?.id !== currentBranchId) {
-    //   setCurrentBranchId(curBranch?.id);
-    // }
+      curSource?.branches?.find(
+        (b) => b.status === Branch_Statuses_Enum.Active
+      );
+
+    if (curBranch?.id && curBranch?.id !== currentBranchId) {
+      setCurrentBranchId(curBranch?.id);
+    }
+
     return curBranch;
-  }, [curSource?.branches, currentBranchId]);
+  }, [curSource?.branches, currentBranchId, setCurrentBranchId]);
+
   const explorationData: ExplorationData | undefined = useMemo(() => {
     if (explorationId && currentExploration?.data) {
       return {
@@ -290,6 +307,7 @@ const ExploreWrapper = () => {
       };
     }
   }, [currentExploration?.data, explorationId]);
+
   const rawSql = useMemo(
     () => sqlData.data?.gen_sql?.result || {},
     [sqlData.data?.gen_sql?.result]
@@ -303,6 +321,13 @@ const ExploreWrapper = () => {
       execCurrentExploration();
     }
   }, [explorationData?.dataset, execCurrentExploration]);
+
+  useEffect(() => {
+    const explorationBranch = explorationData?.exploration?.branch_id;
+    if (explorationBranch) {
+      setCurrentBranchId(explorationBranch);
+    }
+  }, [explorationData?.exploration?.branch_id, setCurrentBranchId]);
 
   useLayoutEffect(() => {
     const noCurSource = dataSourceId && !curSource;
@@ -360,7 +385,7 @@ const ExploreWrapper = () => {
       onSelectDataSource={onSelectDataSource}
       branches={curSource?.branches || []}
       onChangeBranch={onChangeBranch}
-      currentBranch={currentBranch?.id}
+      currentBranch={currentBranch}
       params={{
         modalType: modalType?.toLowerCase(),
         delivery: delivery?.toUpperCase() as AlertType,

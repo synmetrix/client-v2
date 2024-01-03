@@ -4,11 +4,21 @@ import { Row, Col, Typography } from "antd";
 import CategoryItemFilter from "@/components/ExploreCubesCategoryItemFilter";
 import type { CubeMember } from "@/types/cube";
 
+import MemberString from "@/assets/member-string.svg";
+import MemberNumber from "@/assets/member-number.svg";
+import MemberSegment from "@/assets/member-segment.svg";
+
 import s from "./index.module.less";
 
 import type { FC } from "react";
 
 const { Paragraph } = Typography;
+
+const memberIcons: Record<string, JSX.Element> = {
+  string: <MemberString />,
+  number: <MemberNumber />,
+  default: <MemberSegment />,
+};
 
 const CategoryItem: FC<CategoryItemProps> = ({
   onAction,
@@ -42,7 +52,12 @@ const CategoryItem: FC<CategoryItemProps> = ({
       <Paragraph className={s.memberSection}>
         <Row justify="space-between" align="middle">
           <Col xs={16}>
-            <a className={cn(s.member)}>{member.shortTitle}</a>
+            <div className={s.memberRow}>
+              <div className={s.memberIcon}>
+                {memberIcons?.[member?.type] || memberIcons.default}
+              </div>
+              <a className={cn(s.member)}>{member.shortTitle}</a>
+            </div>
           </Col>
           <CategoryItemFilter
             isVisible={isFilterVisible}

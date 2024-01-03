@@ -24,7 +24,8 @@ import styles from "./index.module.less";
 
 import type { FC, ReactNode } from "react";
 
-const DEFAULT_ROW_HEIGHT = 20;
+const DEFAULT_ROW_HEIGHT = 36;
+const DEFAULT_HEADER_HEIGHT = 36;
 
 interface ExploreWorkspaceProps {
   loading: boolean;
@@ -92,7 +93,8 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
   });
 
   const tableHeight = useMemo(
-    () => DEFAULT_ROW_HEIGHT * explorationState.rows.length + 30,
+    () =>
+      DEFAULT_ROW_HEIGHT * explorationState.rows.length + DEFAULT_HEADER_HEIGHT,
     [explorationState.rows.length]
   );
 
@@ -142,7 +144,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     <ExploreDataSection
       key="dataSec"
       width={width}
-      height={isScreenshotMode ? tableHeight : undefined}
+      height={isScreenshotMode ? tableHeight : 450}
       selectedQueryMembers={selectedQueryMembers}
       onExec={onRunQuery}
       onQueryChange={onQueryChange}
@@ -179,6 +181,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
   );
 
   const Layout = !!!dataSources?.length ? AppLayout : SidebarLayout;
+  const showFiltersSection = !!state.filtersCount;
 
   return (
     <Layout
@@ -193,15 +196,17 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
         <div id="data-view">
           {dataSection}
 
-          <ExploreFiltersSection
-            key="filtersSec"
-            availableQueryMembers={availableQueryMembers}
-            selectedQueryMembers={selectedQueryMembers}
-            onToggleSection={onToggleSection}
-            onMemberChange={updateMember}
-            state={state}
-            isActive={collapseState.activePanelKey.includes("filtersSec")}
-          />
+          {showFiltersSection && (
+            <ExploreFiltersSection
+              key="filtersSec"
+              availableQueryMembers={availableQueryMembers}
+              selectedQueryMembers={selectedQueryMembers}
+              onToggleSection={onToggleSection}
+              onMemberChange={updateMember}
+              state={state}
+              isActive={collapseState.activePanelKey.includes("filtersSec")}
+            />
+          )}
         </div>
       ) : (
         <NoDataSource

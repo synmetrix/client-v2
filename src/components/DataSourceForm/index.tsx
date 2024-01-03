@@ -44,7 +44,12 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
 
   return (
     <Card
-      style={shadow === false ? { boxShadow: "0 0 0 0" } : undefined}
+      style={{
+        boxShadow: shadow === false ? "0 0 0 0" : undefined,
+      }}
+      bodyStyle={{
+        padding: 0,
+      }}
       bordered={bordered}
     >
       <Spin spinning={loading}>

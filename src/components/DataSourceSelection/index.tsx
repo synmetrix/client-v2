@@ -32,7 +32,9 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <Title level={3}>{t("title")}</Title>
+      <Title level={3} style={{ marginTop: 0 }}>
+        {t("title")}
+      </Title>
       <Text>{t("text")}</Text>
       <Title level={5}>{t("subtitle")}</Title>
       <SearchInput

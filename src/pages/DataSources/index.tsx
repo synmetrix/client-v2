@@ -204,12 +204,11 @@ export const DataSources = ({
       </Spin>
 
       <Modal
-        width={1000}
-        afterClose={clean}
         open={defaultOpen}
         onClose={onClose}
-        destroyOnClose
         closable
+        afterClose={clean}
+        width={1000}
       >
         <DataSourceForm
           onFinish={onFormFinish}

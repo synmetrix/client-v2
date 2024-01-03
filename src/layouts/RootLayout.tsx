@@ -41,7 +41,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 
   return (
     <ConfigProvider
-      theme={themeProvider}
+      theme={themeProvider as any}
       locale={antLocales[language as keyof typeof antLocales]}
     >
       <UrqlProvider value={URQLClient()}>{children}</UrqlProvider>

@@ -1,4 +1,4 @@
-import { Col, Collapse, Radio, Row, Space } from "antd";
+import { Col, Radio, Row, Space } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import { useSetState } from "ahooks";
@@ -9,23 +9,26 @@ import Button from "@/components/Button";
 import VirtualTable, { cellRenderer } from "@/components/VirtualTable";
 import PrismCode from "@/components/PrismCode";
 import ComponentSwitcher from "@/components/ComponentSwitcher";
+import RestAPI from "@/components/RestAPI";
 import genName from "@/utils/helpers/genName";
+import type { DataSchemaFormValues } from "@/components/ExploreSettingsForm";
 import ExploreSettingsForm from "@/components/ExploreSettingsForm";
 import type { ExploreWorkspaceState } from "@/hooks/useExploreWorkspace";
 import type { SortBySet } from "@/components/VirtualTable";
 import type { ErrorMessage } from "@/types/errorMessage";
 import type { CubeMember } from "@/types/cube";
 import type { ExplorationState } from "@/types/exploration";
+import EmptyExploration from "@/components/EmptyExploration";
+import membersToCubeQuery from "@/utils/helpers/membersToCubeQuery";
+import type { Branch, DataSourceInfo } from "@/types/dataSource";
 
 import AlertIcon from "@/assets/alert-logs.svg";
 import ReportIcon from "@/assets/report-logs.svg";
 
 import s from "./index.module.less";
 
-import type { FC, ReactNode } from "react";
 import type { CollapsePanelProps, RadioChangeEvent } from "antd";
-
-const MAX_ROWS_LIMIT = 10000;
+import type { FC, ReactNode } from "react";
 
 type SortUpdater = (nextSortBy: SortBySet[]) => void;
 
@@ -33,11 +36,13 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   width?: number;
   height?: number;
   onToggleSection: (section: string) => void;
-  onSectionChange: (radioEvent: RadioChangeEvent) => void;
+  onSectionChange: (value: string) => void;
   onOpenModal: (type: string) => void;
   onExec: any;
   onQueryChange: (query: string, ...args: any) => void | SortUpdater;
   disabled: boolean;
+  dataSource?: DataSourceInfo;
+  currentBranch?: Branch;
   state: ExploreWorkspaceState;
   queryState: ExplorationState;
   disableButtons?: boolean;
@@ -52,31 +57,25 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   loading?: boolean;
 }
 
-const { Panel } = Collapse;
-
 const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const {
     width,
     height,
-    onToggleSection = () => {},
+    dataSource,
+    currentBranch,
     onSectionChange = () => {},
     onOpenModal = () => {},
     onExec = () => {},
     onQueryChange = () => {},
     state: workspaceState,
     queryState,
-    isActive,
     selectedQueryMembers,
     disableSectionChange,
-    disableSettings,
-    className,
-    emptyDesc,
     screenshotMode,
     rowHeight,
     disabled,
     loading = false,
     disableButtons,
-    ...restProps
   } = props;
   const { t } = useTranslation(["explore", "common"]);
 
@@ -84,33 +83,33 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     section: workspaceState?.dataSection || "sql",
   });
 
-  const formConfig = {
-    rows: {
-      label: t("data_section.rows_limit"),
-      type: "number",
-      defaultValue: 1000,
-      min: 1,
-      max: MAX_ROWS_LIMIT,
-      rules: {
-        validate: (val: number) =>
-          !isNaN(val) && val > 0 && val <= MAX_ROWS_LIMIT,
-      },
-    },
-    offset: {
-      label: t("data_section.additional_offset"),
-      type: "number",
-      min: 0,
-      defaultValue: 0,
-      rules: {
-        validate: (val: number) => !isNaN(val) && val >= 0,
-      },
-    },
-  };
+  // const formConfig = {
+  //   rows: {
+  //     label: t("data_section.rows_limit"),
+  //     type: "number",
+  //     defaultValue: 1000,
+  //     min: 1,
+  //     max: MAX_ROWS_LIMIT,
+  //     rules: {
+  //       validate: (val: number) =>
+  //         !isNaN(val) && val > 0 && val <= MAX_ROWS_LIMIT,
+  //     },
+  //   },
+  //   offset: {
+  //     label: t("data_section.additional_offset"),
+  //     type: "number",
+  //     min: 0,
+  //     defaultValue: 0,
+  //     rules: {
+  //       validate: (val: number) => !isNaN(val) && val >= 0,
+  //     },
+  //   },
+  // };
 
   const {
     order,
     hitLimit,
-    limit,
+    limit = 1000,
     error,
     rows,
     columns,
@@ -118,17 +117,19 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     settings,
     skippedMembers = [],
     offset = 0,
-    settings: { hideCubeNames, hideIndexColumn },
+    // settings: { hideCubeNames, hideIndexColumn },
   } = queryState;
 
   const onRadioClick = (e: RadioChangeEvent) => {
-    const { target } = e;
+    const {
+      target: { value },
+    } = e;
 
     updateState({
-      section: target.value,
+      section: value,
     });
 
-    onSectionChange(e);
+    onSectionChange(value as string);
   };
 
   useEffect(() => {
@@ -143,8 +144,6 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     selectedQueryMembers,
     settings: queryState?.settings,
   });
-
-  const tableEmptyDesc = emptyDesc || t("data_section.empty_desc");
 
   const Table = useMemo(() => {
     const messages: ErrorMessage[] = [];
@@ -199,11 +198,12 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         sortBy={order}
         cellRenderer={(args) => cellRenderer(args, membersIndex)}
         onSortUpdate={onQueryChange("order") as SortUpdater}
-        emptyDesc={tableEmptyDesc}
+        emptyComponent={<EmptyExploration />}
+        className={s.table}
         settings={settings}
         rowHeight={rowHeight}
         footer={(tableRows) => (
-          <div>
+          <div className={s.tableFooter}>
             {t("data_section.shown")}: {tableRows.length} / {limit},{" "}
             {t("data_section.offset")}: {offset}, {t("data_section.columns")}:{" "}
             {columns.length}
@@ -224,7 +224,6 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     rows,
     order,
     onQueryChange,
-    tableEmptyDesc,
     settings,
     rowHeight,
     limit,
@@ -236,12 +235,37 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const Sql = useMemo(() => {
     const { rawSql } = queryState;
 
-    return <PrismCode lang="sql" code={rawSql?.sql || ""} />;
-  }, [queryState]);
+    return (
+      <>
+        {rawSql?.sql && <span className={s.sqlHeader}>{t("SQL")}</span>}
+        <PrismCode lang="sql" code={rawSql?.sql || ""} />
+      </>
+    );
+  }, [queryState, t]);
 
-  const onSubmit = (values: any) => {
-    if (values.rows !== limit) {
-      onQueryChange("limit", values.rows);
+  const RestApi = useMemo(() => {
+    if (dataSource?.id && currentBranch?.id) {
+      return (
+        <RestAPI
+          dataSourceId={dataSource.id}
+          branchId={currentBranch.id}
+          query={membersToCubeQuery(selectedQueryMembers)}
+          limit={queryState?.limit}
+          offset={queryState?.offset}
+        />
+      );
+    }
+  }, [
+    currentBranch?.id,
+    dataSource?.id,
+    queryState?.limit,
+    queryState?.offset,
+    selectedQueryMembers,
+  ]);
+
+  const onChange = (values: Partial<DataSchemaFormValues>) => {
+    if (values.limit !== limit) {
+      onQueryChange("limit", values.limit);
     }
     if (values.offset !== offset) {
       onQueryChange("offset", values.offset);
@@ -269,7 +293,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                     limit,
                     offset,
                   }}
-                  onChange={onSubmit}
+                  onChange={onChange}
                 />
               </div>
               <Button
@@ -324,10 +348,14 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         </Radio.Group>
       </div>
 
-      <ComponentSwitcher
-        activeItemIndex={currState.section === "sql" ? 1 : 0}
-        items={[Table, Sql]}
-      />
+      <div className={s.wrapper}>
+        <ComponentSwitcher
+          activeItemIndex={["results", "sql", "rest"].findIndex(
+            (sec) => sec === currState.section
+          )}
+          items={[Table, Sql, RestApi]}
+        />
+      </div>
     </div>
   );
 };

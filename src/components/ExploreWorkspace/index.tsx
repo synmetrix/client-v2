@@ -1,4 +1,5 @@
-import { Spin } from "antd";
+import { Space, Spin } from "antd";
+import Title from "antd/es/typography/Title";
 
 import SidebarLayout from "@/layouts/SidebarLayout";
 import ExploreDataSection from "@/components/ExploreDataSection";
@@ -12,7 +13,7 @@ import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
 import pickKeys from "@/utils/helpers/pickKeys";
 import useAppSettings from "@/hooks/useAppSettings";
-import type { DataSourceInfo } from "@/types/dataSource";
+import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
 import type { ExplorationData, RawSql } from "@/types/exploration";
 import type { Meta } from "@/types/cube";
@@ -32,6 +33,7 @@ interface ExploreWorkspaceProps {
   meta: Meta;
   source?: DataSourceInfo;
   dataSources?: DataSourceInfo[];
+  currentBranch?: Branch;
   explorationData?: ExplorationData;
   rawSql?: RawSql;
   runQuery: (state: object, settings: QuerySettings) => void;
@@ -45,6 +47,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
   const {
     header = null,
     subTitle = "Explore",
+    currentBranch,
     source: dataSource,
     dataSources,
     meta,
@@ -88,9 +91,10 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     rawSql,
   });
 
-  const { collapseState, state, onToggleSection } = useExploreWorkspace({
-    selectedQueryMembers,
-  });
+  const { collapseState, state, onToggleSection, onDataSectionChange } =
+    useExploreWorkspace({
+      selectedQueryMembers,
+    });
 
   const tableHeight = useMemo(
     () =>
@@ -146,6 +150,8 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
       width={width}
       height={isScreenshotMode ? tableHeight : 450}
       selectedQueryMembers={selectedQueryMembers}
+      dataSource={dataSource}
+      currentBranch={currentBranch}
       onExec={onRunQuery}
       onQueryChange={onQueryChange}
       onOpenModal={onOpenModal}
@@ -157,7 +163,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
       screenshotMode={isScreenshotMode}
       rowHeight={DEFAULT_ROW_HEIGHT}
       onToggleSection={onToggleSection}
-      onSectionChange={(e) => onToggleSection(e.target.value)}
+      onSectionChange={(value: string) => onDataSectionChange(value)}
       isActive={collapseState.activePanelKey.includes("dataSec")}
     />
   );
@@ -181,15 +187,22 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
   );
 
   const Layout = !!!dataSources?.length ? AppLayout : SidebarLayout;
-  const showFiltersSection = !!state.filtersCount;
+  const showFiltersSection =
+    !!state.filtersCount && state.dataSection === "results";
 
   return (
     <Layout
       title={dataSource?.name || "Explore"}
       divider
-      subTitle={subTitle}
+      subTitle={
+        <Space size={7} align="center">
+          {icon}
+          <Title className={styles.sidebarTitle} level={4}>
+            {subTitle}
+          </Title>
+        </Space>
+      }
       items={sidebar}
-      icon={icon}
       burgerTitle={subTitle as any}
     >
       {!!dataSources?.length ? (

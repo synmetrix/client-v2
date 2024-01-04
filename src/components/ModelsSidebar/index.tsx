@@ -94,7 +94,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
   return (
     <Space
-      size="middle"
+      size={12}
       direction="vertical"
       data-testid="models-sidebar"
       style={{ display: "flex" }}

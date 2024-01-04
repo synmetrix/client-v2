@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { Space, message } from "antd";
-import { useLocalStorageState } from "ahooks";
+import { useLocalStorageState, useTrackedEffect } from "ahooks";
 
 import type { FetchDatasetOutput } from "@/graphql/generated";
 import {
@@ -22,7 +22,7 @@ import useLocation from "@/hooks/useLocation";
 import trackEvent from "@/utils/helpers/trackEvent";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
-import useAnalyticsQuery from "@/hooks/useAnalyticsQuery";
+import useAnalyticsQuery, { initialState } from "@/hooks/useAnalyticsQuery";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useAppSettings from "@/hooks/useAppSettings";
 import type { Exploration, ExplorationData, RawSql } from "@/types/exploration";
@@ -81,7 +81,7 @@ export const Explore = ({
 
   const header = useMemo(
     () => (
-      <Space className={styles.wrapper} size={16} direction="vertical">
+      <Space className={styles.wrapper} size={12} direction="vertical">
         <DataSourcesMenu
           selectedId={dataSource?.id as string}
           entities={dataSources || []}
@@ -118,6 +118,7 @@ export const Explore = ({
         explorationData={explorationData}
         runQuery={runQuery}
         onOpenModal={onOpenModal}
+        currentBranch={currentBranch}
         source={dataSource}
         dataSources={dataSources}
         meta={meta}
@@ -159,7 +160,7 @@ const ExploreWrapper = () => {
   );
   const { dataSourceId, explorationId, modalType, delivery } = useParams();
 
-  const { state: playgroundState } = useAnalyticsQuery();
+  const { state: playgroundState, doReset } = useAnalyticsQuery();
   const { withAuthPrefix } = useAppSettings();
   const [createData, execCreateMutation] = useCreateExplorationMutation();
   const [sqlData, execSqlGenMutation] = useGenSqlMutation();
@@ -184,6 +185,7 @@ const ExploreWrapper = () => {
   const [metaData, execMetaQuery] = useFetchMetaQuery({
     variables: {
       datasource_id: dataSourceId,
+      branch_id: currentBranchId,
     },
     pause: true,
   });
@@ -264,11 +266,13 @@ const ExploreWrapper = () => {
     }
   }, [createData.data, dataSourcePath, setLocation]);
 
-  useEffect(() => {
-    if (dataSourceId) {
+  useTrackedEffect(() => {
+    if (dataSourceId && currentBranchId) {
       execMetaQuery();
+      doReset(initialState);
+      delete currentExploration.data;
     }
-  }, [dataSourceId, execMetaQuery]);
+  }, [dataSourceId, currentBranchId]);
 
   useEffect(() => {
     if (explorationId) {
@@ -291,7 +295,7 @@ const ExploreWrapper = () => {
         (b) => b.status === Branch_Statuses_Enum.Active
       );
 
-    if (curBranch?.id && curBranch?.id !== currentBranchId) {
+    if (curBranch?.id && curBranch.id !== currentBranchId) {
       setCurrentBranchId(curBranch?.id);
     }
 
@@ -324,10 +328,14 @@ const ExploreWrapper = () => {
 
   useEffect(() => {
     const explorationBranch = explorationData?.exploration?.branch_id;
-    if (explorationBranch) {
+    if (explorationBranch && explorationBranch !== currentBranchId) {
       setCurrentBranchId(explorationBranch);
     }
-  }, [explorationData?.exploration?.branch_id, setCurrentBranchId]);
+  }, [
+    currentBranchId,
+    explorationData?.exploration?.branch_id,
+    setCurrentBranchId,
+  ]);
 
   useLayoutEffect(() => {
     const noCurSource = dataSourceId && !curSource;

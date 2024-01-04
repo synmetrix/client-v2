@@ -21,7 +21,9 @@ export default {
     ),
   json: (value: string): boolean => {
     try {
-      JSON.parse(value);
+      const json = JSON.parse(value);
+
+      if (typeof json !== "object" || json === null) return false;
       return true;
     } catch (e) {
       return false;

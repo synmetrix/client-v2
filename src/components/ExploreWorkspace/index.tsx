@@ -25,8 +25,8 @@ import styles from "./index.module.less";
 
 import type { FC, ReactNode } from "react";
 
-const DEFAULT_ROW_HEIGHT = 36;
-const DEFAULT_HEADER_HEIGHT = 36;
+const DEFAULT_ROW_HEIGHT = 20;
+const DEFAULT_HEADER_HEIGHT = 30;
 
 interface ExploreWorkspaceProps {
   loading: boolean;
@@ -148,7 +148,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     <ExploreDataSection
       key="dataSec"
       width={width}
-      height={isScreenshotMode ? tableHeight : 450}
+      height={isScreenshotMode ? tableHeight : 400}
       selectedQueryMembers={selectedQueryMembers}
       dataSource={dataSource}
       currentBranch={currentBranch}

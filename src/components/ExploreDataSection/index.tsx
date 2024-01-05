@@ -22,8 +22,8 @@ import EmptyExploration from "@/components/EmptyExploration";
 import membersToCubeQuery from "@/utils/helpers/membersToCubeQuery";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 
-import AlertIcon from "@/assets/alert-logs.svg";
-import ReportIcon from "@/assets/report-logs.svg";
+import AlertIcon from "@/assets/alert.svg";
+import ReportIcon from "@/assets/report.svg";
 
 import s from "./index.module.less";
 
@@ -287,19 +287,17 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
                 {t("data_section.run_query")}
                 <RightOutlined />
               </Button>
-              <div className={s.popoverInner}>
-                <ExploreSettingsForm
-                  defaultValues={{
-                    limit,
-                    offset,
-                  }}
-                  onChange={onChange}
-                />
-              </div>
+              <ExploreSettingsForm
+                defaultValues={{
+                  limit,
+                  offset,
+                }}
+                onChange={onChange}
+              />
               <Button
                 icon={<AlertIcon />}
                 className={s.alertButton}
-                type="primary"
+                type="default"
                 onClick={() => onOpenModal("alert")}
                 disabled={disableButtons}
               >
@@ -308,7 +306,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
               <Button
                 icon={<ReportIcon />}
                 className={s.alertButton}
-                type="primary"
+                type="default"
                 onClick={() => onOpenModal("report")}
                 disabled={disableButtons}
               >

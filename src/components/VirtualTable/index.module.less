@@ -49,12 +49,14 @@
   font-size: 12px;
   text-transform: uppercase;
   background: #f5f3f5;
-  border-radius: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .table :global(.ReactVirtualized__Table__headerColumn) {
   display: flex;
   align-items: center;
+  align-self: baseline;
   justify-content: start;
   width: 100%;
   overflow: hidden;
@@ -71,18 +73,25 @@
 
 .table :global(.ReactVirtualized__Table__row) {
   color: rgba(0, 0, 0, 0.5);
-  font-weight: 700;
   font-size: 12px;
+}
+
+.table :global(.ReactVirtualized__Table__row):hover {
+  background: #e6e6e6 !important;
 }
 
 .table :global(.ReactVirtualized__Table__rowColumn) {
   padding: 13px 0px;
-  font-weight: 700;
 }
 
 .table :global(.ReactVirtualized__Table__rowColumn:first-of-type),
 .table :global(.ReactVirtualized__Table__headerColumn:first-of-type) {
   margin-left: 18px;
+}
+
+.table :global(.ReactVirtualized__Table__Grid) {
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .indexColumn {

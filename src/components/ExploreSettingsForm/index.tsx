@@ -44,7 +44,7 @@ const ExploreSettingsForm: FC<ExploreSettingsFormProps> = ({
     <Space direction="horizontal" size={0}>
       <Form id="explore-settings-form" layout="horizontal">
         <Row gutter={[10, 10]}>
-          <Col xs={12}>
+          <Col xs={24} sm={12}>
             <Input
               className={s.input}
               rules={{ required: true }}
@@ -58,7 +58,7 @@ const ExploreSettingsForm: FC<ExploreSettingsFormProps> = ({
               addonBefore={t("data_section.row_limit")}
             />
           </Col>
-          <Col xs={12}>
+          <Col xs={24} sm={12}>
             <Input
               className={s.input}
               rules={{ required: true }}

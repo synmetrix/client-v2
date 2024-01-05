@@ -158,6 +158,7 @@ const ExploreWrapper = () => {
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
     `${currentDataSourceId}:exploreCurrentBranch`
   );
+
   const { dataSourceId, explorationId, modalType, delivery } = useParams();
 
   const { state: playgroundState, doReset } = useAnalyticsQuery();
@@ -182,10 +183,24 @@ const ExploreWrapper = () => {
     [teamData]
   ) as DataSourceInfo[];
 
+  const [curSource, currentBranch] = useMemo(() => {
+    const source =
+      (datasources || []).find((d) => d.id === currentDataSourceId) ||
+      datasources?.[0];
+
+    const branch =
+      (source?.branches || []).find((b) => b.id === currentBranchId) ||
+      (source?.branches || []).find(
+        (b) => b.status === Branch_Statuses_Enum.Active
+      );
+
+    return [source, branch];
+  }, [currentBranchId, currentDataSourceId, datasources]);
+
   const [metaData, execMetaQuery] = useFetchMetaQuery({
     variables: {
-      datasource_id: dataSourceId,
-      branch_id: currentBranchId,
+      datasource_id: curSource?.id,
+      branch_id: currentBranch?.id,
     },
     pause: true,
   });
@@ -267,12 +282,12 @@ const ExploreWrapper = () => {
   }, [createData.data, dataSourcePath, setLocation]);
 
   useTrackedEffect(() => {
-    if (dataSourceId && currentBranchId) {
+    if (curSource?.id && currentBranch?.id) {
       execMetaQuery();
       doReset(initialState);
       delete currentExploration.data;
     }
-  }, [dataSourceId, currentBranchId]);
+  }, [curSource?.id, currentBranch?.id]);
 
   useEffect(() => {
     if (explorationId) {
@@ -282,25 +297,6 @@ const ExploreWrapper = () => {
       });
     }
   }, [execCurrentExploration, execSqlGenMutation, explorationId]);
-
-  const curSource = useMemo(
-    () => (datasources || []).find((d) => d.id === dataSourceId),
-    [dataSourceId, datasources]
-  );
-
-  const currentBranch = useMemo(() => {
-    const curBranch =
-      (curSource?.branches || []).find((b) => b.id === currentBranchId) ||
-      curSource?.branches?.find(
-        (b) => b.status === Branch_Statuses_Enum.Active
-      );
-
-    if (curBranch?.id && curBranch.id !== currentBranchId) {
-      setCurrentBranchId(curBranch?.id);
-    }
-
-    return curBranch;
-  }, [curSource?.branches, currentBranchId, setCurrentBranchId]);
 
   const explorationData: ExplorationData | undefined = useMemo(() => {
     if (explorationId && currentExploration?.data) {

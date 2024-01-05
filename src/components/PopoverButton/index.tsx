@@ -65,8 +65,10 @@ const PopoverButton: FC<PopoverButtonProps> = ({
       }}
       {...buttonProps}
     >
-      {icon}
-      {actionText || null}
+      <span>
+        {icon}
+        {actionText || null}
+      </span>
     </Button>
   );
 
@@ -84,7 +86,11 @@ const PopoverButton: FC<PopoverButtonProps> = ({
 
   if (popoverType === "dropdown") {
     return (
-      <Dropdown disabled={disabled} {...(restProps as DropdownProps)}>
+      <Dropdown
+        {...(restProps as DropdownProps)}
+        disabled={disabled}
+        onOpenChange={onVisChange}
+      >
         {actionButton}
       </Dropdown>
     );
@@ -93,9 +99,9 @@ const PopoverButton: FC<PopoverButtonProps> = ({
   return (
     <div style={{ display: "inline-block" }} onClick={stopPropagation}>
       <Popover
+        {...(restProps as PopoverProps)}
         open={visibleState}
         onOpenChange={onVisChange}
-        {...(restProps as PopoverProps)}
       >
         {actionButton}
       </Popover>

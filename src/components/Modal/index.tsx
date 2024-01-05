@@ -43,7 +43,14 @@ const Modal: FC<ModalProps> = ({
           },
         }}
         onClose={onClose}
-        closeIcon={closable && <CloseIcon className={styles.closeIcon} />}
+        closeIcon={
+          closable && (
+            <CloseIcon
+              className={styles.closeIcon}
+              data-testid="modal-close-button"
+            />
+          )
+        }
         center
       >
         <Suspense>{children}</Suspense>

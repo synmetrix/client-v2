@@ -2,14 +2,24 @@ import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 
 import { alerts } from "@/mocks/alerts";
-import { queryStateMock } from "@/mocks/queryState";
 
 import AlertModal from "./";
 
+vi.mock("@/hooks/useAlerts", () => ({
+  default: () => ({
+    createAlert: () => {},
+    updateAlert: () => {},
+    onSendTest: () => {},
+    mutations: {
+      createMutationData: () => {},
+      updateMutationData: () => {},
+      sendTestMutationData: () => {},
+    },
+  }),
+}));
+
 describe("AlertModal", () => {
   const mockAlert = alerts?.[0];
-
-  const mockQuery = queryStateMock;
 
   const mockParams: any = {
     screenshotMode: false,
@@ -18,8 +28,6 @@ describe("AlertModal", () => {
   };
 
   const mockOnClose = vi.fn();
-  const mockOnSendTest = vi.fn();
-  const mockOnSubmit = vi.fn();
   const mockOnChangeStep = vi.fn();
   const mockOnSelectDelivery = vi.fn();
 
@@ -27,14 +35,10 @@ describe("AlertModal", () => {
     render(
       <AlertModal
         alert={mockAlert}
-        query={mockQuery}
         isOpen={true}
         onClose={mockOnClose}
-        onSendTest={mockOnSendTest}
-        onSubmit={mockOnSubmit}
         onChangeStep={mockOnChangeStep}
         onSelectDelivery={mockOnSelectDelivery}
-        loading={false}
         params={mockParams}
       />
     );
@@ -61,14 +65,10 @@ describe("AlertModal", () => {
   test("renders the AlertTypeSelection when alert and delivery are not present", () => {
     render(
       <AlertModal
-        query={mockQuery}
         isOpen={true}
         onClose={mockOnClose}
-        onSendTest={mockOnSendTest}
-        onSubmit={mockOnSubmit}
         onChangeStep={mockOnChangeStep}
         onSelectDelivery={mockOnSelectDelivery}
-        loading={false}
         params={{
           ...mockParams,
           delivery: undefined,

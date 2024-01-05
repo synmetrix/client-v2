@@ -180,13 +180,7 @@ export const SqlApi = ({
         </Space>
       </Spin>
 
-      <Modal
-        width={1000}
-        open={!!editId}
-        onClose={onClose}
-        closable
-        destroyOnClose
-      >
+      <Modal width={1000} open={!!editId} onClose={onClose} closable>
         <ApiSetup
           isNew={isNew}
           isOnboarding={!!editId}

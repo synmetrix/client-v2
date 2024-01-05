@@ -38,7 +38,9 @@ const MembersForm: FC<MembersFormProps> = ({
 
   return (
     <Form layout="vertical">
-      <Title level={4}>{t("members.members.title")}</Title>
+      <Title level={4} style={{ marginTop: 0 }}>
+        {t("members.members.title")}
+      </Title>
       <Row gutter={[16, 16]}>
         <Col span={24} md={12}>
           <Input

@@ -189,13 +189,7 @@ export const RolesAndAccess: React.FC<RolesAndAccessProps> = ({
         </Spin>
       </Space>
 
-      <Modal
-        width={1000}
-        open={isOpen}
-        onClose={onModalClose}
-        closable
-        destroyOnClose
-      >
+      <Modal width={1000} open={isOpen} onClose={onModalClose} closable>
         <RoleForm
           initialValues={initialValues}
           dataSourceAccess={dataSourceAccess}

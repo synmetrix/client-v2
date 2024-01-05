@@ -44,6 +44,10 @@ vi.mock("react-i18next", () => ({
   },
 }));
 
+vi.mock("@vitjs/runtime", () => ({
+  __esModule: true,
+}));
+
 // runs a cleanup after each test case (e.g. clearing jsdom)
 afterEach(() => {
   cleanup();

@@ -3,8 +3,25 @@ import { render } from "@testing-library/react";
 
 import { Explore } from "./";
 
-vi.mock("@vitjs/runtime", () => ({
-  __esModule: true,
+vi.mock("@/hooks/useAlerts", () => ({
+  default: () => ({
+    createAlert: () => {},
+    updateAlert: () => {},
+    onSendTest: () => {},
+    mutations: {
+      createMutationData: () => {},
+      updateMutationData: () => {},
+      sendTestMutationData: () => {},
+    },
+  }),
+}));
+
+vi.mock("@/hooks/useReports", () => ({
+  default: () => ({
+    createReport: () => {},
+    updateReport: () => {},
+    mutations: { createMutationData: () => {}, updateMutationData: () => {} },
+  }),
 }));
 
 describe("Explore", () => {

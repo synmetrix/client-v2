@@ -145,7 +145,9 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
   return (
     <div>
-      <Title level={3}>{t("title")}</Title>
+      <Title level={3} style={{ marginTop: 0 }}>
+        {t("title")}
+      </Title>
 
       <Text>{t("text")}</Text>
 

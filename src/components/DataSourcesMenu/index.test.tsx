@@ -17,7 +17,7 @@ describe("DataSourcesMenu Component", () => {
         onChange={onChange}
       />
     );
-    const valueElement = screen.getByText("Ecom (demo db)");
+    const valueElement = screen.getByText(dataSourcesMock[0].name);
     expect(valueElement).toBeDefined();
   });
 

@@ -235,9 +235,13 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const Sql = useMemo(() => {
     const { rawSql } = queryState;
 
+    if (!rawSql?.sql) {
+      return <EmptyExploration />;
+    }
+
     return (
       <>
-        {rawSql?.sql && <span className={s.sqlHeader}>{t("SQL")}</span>}
+        <span className={s.sqlHeader}>{t("SQL")}</span>
         <PrismCode lang="sql" code={rawSql?.sql || ""} />
       </>
     );

@@ -83,15 +83,22 @@
   margin-right: 10px;
 }
 
-.buttonGroup {
-  display: flex !important;
-
+.radio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   margin-bottom: 16px;
-  padding: 12px 0 12px;
-  padding-right: 25px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.buttonGroup {
+  display: inline-flex !important;
+  gap: 13px;
+
   text-align: center;
   background: transparent;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
   * {
     background: transparent;
@@ -105,10 +112,14 @@
 
 .buttonGroup :global(.ant-radio-button-wrapper) {
   flex: 1;
+  * {
+    box-shadow: none !important;
+  }
 }
 
 .buttonGroup :global(.ant-radio-button-wrapper-checked) {
   background: transparent;
+
   &::before {
     display: none;
   }
@@ -119,7 +130,6 @@
   }
 
   & > span:nth-child(2) {
-    position: relative;
     display: inline-block;
 
     &::after {

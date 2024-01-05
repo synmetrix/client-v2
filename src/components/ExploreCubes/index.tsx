@@ -175,7 +175,9 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
       <div className={styles.radio}>
         <Radio.Group
           value={state.radioValue}
+          defaultValue={state.radioValue}
           size="small"
+          optionType="button"
           onChange={onFilterChange}
           className={styles.buttonGroup}
         >

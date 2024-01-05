@@ -233,7 +233,7 @@ export const Models: React.FC<ModelsProps> = ({
 
           {dataSource && (
             <Modal
-              open={genSchemaModalVisible}
+              open={!!genSchemaModalVisible}
               onClose={onModalClose}
               width={1004}
             >
@@ -250,9 +250,8 @@ export const Models: React.FC<ModelsProps> = ({
           )}
           <Modal
             width={1004}
-            open={versionsModalVisible}
+            open={!!versionsModalVisible}
             onClose={onModalClose}
-            destroyOnClose
           >
             <VersionsList
               onRestore={onSaveVersion}

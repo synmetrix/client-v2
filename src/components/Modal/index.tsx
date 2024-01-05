@@ -1,49 +1,54 @@
 import { Suspense } from "react";
-import { Modal as BasicModal } from "antd";
-
-import Button from "@/components/Button";
+import { Modal as BasicModal } from "react-responsive-modal";
+import "react-responsive-modal/styles.css";
 
 import CloseIcon from "@/assets/close.svg";
 
 import styles from "./index.module.less";
 
 import type { FC } from "react";
-import type { ModalProps as BasicModalProps } from "antd";
+import type { ModalProps as BasicModalProps } from "react-responsive-modal";
 
 interface ModalProps extends BasicModalProps {
-  onClose: () => void;
+  width?: number | string;
+  closable?: boolean;
+  afterClose?: () => void;
 }
 
 const Modal: FC<ModalProps> = ({
   children,
-  closable,
-  footer = null,
+  width = 1000,
+  closable = false,
+  afterClose = () => {},
   ...props
 }) => {
+  const onClose = () => {
+    props.onClose?.();
+    setTimeout(() => {
+      afterClose();
+    }, props.animationDuration || 300);
+  };
+
   return (
-    <BasicModal
-      {...props}
-      footer={footer}
-      onCancel={props.onCancel || props.onClose}
-      closable={false}
-      maskStyle={{ backdropFilter: "blur(10px)" }}
-    >
-      <Suspense>
-        <div className={styles.overlay} onClick={props.onClose}>
-          {closable && (
-            <Button
-              className={styles.closeBtn}
-              onClick={props.onClose}
-              data-testid="modal-close-button"
-              type="text"
-            >
-              <CloseIcon className={styles.closeIcon} />
-            </Button>
-          )}
-        </div>
-        {children}
-      </Suspense>
-    </BasicModal>
+    <>
+      <BasicModal
+        {...props}
+        classNames={{
+          modal: styles.modal,
+        }}
+        styles={{
+          modal: {
+            width: "calc(100% - 100px)",
+            maxWidth: width,
+          },
+        }}
+        onClose={onClose}
+        closeIcon={closable && <CloseIcon className={styles.closeIcon} />}
+        center
+      >
+        <Suspense>{children}</Suspense>
+      </BasicModal>
+    </>
   );
 };
 

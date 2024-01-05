@@ -32,7 +32,9 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <Title level={3}>{t("title")}</Title>
+      <Title level={3} style={{ marginTop: 0 }}>
+        {t("title")}
+      </Title>
       <Text>{t("text")}</Text>
       <Title level={5}>{t("subtitle")}</Title>
       <SearchInput
@@ -46,7 +48,14 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
             db.name?.toLowerCase().includes(keyword.toLowerCase())
           )
           .map((tile) => (
-            <Col className={styles.tile} key={tile.name} span={4}>
+            <Col
+              className={styles.tile}
+              key={tile.name}
+              xs={24}
+              sm={12}
+              md={8}
+              lg={4}
+            >
               <FormTile
                 title={tile.name || ""}
                 icon={tile.icon}

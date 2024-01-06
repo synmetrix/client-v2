@@ -91,7 +91,7 @@ export const Explore = ({
           branches={branches}
           currentBranch={currentBranch}
           onChangeBranch={onChangeBranch}
-          disableCreate
+          disableActions
         />
       </Space>
     ),

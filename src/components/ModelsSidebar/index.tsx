@@ -25,17 +25,17 @@ import type { MenuProps } from "antd";
 
 export interface ModelsSidebarProps {
   dataSourceId?: string | null;
-  branchMenu: MenuProps["items"];
   ideMenu: MenuProps["items"];
   branches: Branch[];
   currentBranch?: Branch;
-  onChangeBranch: (branchId?: string) => void;
   docs: string;
   version?: string;
   files: Dataschema[];
   onSelectFile: (schema: string, hash?: string) => void;
   onSetDefault: (branchId?: string) => void;
   onCreateBranch: (name: string) => Promise<void>;
+  onChangeBranch: (branchId?: string) => void;
+  onDeleteBranch: (branchId: string) => void;
   onSchemaDelete: (schema: Dataschema) => void;
   onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
   onCreateFile: (values: Partial<Dataschema>) => void;
@@ -51,7 +51,6 @@ const icons = {
 const ModelsSidebar: FC<ModelsSidebarProps> = ({
   branches,
   currentBranch,
-  branchMenu,
   ideMenu,
   onChangeBranch,
   onSetDefault,
@@ -61,6 +60,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   onCreateFile,
   onSelectFile,
   onCreateBranch,
+  onDeleteBranch,
   onSchemaDelete,
   onSchemaUpdate,
   dataSources,
@@ -105,11 +105,12 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
         onChange={onDataSourceChange}
       />
       <BranchSelection
-        branchMenu={branchMenu}
         branches={branches}
         currentBranch={currentBranch}
         onChangeBranch={onChangeBranch}
         onCreateBranch={onCreateBranch}
+        onDeleteBranch={onDeleteBranch}
+        onSetDefault={onSetDefault}
       />
 
       <div className={styles.inner}>
@@ -134,14 +135,6 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
           <div className={styles.version} title={version}>
             {version}
           </div>
-          {currentBranch && currentBranch.status !== "active" && (
-            <Button
-              className={styles.default}
-              onClick={() => onSetDefault(currentBranch?.id)}
-            >
-              {t("sidebar.set_as_default")}
-            </Button>
-          )}
         </Space>
 
         <Space className={styles.space} size={16} direction="vertical">

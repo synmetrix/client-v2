@@ -13405,7 +13405,10 @@ export const TeamDataDocument = gql`
         db_type
         created_at
         updated_at
-        branches(where: { status: { _in: [active, created] } }) {
+        branches(
+          where: { status: { _in: [active, created] } }
+          order_by: { created_at: desc }
+        ) {
           ...BranchesFields
         }
         sql_credentials {
@@ -13487,7 +13490,10 @@ export const SubTeamDataDocument = gql`
         db_type
         created_at
         updated_at
-        branches(where: { status: { _in: [active, created] } }) {
+        branches(
+          where: { status: { _in: [active, created] } }
+          order_by: { created_at: desc }
+        ) {
           ...BranchesFields
         }
         sql_credentials {

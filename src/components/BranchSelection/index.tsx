@@ -121,7 +121,6 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
             </div>
           );
         }}
-        defaultOpen
         placement="bottomRight"
         popupClassName={styles.popup}
         onChange={onChangeBranch}

@@ -65,7 +65,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
         value={currentBranch?.id}
         optionLabelProp="valueLabel"
         suffixIcon={<DownOutlined />}
-        options={branches.map((b) => ({
+        options={(branches || []).map((b) => ({
           value: b.id,
           label:
             b.status === Branch_Statuses_Enum.Active

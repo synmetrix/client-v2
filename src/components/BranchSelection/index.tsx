@@ -22,7 +22,7 @@ interface BranchSelectionProps {
   branches: Branch[];
   currentBranch?: Branch;
   disableActions?: boolean;
-  onChangeBranch: (branchId: string) => void;
+  onChangeBranch?: (branchId: string) => void;
   onCreateBranch?: (name: string) => void;
   onSetDefault?: (branchId: string) => void;
   onDeleteBranch?: (branchId: string) => void;
@@ -32,10 +32,10 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
   branches,
   currentBranch,
   disableActions,
-  onChangeBranch,
-  onCreateBranch,
-  onSetDefault,
-  onDeleteBranch,
+  onChangeBranch = () => {},
+  onCreateBranch = () => {},
+  onSetDefault = () => {},
+  onDeleteBranch = () => {},
 }) => {
   const { t } = useTranslation(["models", "common"]);
 
@@ -46,12 +46,12 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
 
   const onDefault = (e: any, branchId: string) => {
     e.stopPropagation();
-    onSetDefault?.(branchId);
+    onSetDefault(branchId);
   };
 
   const onDelete = (e: any, branchId: string) => {
     e.stopPropagation();
-    onDeleteBranch?.(branchId);
+    onDeleteBranch(branchId);
   };
 
   return (

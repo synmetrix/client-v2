@@ -125,6 +125,7 @@ interface VirtualTableProps {
   loading?: boolean;
   loadingTip?: string;
   emptyDesc?: ReactNode;
+  emptyComponent?: ReactNode;
   orderByFn?: OrderByFn<object>;
   footer?: (rows: object[]) => void;
   sortDisabled?: boolean;
@@ -146,6 +147,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
   headerHeight = 30,
   rowHeight = 30,
   emptyDesc = "No Data",
+  emptyComponent,
   onSortUpdate = () => {},
   messages = [],
   sortDisabled = false,
@@ -351,10 +353,14 @@ const VirtualTable: FC<VirtualTableProps> = ({
     return tw;
   }, [flatHeaders.length, hideIndexColumn]);
 
+  const defaultEmptyComponent = (
+    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={emptyDesc} />
+  );
+
   return (
     <Spin spinning={loading} tip={loadingTip}>
       {isEmpty ? (
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={emptyDesc} />
+        emptyComponent || defaultEmptyComponent
       ) : (
         <>
           {messages.map((msg) => (
@@ -369,7 +375,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
             className={cn(className)}
             style={{
               width: `min(100%, ${width})`,
-              height: height + 50,
+              height: height + 10,
               overflow: "auto",
             }}
           >
@@ -383,7 +389,10 @@ const VirtualTable: FC<VirtualTableProps> = ({
                 rowHeight={rowHeight}
                 rowCount={rows.length}
                 rowGetter={({ index }) => rows[index]}
-                rowStyle={{ width: tableWidth }}
+                rowStyle={({ index }) => ({
+                  width: tableWidth,
+                  background: index % 2 ? "rgba(249, 249, 249, 1)" : "none",
+                })}
                 noRowsRenderer={noRowsRenderer}
                 overscanRowCount={3}
                 onScroll={(values) => onScroll?.({ ...values, rowHeight })}

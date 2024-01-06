@@ -1,26 +1,19 @@
-import { Col, Input, Row, Space } from "antd";
-import {
-  DeleteOutlined,
-  DownOutlined,
-  EditOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { useResponsive } from "ahooks";
+import { Col, Row, Space } from "antd";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
 import Button from "@/components/Button";
-import Select from "@/components/Select";
 import SearchInput from "@/components/SearchInput";
 import PopoverButton from "@/components/PopoverButton";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
 import DataSchemaForm from "@/components/DataSchemaForm";
 import useSubstringSearch from "@/hooks/useSubstringSearch";
 import Highlight from "@/components/Highlight";
+import BranchSelection from "@/components/BranchSelection";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
 
-import BranchIcon from "@/assets/branch.svg";
 import VerticalDots from "@/assets/dots-vertical.svg";
 import YMLIcon from "@/assets/yml-flie.svg";
 import JSIcon from "@/assets/js-file.svg";
@@ -75,11 +68,8 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   dataSourceId,
 }) => {
   const { t } = useTranslation(["models", "common"]);
-  const windowSize = useResponsive();
-  const isMobile = windowSize.md === false;
 
   const [isCreateFormOpen, setIsCreateFormOpen] = useState<boolean>(false);
-  const [newBranchName, setNewBranchName] = useState<string>("");
   const [editPopover, setEditPopover] = useState<{
     id: string;
     type: "remove" | "edit";
@@ -104,72 +94,25 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
 
   return (
     <Space
-      className={styles.wrapper}
-      size={16}
+      size={12}
       direction="vertical"
       data-testid="models-sidebar"
+      style={{ display: "flex" }}
     >
-      <div className={styles.dataSourceMenu}>
-        <DataSourcesMenu
-          selectedId={dataSourceId}
-          entities={dataSources}
-          onChange={onDataSourceChange}
-        />
-      </div>
-      <div className={styles.inner}>
-        <div>
-          <Space className={styles.space} size={10} direction="vertical">
-            <div className={styles.label}>{t("common:words.branch")}:</div>
-            <div className={styles.row}>
-              <Select
-                className={cn(styles.select, isMobile && styles.selectMobile)}
-                placeholder={t("common:words.select_branch")}
-                prefixIcon={<BranchIcon />}
-                size="large"
-                defaultValue={currentBranch?.id}
-                value={currentBranch?.id}
-                optionLabelProp="valueLabel"
-                suffixIcon={<DownOutlined />}
-                options={branches.map((b) => ({
-                  value: b.id,
-                  label: b.status === "active" ? b.name + " - default" : b.name,
-                }))}
-                onChange={onChangeBranch}
-                disabled={!branches?.length}
-                dropdownRender={(menu) => (
-                  <>
-                    {menu}
-                    <Input
-                      value={newBranchName}
-                      onChange={(e) => setNewBranchName(e.target.value)}
-                      addonAfter={
-                        <PlusOutlined
-                          onClick={() => {
-                            onCreateBranch(newBranchName);
-                            setNewBranchName("");
-                          }}
-                        />
-                      }
-                    />
-                  </>
-                )}
-              />
-              {branchMenu && (
-                <PopoverButton
-                  className={styles.dropdown}
-                  popoverType="dropdown"
-                  buttonProps={{ type: "ghost" }}
-                  menu={{ items: branchMenu }}
-                  icon={<VerticalDots />}
-                  trigger={["click"]}
-                  arrow
-                  disabled={!branches?.length}
-                />
-              )}
-            </div>
-          </Space>
-        </div>
+      <DataSourcesMenu
+        selectedId={dataSourceId}
+        entities={dataSources}
+        onChange={onDataSourceChange}
+      />
+      <BranchSelection
+        branchMenu={branchMenu}
+        branches={branches}
+        currentBranch={currentBranch}
+        onChangeBranch={onChangeBranch}
+        onCreateBranch={onCreateBranch}
+      />
 
+      <div className={styles.inner}>
         <Space
           className={cn(styles.space, styles.versionRow)}
           size={10}

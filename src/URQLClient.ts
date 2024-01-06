@@ -107,7 +107,7 @@ export default () => {
       url: HASURA_GRAPHQL_ENDPOINT,
       exchanges,
     });
-  }, [JWTpayload, accessToken, refreshToken, setAuthData]);
+  }, [JWTpayload, accessToken, cleanTokens, refreshToken, setAuthData]);
 
   return client;
 };

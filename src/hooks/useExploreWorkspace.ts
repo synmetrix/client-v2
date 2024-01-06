@@ -84,9 +84,7 @@ export default ({ selectedQueryMembers }: Props) => {
   );
 
   const onDataSectionChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.target;
-
+    (value: string) => {
       updateState({ dataSection: value });
     },
     [updateState]

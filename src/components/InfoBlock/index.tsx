@@ -1,3 +1,5 @@
+import cn from "classnames";
+
 import Button from "@/components/Button";
 
 import DocsIcon from "@/assets/docs-grey.svg";
@@ -11,6 +13,7 @@ interface Props {
   text?: string;
   href?: string;
   linkText?: string;
+  className?: string;
 }
 
 const InfoBlock: React.FC<Props> = ({
@@ -18,9 +21,10 @@ const InfoBlock: React.FC<Props> = ({
   text,
   href,
   linkText,
+  className,
 }) => {
   return (
-    <div className={styles.howBlock}>
+    <div className={cn(styles.howBlock, className)}>
       {icon}
       <span>
         {!!text && text}

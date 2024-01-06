@@ -2585,29 +2585,7 @@ export type Auth_Roles_Updates = {
 /** columns and relationships of "branch_statuses" */
 export type Branch_Statuses = {
   __typename?: "branch_statuses";
-  /** An array relationship */
-  branches: Array<Branches>;
-  /** An aggregate relationship */
-  branches_aggregate: Branches_Aggregate;
   status: Scalars["String"]["output"];
-};
-
-/** columns and relationships of "branch_statuses" */
-export type Branch_StatusesBranchesArgs = {
-  distinct_on?: InputMaybe<Array<Branches_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Branches_Order_By>>;
-  where?: InputMaybe<Branches_Bool_Exp>;
-};
-
-/** columns and relationships of "branch_statuses" */
-export type Branch_StatusesBranches_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Branches_Select_Column>>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  order_by?: InputMaybe<Array<Branches_Order_By>>;
-  where?: InputMaybe<Branches_Bool_Exp>;
 };
 
 /** aggregated selection of "branch_statuses" */
@@ -2636,8 +2614,6 @@ export type Branch_Statuses_Bool_Exp = {
   _and?: InputMaybe<Array<Branch_Statuses_Bool_Exp>>;
   _not?: InputMaybe<Branch_Statuses_Bool_Exp>;
   _or?: InputMaybe<Array<Branch_Statuses_Bool_Exp>>;
-  branches?: InputMaybe<Branches_Bool_Exp>;
-  branches_aggregate?: InputMaybe<Branches_Aggregate_Bool_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -2664,7 +2640,6 @@ export type Branch_Statuses_Enum_Comparison_Exp = {
 
 /** input type for inserting data into table "branch_statuses" */
 export type Branch_Statuses_Insert_Input = {
-  branches?: InputMaybe<Branches_Arr_Rel_Insert_Input>;
   status?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -2705,7 +2680,6 @@ export type Branch_Statuses_On_Conflict = {
 
 /** Ordering options when selecting data from "branch_statuses". */
 export type Branch_Statuses_Order_By = {
-  branches_aggregate?: InputMaybe<Branches_Aggregate_Order_By>;
   status?: InputMaybe<Order_By>;
 };
 
@@ -2760,6 +2734,10 @@ export type Branches = {
   /** An object relationship */
   datasource: Datasources;
   datasource_id: Scalars["uuid"]["output"];
+  /** An array relationship */
+  explorations: Array<Explorations>;
+  /** An aggregate relationship */
+  explorations_aggregate: Explorations_Aggregate;
   id: Scalars["uuid"]["output"];
   name: Scalars["String"]["output"];
   status: Branch_Statuses_Enum;
@@ -2771,6 +2749,24 @@ export type Branches = {
   versions: Array<Versions>;
   /** An aggregate relationship */
   versions_aggregate: Versions_Aggregate;
+};
+
+/** columns and relationships of "branches" */
+export type BranchesExplorationsArgs = {
+  distinct_on?: InputMaybe<Array<Explorations_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Explorations_Order_By>>;
+  where?: InputMaybe<Explorations_Bool_Exp>;
+};
+
+/** columns and relationships of "branches" */
+export type BranchesExplorations_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Explorations_Select_Column>>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  offset?: InputMaybe<Scalars["Int"]["input"]>;
+  order_by?: InputMaybe<Array<Explorations_Order_By>>;
+  where?: InputMaybe<Explorations_Bool_Exp>;
 };
 
 /** columns and relationships of "branches" */
@@ -2846,6 +2842,8 @@ export type Branches_Bool_Exp = {
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   datasource?: InputMaybe<Datasources_Bool_Exp>;
   datasource_id?: InputMaybe<Uuid_Comparison_Exp>;
+  explorations?: InputMaybe<Explorations_Bool_Exp>;
+  explorations_aggregate?: InputMaybe<Explorations_Aggregate_Bool_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   status?: InputMaybe<Branch_Statuses_Enum_Comparison_Exp>;
@@ -2868,6 +2866,7 @@ export type Branches_Insert_Input = {
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   datasource?: InputMaybe<Datasources_Obj_Rel_Insert_Input>;
   datasource_id?: InputMaybe<Scalars["uuid"]["input"]>;
+  explorations?: InputMaybe<Explorations_Arr_Rel_Insert_Input>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   status?: InputMaybe<Branch_Statuses_Enum>;
@@ -2948,6 +2947,7 @@ export type Branches_Order_By = {
   created_at?: InputMaybe<Order_By>;
   datasource?: InputMaybe<Datasources_Order_By>;
   datasource_id?: InputMaybe<Order_By>;
+  explorations_aggregate?: InputMaybe<Explorations_Aggregate_Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
@@ -4406,6 +4406,9 @@ export type Explorations = {
   alerts: Array<Alerts>;
   /** An aggregate relationship */
   alerts_aggregate: Alerts_Aggregate;
+  /** An object relationship */
+  branch?: Maybe<Branches>;
+  branch_id?: Maybe<Scalars["uuid"]["output"]>;
   created_at: Scalars["timestamptz"]["output"];
   /** An object relationship */
   datasource: Datasources;
@@ -4548,6 +4551,8 @@ export type Explorations_Bool_Exp = {
   _or?: InputMaybe<Array<Explorations_Bool_Exp>>;
   alerts?: InputMaybe<Alerts_Bool_Exp>;
   alerts_aggregate?: InputMaybe<Alerts_Aggregate_Bool_Exp>;
+  branch?: InputMaybe<Branches_Bool_Exp>;
+  branch_id?: InputMaybe<Uuid_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   datasource?: InputMaybe<Datasources_Bool_Exp>;
   datasource_id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -4589,6 +4594,8 @@ export type Explorations_Delete_Key_Input = {
 /** input type for inserting data into table "explorations" */
 export type Explorations_Insert_Input = {
   alerts?: InputMaybe<Alerts_Arr_Rel_Insert_Input>;
+  branch?: InputMaybe<Branches_Obj_Rel_Insert_Input>;
+  branch_id?: InputMaybe<Scalars["uuid"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   datasource?: InputMaybe<Datasources_Obj_Rel_Insert_Input>;
   datasource_id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -4604,6 +4611,7 @@ export type Explorations_Insert_Input = {
 /** aggregate max on columns */
 export type Explorations_Max_Fields = {
   __typename?: "explorations_max_fields";
+  branch_id?: Maybe<Scalars["uuid"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
   datasource_id?: Maybe<Scalars["uuid"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
@@ -4613,6 +4621,7 @@ export type Explorations_Max_Fields = {
 
 /** order by max() on columns of table "explorations" */
 export type Explorations_Max_Order_By = {
+  branch_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   datasource_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -4623,6 +4632,7 @@ export type Explorations_Max_Order_By = {
 /** aggregate min on columns */
 export type Explorations_Min_Fields = {
   __typename?: "explorations_min_fields";
+  branch_id?: Maybe<Scalars["uuid"]["output"]>;
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
   datasource_id?: Maybe<Scalars["uuid"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
@@ -4632,6 +4642,7 @@ export type Explorations_Min_Fields = {
 
 /** order by min() on columns of table "explorations" */
 export type Explorations_Min_Order_By = {
+  branch_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   datasource_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -4665,6 +4676,8 @@ export type Explorations_On_Conflict = {
 /** Ordering options when selecting data from "explorations". */
 export type Explorations_Order_By = {
   alerts_aggregate?: InputMaybe<Alerts_Aggregate_Order_By>;
+  branch?: InputMaybe<Branches_Order_By>;
+  branch_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   datasource?: InputMaybe<Datasources_Order_By>;
   datasource_id?: InputMaybe<Order_By>;
@@ -4691,6 +4704,8 @@ export type Explorations_Prepend_Input = {
 /** select columns of table "explorations" */
 export enum Explorations_Select_Column {
   /** column name */
+  BranchId = "branch_id",
+  /** column name */
   CreatedAt = "created_at",
   /** column name */
   DatasourceId = "datasource_id",
@@ -4708,6 +4723,7 @@ export enum Explorations_Select_Column {
 
 /** input type for updating data in table "explorations" */
 export type Explorations_Set_Input = {
+  branch_id?: InputMaybe<Scalars["uuid"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   datasource_id?: InputMaybe<Scalars["uuid"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -4727,6 +4743,7 @@ export type Explorations_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Explorations_Stream_Cursor_Value_Input = {
+  branch_id?: InputMaybe<Scalars["uuid"]["input"]>;
   created_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   datasource_id?: InputMaybe<Scalars["uuid"]["input"]>;
   id?: InputMaybe<Scalars["uuid"]["input"]>;
@@ -4738,6 +4755,8 @@ export type Explorations_Stream_Cursor_Value_Input = {
 
 /** update columns of table "explorations" */
 export enum Explorations_Update_Column {
+  /** column name */
+  BranchId = "branch_id",
   /** column name */
   CreatedAt = "created_at",
   /** column name */
@@ -6364,6 +6383,7 @@ export type Mutation_RootInvite_Team_MemberArgs = {
 
 /** mutation root */
 export type Mutation_RootRun_QueryArgs = {
+  branch_id?: InputMaybe<Scalars["uuid"]["input"]>;
   datasource_id: Scalars["uuid"]["input"];
   limit: Scalars["Int"]["input"];
   query: Scalars["String"]["input"];
@@ -7797,6 +7817,7 @@ export type Query_RootFetch_DatasetArgs = {
 };
 
 export type Query_RootFetch_MetaArgs = {
+  branch_id?: InputMaybe<Scalars["uuid"]["input"]>;
   datasource_id: Scalars["uuid"]["input"];
 };
 
@@ -9295,6 +9316,8 @@ export enum Sql_Credentials_Constraint {
   SqlCredentialsDatasourceIdUserIdUsernameKey = "sql_credentials_datasource_id_user_id_username_key",
   /** unique or primary key constraint on columns "id" */
   SqlCredentialsPkey = "sql_credentials_pkey",
+  /** unique or primary key constraint on columns "username" */
+  SqlCredentialsUsernameKey = "sql_credentials_username_key",
 }
 
 /** input type for inserting data into table "sql_credentials" */
@@ -12374,6 +12397,7 @@ export type FetchTablesQuery = {
 
 export type FetchMetaQueryVariables = Exact<{
   datasource_id: Scalars["uuid"]["input"];
+  branch_id?: InputMaybe<Scalars["uuid"]["input"]>;
 }>;
 
 export type FetchMetaQuery = {
@@ -12490,6 +12514,7 @@ export type CurrentExplorationQuery = {
   explorations_by_pk?: {
     __typename?: "explorations";
     id: any;
+    branch_id?: any | null;
     datasource_id: any;
     playground_state: any;
     playground_settings: any;
@@ -13715,8 +13740,8 @@ export function useFetchTablesQuery(
   });
 }
 export const FetchMetaDocument = gql`
-  query FetchMeta($datasource_id: uuid!) {
-    fetch_meta(datasource_id: $datasource_id) {
+  query FetchMeta($datasource_id: uuid!, $branch_id: uuid) {
+    fetch_meta(datasource_id: $datasource_id, branch_id: $branch_id) {
       cubes
     }
   }
@@ -13872,6 +13897,7 @@ export const CurrentExplorationDocument = gql`
   query CurrentExploration($id: uuid!, $offset: Int, $limit: Int) {
     explorations_by_pk(id: $id) {
       id
+      branch_id
       datasource_id
       playground_state
       playground_settings

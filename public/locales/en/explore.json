@@ -5,7 +5,7 @@
     "create_report": "Add Report",
     "how_to_create_report": "How to create Reports?",
     "query": "Query",
-    "rows_limit": "Rows Limit",
+    "row_limit": "Row Limit",
     "additional_offset": "Additional Offset",
     "settings": "Settings",
     "hide_cube_names": "Hide Cube Names",
@@ -19,6 +19,7 @@
     "columns": "Columns",
     "data": "Data",
     "sql": "Generated SQL",
+    "rest_api": "REST API",
     "run_query": "Run Query",
     "export": "Export",
     "new": "New",
@@ -31,5 +32,9 @@
   "errors": {
     "exploration_not_found": "Exploration not found",
     "data_source_not_found": "Data source not found"
+  },
+  "no_query": {
+    "header": "Select Models, Dimensions, Measures",
+    "text": "And Run Query"
   }
 }

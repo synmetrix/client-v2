@@ -94,8 +94,8 @@ query FetchTables($id: uuid!) {
   }
 }
 
-query FetchMeta($datasource_id: uuid!) {
-  fetch_meta(datasource_id: $datasource_id) {
+query FetchMeta($datasource_id: uuid!, $branch_id: uuid) {
+  fetch_meta(datasource_id: $datasource_id, branch_id: $branch_id) {
     cubes
   }
 }

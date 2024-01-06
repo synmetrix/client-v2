@@ -245,7 +245,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
                 {...props}
                 size={size}
                 className={cn(styles.input, props.className)}
-                style={{ resize: "none", height: 108 }}
+                style={props.style || { resize: "none", height: 108 }}
                 value={value}
                 onChange={onChange}
                 status={invalid ? "error" : undefined}

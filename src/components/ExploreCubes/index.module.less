@@ -23,13 +23,14 @@
 }
 
 .panel :global(.ant-collapse-header) {
-  background: linear-gradient(
-      0deg,
-      rgba(71, 13, 105, 0.1) 0%,
-      rgba(71, 13, 105, 0.1) 100%
-    ),
-    #fff;
+  align-items: center !important;
+  padding: 2px 6px !important;
+  background: rgba(240, 241, 243, 1);
   border-radius: 6px !important;
+}
+
+.collapse :global(.ant-collapse-item-active > .ant-collapse-header) {
+  background: rgba(71, 13, 105, 0.1);
 }
 
 .panel :global(.ant-collapse-item) {
@@ -38,6 +39,15 @@
 
 .panel :global(.ant-collapse-content-box) {
   padding: 5px 0 0 !important;
+}
+
+.panel :global(.ant-collapse-extra) {
+  display: flex;
+
+  sup {
+    height: 17px;
+    line-height: 17px;
+  }
 }
 
 .categorySection {
@@ -83,26 +93,14 @@
   margin-right: 10px;
 }
 
-.radio {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 16px;
-  padding: 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
 .buttonGroup {
-  display: inline-flex !important;
-  gap: 13px;
+  display: flex !important;
+  height: 40px;
+  margin: 12px;
+  padding: 4px;
+  background-color: rgba(0, 0, 0, 0.05);
 
-  text-align: center;
-  background: transparent;
-
-  * {
-    background: transparent;
-  }
+  border-radius: 6px;
 
   span {
     color: rgba(0, 0, 0, 0.5);
@@ -112,13 +110,16 @@
 
 .buttonGroup :global(.ant-radio-button-wrapper) {
   flex: 1;
-  * {
-    box-shadow: none !important;
-  }
+  height: 32px;
+  font-size: 11px;
+  line-height: 32px;
+  text-align: center;
+  background: transparent;
+  border-radius: 4px;
 }
 
 .buttonGroup :global(.ant-radio-button-wrapper-checked) {
-  background: transparent;
+  background: white;
 
   &::before {
     display: none;
@@ -131,17 +132,6 @@
 
   & > span:nth-child(2) {
     display: inline-block;
-
-    &::after {
-      position: absolute;
-      bottom: -14px;
-      left: 50%;
-      width: calc(100% + 18px);
-      height: 2px;
-      background: #a31bcb;
-      transform: translateX(-50%);
-      content: "";
-    }
   }
 }
 

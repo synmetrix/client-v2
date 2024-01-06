@@ -1,33 +1,34 @@
-import { Col, Collapse, Radio, Row, Space } from "antd";
-import { RightOutlined, SettingOutlined } from "@ant-design/icons";
+import { Col, Radio, Row, Space } from "antd";
+import { RightOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import { useSetState } from "ahooks";
 import { useTranslation } from "react-i18next";
-import cn from "classnames";
 
 import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
 import Button from "@/components/Button";
-import PopoverButton from "@/components/PopoverButton";
-import SimpleForm from "@/components/SimpleForm";
 import VirtualTable, { cellRenderer } from "@/components/VirtualTable";
 import PrismCode from "@/components/PrismCode";
 import ComponentSwitcher from "@/components/ComponentSwitcher";
+import RestAPI from "@/components/RestAPI";
 import genName from "@/utils/helpers/genName";
+import type { DataSchemaFormValues } from "@/components/ExploreSettingsForm";
+import ExploreSettingsForm from "@/components/ExploreSettingsForm";
 import type { ExploreWorkspaceState } from "@/hooks/useExploreWorkspace";
 import type { SortBySet } from "@/components/VirtualTable";
 import type { ErrorMessage } from "@/types/errorMessage";
 import type { CubeMember } from "@/types/cube";
 import type { ExplorationState } from "@/types/exploration";
+import EmptyExploration from "@/components/EmptyExploration";
+import membersToCubeQuery from "@/utils/helpers/membersToCubeQuery";
+import type { Branch, DataSourceInfo } from "@/types/dataSource";
 
-import AlertIcon from "@/assets/alert-logs.svg";
-import ReportIcon from "@/assets/report-logs.svg";
+import AlertIcon from "@/assets/alert.svg";
+import ReportIcon from "@/assets/report.svg";
 
 import s from "./index.module.less";
 
-import type { FC, ReactNode } from "react";
 import type { CollapsePanelProps, RadioChangeEvent } from "antd";
-
-const MAX_ROWS_LIMIT = 10000;
+import type { FC, ReactNode } from "react";
 
 type SortUpdater = (nextSortBy: SortBySet[]) => void;
 
@@ -35,11 +36,13 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   width?: number;
   height?: number;
   onToggleSection: (section: string) => void;
-  onSectionChange: (radioEvent: RadioChangeEvent) => void;
+  onSectionChange: (value: string) => void;
   onOpenModal: (type: string) => void;
   onExec: any;
   onQueryChange: (query: string, ...args: any) => void | SortUpdater;
   disabled: boolean;
+  dataSource?: DataSourceInfo;
+  currentBranch?: Branch;
   state: ExploreWorkspaceState;
   queryState: ExplorationState;
   disableButtons?: boolean;
@@ -54,31 +57,25 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   loading?: boolean;
 }
 
-const { Panel } = Collapse;
-
 const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const {
     width,
     height,
-    onToggleSection = () => {},
+    dataSource,
+    currentBranch,
     onSectionChange = () => {},
     onOpenModal = () => {},
     onExec = () => {},
     onQueryChange = () => {},
     state: workspaceState,
     queryState,
-    isActive,
     selectedQueryMembers,
     disableSectionChange,
-    disableSettings,
-    className,
-    emptyDesc,
     screenshotMode,
     rowHeight,
     disabled,
     loading = false,
     disableButtons,
-    ...restProps
   } = props;
   const { t } = useTranslation(["explore", "common"]);
 
@@ -86,47 +83,33 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     section: workspaceState?.dataSection || "sql",
   });
 
-  const formConfig = {
-    rows: {
-      section: t("data_section.query"),
-      label: t("data_section.rows_limit"),
-      type: "number",
-      defaultValue: 1000,
-      min: 1,
-      max: MAX_ROWS_LIMIT,
-      rules: {
-        validate: (val: number) =>
-          !isNaN(val) && val > 0 && val <= MAX_ROWS_LIMIT,
-      },
-    },
-    offset: {
-      section: t("data_section.query"),
-      label: t("data_section.additional_offset"),
-      type: "number",
-      min: 0,
-      defaultValue: 0,
-      rules: {
-        validate: (val: number) => !isNaN(val) && val >= 0,
-      },
-    },
-    hideCubeNames: {
-      name: "hide_cube_names",
-      section: t("data_section.settings"),
-      label: t("data_section.hide_cube_names"),
-      type: "checkbox",
-    },
-    hideIndexColumn: {
-      name: "hide_index_column",
-      section: t("data_section.settings"),
-      label: t("data_section.hide_index_column"),
-      type: "checkbox",
-    },
-  };
+  // const formConfig = {
+  //   rows: {
+  //     label: t("data_section.rows_limit"),
+  //     type: "number",
+  //     defaultValue: 1000,
+  //     min: 1,
+  //     max: MAX_ROWS_LIMIT,
+  //     rules: {
+  //       validate: (val: number) =>
+  //         !isNaN(val) && val > 0 && val <= MAX_ROWS_LIMIT,
+  //     },
+  //   },
+  //   offset: {
+  //     label: t("data_section.additional_offset"),
+  //     type: "number",
+  //     min: 0,
+  //     defaultValue: 0,
+  //     rules: {
+  //       validate: (val: number) => !isNaN(val) && val >= 0,
+  //     },
+  //   },
+  // };
 
   const {
     order,
     hitLimit,
-    limit,
+    limit = 1000,
     error,
     rows,
     columns,
@@ -134,17 +117,19 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     settings,
     skippedMembers = [],
     offset = 0,
-    settings: { hideCubeNames, hideIndexColumn },
+    // settings: { hideCubeNames, hideIndexColumn },
   } = queryState;
 
   const onRadioClick = (e: RadioChangeEvent) => {
-    const { target } = e;
+    const {
+      target: { value },
+    } = e;
 
     updateState({
-      section: target.value,
+      section: value,
     });
 
-    onSectionChange(e);
+    onSectionChange(value as string);
   };
 
   useEffect(() => {
@@ -159,8 +144,6 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     selectedQueryMembers,
     settings: queryState?.settings,
   });
-
-  const tableEmptyDesc = emptyDesc || t("data_section.empty_desc");
 
   const Table = useMemo(() => {
     const messages: ErrorMessage[] = [];
@@ -215,11 +198,12 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         sortBy={order}
         cellRenderer={(args) => cellRenderer(args, membersIndex)}
         onSortUpdate={onQueryChange("order") as SortUpdater}
-        emptyDesc={tableEmptyDesc}
+        emptyComponent={<EmptyExploration />}
+        className={s.table}
         settings={settings}
         rowHeight={rowHeight}
         footer={(tableRows) => (
-          <div>
+          <div className={s.tableFooter}>
             {t("data_section.shown")}: {tableRows.length} / {limit},{" "}
             {t("data_section.offset")}: {offset}, {t("data_section.columns")}:{" "}
             {columns.length}
@@ -240,7 +224,6 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     rows,
     order,
     onQueryChange,
-    tableEmptyDesc,
     settings,
     rowHeight,
     limit,
@@ -252,156 +235,133 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   const Sql = useMemo(() => {
     const { rawSql } = queryState;
 
-    return <PrismCode lang="sql" code={rawSql?.sql || ""} />;
-  }, [queryState]);
+    if (!rawSql?.sql) {
+      return <EmptyExploration />;
+    }
 
-  const onSubmit = (values: any) => {
-    if (values.rows !== limit) {
-      onQueryChange("limit", values.rows);
+    return (
+      <>
+        <span className={s.sqlHeader}>{t("SQL")}</span>
+        <PrismCode
+          lang="sql"
+          code={rawSql?.sql || ""}
+          style={{ minHeight: 400 }}
+        />
+      </>
+    );
+  }, [queryState, t]);
+
+  const RestApi = useMemo(() => {
+    if (dataSource?.id && currentBranch?.id) {
+      return (
+        <RestAPI
+          dataSourceId={dataSource.id}
+          branchId={currentBranch.id}
+          query={membersToCubeQuery(selectedQueryMembers)}
+          limit={queryState?.limit}
+          offset={queryState?.offset}
+        />
+      );
+    }
+  }, [
+    currentBranch?.id,
+    dataSource?.id,
+    queryState?.limit,
+    queryState?.offset,
+    selectedQueryMembers,
+  ]);
+
+  const onChange = (values: Partial<DataSchemaFormValues>) => {
+    if (values.limit !== limit) {
+      onQueryChange("limit", values.limit);
     }
     if (values.offset !== offset) {
       onQueryChange("offset", values.offset);
-    }
-    if (values.hideCubeNames !== hideCubeNames) {
-      onQueryChange("hideCubeNames", values.hideCubeNames);
-    }
-    if (values.hideIndexColumn !== hideIndexColumn) {
-      onQueryChange("hideIndexColumn", values.hideIndexColumn);
     }
   };
 
   return (
     <div data-testid="explore-data-section">
-      <Collapse
-        expandIcon={({ isActive: isPanelActive }) => (
-          <RightOutlined className={s.arrow} rotate={isPanelActive ? 90 : 0} />
-        )}
-        {...restProps}
-        className={cn(s.collapse, className)}
-        activeKey={isActive ? "dataSec" : []}
-      >
-        <Panel
-          header={
-            <div className={s.header}>
-              <Row justify={"space-between"} gutter={[16, 16]}>
-                <Col>
-                  <Space wrap>
-                    <Button
-                      className={s.dataBtn}
-                      type="dashed"
-                      onClick={() => onToggleSection("dataSec")}
-                    >
-                      {t("data_section.data")}
-                    </Button>
+      <div className={s.header}>
+        <Row justify={"space-between"} align={"middle"} gutter={[16, 16]}>
+          <Col>
+            <Space wrap>
+              <Button
+                className={s.run}
+                type="primary"
+                onClick={onExec}
+                disabled={!queryState?.columns?.length || disabled || loading}
+              >
+                {t("data_section.run_query")}
+                <RightOutlined />
+              </Button>
+              <ExploreSettingsForm
+                defaultValues={{
+                  limit,
+                  offset,
+                }}
+                onChange={onChange}
+              />
+              <Button
+                icon={<AlertIcon />}
+                className={s.alertButton}
+                type="default"
+                onClick={() => onOpenModal("alert")}
+                disabled={disableButtons}
+              >
+                {t("data_section.create_alert")}
+              </Button>
+              <Button
+                icon={<ReportIcon />}
+                className={s.alertButton}
+                type="default"
+                onClick={() => onOpenModal("report")}
+                disabled={disableButtons}
+              >
+                {t("data_section.create_report")}
+              </Button>
+            </Space>
+          </Col>
 
-                    <Radio.Group
-                      value={currState.section}
-                      onChange={onRadioClick}
-                      disabled={disableSectionChange}
-                      className={s.buttonGroup}
-                    >
-                      <Radio.Button value="results">
-                        {t("data_section.results")}
-                      </Radio.Button>
-                      <Radio.Button value="sql">
-                        {t("data_section.sql")}
-                      </Radio.Button>
-                    </Radio.Group>
+          <Col style={{ justifySelf: "end" }}>
+            <Space wrap>
+              <CSVLink data={rows} filename={`exploration-${genName(5)}.csv`}>
+                <Button className={s.csvBtn} disabled={disableButtons}>
+                  {t("data_section.export")} .CSV
+                </Button>
+              </CSVLink>
+            </Space>
+          </Col>
+        </Row>
+      </div>
 
-                    <Space align="center">
-                      <Button
-                        className={s.run}
-                        type="primary"
-                        onClick={onExec}
-                        disabled={
-                          !queryState?.columns?.length || disabled || loading
-                        }
-                      >
-                        {t("data_section.run_query")}
-                        <RightOutlined />
-                      </Button>
-
-                      {!disableSettings && (
-                        <PopoverButton
-                          icon={<SettingOutlined />}
-                          style={{
-                            borderColor: "transparent",
-                            boxShadow: "none",
-                            color: "rgba(0, 0, 0, 0.25)",
-                          }}
-                          placement="bottom"
-                          buttonProps={{
-                            size: "middle",
-                            type: "link",
-                            className: s.settingsBtn,
-                          }}
-                          content={
-                            <div className={s.popoverInner}>
-                              <SimpleForm
-                                layout="vertical"
-                                config={formConfig}
-                                onSubmit={onSubmit}
-                                initialValues={
-                                  {
-                                    rows: limit,
-                                    offset,
-                                    hideCubeNames,
-                                    hideIndexColumn,
-                                  } as unknown as Record<string, string>
-                                }
-                                autoSubmit
-                              />
-                            </div>
-                          }
-                          trigger="click"
-                        />
-                      )}
-                    </Space>
-                  </Space>
-                </Col>
-
-                <Col style={{ alignSelf: "end", justifySelf: "end" }}>
-                  <Space wrap>
-                    <CSVLink
-                      data={rows}
-                      filename={`exploration-${genName(5)}.csv`}
-                    >
-                      <Button className={s.csvBtn} disabled={disableButtons}>
-                        {t("data_section.export")} .CSV
-                      </Button>
-                    </CSVLink>
-
-                    <Button
-                      icon={<AlertIcon />}
-                      className={s.alertButton}
-                      type="primary"
-                      onClick={() => onOpenModal("alert")}
-                      disabled={disableButtons}
-                    >
-                      {t("data_section.create_alert")}
-                    </Button>
-                    <Button
-                      icon={<ReportIcon />}
-                      className={s.alertButton}
-                      type="primary"
-                      onClick={() => onOpenModal("report")}
-                      disabled={disableButtons}
-                    >
-                      {t("data_section.create_report")}
-                    </Button>
-                  </Space>
-                </Col>
-              </Row>
-            </div>
-          }
-          key="dataSec"
+      <div className={s.radio}>
+        <Radio.Group
+          value={currState.section}
+          onChange={onRadioClick}
+          disabled={disableSectionChange}
+          className={s.buttonGroup}
         >
-          <ComponentSwitcher
-            activeItemIndex={currState.section === "sql" ? 1 : 0}
-            items={[Table, Sql]}
-          />
-        </Panel>
-      </Collapse>
+          <Radio.Button value="results" type="text" className={s.radioButton}>
+            {t("data_section.results")}
+          </Radio.Button>
+          <Radio.Button value="sql" type="text" className={s.radioButton}>
+            {t("data_section.sql")}
+          </Radio.Button>
+          <Radio.Button value="rest" type="text" className={s.radioButton}>
+            {t("data_section.rest_api")}
+          </Radio.Button>
+        </Radio.Group>
+      </div>
+
+      <div className={s.wrapper}>
+        <ComponentSwitcher
+          activeItemIndex={["results", "sql", "rest"].findIndex(
+            (sec) => sec === currState.section
+          )}
+          items={[Table, Sql, RestApi]}
+        />
+      </div>
     </div>
   );
 };

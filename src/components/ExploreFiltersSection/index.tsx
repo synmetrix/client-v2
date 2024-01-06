@@ -1,4 +1,4 @@
-import { Badge, Button, Collapse, type CollapsePanelProps } from "antd";
+import { Space, Badge, Button, Collapse, type CollapsePanelProps } from "antd";
 import { useTranslation } from "react-i18next";
 import { RightOutlined } from "@ant-design/icons";
 
@@ -57,12 +57,12 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
 
   return (
     <Collapse
-      expandIcon={({ isActive: isPanelActive }) => (
-        <RightOutlined className={s.arrow} rotate={isPanelActive ? 90 : 0} />
-      )}
+      rootClassName={s.root}
       {...restProps}
+      bordered={false}
       className={s.collapse}
       activeKey={isActive ? "filtersSec" : []}
+      expandIconPosition="right"
     >
       <Panel
         {...restProps}
@@ -74,18 +74,20 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
               type="dashed"
               onClick={() => onToggleSection("filtersSec")}
             >
-              {t("Filters")}
-            </Button>
+              <Space size={14}>
+                {t("Filters")}
 
-            <Badge
-              count={state.filtersCount}
-              style={{
-                marginLeft: 10,
-                backgroundColor: "#EDE7F0",
-                color: "#000",
-                padding: "0 13px",
-              }}
-            />
+                <Badge
+                  count={state.filtersCount}
+                  style={{
+                    backgroundColor: "#EDE7F0",
+                    color: "#000",
+                    padding: "0 10px",
+                  }}
+                />
+              </Space>
+            </Button>
+            <RightOutlined className={s.arrow} rotate={isActive ? 90 : 0} />
           </div>
         }
         key={"filtersSec"}

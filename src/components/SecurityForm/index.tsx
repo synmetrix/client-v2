@@ -4,7 +4,7 @@ import { Col, Form, Row, Typography } from "antd";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
-import validate from "@/utils/validations";
+import validate from "@/utils/helpers/validations";
 
 import styles from "./index.module.less";
 

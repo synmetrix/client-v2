@@ -4,9 +4,10 @@
 }
 
 .header {
-  margin-top: -3px;
-  padding: 12px 22px 9px;
+  padding: 12px 16px;
   overflow: auto;
+  background: rgba(249, 249, 249, 1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   cursor: default;
 }
 
@@ -22,11 +23,6 @@
   &:hover {
     color: #a31bcb !important;
   }
-}
-
-.popoverInner {
-  max-width: 320px;
-  padding: 15px;
 }
 
 .csvBtn {
@@ -63,6 +59,14 @@
   display: flex;
   gap: 5px;
   align-items: center;
+  color: rgba(71, 13, 105, 1);
+  background: rgba(71, 13, 105, 0.1);
+  border: 1px solid rgba(102, 112, 133, 0.1);
+  box-shadow: none;
+
+  &:hover {
+    border-color: rgba(71, 13, 105, 1);
+  }
 }
 
 .guideLink {
@@ -97,16 +101,94 @@
   left: 20px;
 }
 
+.run {
+  background: #a31bcb;
+}
+
 .buttonGroup {
-  margin-right: 17px;
+  display: flex !important;
+  gap: 10px;
+  justify-content: left;
+
+  padding: 12px;
+  padding-right: 25px;
+  text-align: center;
+  background: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  * {
+    background: transparent;
+  }
+
+  span {
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 700;
+    font-size: 12px;
+  }
 }
 
 .buttonGroup :global(.ant-radio-button-wrapper-checked) {
-  color: #a31bcb;
-  border-color: #a31bcb !important;
+  background: transparent;
+  &::before {
+    display: none;
+  }
+
+  div {
+    display: none;
+  }
+
+  span {
+    color: #a31bcb;
+  }
+
+  & > span:last-of-type {
+    &::after {
+      position: absolute;
+      bottom: -13px;
+      left: 50%;
+      width: 80%;
+      height: 3px;
+      background: #a31bcb;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      transform: translateX(-50%);
+      content: "";
+    }
+  }
 }
 
-.run {
-  margin-right: 17px;
-  background: #a31bcb;
+.buttonGroup :global(.ant-radio-button-wrapper) {
+  &::before {
+    display: none;
+  }
+}
+
+.radioButton {
+  border: none !important;
+}
+
+.table :global(.ReactVirtualized__Table__headerRow) {
+  padding: 6px 0;
+}
+
+.table :global(.ReactVirtualized__Table__row) span {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+}
+
+.tableFooter {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.tableFooter {
+  margin-top: 16px;
+}
+
+.wrapper {
+  padding: 16px;
+}
+
+.sqlHeader {
+  font-weight: 700;
+  font-size: 14px;
 }

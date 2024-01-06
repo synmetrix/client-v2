@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import useLocation from "@/hooks/useLocation";
-import validate from "@/utils/validations";
+import validate from "@/utils/helpers/validations";
 import { SIGNIN, SIGNUP } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";

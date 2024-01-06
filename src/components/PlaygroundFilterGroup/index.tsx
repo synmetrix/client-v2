@@ -30,17 +30,6 @@ const FilterGroup: FC<FilterGroupProps> = ({
     >
       {members.map((m) => (
         <Space key={m.index} size={10} align="center">
-          <Button
-            data-testid="filter-remove-button"
-            danger
-            icon={<CloseOutlined />}
-            size="large"
-            className={s.remove}
-            onClick={() => {
-              trackEvent("Remove Member", { memberName: addMemberName });
-              updateMethods.remove(m);
-            }}
-          />
           <PlaygroundFilterSelect
             availableMembers={availableMembers}
             value={t(m.dimension!.title)}
@@ -68,6 +57,17 @@ const FilterGroup: FC<FilterGroupProps> = ({
             key="filterInput"
             updateMethods={updateMethods}
             addMemberName={addMemberName}
+          />
+          <Button
+            data-testid="filter-remove-button"
+            danger
+            icon={<CloseOutlined />}
+            size="large"
+            className={s.remove}
+            onClick={() => {
+              trackEvent("Remove Member", { memberName: addMemberName });
+              updateMethods.remove(m);
+            }}
           />
         </Space>
       ))}

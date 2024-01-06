@@ -98,7 +98,9 @@
     "loading": "Loading",
     "no_docs": "Documentation has not been generated yet.",
     "set_current": "Set current",
-    "my_role": "My role"
+    "my_role": "My role",
+    "send_request": "Send Request",
+    "rest_api_docs": "REST API docs"
   },
   "form": {
     "labels": {
@@ -136,7 +138,10 @@
       "email": "E-mail",
       "new_password": "New Password",
       "old_password": "Old Password",
-      "team_member": "Team member"
+      "team_member": "Team member",
+      "auth_token": "Auth Token",
+      "json": "JSON",
+      "request_output": "Request Output"
     },
     "placeholders": {
       "name": "Name",
@@ -150,7 +155,8 @@
     "errors": {
       "email": "Enter a valid e-mail",
       "password": "Minimum 6 characters",
-      "url": "Invalid URL"
+      "url": "Invalid URL",
+      "json": "Bad JSON"
     }
   },
   "alerts": {

@@ -1,4 +1,5 @@
 import { Spin } from "antd";
+import { useTranslation } from "react-i18next";
 
 import SidebarLayout from "@/layouts/SidebarLayout";
 import ExploreDataSection from "@/components/ExploreDataSection";
@@ -12,7 +13,7 @@ import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
 import pickKeys from "@/utils/helpers/pickKeys";
 import useAppSettings from "@/hooks/useAppSettings";
-import type { DataSourceInfo } from "@/types/dataSource";
+import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
 import type { ExplorationData, RawSql } from "@/types/exploration";
 import type { Meta } from "@/types/cube";
@@ -25,12 +26,14 @@ import styles from "./index.module.less";
 import type { FC, ReactNode } from "react";
 
 const DEFAULT_ROW_HEIGHT = 20;
+const DEFAULT_HEADER_HEIGHT = 30;
 
 interface ExploreWorkspaceProps {
   loading: boolean;
   meta: Meta;
   source?: DataSourceInfo;
   dataSources?: DataSourceInfo[];
+  currentBranch?: Branch;
   explorationData?: ExplorationData;
   rawSql?: RawSql;
   runQuery: (state: object, settings: QuerySettings) => void;
@@ -44,6 +47,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
   const {
     header = null,
     subTitle = "Explore",
+    currentBranch,
     source: dataSource,
     dataSources,
     meta,
@@ -55,6 +59,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     icon,
   } = props;
 
+  const { t } = useTranslation(["common"]);
   const [location, setLocation] = useLocation();
   const { screenshotMode } = location?.query || {};
   const isScreenshotMode = screenshotMode !== undefined;
@@ -87,12 +92,14 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     rawSql,
   });
 
-  const { collapseState, state, onToggleSection } = useExploreWorkspace({
-    selectedQueryMembers,
-  });
+  const { collapseState, state, onToggleSection, onDataSectionChange } =
+    useExploreWorkspace({
+      selectedQueryMembers,
+    });
 
   const tableHeight = useMemo(
-    () => DEFAULT_ROW_HEIGHT * explorationState.rows.length + 30,
+    () =>
+      DEFAULT_ROW_HEIGHT * explorationState.rows.length + DEFAULT_HEADER_HEIGHT,
     [explorationState.rows.length]
   );
 
@@ -142,8 +149,10 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     <ExploreDataSection
       key="dataSec"
       width={width}
-      height={isScreenshotMode ? tableHeight : undefined}
+      height={isScreenshotMode ? tableHeight : 400}
       selectedQueryMembers={selectedQueryMembers}
+      dataSource={dataSource}
+      currentBranch={currentBranch}
       onExec={onRunQuery}
       onQueryChange={onQueryChange}
       onOpenModal={onOpenModal}
@@ -155,7 +164,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
       screenshotMode={isScreenshotMode}
       rowHeight={DEFAULT_ROW_HEIGHT}
       onToggleSection={onToggleSection}
-      onSectionChange={(e) => onToggleSection(e.target.value)}
+      onSectionChange={(value: string) => onDataSectionChange(value)}
       isActive={collapseState.activePanelKey.includes("dataSec")}
     />
   );
@@ -179,29 +188,33 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
   );
 
   const Layout = !!!dataSources?.length ? AppLayout : SidebarLayout;
+  const showFiltersSection =
+    !!state.filtersCount && state.dataSection === "results";
 
   return (
     <Layout
-      title={dataSource?.name || "Explore"}
-      divider={!dataSources?.length}
-      subTitle={subTitle}
-      items={sidebar}
+      title={dataSource?.name || t("explore")}
       icon={icon}
+      divider
+      subTitle={t("explore")}
+      items={sidebar}
       burgerTitle={subTitle as any}
     >
       {!!dataSources?.length ? (
-        <div id="data-view" className={styles.dataView}>
+        <div id="data-view">
           {dataSection}
 
-          <ExploreFiltersSection
-            key="filtersSec"
-            availableQueryMembers={availableQueryMembers}
-            selectedQueryMembers={selectedQueryMembers}
-            onToggleSection={onToggleSection}
-            onMemberChange={updateMember}
-            state={state}
-            isActive={collapseState.activePanelKey.includes("filtersSec")}
-          />
+          {showFiltersSection && (
+            <ExploreFiltersSection
+              key="filtersSec"
+              availableQueryMembers={availableQueryMembers}
+              selectedQueryMembers={selectedQueryMembers}
+              onToggleSection={onToggleSection}
+              onMemberChange={updateMember}
+              state={state}
+              isActive={collapseState.activePanelKey.includes("filtersSec")}
+            />
+          )}
         </div>
       ) : (
         <NoDataSource

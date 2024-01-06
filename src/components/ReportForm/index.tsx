@@ -9,7 +9,7 @@ import Button from "@/components/Button";
 import QueryPreview from "@/components/QueryPreview";
 import StepFormHeader from "@/components/StepFormHeader";
 import { capitalize } from "@/utils/helpers/capitalize";
-import validate from "@/utils/validations";
+import validate from "@/utils/helpers/validations";
 import type { QueryState } from "@/types/queryState";
 import type { ReportFormType } from "@/types/report";
 import { WEBHOOK_PLACEHOLDER } from "@/utils/constants/links";

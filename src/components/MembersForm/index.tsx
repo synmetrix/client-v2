@@ -6,7 +6,7 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import type { Team_Roles_Enum } from "@/graphql/generated";
 import { ChangeableRoles } from "@/types/team";
-import validate from "@/utils/validations";
+import validate from "@/utils/helpers/validations";
 import type { Option } from "@/types/access";
 
 import styles from "./index.module.less";

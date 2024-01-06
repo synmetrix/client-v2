@@ -170,6 +170,7 @@ export const Members: React.FC<MembersProps> = ({
                         label: capitalize(
                           t("common:words.full_access").toUpperCase()
                         ),
+                        value: null,
                       },
                       ...(accessLists || []).map((al) => ({
                         value: al.id,

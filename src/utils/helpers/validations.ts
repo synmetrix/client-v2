@@ -19,4 +19,14 @@ export default {
     /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(
       value
     ),
+  json: (value: string): boolean => {
+    try {
+      const json = JSON.parse(value);
+
+      if (typeof json !== "object" || json === null) return false;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  },
 };

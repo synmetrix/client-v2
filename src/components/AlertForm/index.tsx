@@ -11,7 +11,7 @@ import NestedTag from "@/components/NestedTag";
 import Input from "@/components/Input";
 import QueryPreview from "@/components/QueryPreview";
 import { capitalize } from "@/utils/helpers/capitalize";
-import validate from "@/utils/validations";
+import validate from "@/utils/helpers/validations";
 import { QUERY_COLORS } from "@/utils/constants/colors";
 import type { QueryState } from "@/types/queryState";
 import type { AlertFormType, AlertType } from "@/types/alert";

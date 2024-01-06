@@ -8,7 +8,7 @@ import type { FC, ReactNode } from "react";
 interface SidebarProps {
   icon?: ReactNode;
   title: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const Sidebar: FC<SidebarProps> = ({ icon, title, children }) => {
@@ -18,11 +18,11 @@ const Sidebar: FC<SidebarProps> = ({ icon, title, children }) => {
     <div className={cn(styles.wrapper, !responsive.lg && styles.wrapperMobile)}>
       {responsive.lg && (
         <div className={styles.header}>
-          {icon && icon}
+          {icon && <div className={styles.iconContainer}>{icon}</div>}
           <div>{title}</div>
         </div>
       )}
-      <div className={styles.body}>{children}</div>
+      {children && <div className={styles.body}>{children}</div>}
     </div>
   );
 };

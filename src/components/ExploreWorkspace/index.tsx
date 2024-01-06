@@ -1,5 +1,5 @@
-import { Space, Spin } from "antd";
-import Title from "antd/es/typography/Title";
+import { Spin } from "antd";
+import { useTranslation } from "react-i18next";
 
 import SidebarLayout from "@/layouts/SidebarLayout";
 import ExploreDataSection from "@/components/ExploreDataSection";
@@ -59,6 +59,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     icon,
   } = props;
 
+  const { t } = useTranslation(["common"]);
   const [location, setLocation] = useLocation();
   const { screenshotMode } = location?.query || {};
   const isScreenshotMode = screenshotMode !== undefined;
@@ -192,16 +193,10 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
 
   return (
     <Layout
-      title={dataSource?.name || "Explore"}
+      title={dataSource?.name || t("explore")}
+      icon={icon}
       divider
-      subTitle={
-        <Space size={7} align="center">
-          {icon}
-          <Title className={styles.sidebarTitle} level={4}>
-            {subTitle}
-          </Title>
-        </Space>
-      }
+      subTitle={t("explore")}
       items={sidebar}
       burgerTitle={subTitle as any}
     >

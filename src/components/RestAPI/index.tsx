@@ -1,10 +1,11 @@
-import { Spin, Col, Form, Row } from "antd";
+import { Spin, Col, Form, Row, Space } from "antd";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import InfoBlock from "@/components/InfoBlock";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import validations from "@/utils/helpers/validations";
 
@@ -13,6 +14,7 @@ import styles from "./index.module.less";
 import type { FC } from "react";
 
 const CUBEJS_REST_API_URL = import.meta.env.VITE_CUBEJS_REST_API_URL as string;
+const CUBEJS_API_DOCS_URL = import.meta.env.VITE_CUBEJS_API_DOCS_URL as string;
 
 interface RestApiProps {
   dataSourceId: string;
@@ -109,7 +111,7 @@ const RestAPI: FC<RestApiProps> = ({
               className={styles.input}
               label={t("common:form.labels.json")}
               name="json"
-              style={{ height: 200, resize: "vertical" }}
+              style={{ height: 300, resize: "vertical" }}
               fieldType="textarea"
               control={control}
               rules={{
@@ -144,18 +146,21 @@ const RestAPI: FC<RestApiProps> = ({
           </Col>
         </Row>
 
-        <Row style={{ width: "100%" }} gutter={10}>
-          <Col>
-            <Button
-              className={styles.submit}
-              size="large"
-              type="primary"
-              onClick={handleSubmit(onSubmit)}
-            >
-              {t("common:words.send_request")}
-            </Button>
-          </Col>
-        </Row>
+        <Space>
+          <Button
+            className={styles.submit}
+            size="large"
+            type="primary"
+            onClick={handleSubmit(onSubmit)}
+          >
+            {t("common:words.send_request")}
+          </Button>
+          <InfoBlock
+            className={styles.infoBlock}
+            href={CUBEJS_API_DOCS_URL}
+            linkText={t("common:words.rest_api_docs")}
+          />
+        </Space>
 
         {state.response && (
           <Row style={{ width: "100%", marginTop: 20 }} gutter={10}>
@@ -164,7 +169,7 @@ const RestAPI: FC<RestApiProps> = ({
                 className={cn(styles.input, styles.disabledInput)}
                 label={t("common:form.labels.request_output")}
                 name="response"
-                style={{ height: 200, resize: "vertical" }}
+                style={{ height: 300, resize: "vertical" }}
                 fieldType="textarea"
                 control={control}
                 disabled

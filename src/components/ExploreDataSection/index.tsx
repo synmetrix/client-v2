@@ -242,7 +242,11 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     return (
       <>
         <span className={s.sqlHeader}>{t("SQL")}</span>
-        <PrismCode lang="sql" code={rawSql?.sql || ""} />
+        <PrismCode
+          lang="sql"
+          code={rawSql?.sql || ""}
+          style={{ minHeight: 400 }}
+        />
       </>
     );
   }, [queryState, t]);

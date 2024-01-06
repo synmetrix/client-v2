@@ -99,7 +99,8 @@
     "no_docs": "Documentation has not been generated yet.",
     "set_current": "Set current",
     "my_role": "My role",
-    "send_request": "Send Request"
+    "send_request": "Send Request",
+    "rest_api_docs": "REST API docs"
   },
   "form": {
     "labels": {

@@ -1,4 +1,4 @@
-import { Space, Spin, Typography, message } from "antd";
+import { Spin, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { useLocalStorageState } from "ahooks";
@@ -86,8 +86,6 @@ interface ModelsProps {
   onConnect: () => void;
 }
 
-const { Title } = Typography;
-
 export const Models: React.FC<ModelsProps> = ({
   dataSource,
   dataSchemaName,
@@ -161,15 +159,9 @@ export const Models: React.FC<ModelsProps> = ({
 
   return (
     <Layout
+      icon={<ModelsActiveIcon />}
       title={dataSource?.name || t("models")}
-      subTitle={
-        <Space size={7} align="center">
-          <ModelsActiveIcon />
-          <Title className={styles.sidebarTitle} level={4}>
-            {t("models")}
-          </Title>
-        </Space>
-      }
+      subTitle={t("models")}
       burgerTitle={t("models")}
       divider
       items={

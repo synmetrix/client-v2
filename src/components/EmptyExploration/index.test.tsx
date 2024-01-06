@@ -1,13 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import { expect, test, describe } from "vitest";
+import { it, expect, describe } from "vitest";
 
 import EmptyExploration from "./index";
 
-describe("EmptyExploration", () => {
-  test("renders without error", () => {
+describe("EmptyExploration component", () => {
+  it("renders without crashing", () => {
     render(<EmptyExploration />);
+    expect(screen.getByText("no_query.header")).toBeDefined();
   });
-
-  const valueElement = screen.getByText("Select Models");
-  expect(valueElement).toBeDefined();
 });

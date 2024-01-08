@@ -9,7 +9,7 @@ fragment UserTeamFields on teams {
   name
   created_at
   updated_at
-  members(order_by: { created_at: desc }) {
+  members(order_by: { updated_at: desc }) {
     id
     user_id
     member_roles {
@@ -27,7 +27,7 @@ fragment UserTeamFields on teams {
 }
 
 fragment TeamMembersFields on teams {
-  members(order_by: { created_at: desc }) {
+  members(order_by: { updated_at: desc }) {
     id
     user_id
     member_roles {
@@ -61,7 +61,7 @@ query CurrentUser($id: uuid!) {
       email
     }
 
-    members(order_by: { created_at: desc }) {
+    members(order_by: { updated_at: desc }) {
       member_roles {
         team_role
       }
@@ -89,7 +89,7 @@ subscription SubCurrentUser($id: uuid!) {
       email
     }
 
-    members(order_by: { created_at: desc }) {
+    members(order_by: { updated_at: desc }) {
       id
       user_id
       member_roles {

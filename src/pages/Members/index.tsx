@@ -118,7 +118,7 @@ export const Members: React.FC<MembersProps> = ({
           )
         }
       >
-        <dl>
+        <dl className={styles.dl}>
           {member.email && (
             <>
               <dt>{t("common:words.email")}</dt>

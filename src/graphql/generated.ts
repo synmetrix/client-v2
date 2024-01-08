@@ -13373,7 +13373,7 @@ export const TeamDataDocument = gql`
   query TeamData($team_id: uuid!) {
     teams_by_pk(id: $team_id) {
       ...TeamMembersFields
-      datasources(order_by: { created_at: desc }) {
+      datasources(order_by: { updated_at: desc }) {
         id
         name
         db_params_computed
@@ -13383,7 +13383,7 @@ export const TeamDataDocument = gql`
         branches(where: { status: { _in: [active, created] } }) {
           ...BranchesFields
         }
-        sql_credentials {
+        sql_credentials(order_by: { updated_at: desc }) {
           id
           username
           created_at
@@ -13455,7 +13455,7 @@ export const SubTeamDataDocument = gql`
   subscription SubTeamData($team_id: uuid!) {
     teams_by_pk(id: $team_id) {
       ...TeamMembersFields
-      datasources(order_by: { created_at: desc }) {
+      datasources(order_by: { updated_at: desc }) {
         id
         name
         db_params_computed

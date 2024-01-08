@@ -12974,7 +12974,7 @@ export const UserTeamFieldsFragmentDoc = gql`
     name
     created_at
     updated_at
-    members(order_by: { created_at: desc }) {
+    members(order_by: { updated_at: desc }) {
       id
       user_id
       member_roles {
@@ -12993,7 +12993,7 @@ export const UserTeamFieldsFragmentDoc = gql`
 `;
 export const TeamMembersFieldsFragmentDoc = gql`
   fragment TeamMembersFields on teams {
-    members(order_by: { created_at: desc }) {
+    members(order_by: { updated_at: desc }) {
       id
       user_id
       member_roles {
@@ -13285,7 +13285,7 @@ export const CurrentUserDocument = gql`
       account {
         email
       }
-      members(order_by: { created_at: desc }) {
+      members(order_by: { updated_at: desc }) {
         member_roles {
           team_role
         }
@@ -13323,7 +13323,7 @@ export const SubCurrentUserDocument = gql`
       account {
         email
       }
-      members(order_by: { created_at: desc }) {
+      members(order_by: { updated_at: desc }) {
         id
         user_id
         member_roles {

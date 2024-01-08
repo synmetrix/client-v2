@@ -195,7 +195,9 @@ const prepareTeamData = (
     alerts,
     reports,
     members,
-    sqlCredentials,
+    sqlCredentials: sqlCredentials.sort(
+      (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+    ),
   };
 };
 

@@ -112,7 +112,9 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
   const WrapperComponent = label ? Form.Item : "label";
   const wrapperProps = {
     className: styles.label,
-    label: label ? getLabel() : undefined,
+    label: (
+      <span className={styles.text}>{label ? getLabel() : undefined}</span>
+    ),
   };
 
   switch (fieldType) {
@@ -159,7 +161,7 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
             field: { value, onChange },
             fieldState: { invalid, error },
           }) => (
-            <WrapperComponent {...wrapperProps} className="">
+            <WrapperComponent {...wrapperProps}>
               <Radio.Group
                 className={cn({ [styles.radioError]: invalid })}
                 {...props}

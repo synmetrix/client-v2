@@ -152,45 +152,37 @@ const ApiSetup: FC<ApiSetupProps> = ({
       <Text>{t("text")}</Text>
 
       <Form layout="vertical" id="api-setup">
-        {isNew ? (
-          <Row gutter={[16, 16]}>
-            <Col xs={24} sm={12}>
-              <Input
-                control={control}
-                name="user_id"
-                fieldType="select"
-                label={getLabel("team_member")}
-                defaultValue={initialValue?.user_id}
-                options={(teamMembers || []).map((m) => ({
-                  value: m.user_id,
-                  label: m.displayName,
-                }))}
-              />
-            </Col>
-            <Col xs={24} sm={12}>
-              <Input
-                className={styles.input}
-                control={control}
-                name="datasource_id"
-                fieldType="select"
-                label={getLabel("data_source")}
-                defaultValue={initialValue?.datasource_id}
-                options={(dataSources || []).map((d) => ({
-                  value: d.id as string,
-                  label: d.name,
-                }))}
-              />
-            </Col>
-          </Row>
-        ) : (
-          <Input
-            control={control}
-            name="name"
-            defaultValue={initialValue?.name}
-            label={getLabel("data_source")}
-            disabled
-          />
-        )}
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Input
+              control={control}
+              name="user_id"
+              fieldType="select"
+              label={getLabel("team_member")}
+              defaultValue={initialValue?.user_id}
+              options={(teamMembers || []).map((m) => ({
+                value: m.user_id,
+                label: m.displayName,
+              }))}
+              disabled={!isOnboarding || !isNew}
+            />
+          </Col>
+          <Col xs={24} sm={12}>
+            <Input
+              className={styles.input}
+              control={control}
+              name="datasource_id"
+              fieldType="select"
+              label={getLabel("data_source")}
+              defaultValue={initialValue?.datasource_id}
+              options={(dataSources || []).map((d) => ({
+                value: d.id as string,
+                label: d.name,
+              }))}
+              disabled={!isOnboarding || !isNew}
+            />
+          </Col>
+        </Row>
 
         <Input
           control={control}

@@ -70,7 +70,6 @@ export const SqlApi = ({
     editPermission && credentials.length ? t("settings:sql_api.action") : null;
 
   const renderCard = (credential: DataSourceCredentials) => {
-    console.log(credential);
     return (
       <Card
         key={credential.id}

@@ -1,17 +1,14 @@
-import { Alert, Form, InputNumber, Space } from "antd";
-import {
-  RightOutlined,
-  SettingOutlined,
-  VerticalAlignMiddleOutlined,
-} from "@ant-design/icons";
+import { Alert, InputNumber, Space } from "antd";
+import { RightOutlined, VerticalAlignMiddleOutlined } from "@ant-design/icons";
 import { ResizableBox } from "react-resizable";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
 
 import VirtualTable from "@/components/VirtualTable";
-import PopoverButton from "@/components/PopoverButton";
 import Button from "@/components/Button";
 import { MONACO_OPTIONS } from "@/utils/constants/monaco";
+
+import CloseIcon from "@/assets/alert-close.svg";
 
 import styles from "./index.module.less";
 
@@ -54,11 +51,12 @@ const SQLRunner: FC<SQLRunnerProps> = ({
       {(Object.keys(sqlError).length && (
         <div>
           <Alert
-            style={{ borderRadius: 0 }}
+            className={styles.error}
             type="error"
             role="error"
             message={sqlError.toString()}
             closable
+            closeIcon={<CloseIcon />}
           />
         </div>
       )) ||

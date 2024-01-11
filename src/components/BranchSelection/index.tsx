@@ -58,7 +58,6 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
     <div className={styles.wrapper}>
       <BranchColoredIcon />
       <Select
-        open
         className={cn(styles.select, isMobile && styles.selectMobile)}
         placeholder={t("common:words.select_branch")}
         size="middle"

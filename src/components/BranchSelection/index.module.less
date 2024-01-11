@@ -22,10 +22,19 @@
 
 .popup :global(.ant-select-item) {
   padding: 6px;
+  background: none !important;
+
+  &:hover {
+    background: none;
+
+    .paragraph {
+      color: black;
+    }
+  }
 }
 
-.popup :global(.ant-select-item-option-selected) {
-  background-color: transparent !important;
+.popup :global(.ant-select-item-option-selected) .paragraph {
+  color: black !important;
 }
 
 .input {
@@ -122,7 +131,7 @@
 .inputWrapper {
   justify-content: space-between;
   width: 100%;
-  padding: 4px;
+  padding: 4px 6px;
 
   & div:first-child {
     flex-grow: 1;

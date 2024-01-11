@@ -79,46 +79,6 @@ const CodeEditor: FC<CodeEditorProps> = ({
     },
     [schemas]
   );
-
-  const defaultButtons = [
-    <Button
-      className={cn(styles.btn, styles.sqlRunner, {
-        [styles.active]: active === "sqlrunner",
-      })}
-      key="sqlrunner"
-      onClick={() => onTabChange()}
-    >
-      {t("common:words.sql_runner")}
-    </Button>,
-    active === "sqlrunner" ? (
-      <Button className={styles.run} type="primary" key="run" onClick={onRun}>
-        {t("common:words.run")}
-      </Button>
-    ) : null,
-    active === "sqlrunner" ? (
-      <PopoverButton
-        key="settings"
-        trigger={["click"]}
-        icon={<SettingOutlined />}
-        content={
-          <Form layout="vertical">
-            <Form.Item label="Rows limit:">
-              <InputNumber
-                width={300}
-                value={limit}
-                onChange={(val) => setLimit(val || 0)}
-              />
-            </Form.Item>
-          </Form>
-        }
-        buttonProps={{
-          className: styles.settings,
-          type: "link",
-        }}
-      />
-    ) : null,
-  ];
-
   const language = active
     ? languages[active.split(".")[0] as keyof typeof languages]
     : "sql";
@@ -132,6 +92,15 @@ const CodeEditor: FC<CodeEditorProps> = ({
         gutter={16}
       >
         <Col className={styles.navBtns} order={isMobile ? 1 : -1}>
+          <Button
+            className={cn(styles.btn, styles.sqlRunner, {
+              [styles.active]: active === "sqlrunner",
+            })}
+            key="sqlrunner"
+            onClick={() => onTabChange()}
+          >
+            {t("common:words.sql_runner")}
+          </Button>
           <Space size={4} align="center">
             {files &&
               Object.keys(files).map((name) => (
@@ -157,7 +126,6 @@ const CodeEditor: FC<CodeEditorProps> = ({
                   </Tooltip>
                 </Button>
               ))}
-            {defaultButtons}
           </Space>
         </Col>
 
@@ -188,6 +156,8 @@ const CodeEditor: FC<CodeEditorProps> = ({
           showData={showData}
           data={data}
           sqlError={sqlError}
+          limit={limit}
+          onChangeLimit={setLimit}
         />
       )}
     </div>

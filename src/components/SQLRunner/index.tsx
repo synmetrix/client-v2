@@ -1,9 +1,15 @@
-import { Alert, Space } from "antd";
-import { VerticalAlignMiddleOutlined } from "@ant-design/icons";
+import { Alert, Form, InputNumber, Space } from "antd";
+import {
+  SettingOutlined,
+  VerticalAlignMiddleOutlined,
+} from "@ant-design/icons";
 import { ResizableBox } from "react-resizable";
 import { Editor } from "@monaco-editor/react";
+import { useTranslation } from "react-i18next";
 
 import VirtualTable from "@/components/VirtualTable";
+import PopoverButton from "@/components/PopoverButton";
+import Button from "@/components/Button";
 import { MONACO_OPTIONS } from "@/utils/constants/monaco";
 
 import styles from "./index.module.less";
@@ -17,6 +23,9 @@ interface SQLRunnerProps {
   onChange: (value: string) => void;
   showData: boolean;
   data?: object[];
+  onRun?: () => void;
+  limit?: number;
+  onChangeLimit?: (limit: number) => void;
 }
 
 const SQLRunner: FC<SQLRunnerProps> = ({
@@ -25,7 +34,12 @@ const SQLRunner: FC<SQLRunnerProps> = ({
   showData,
   value,
   onChange,
+  onRun = () => {},
+  limit,
+  onChangeLimit = () => {},
 }) => {
+  const { t } = useTranslation(["common"]);
+
   const monacoRef: MutableRefObject<editor.IStandaloneCodeEditor | null> =
     useRef(null);
   const [monacoHeight, setMonacoHeight] = useState(100);
@@ -64,18 +78,70 @@ const SQLRunner: FC<SQLRunnerProps> = ({
             </div>
           )) ||
             null}
-          <Editor
-            className={styles.monaco}
-            defaultLanguage={"sql"}
-            wrapperProps={{ styles: { minHeight: monacoHeight } }}
-            height={monacoHeight}
-            defaultValue={value}
-            onChange={(val) => onChange(val || "")}
-            path={"sql"}
-            options={MONACO_OPTIONS}
-            onMount={(editor) => (monacoRef.current = editor)}
-          />
+          <div className={styles.monacoWrapper}>
+            <Editor
+              className={styles.monaco}
+              defaultLanguage={"sql"}
+              wrapperProps={{ styles: { minHeight: monacoHeight } }}
+              height={monacoHeight}
+              defaultValue={value}
+              onChange={(val) => onChange(val || "")}
+              path={"sql"}
+              options={{
+                ...MONACO_OPTIONS,
+                glyphMargin: false,
+                folding: false,
+                lineDecorationsWidth: 7,
+                lineNumbersMinChars: 2,
+                renderLineHighlight: "none",
+              }}
+              onMount={(editor, monaco) => {
+                monaco.editor.defineTheme("my-theme", {
+                  base: "vs",
+                  inherit: true,
+                  rules: [],
+                  colors: {
+                    "editor.background": "#F3F4F5",
+                  },
+                });
+                monaco.editor.setTheme("my-theme");
+                monacoRef.current = editor;
+              }}
+            />
+          </div>
         </div>
+
+        <Space className={styles.footer}>
+          <Button
+            className={styles.run}
+            type="primary"
+            key="run"
+            onClick={onRun}
+          >
+            {t("common:words.run")}
+          </Button>
+
+          <PopoverButton
+            key="settings"
+            trigger={["click"]}
+            icon={<SettingOutlined />}
+            content={
+              <Form layout="vertical">
+                <Form.Item label="Rows limit:">
+                  <InputNumber
+                    width={300}
+                    value={limit}
+                    onChange={(val) => onChangeLimit(val || 0)}
+                  />
+                </Form.Item>
+              </Form>
+            }
+            buttonProps={{
+              className: styles.settings,
+              type: "link",
+            }}
+          />
+        </Space>
       </ResizableBox>
       {showData && (
         <div className={styles.data}>

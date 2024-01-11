@@ -384,11 +384,20 @@ const ModelsWrapper: React.FC = () => {
     successMessage: null,
   });
 
-  useCheckResponse(setDefaultMutation, () => {}, {
-    successMessage: `${t(`alerts.branch`)} "${currentBranch?.name}" ${t(
-      "alerts.is_now_default"
-    )}`,
-  });
+  useCheckResponse(
+    setDefaultMutation,
+    (res) => {
+      const branchName = res?.update_branches_by_pk?.name;
+      if (branchName) {
+        message.success(
+          `${t(`alerts.branch`)} "${branchName}" ${t("alerts.is_now_default")}`
+        );
+      }
+    },
+    {
+      successMessage: null,
+    }
+  );
 
   useCheckResponse(deleteMutation, () => {}, {
     successMessage: t("alerts.branch_removed"),

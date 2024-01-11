@@ -11863,7 +11863,11 @@ export type SetDefaultBranchMutation = {
     __typename?: "branches_mutation_response";
     affected_rows: number;
   } | null;
-  update_branches_by_pk?: { __typename?: "branches"; id: any } | null;
+  update_branches_by_pk?: {
+    __typename?: "branches";
+    id: any;
+    name: string;
+  } | null;
 };
 
 export type ExportDataMutationVariables = Exact<{
@@ -13265,6 +13269,7 @@ export const SetDefaultBranchDocument = gql`
       pk_columns: { id: $branch_id }
     ) {
       id
+      name
     }
   }
 `;

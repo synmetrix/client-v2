@@ -20,12 +20,16 @@
   font-size: 12px;
 }
 
+.popup :global(.ant-select-item) {
+  padding: 6px;
+}
+
 .popup :global(.ant-select-item-option-selected) {
   background-color: transparent !important;
 }
 
 .input {
-  margin-top: 4px;
+  height: 27px;
   background-color: rgba(102, 112, 133, 0.1) !important;
 }
 
@@ -41,6 +45,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  padding: 5px !important;
   color: rgba(0, 0, 0, 0.5);
   font-weight: 700;
   font-size: 9px;
@@ -60,9 +65,19 @@
   }
 }
 
+.defaultButton {
+  color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(102, 112, 133, 0.1);
+  cursor: pointer !important;
+
+  &:hover {
+    background-color: rgba(102, 112, 133, 0.1) !important;
+  }
+}
+
 .popup .plusButton {
   height: auto;
-  padding: 10px;
+  padding: 8px !important;
   border: 1px solid;
   border-radius: 6px;
 
@@ -80,11 +95,14 @@
 .paragraph {
   max-width: 100%;
   margin-bottom: 0 !important;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 700;
 }
 
 .icon {
   height: 14px;
-  margin-right: 6px;
+  margin-right: 9px;
+  margin-left: 3px;
 }
 
 .actions {
@@ -98,5 +116,15 @@
   align-items: center;
   justify-content: left;
   width: 100%;
-  overflow: auto;
+  overflow: hidden;
+}
+
+.inputWrapper {
+  justify-content: space-between;
+  width: 100%;
+  padding: 4px;
+
+  & div:first-child {
+    flex-grow: 1;
+  }
 }

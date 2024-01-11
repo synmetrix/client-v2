@@ -100,7 +100,8 @@
     "set_current": "Set current",
     "my_role": "My role",
     "send_request": "Send Request",
-    "rest_api_docs": "REST API docs"
+    "rest_api_docs": "REST API docs",
+    "default": "default"
   },
   "form": {
     "labels": {

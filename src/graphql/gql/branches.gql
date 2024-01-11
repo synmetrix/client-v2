@@ -11,6 +11,7 @@ mutation SetDefaultBranch($branch_id: uuid!, $datasource_id: uuid!) {
     pk_columns: { id: $branch_id }
   ) {
     id
+    name
   }
 }
 

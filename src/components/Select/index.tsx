@@ -17,7 +17,7 @@ const Select: FC<IconSelectProps> = ({ prefixIcon, options, ...props }) => {
   return (
     <BasicSelect
       {...props}
-      optionLabelProp="valueLabel"
+      optionLabelProp={props?.optionLabelProp || "valueLabel"}
       options={options?.map((o) => ({
         ...o,
         valueLabel: prefixIcon ? <ValueLabel label={o.label} /> : o.label,

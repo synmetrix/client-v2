@@ -267,7 +267,7 @@ const RolesAndAccessWrapper: React.FC = () => {
         },
       },
       order_by: {
-        created_at: Order_By.Desc,
+        updated_at: Order_By.Desc,
       },
     },
     pause: true,

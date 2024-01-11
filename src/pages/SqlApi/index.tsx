@@ -124,6 +124,13 @@ export const SqlApi = ({
             </>
           )}
 
+          {credential.member?.displayName && (
+            <>
+              <dt>{t("common:words.member")}</dt>
+              <dd title={credential.login}>{credential.member.displayName}</dd>
+            </>
+          )}
+
           {credential.login && (
             <>
               <dt>{t("common:words.login")}</dt>

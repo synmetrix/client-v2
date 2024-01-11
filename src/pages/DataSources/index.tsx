@@ -209,6 +209,12 @@ export const DataSources = ({
         closable
         afterClose={clean}
         width={1000}
+        classNames={{
+          modal: styles.modal,
+        }}
+        modalStyles={{
+          padding: 0,
+        }}
       >
         <DataSourceForm
           onFinish={onFormFinish}
@@ -305,7 +311,16 @@ const DataSourcesWrapper = () => {
   };
 
   const onDataModelGeneration = async (data: DynamicForm) => {
-    await onDataModelGenerationSubmit(data, nextStep);
+    const isSuccess = await onDataModelGenerationSubmit(data);
+
+    if (editId && isSuccess) {
+      onFinish();
+      return;
+    }
+
+    if (isSuccess) {
+      nextStep();
+    }
   };
 
   const onTestConnection = async (data: DataSourceSetupForm) => {

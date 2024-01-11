@@ -1,13 +1,16 @@
 import { Row, Col } from "antd";
 import { useParams } from "@vitjs/runtime";
+import { useResponsive } from "ahooks";
 
 import DataSourceForm from "@/components/DataSourceForm";
-import AppLayout from "@/layouts/AppLayout";
+import Navbar from "@/components/Navbar";
+import BasicLayout from "@/layouts/BasicLayout";
 import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
+import useOnboarding from "@/hooks/useOnboarding";
 import DataSourceStore from "@/stores/DataSourceStore";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import useOnboarding from "@/hooks/useOnboarding";
+import { userMenu } from "@/mocks/user";
 import type {
   DataSource,
   DataSourceSetupForm,
@@ -36,11 +39,24 @@ const Onboarding: React.FC<OnboardingProps> = ({
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
 }) => {
+  const responsive = useResponsive();
+  const { currentUser } = CurrentUserStore();
+
+  const header = (
+    <Navbar
+      username={currentUser.displayName}
+      userAvatar={currentUser.avatarUrl}
+      userMenu={userMenu}
+      type={!responsive.lg ? "dropdown" : "inline"}
+    />
+  );
+
   return (
-    <AppLayout>
+    <BasicLayout header={header} disableMenu>
       <Row className={styles.container}>
         <Col xs={24}>
           <DataSourceForm
+            bordered
             onChangeStep={onChangeStep}
             loading={loading}
             onFinish={onFinish}
@@ -51,7 +67,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
           />
         </Col>
       </Row>
-    </AppLayout>
+    </BasicLayout>
   );
 };
 
@@ -97,7 +113,11 @@ const OnboardingWrapper = () => {
   };
 
   const onDataModelGeneration = async (data: DynamicForm) => {
-    await onDataModelGenerationSubmit(data, onNextStep);
+    const isSuccess = await onDataModelGenerationSubmit(data);
+
+    if (isSuccess) {
+      onNextStep();
+    }
   };
 
   const onTestConnection = async (data: DataSourceSetupForm) => {

@@ -5,13 +5,13 @@ import RestAPI from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Settings/DataSources/NoDataSource",
+  title: "Components/Basic/RestAPI",
   component: RestAPI,
 } as Meta<typeof RestAPI>;
 
-const Template: StoryFn<typeof RestAPI> = () => (
+const Template: StoryFn<typeof RestAPI> = (args) => (
   <RootLayout>
-    <RestAPI />
+    <RestAPI {...args} />
   </RootLayout>
 );
 

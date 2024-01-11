@@ -141,7 +141,7 @@ const Navbar: FC<NavbarProps> = ({
   }
 
   return (
-    <Space size={20} direction={direction} align="start" wrap={wrap}>
+    <Space size={20} direction={direction} align="center" wrap={wrap}>
       {docs}
       {!!teams?.length && (
         <Dropdown

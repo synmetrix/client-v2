@@ -13,10 +13,15 @@ const { Content } = Layout;
 
 export type BasicLayoutProps = {
   header?: ReactNode;
+  disableMenu?: boolean;
   children: ReactNode;
 };
 
-const BasicLayout: React.FC<BasicLayoutProps> = ({ header, children }) => {
+const BasicLayout: React.FC<BasicLayoutProps> = ({
+  header,
+  disableMenu,
+  children,
+}) => {
   const responsive = useResponsive();
   const isMobile = responsive.md === false;
 
@@ -24,7 +29,13 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({ header, children }) => {
     <div className={styles.root}>
       <Layout>
         <Header
-          content={isMobile ? <BurgerMenu>{header}</BurgerMenu> : header}
+          content={
+            isMobile && !disableMenu ? (
+              <BurgerMenu>{header}</BurgerMenu>
+            ) : (
+              header
+            )
+          }
           withLogo
           bordered
         />

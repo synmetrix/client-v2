@@ -49,7 +49,6 @@ export default ({ editId }: Props) => {
     isOnboarding,
     setSchema,
     setFormStateData,
-    nextStep,
   } = DataSourceStore();
 
   const [fetchTablesQuery, execFetchTables] = useFetchTablesQuery({
@@ -91,10 +90,7 @@ export default ({ editId }: Props) => {
     [curDataSource?.branches]
   );
 
-  const onDataModelGenerationSubmit = async (
-    data: DynamicForm,
-    callback?: () => void
-  ) => {
+  const onDataModelGenerationSubmit = async (data: DynamicForm) => {
     setLoading(true);
 
     let tables = { ...data } as any;
@@ -120,15 +116,7 @@ export default ({ editId }: Props) => {
         return null;
       }
 
-      if (callback) {
-        callback();
-        return null;
-      }
-
-      if (isOnboarding) {
-        nextStep();
-        return true;
-      }
+      return true;
     }
   };
 

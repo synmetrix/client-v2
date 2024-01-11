@@ -111,9 +111,9 @@ const SQLRunner: FC<SQLRunnerProps> = ({
 
       <Space className={styles.runner} align="start">
         <InputNumber
-          width={300}
+          addonBefore={t("common:words.row_limit")}
           value={limit}
-          style={{ padding: "5px 5px 5px 5px" }}
+          className={styles.limit}
           onChange={(val) => onChangeLimit(val || 0)}
         />
 

@@ -86,12 +86,14 @@ const OnboardingWrapper = () => {
     setIsOnboarding,
     setStep,
     setFormStateData,
+    clean,
   } = DataSourceStore();
 
   const { onDataModelGenerationSubmit, onDataSourceSetupSubmit } =
     useOnboarding({});
 
   const onFinish = () => {
+    clean();
     setLocation(withAuthPrefix(MODELS));
   };
 

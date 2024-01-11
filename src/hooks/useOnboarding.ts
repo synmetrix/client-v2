@@ -30,8 +30,7 @@ interface Props {
 
 export default ({ editId }: Props) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { currentTeam, teamData, currentUser, loading, setLoading } =
-    CurrentUserStore();
+  const { currentTeam, teamData, currentUser, setLoading } = CurrentUserStore();
 
   const [, execInsertSqlCredentialsMutation] =
     useInsertSqlCredentialsMutation();

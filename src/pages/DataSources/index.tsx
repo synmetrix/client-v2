@@ -313,8 +313,9 @@ const DataSourcesWrapper = () => {
   const onDataModelGeneration = async (data: DynamicForm) => {
     const isSuccess = await onDataModelGenerationSubmit(data);
 
-    if (!editId && isSuccess) {
+    if (editId && isSuccess) {
       onFinish();
+      return;
     }
 
     if (isSuccess) {

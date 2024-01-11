@@ -6,12 +6,13 @@ import CloseIcon from "@/assets/close.svg";
 
 import styles from "./index.module.less";
 
-import type { FC } from "react";
+import type { CSSProperties, FC } from "react";
 import type { ModalProps as BasicModalProps } from "react-responsive-modal";
 
 interface ModalProps extends BasicModalProps {
   width?: number | string;
   closable?: boolean;
+  modalStyles?: CSSProperties;
   afterClose?: () => void;
 }
 
@@ -40,6 +41,7 @@ const Modal: FC<ModalProps> = ({
           modal: {
             width: "calc(100% - 100px)",
             maxWidth: width,
+            ...props.modalStyles,
           },
         }}
         onClose={onClose}

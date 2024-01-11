@@ -30,8 +30,7 @@ interface Props {
 
 export default ({ editId }: Props) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { currentTeam, teamData, currentUser, loading, setLoading } =
-    CurrentUserStore();
+  const { currentTeam, teamData, currentUser, setLoading } = CurrentUserStore();
 
   const [, execInsertSqlCredentialsMutation] =
     useInsertSqlCredentialsMutation();
@@ -49,7 +48,6 @@ export default ({ editId }: Props) => {
     isOnboarding,
     setSchema,
     setFormStateData,
-    nextStep,
   } = DataSourceStore();
 
   const [fetchTablesQuery, execFetchTables] = useFetchTablesQuery({
@@ -91,10 +89,7 @@ export default ({ editId }: Props) => {
     [curDataSource?.branches]
   );
 
-  const onDataModelGenerationSubmit = async (
-    data: DynamicForm,
-    callback?: () => void
-  ) => {
+  const onDataModelGenerationSubmit = async (data: DynamicForm) => {
     setLoading(true);
 
     let tables = { ...data } as any;
@@ -120,20 +115,11 @@ export default ({ editId }: Props) => {
         return null;
       }
 
-      if (callback) {
-        callback();
-        return null;
-      }
-
-      if (isOnboarding) {
-        nextStep();
-        return true;
-      }
+      return true;
     }
   };
 
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
-    setLoading(true);
     let dataSourceId;
 
     if (!dataSourceSetup?.id) {
@@ -278,7 +264,6 @@ export default ({ editId }: Props) => {
 
   useEffect(() => {
     const isLoading =
-      loading ||
       createMutation.fetching ||
       updateMutation.fetching ||
       checkConnectionMutation.fetching ||
@@ -291,7 +276,6 @@ export default ({ editId }: Props) => {
       setLoading(false);
     }
   }, [
-    loading,
     createMutation.fetching,
     updateMutation.fetching,
     checkConnectionMutation.fetching,

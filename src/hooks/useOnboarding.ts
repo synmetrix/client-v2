@@ -121,7 +121,6 @@ export default ({ editId }: Props) => {
   };
 
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
-    setLoading(true);
     let dataSourceId;
 
     if (!dataSourceSetup?.id) {
@@ -266,7 +265,6 @@ export default ({ editId }: Props) => {
 
   useEffect(() => {
     const isLoading =
-      loading ||
       createMutation.fetching ||
       updateMutation.fetching ||
       checkConnectionMutation.fetching ||
@@ -279,7 +277,6 @@ export default ({ editId }: Props) => {
       setLoading(false);
     }
   }, [
-    loading,
     createMutation.fetching,
     updateMutation.fetching,
     checkConnectionMutation.fetching,

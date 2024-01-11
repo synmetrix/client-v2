@@ -158,6 +158,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
           sqlError={sqlError}
           limit={limit}
           onChangeLimit={setLimit}
+          onRun={onRun}
         />
       )}
     </div>

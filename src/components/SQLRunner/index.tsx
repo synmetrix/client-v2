@@ -1,5 +1,6 @@
 import { Alert, Form, InputNumber, Space } from "antd";
 import {
+  RightOutlined,
   SettingOutlined,
   VerticalAlignMiddleOutlined,
 } from "@ant-design/icons";
@@ -49,35 +50,33 @@ const SQLRunner: FC<SQLRunnerProps> = ({
   }, [monacoHeight]);
 
   return (
-    <Space className={styles.sqlRunner} direction="vertical" size={25}>
-      <ResizableBox
-        height={100}
-        handle={
-          <div className={styles.resizeIcon}>
-            <VerticalAlignMiddleOutlined />
-          </div>
-        }
-        axis="y"
-        resizeHandles={["s"]}
-        minConstraints={[100, 100]}
-        maxConstraints={[1000, 1000]}
-        onResize={(_w, editor) => {
-          setMonacoHeight(editor.size.height);
-        }}
-      >
+    <Space className={styles.sqlRunner} direction="vertical" size={16}>
+      {(Object.keys(sqlError).length && (
         <div>
-          {(Object.keys(sqlError).length && (
-            <div>
-              <Alert
-                style={{ borderRadius: 0 }}
-                type="error"
-                role="error"
-                message={sqlError.toString()}
-                closable
-              />
+          <Alert
+            style={{ borderRadius: 0 }}
+            type="error"
+            role="error"
+            message={sqlError.toString()}
+            closable
+          />
+        </div>
+      )) ||
+        null}
+      <div className={styles.resize}>
+        <ResizableBox
+          height={monacoHeight}
+          handle={
+            <div className={styles.resizeIcon}>
+              <VerticalAlignMiddleOutlined />
             </div>
-          )) ||
-            null}
+          }
+          axis="y"
+          resizeHandles={["s"]}
+          minConstraints={[100, 100]}
+          maxConstraints={[1000, 1000]}
+          onResize={(_w, editor) => setMonacoHeight(editor.size.height)}
+        >
           <div className={styles.monacoWrapper}>
             <Editor
               className={styles.monaco}
@@ -109,40 +108,23 @@ const SQLRunner: FC<SQLRunnerProps> = ({
               }}
             />
           </div>
-        </div>
+        </ResizableBox>
+      </div>
 
-        <Space className={styles.footer}>
-          <Button
-            className={styles.run}
-            type="primary"
-            key="run"
-            onClick={onRun}
-          >
-            {t("common:words.run")}
-          </Button>
+      <Space className={styles.runner} align="start">
+        <InputNumber
+          width={300}
+          value={limit}
+          style={{ padding: "5px 5px 5px 5px" }}
+          onChange={(val) => onChangeLimit(val || 0)}
+        />
 
-          <PopoverButton
-            key="settings"
-            trigger={["click"]}
-            icon={<SettingOutlined />}
-            content={
-              <Form layout="vertical">
-                <Form.Item label="Rows limit:">
-                  <InputNumber
-                    width={300}
-                    value={limit}
-                    onChange={(val) => onChangeLimit(val || 0)}
-                  />
-                </Form.Item>
-              </Form>
-            }
-            buttonProps={{
-              className: styles.settings,
-              type: "link",
-            }}
-          />
-        </Space>
-      </ResizableBox>
+        <Button className={styles.run} type="primary" key="run" onClick={onRun}>
+          {t("common:words.run")}
+          <RightOutlined />
+        </Button>
+      </Space>
+
       {showData && (
         <div className={styles.data}>
           <VirtualTable data={data || []} loading={false} />

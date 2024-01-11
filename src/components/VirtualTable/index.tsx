@@ -376,7 +376,6 @@ const VirtualTable: FC<VirtualTableProps> = ({
             style={{
               width: `min(100%, ${width})`,
               height: height + 10,
-              overflow: "auto",
             }}
           >
             <div className={styles.tableWrapper} role="table">

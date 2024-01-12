@@ -110,11 +110,10 @@ const CodeEditor: FC<CodeEditorProps> = ({
             {...props}
             style={{
               ...style,
-              backgroundColor: "#b65cf8",
+              backgroundColor: "#C1BFC1",
               height: "4px",
-              opacity: 0.4,
               borderRadius: "2px",
-              bottom: -3,
+              bottom: -1,
             }}
           />
         )}

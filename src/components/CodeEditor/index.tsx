@@ -2,7 +2,7 @@ import { Col, Row, Space, Tooltip } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
-import { useTrackedEffect } from "ahooks";
+import { useResponsive, useTrackedEffect } from "ahooks";
 import cn from "classnames";
 
 import Button from "@/components/Button";
@@ -45,6 +45,8 @@ const CodeEditor: FC<CodeEditorProps> = ({
   sqlError = {},
 }) => {
   const { t } = useTranslation(["models", "common"]);
+  const windowSize = useResponsive();
+  const isMd = windowSize?.md;
 
   const [limit, setLimit] = useState<number>(1000);
   const [query, setQuery] = useState<string>("SELECT id FROM users");
@@ -64,7 +66,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   const saveBtn = (
     <Button
-      className={styles.save}
+      className={cn(styles.save)}
       onClick={() => active && onCodeSave(files[active].id, content)}
       icon={<SaveIcon />}
     >
@@ -138,21 +140,22 @@ const CodeEditor: FC<CodeEditorProps> = ({
               className={styles.editorHeaderInner}
               align={"middle"}
               justify={"space-between"}
+              gutter={[16, 16]}
             >
               <Col>
                 {(files[active]?.updated_at || files[active]?.created_at) && (
-                  <>
+                  <span className={cn(!isMd && styles.modifyMobile)}>
                     {t("models:last_modify")}{" "}
                     {formatTime(
                       files[active].updated_at || files[active]?.created_at
                     )}
-                  </>
+                  </span>
                 )}
               </Col>
               <Col>{saveBtn}</Col>
             </Row>
           </div>
-          <div className={styles.editorControls}>{saveBtn}</div>
+          <div className={styles.editorControls}>{isMd && saveBtn}</div>
           <Editor
             className={styles.monaco}
             language={language}

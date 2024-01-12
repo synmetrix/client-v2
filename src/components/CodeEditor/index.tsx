@@ -1,4 +1,5 @@
 import { Col, Row, Space, Tooltip } from "antd";
+import Scrollbar from "react-custom-scrollbars";
 import { CloseOutlined } from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
@@ -97,41 +98,63 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   return (
     <div className={styles.wrapper} data-testid="code-editor">
-      <Space className={styles.nav} size={8}>
-        <Button
-          className={cn(styles.btn, styles.sqlRunner, {
-            [styles.active]: active === "sqlrunner",
-          })}
-          key="sqlrunner"
-          onClick={() => onTabChange()}
-        >
-          {t("common:words.sql_runner")}
-        </Button>
-        {files &&
-          Object.keys(files).map((name) => (
-            <Button
-              type="default"
-              key={name}
-              className={cn(styles.btn, {
-                [styles.active]: active && name === active,
-              })}
-              onClick={() => onTabChange(files[name])}
-            >
-              {files[name].name}
-              <Tooltip title={t("common:words.close")}>
-                <CloseOutlined
-                  className={styles.closeIcon}
-                  data-testid="close-icon"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onClose(name);
-                  }}
-                />
-              </Tooltip>
-            </Button>
-          ))}
-      </Space>
+      <Scrollbar
+        style={{
+          width: "100%",
+          height: "57px",
+        }}
+        hideTracksWhenNotNeeded
+        autoHide
+        renderThumbHorizontal={({ style, ...props }) => (
+          <div
+            {...props}
+            style={{
+              ...style,
+              backgroundColor: "#b65cf8",
+              height: "4px",
+              opacity: 0.4,
+              borderRadius: "2px",
+              bottom: -3,
+            }}
+          />
+        )}
+      >
+        <Space className={styles.nav} size={8}>
+          <Button
+            className={cn(styles.btn, styles.sqlRunner, {
+              [styles.active]: active === "sqlrunner",
+            })}
+            key="sqlrunner"
+            onClick={() => onTabChange()}
+          >
+            {t("common:words.sql_runner")}
+          </Button>
+          {files &&
+            Object.keys(files).map((name) => (
+              <Button
+                type="default"
+                key={name}
+                className={cn(styles.btn, {
+                  [styles.active]: active && name === active,
+                })}
+                onClick={() => onTabChange(files[name])}
+              >
+                {files[name].name}
+                <Tooltip title={t("common:words.close")}>
+                  <CloseOutlined
+                    className={styles.closeIcon}
+                    data-testid="close-icon"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onClose(name);
+                    }}
+                  />
+                </Tooltip>
+              </Button>
+            ))}
+        </Space>
+      </Scrollbar>
 
       {active && active !== "sqlrunner" ? (
         <div>

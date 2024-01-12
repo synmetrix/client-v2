@@ -1,7 +1,7 @@
-<svg width="3" height="18" viewBox="0 0 3 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="4" height="18" viewBox="0 0 3 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 <g id="Group 217">
-<circle id="Ellipse 37" cx="1.5" cy="15.6685" r="1.5" transform="rotate(-90 1.5 15.6685)" fill="#A5A5A5"/>
-<circle id="Ellipse 38" cx="1.5" cy="9.00195" r="1.5" transform="rotate(-90 1.5 9.00195)" fill="#A5A5A5"/>
-<circle id="Ellipse 39" cx="1.5" cy="2.33154" r="1.5" transform="rotate(-90 1.5 2.33154)" fill="#A5A5A5"/>
+<circle id="Ellipse 37" cx="1.5" cy="15.6685" r="1.5" transform="rotate(-90 1.5 15.6685)" fill="currentColor"/>
+<circle id="Ellipse 38" cx="1.5" cy="9.00195" r="1.5" transform="rotate(-90 1.5 9.00195)" fill="currentColor"/>
+<circle id="Ellipse 39" cx="1.5" cy="2.33154" r="1.5" transform="rotate(-90 1.5 2.33154)" fill="currentColor"/>
 </g>
 </svg>

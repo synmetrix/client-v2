@@ -16,6 +16,7 @@ import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
 
 import TrashColoredIcon from "@/assets/trash-colored.svg";
+import VerticalDots from "@/assets/dots-vertical.svg";
 import EditIcon from "@/assets/edit.svg";
 import YMLIcon from "@/assets/yml-flie.svg";
 import JSIcon from "@/assets/js-file.svg";
@@ -169,6 +170,19 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 />
               }
             />
+
+            {ideMenu && (
+              <PopoverButton
+                className={cn(styles.dropdown, styles.schemaMenu)}
+                popoverType="dropdown"
+                buttonProps={{ className: styles.addFile }}
+                menu={{ items: ideMenu }}
+                icon={<VerticalDots className={styles.dots} />}
+                trigger={["click"]}
+                arrow
+                disabled={!branches?.length}
+              />
+            )}
           </div>
 
           <Space className={styles.fileList} size={4} direction="vertical">

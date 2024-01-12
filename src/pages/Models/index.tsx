@@ -29,6 +29,7 @@ import type { Branch, DataSourceInfo, Schema } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
 import type { Version } from "@/types/version";
 import type { Branches_Insert_Input } from "@/graphql/generated";
+import type { CreateBranchFormValues } from "@/components/BranchSelection";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import {
   useDeleteSchemaMutation,
@@ -51,7 +52,7 @@ interface ModelsProps {
   branches: Branch[];
   onSetDefault: (branchId?: string) => void;
   onChangeBranch: (branchId?: string) => void;
-  onCreateBranch: (name: string) => Promise<void>;
+  onCreateBranch: (data: CreateBranchFormValues) => Promise<void>;
   onDeleteBranch: (branchId: string) => void;
   onSchemaDelete: (id: string) => void;
   onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
@@ -64,6 +65,7 @@ interface ModelsProps {
   onRunSQL: (query: string, limit: number) => void;
   dataSchemaName: string;
   fetching?: boolean;
+  branchLoading?: boolean;
   genSchemaModalVisible?: boolean;
   versionsModalVisible?: boolean;
   tablesSchema: Schema;
@@ -112,6 +114,7 @@ export const Models: React.FC<ModelsProps> = ({
   data,
   tablesSchema,
   schemaFetching,
+  branchLoading,
   onModalClose,
   onGenSubmit,
   onSaveVersion,
@@ -178,6 +181,7 @@ export const Models: React.FC<ModelsProps> = ({
             version={currentVersion?.checksum}
             ideMenu={ideMenu}
             branches={branches}
+            branchLoading={branchLoading}
             currentBranch={currentBranch}
             onChangeBranch={onChangeBranch}
             onDeleteBranch={onDeleteBranch}
@@ -669,7 +673,7 @@ const ModelsWrapper: React.FC = () => {
     });
   };
 
-  const onCreateBranch = async (name: string) => {
+  const onCreateBranch = async (data: CreateBranchFormValues) => {
     const newSchemas = dataschemas.map((schema: Dataschema) => ({
       name: schema.name,
       code: schema.code,
@@ -678,7 +682,7 @@ const ModelsWrapper: React.FC = () => {
     }));
 
     const branchData = {
-      name,
+      name: data.name,
       status: "created",
       user_id: currentUser.id,
       datasource_id: dataSourceId,
@@ -760,6 +764,7 @@ const ModelsWrapper: React.FC = () => {
         setLocation(`${basePath}/${dataSourceId}/${branchId}`);
       }}
       onSetDefault={onSetDefault}
+      branchLoading={createBranchMutation.fetching}
       onCreateBranch={onCreateBranch}
       onDeleteBranch={onDeleteBranch}
       currentVersion={currentVersion}

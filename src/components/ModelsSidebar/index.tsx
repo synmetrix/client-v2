@@ -10,6 +10,7 @@ import DataSourcesMenu from "@/components/DataSourcesMenu";
 import DataSchemaForm from "@/components/DataSchemaForm";
 import useSubstringSearch from "@/hooks/useSubstringSearch";
 import Highlight from "@/components/Highlight";
+import type { CreateBranchFormValues } from "@/components/BranchSelection";
 import BranchSelection from "@/components/BranchSelection";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
@@ -31,9 +32,10 @@ export interface ModelsSidebarProps {
   docs: string;
   version?: string;
   files: Dataschema[];
+  branchLoading?: boolean;
   onSelectFile: (schema: string, hash?: string) => void;
   onSetDefault: (branchId?: string) => void;
-  onCreateBranch: (name: string) => Promise<void>;
+  onCreateBranch: (data: CreateBranchFormValues) => Promise<void>;
   onChangeBranch: (branchId?: string) => void;
   onDeleteBranch: (branchId: string) => void;
   onSchemaDelete: (schema: Dataschema) => void;
@@ -51,6 +53,7 @@ const icons = {
 const ModelsSidebar: FC<ModelsSidebarProps> = ({
   branches,
   currentBranch,
+  branchLoading,
   ideMenu,
   onChangeBranch,
   onSetDefault,
@@ -106,6 +109,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
       />
       <BranchSelection
         branches={branches}
+        loading={branchLoading}
         currentBranch={currentBranch}
         onChangeBranch={onChangeBranch}
         onCreateBranch={onCreateBranch}

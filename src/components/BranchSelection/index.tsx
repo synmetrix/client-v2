@@ -1,12 +1,15 @@
-import { Input, Space, Typography } from "antd";
+import { Form, Space, Typography } from "antd";
 import { useResponsive } from "ahooks";
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
 import cn from "classnames";
 
+import Input from "@/components/Input";
 import Button from "@/components/Button";
 import Select from "@/components/Select";
 import type { Branch } from "@/types/dataSource";
+import ConfirmModal from "@/components/ConfirmModal";
 import { Branch_Statuses_Enum } from "@/graphql/generated";
 
 import BranchGreyIcon from "@/assets/branch.svg";
@@ -18,12 +21,17 @@ import styles from "./index.module.less";
 
 const { Paragraph } = Typography;
 
+export interface CreateBranchFormValues {
+  name: string;
+}
+
 interface BranchSelectionProps {
   branches: Branch[];
   currentBranch?: Branch;
   disableActions?: boolean;
+  loading?: boolean;
   onChangeBranch?: (branchId: string) => void;
-  onCreateBranch?: (name: string) => void;
+  onCreateBranch?: (data: CreateBranchFormValues) => void;
   onSetDefault?: (branchId: string) => void;
   onDeleteBranch?: (branchId: string) => void;
 }
@@ -32,6 +40,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
   branches,
   currentBranch,
   disableActions,
+  loading,
   onChangeBranch = () => {},
   onCreateBranch = () => {},
   onSetDefault = () => {},
@@ -39,7 +48,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
 }) => {
   const { t } = useTranslation(["models", "common"]);
 
-  const [newBranchName, setNewBranchName] = useState<string>("");
+  const { control, handleSubmit } = useForm<CreateBranchFormValues>();
 
   const windowSize = useResponsive();
   const isMobile = windowSize.md === false;
@@ -49,8 +58,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
     onSetDefault(branchId);
   };
 
-  const onDelete = (e: any, branchId: string) => {
-    e.stopPropagation();
+  const onDelete = (branchId: string) => {
     onDeleteBranch(branchId);
   };
 
@@ -93,7 +101,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
           );
 
           if (disableActions) {
-            return label;
+            return title;
           }
 
           return (
@@ -114,14 +122,18 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
                     ? t("common:words.default").toUpperCase()
                     : t("models:sidebar.set_default").toUpperCase()}
                 </Button>
-                <Button
-                  size="small"
-                  type="text"
-                  className={styles.button}
-                  onClick={(e) => onDelete?.(e, value as string)}
-                >
-                  <TrashColoredIcon />
-                </Button>
+
+                <div onClick={(e) => e.stopPropagation()}>
+                  <ConfirmModal
+                    title={t("common:words.delete_branch")}
+                    className={styles.deleteText}
+                    onConfirm={() => onDelete?.(value as string)}
+                  >
+                    <Button size="small" type="text" className={styles.button}>
+                      <TrashColoredIcon />
+                    </Button>
+                  </ConfirmModal>
+                </div>
               </Space>
             </div>
           );
@@ -135,24 +147,29 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
             {menu}
             {!disableActions && (
               <Space className={styles.inputWrapper}>
-                <Input
-                  maxLength={20}
-                  value={newBranchName}
-                  className={styles.input}
-                  placeholder="Main"
-                  onChange={(e) => setNewBranchName(e.target.value)}
-                />
-                <Button
-                  size="small"
-                  type="text"
-                  className={cn(styles.button, styles.plusButton)}
-                  onClick={() => {
-                    onCreateBranch?.(newBranchName);
-                    setNewBranchName("");
-                  }}
+                <Form
+                  id="create-branch-form"
+                  layout="vertical"
+                  className={styles.form}
                 >
-                  <PlusOutlined />
-                </Button>
+                  <Space>
+                    <Input
+                      rules={{ required: true }}
+                      name="name"
+                      fieldType="text"
+                      size="middle"
+                      control={control}
+                    />
+                    <Button
+                      size="small"
+                      type="text"
+                      icon={<PlusOutlined />}
+                      loading={loading}
+                      className={cn(styles.button, styles.plusButton)}
+                      onClick={handleSubmit(onCreateBranch)}
+                    />
+                  </Space>
+                </Form>
               </Space>
             )}
           </div>

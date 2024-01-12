@@ -12990,6 +12990,21 @@ export type CurrentVersionQuery = {
   }>;
 };
 
+export type VersionsCountSubscriptionVariables = Exact<{
+  branch_id: Scalars["uuid"]["input"];
+}>;
+
+export type VersionsCountSubscription = {
+  __typename?: "subscription_root";
+  versions_aggregate: {
+    __typename?: "versions_aggregate";
+    aggregate?: {
+      __typename?: "versions_aggregate_fields";
+      count: number;
+    } | null;
+  };
+};
+
 export const BranchesFieldsFragmentDoc = gql`
   fragment BranchesFields on branches {
     id
@@ -14549,6 +14564,29 @@ export function useCurrentVersionQuery(
     ...options,
   });
 }
+export const VersionsCountDocument = gql`
+  subscription VersionsCount($branch_id: uuid!) {
+    versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export function useVersionsCountSubscription<TData = VersionsCountSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<VersionsCountSubscriptionVariables>,
+    "query"
+  >,
+  handler?: Urql.SubscriptionHandler<VersionsCountSubscription, TData>
+) {
+  return Urql.useSubscription<
+    VersionsCountSubscription,
+    TData,
+    VersionsCountSubscriptionVariables
+  >({ query: VersionsCountDocument, ...options }, handler);
+}
 export const namedOperations = {
   Query: {
     AllAccessLists: "AllAccessLists",
@@ -14615,6 +14653,7 @@ export const namedOperations = {
     AllSchemas: "AllSchemas",
     SubCredentials: "SubCredentials",
     VersionDoc: "VersionDoc",
+    VersionsCount: "VersionsCount",
   },
   Fragment: {
     BranchesFields: "BranchesFields",

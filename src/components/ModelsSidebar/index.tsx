@@ -3,7 +3,6 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
-import Button from "@/components/Button";
 import SearchInput from "@/components/SearchInput";
 import PopoverButton from "@/components/PopoverButton";
 import DataSourcesMenu from "@/components/DataSourcesMenu";
@@ -11,6 +10,7 @@ import DataSchemaForm from "@/components/DataSchemaForm";
 import useSubstringSearch from "@/hooks/useSubstringSearch";
 import Highlight from "@/components/Highlight";
 import type { CreateBranchFormValues } from "@/components/BranchSelection";
+import VersionPreview from "@/components/VersionPreview";
 import BranchSelection from "@/components/BranchSelection";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
@@ -45,6 +45,8 @@ export interface ModelsSidebarProps {
   onCreateFile: (values: Partial<Dataschema>) => void;
   dataSources: DataSourceInfo[];
   onDataSourceChange: (dataSource: DataSourceInfo | null) => void;
+  versionsCount?: number;
+  onVersionsOpen?: () => void;
 }
 
 const icons = {
@@ -71,6 +73,8 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
   dataSources,
   onDataSourceChange,
   dataSourceId,
+  versionsCount,
+  onVersionsOpen,
 }) => {
   const { t } = useTranslation(["models", "common"]);
 
@@ -125,22 +129,14 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
           size={10}
           direction="vertical"
         >
-          {branches?.length ? (
-            <div>
-              <span> {t("sidebar.version")}:</span>{" "}
-              <Button
-                className={styles.docsLink}
-                type="link"
-                href={docs}
-                target="_blank"
-              >
-                {t("sidebar.open_docs")}
-              </Button>
-            </div>
-          ) : null}
-          <div className={styles.version} title={version}>
-            {version}
-          </div>
+          {branches?.length && version && (
+            <VersionPreview
+              version={version}
+              count={versionsCount}
+              href={docs}
+              onRestore={onVersionsOpen}
+            />
+          )}
         </Space>
 
         <Space className={styles.space} size={10} direction="vertical">

@@ -94,7 +94,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   const language = active
     ? languages[active.split(".")[0] as keyof typeof languages]
     : "sql";
-  console.log(active);
+
   return (
     <div className={styles.wrapper} data-testid="code-editor">
       <Space className={styles.nav} size={8}>

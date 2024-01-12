@@ -37,6 +37,7 @@ import {
   useCreateVersionMutation,
   useSetDefaultBranchMutation,
   useCurrentVersionQuery,
+  useVersionsCountSubscription,
 } from "@/graphql/generated";
 import { EXPORT, MODELS, SOURCES } from "@/utils/constants/paths";
 
@@ -86,6 +87,8 @@ interface ModelsProps {
   sqlError?: object;
   dataSources?: DataSourceInfo[];
   onConnect: () => void;
+  versionsCount?: number;
+  onVersionsOpen?: () => void;
 }
 
 export const Models: React.FC<ModelsProps> = ({
@@ -122,6 +125,8 @@ export const Models: React.FC<ModelsProps> = ({
   dataSources,
   sqlError,
   onConnect,
+  versionsCount,
+  onVersionsOpen,
 }) => {
   const { t } = useTranslation(["pages"]);
 
@@ -193,6 +198,8 @@ export const Models: React.FC<ModelsProps> = ({
             onSelectFile={openSchema}
             dataSources={dataSources || []}
             dataSourceId={dataSource?.id}
+            versionsCount={versionsCount}
+            onVersionsOpen={onVersionsOpen}
           />
         </Spin>
       }
@@ -290,6 +297,15 @@ const ModelsWrapper: React.FC = () => {
     ],
     [params]
   );
+
+  const [versionsData] = useVersionsCountSubscription({
+    variables: {
+      branch_id: branch,
+    },
+  });
+
+  const versionsCount = versionsData.data?.versions_aggregate.aggregate?.count;
+
   const dataSource = useMemo(
     () =>
       teamData?.dataSources?.find((d: DataSourceInfo) => d.id === dataSourceId),
@@ -788,6 +804,10 @@ const ModelsWrapper: React.FC = () => {
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
       onConnect={() => setLocation(withAuthPrefix(`${SOURCES}/new`))}
+      versionsCount={versionsCount}
+      onVersionsOpen={() =>
+        setLocation(`${basePath}/${dataSourceId}/${branch}/versions`)
+      }
     />
   );
 };

@@ -81,62 +81,54 @@ const CodeEditor: FC<CodeEditorProps> = ({
   const language = active
     ? languages[active.split(".")[0] as keyof typeof languages]
     : "sql";
-
+  console.log(active);
   return (
     <div className={styles.wrapper} data-testid="code-editor">
-      <Row
-        className={styles.nav}
-        justify="space-between"
-        align="stretch"
-        gutter={16}
-      >
-        <Col className={styles.navBtns} order={isMobile ? 1 : -1}>
-          <Button
-            className={cn(styles.btn, styles.sqlRunner, {
-              [styles.active]: active === "sqlrunner",
-            })}
-            key="sqlrunner"
-            onClick={() => onTabChange()}
-          >
-            {t("common:words.sql_runner")}
-          </Button>
-          <Space size={4} align="center">
-            {files &&
-              Object.keys(files).map((name) => (
-                <Button
-                  type="default"
-                  key={name}
-                  className={cn(styles.btn, {
-                    [styles.active]: active && name === active,
-                  })}
-                  onClick={() => onTabChange(files[name])}
-                >
-                  {files[name].name}
-                  <Tooltip title={t("common:words.close")}>
-                    <CloseOutlined
-                      className={styles.closeIcon}
-                      data-testid="close-icon"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        onClose(name);
-                      }}
-                    />
-                  </Tooltip>
-                </Button>
-              ))}
-          </Space>
-        </Col>
+      <Space className={styles.nav}>
+        <Button
+          className={cn(styles.btn, styles.sqlRunner, {
+            [styles.active]: active === "sqlrunner",
+          })}
+          key="sqlrunner"
+          onClick={() => onTabChange()}
+        >
+          {t("common:words.sql_runner")}
+        </Button>
+        {files &&
+          Object.keys(files).map((name) => (
+            <Button
+              type="default"
+              key={name}
+              className={cn(styles.btn, {
+                [styles.active]: active && name === active,
+              })}
+              onClick={() => onTabChange(files[name])}
+            >
+              {files[name].name}
+              <Tooltip title={t("common:words.close")}>
+                <CloseOutlined
+                  className={styles.closeIcon}
+                  data-testid="close-icon"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onClose(name);
+                  }}
+                />
+              </Tooltip>
+            </Button>
+          ))}
+      </Space>
 
-        <Col order={isMobile ? -1 : 1}>
+      {/* <Col order={isMobile ? -1 : 1}>
           <Button
             className={styles.save}
             onClick={() => active && onCodeSave(files[active].id, content)}
           >
             {t("common:words.save")}
           </Button>
-        </Col>
-      </Row>
+        </Col> */}
+
       {active && active !== "sqlrunner" ? (
         <Editor
           className={styles.monaco}

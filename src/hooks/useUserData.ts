@@ -148,7 +148,7 @@ const prepareUserData = (
     email: rawUserData?.account?.email,
     displayName: rawUserData?.display_name,
     avatarUrl: rawUserData?.avatar_url,
-    teams: teams.sort(
+    teams: (teams || []).sort(
       (a, b) => Date.parse(a.updatedAt) - Date.parse(b.updatedAt)
     ),
   };
@@ -193,15 +193,15 @@ const prepareTeamData = (
   );
 
   return {
-    dataSources: dataSources.sort(
+    dataSources: (dataSources || []).sort(
       (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
     ),
     alerts,
     reports,
-    members: members.sort(
+    members: (members || []).sort(
       (a, b) => Date.parse(b.updatedAt!) - Date.parse(a.updatedAt!)
     ),
-    sqlCredentials: sqlCredentials.sort(
+    sqlCredentials: (sqlCredentials || []).sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     ),
   };

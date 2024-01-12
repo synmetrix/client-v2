@@ -1337,6 +1337,7 @@ export const exploreMock = {
       explorations_by_pk: {
         id: "b24d941c-94ac-4bca-8a3a-9e179a4fc06e",
         datasource_id: "35c549a8-c38a-4ff1-90a5-b3081a35aa93",
+        branch_id: "b5160083-687a-4a1d-bfb5-8aba9a439e3a",
         playground_state: {
           page: 0,
           limit: 1000,

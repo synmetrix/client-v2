@@ -4,14 +4,10 @@ import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import { useForm } from "react-hook-form";
 
-import type {
-  ApiSetupField,
-  ApiSetupForm,
-  DataSourceInfo,
-} from "@/types/dataSource";
-import type { Member } from "@/types/team";
+import type { ApiSetupField, ApiSetupForm } from "@/types/dataSource";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import CurrentUserStore from "@/stores/CurrentUserStore";
 
 import CopyIcon from "@/assets/copy.svg";
 
@@ -53,8 +49,6 @@ interface ApiSetupProps {
   isNew?: boolean;
   initialValue: ApiSetupForm | undefined;
   connectionOptions?: ApiSetupField[];
-  dataSources?: DataSourceInfo[];
-  teamMembers?: Member[];
 }
 
 const connectionData = [
@@ -74,13 +68,12 @@ const connectionData = [
 const ApiSetup: FC<ApiSetupProps> = ({
   connectionOptions = defaultConnectionOptions,
   initialValue,
-  dataSources,
-  teamMembers,
   isOnboarding,
   isNew,
   onSubmit,
   onGoBack,
 }) => {
+  const { teamData } = CurrentUserStore();
   const { control, handleSubmit, setValue, getValues, watch, resetField } =
     useForm<ApiSetupForm>({
       values: initialValue,
@@ -141,7 +134,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
     });
 
     return () => subscription.unsubscribe();
-  }, [createConnectionString, dataSources, resetField, setValue, watch]);
+  }, [createConnectionString, resetField, setValue, watch]);
 
   return (
     <div>
@@ -160,7 +153,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
               fieldType="select"
               label={getLabel("team_member")}
               defaultValue={initialValue?.user_id}
-              options={(teamMembers || []).map((m) => ({
+              options={(teamData?.members || []).map((m) => ({
                 value: m.user_id,
                 label: m.displayName,
               }))}
@@ -175,7 +168,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
               fieldType="select"
               label={getLabel("data_source")}
               defaultValue={initialValue?.datasource_id}
-              options={(dataSources || []).map((d) => ({
+              options={(teamData?.dataSources || []).map((d) => ({
                 value: d.id as string,
                 label: d.name,
               }))}

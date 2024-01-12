@@ -11863,7 +11863,11 @@ export type SetDefaultBranchMutation = {
     __typename?: "branches_mutation_response";
     affected_rows: number;
   } | null;
-  update_branches_by_pk?: { __typename?: "branches"; id: any } | null;
+  update_branches_by_pk?: {
+    __typename?: "branches";
+    id: any;
+    name: string;
+  } | null;
 };
 
 export type ExportDataMutationVariables = Exact<{
@@ -13265,6 +13269,7 @@ export const SetDefaultBranchDocument = gql`
       pk_columns: { id: $branch_id }
     ) {
       id
+      name
     }
   }
 `;
@@ -13405,7 +13410,10 @@ export const TeamDataDocument = gql`
         db_type
         created_at
         updated_at
-        branches(where: { status: { _in: [active, created] } }) {
+        branches(
+          where: { status: { _in: [active, created] } }
+          order_by: { created_at: desc }
+        ) {
           ...BranchesFields
         }
         sql_credentials(order_by: { updated_at: desc }) {
@@ -13487,7 +13495,10 @@ export const SubTeamDataDocument = gql`
         db_type
         created_at
         updated_at
-        branches(where: { status: { _in: [active, created] } }) {
+        branches(
+          where: { status: { _in: [active, created] } }
+          order_by: { created_at: desc }
+        ) {
           ...BranchesFields
         }
         sql_credentials {

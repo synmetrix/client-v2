@@ -25,9 +25,7 @@ Default.args = {
   initialValue: {
     name: "gh-api.clickhouse.tech (Yandex Demo)",
     host: "gh-api.clickhouse.tech",
-    user: "user@api.clickhouse.tech",
-    username: "user@api.clickhouse.tech",
-    port: "12346",
+    user_id: "12345",
     password: "132456456",
     db_username: "db_username",
     db: "db",

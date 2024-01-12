@@ -2,7 +2,7 @@ import { Col, Row, Space, Tooltip } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
-import { useResponsive, useTrackedEffect } from "ahooks";
+import { useTrackedEffect } from "ahooks";
 import cn from "classnames";
 
 import Button from "@/components/Button";
@@ -10,6 +10,9 @@ import SQLRunner from "@/components/SQLRunner";
 import { MONACO_OPTIONS } from "@/utils/constants/monaco";
 import type { Dataschema } from "@/types/dataschema";
 import equals from "@/utils/helpers/equals";
+import formatTime from "@/utils/helpers/formatTime";
+
+import SaveIcon from "@/assets/save.svg";
 
 import styles from "./index.module.less";
 
@@ -42,8 +45,6 @@ const CodeEditor: FC<CodeEditorProps> = ({
   sqlError = {},
 }) => {
   const { t } = useTranslation(["models", "common"]);
-  const windowSize = useResponsive();
-  const isMobile = windowSize.md === false;
 
   const [limit, setLimit] = useState<number>(1000);
   const [query, setQuery] = useState<string>("SELECT id FROM users");
@@ -59,6 +60,16 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   const [content, setContent] = useState<string>(
     active ? files[active]?.code : ""
+  );
+
+  const saveBtn = (
+    <Button
+      className={styles.save}
+      onClick={() => active && onCodeSave(files[active].id, content)}
+      icon={<SaveIcon />}
+    >
+      {t("common:words.save")}
+    </Button>
   );
 
   const onRun = () => {
@@ -84,7 +95,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
   console.log(active);
   return (
     <div className={styles.wrapper} data-testid="code-editor">
-      <Space className={styles.nav}>
+      <Space className={styles.nav} size={8}>
         <Button
           className={cn(styles.btn, styles.sqlRunner, {
             [styles.active]: active === "sqlrunner",
@@ -120,26 +131,39 @@ const CodeEditor: FC<CodeEditorProps> = ({
           ))}
       </Space>
 
-      {/* <Col order={isMobile ? -1 : 1}>
-          <Button
-            className={styles.save}
-            onClick={() => active && onCodeSave(files[active].id, content)}
-          >
-            {t("common:words.save")}
-          </Button>
-        </Col> */}
-
       {active && active !== "sqlrunner" ? (
-        <Editor
-          className={styles.monaco}
-          language={language}
-          defaultLanguage={language}
-          defaultValue={files[active]?.code}
-          value={content}
-          onChange={(val) => setContent(val || "")}
-          path={files[active]?.name}
-          options={MONACO_OPTIONS}
-        />
+        <div>
+          <div className={styles.editorHeader}>
+            <Row
+              className={styles.editorHeaderInner}
+              align={"middle"}
+              justify={"space-between"}
+            >
+              <Col>
+                {(files[active]?.updated_at || files[active]?.created_at) && (
+                  <>
+                    {t("models:last_modify")}{" "}
+                    {formatTime(
+                      files[active].updated_at || files[active]?.created_at
+                    )}
+                  </>
+                )}
+              </Col>
+              <Col>{saveBtn}</Col>
+            </Row>
+          </div>
+          <div className={styles.editorControls}>{saveBtn}</div>
+          <Editor
+            className={styles.monaco}
+            language={language}
+            defaultLanguage={language}
+            defaultValue={files[active]?.code}
+            value={content}
+            onChange={(val) => setContent(val || "")}
+            path={files[active]?.name}
+            options={MONACO_OPTIONS}
+          />
+        </div>
       ) : (
         <SQLRunner
           value={query}

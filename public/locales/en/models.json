@@ -32,5 +32,6 @@
   "branch_menu": {
     "show_versions": "Show versions",
     "remove_branch": "Remove branch"
-  }
+  },
+  "last_modify": "Last modify"
 }

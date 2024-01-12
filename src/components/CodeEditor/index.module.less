@@ -2,6 +2,8 @@
   width: 100%;
   height: 57px;
   padding: 0 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
   background: #f9f9f9;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -11,11 +13,6 @@
   * {
     font-family: monospace;
   }
-}
-
-.navBtns {
-  margin: 0 -24px;
-  overflow: auto;
 }
 
 .btn {
@@ -82,19 +79,32 @@
 }
 
 .save {
-  position: relative;
-  bottom: 3px;
-  display: inline-block;
-  margin-top: 15px;
-  margin-left: auto;
   color: #470d69;
   font-weight: 700;
   background: rgba(71, 13, 105, 0.1);
-  border-color: transparent;
-  * {
-    font-size: 12px !important;
-  }
+
   &:hover {
     border-color: inherit;
   }
+
+  svg {
+    position: relative;
+    top: 3px;
+  }
+}
+
+.editorHeader {
+  margin-bottom: 16px;
+  padding: 0 16px;
+  font-weight: 700;
+}
+
+.editorHeaderInner {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.editorControls {
+  margin-bottom: 16px;
+  padding: 0 16px;
 }

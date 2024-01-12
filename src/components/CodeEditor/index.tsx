@@ -3,6 +3,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
 import { useResponsive, useTrackedEffect } from "ahooks";
+import moment from "moment";
 import cn from "classnames";
 
 import Button from "@/components/Button";
@@ -10,7 +11,6 @@ import SQLRunner from "@/components/SQLRunner";
 import { MONACO_OPTIONS } from "@/utils/constants/monaco";
 import type { Dataschema } from "@/types/dataschema";
 import equals from "@/utils/helpers/equals";
-import formatTime from "@/utils/helpers/formatTime";
 
 import SaveIcon from "@/assets/save.svg";
 
@@ -146,9 +146,9 @@ const CodeEditor: FC<CodeEditorProps> = ({
                 {(files[active]?.updated_at || files[active]?.created_at) && (
                   <span className={cn(!isMd && styles.modifyMobile)}>
                     {t("models:last_modify")}{" "}
-                    {formatTime(
-                      files[active].updated_at || files[active]?.created_at
-                    )}
+                    {moment(
+                      files[active]?.updated_at || files[active]?.created_at
+                    ).fromNow()}
                   </span>
                 )}
               </Col>

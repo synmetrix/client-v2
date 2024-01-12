@@ -12,13 +12,137 @@
 }
 
 .select :global(.ant-select-selector) {
-  background-color: rgba(71, 13, 105, 0.1) !important;
+  background-color: rgba(102, 112, 133, 0.1) !important;
 }
 
 .select :global(.ant-select-selection-item) {
   font-weight: 700;
+  font-size: 12px;
+}
+
+.popup :global(.ant-select-item) {
+  padding: 6px;
+  background: none !important;
+
+  &:hover {
+    background: none;
+
+    .paragraph {
+      color: black;
+    }
+  }
+}
+
+.popup :global(.ant-select-item-option-selected) .paragraph {
+  color: black !important;
+}
+
+.input {
+  height: 27px;
+  background-color: rgba(102, 112, 133, 0.1) !important;
 }
 
 .selectMobile {
   width: 100%;
+}
+
+.popup {
+  width: 260px !important;
+}
+
+.button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 5px !important;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 700;
+  font-size: 9px;
+
+  span {
+    font-weight: 700;
+    font-size: 9px;
+  }
+
+  &:hover {
+    color: black;
+    background: rgba(163, 27, 203, 0.1) !important;
+
+    path {
+      stroke: rgba(163, 27, 203, 1);
+    }
+  }
+}
+
+.defaultButton {
+  color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(102, 112, 133, 0.1);
+  cursor: pointer !important;
+
+  &:hover {
+    background-color: rgba(102, 112, 133, 0.1) !important;
+  }
+}
+
+.popup .plusButton {
+  width: auto !important;
+  height: auto;
+  padding: 8px !important;
+  border: 1px solid;
+  border-radius: 6px;
+
+  & span {
+    font-size: 11px;
+  }
+
+  &:hover {
+    background: none !important;
+  }
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.paragraph {
+  max-width: 100%;
+  margin-bottom: 0 !important;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 700;
+}
+
+.icon {
+  height: 14px;
+  margin-right: 9px;
+  margin-left: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-grow: 5;
+  flex-shrink: 0;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  width: 100%;
+  overflow: hidden;
+}
+
+.inputWrapper {
+  justify-content: space-between;
+  width: 100%;
+  padding: 4px;
+
+  & div:first-child {
+    flex-grow: 1;
+  }
+}
+
+.form {
+  display: flex;
 }

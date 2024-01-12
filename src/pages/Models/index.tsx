@@ -29,6 +29,7 @@ import type { Branch, DataSourceInfo, Schema } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
 import type { Version } from "@/types/version";
 import type { Branches_Insert_Input } from "@/graphql/generated";
+import type { CreateBranchFormValues } from "@/components/BranchSelection";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import {
   useDeleteSchemaMutation,
@@ -47,12 +48,12 @@ import type { MenuProps } from "antd";
 import type { ChangeEvent } from "react";
 
 interface ModelsProps {
-  branchMenu: MenuProps["items"];
   ideMenu: MenuProps["items"];
   branches: Branch[];
   onSetDefault: (branchId?: string) => void;
   onChangeBranch: (branchId?: string) => void;
-  onCreateBranch: (name: string) => Promise<void>;
+  onCreateBranch: (data: CreateBranchFormValues) => Promise<void>;
+  onDeleteBranch: (branchId: string) => void;
   onSchemaDelete: (id: string) => void;
   onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
   dataSource?: DataSourceInfo;
@@ -64,6 +65,7 @@ interface ModelsProps {
   onRunSQL: (query: string, limit: number) => void;
   dataSchemaName: string;
   fetching?: boolean;
+  branchLoading?: boolean;
   genSchemaModalVisible?: boolean;
   versionsModalVisible?: boolean;
   tablesSchema: Schema;
@@ -89,13 +91,13 @@ interface ModelsProps {
 export const Models: React.FC<ModelsProps> = ({
   dataSource,
   dataSchemaName,
-  branchMenu,
   ideMenu,
   branches,
   currentBranch,
   currentVersion,
   onChangeBranch,
   onCreateBranch,
+  onDeleteBranch,
   onSetDefault,
   fetching = false,
   onSchemaCreate,
@@ -112,6 +114,7 @@ export const Models: React.FC<ModelsProps> = ({
   data,
   tablesSchema,
   schemaFetching,
+  branchLoading,
   onModalClose,
   onGenSubmit,
   onSaveVersion,
@@ -176,11 +179,12 @@ export const Models: React.FC<ModelsProps> = ({
             }}
             onSchemaUpdate={onSchemaUpdate}
             version={currentVersion?.checksum}
-            branchMenu={branchMenu}
             ideMenu={ideMenu}
             branches={branches}
+            branchLoading={branchLoading}
             currentBranch={currentBranch}
             onChangeBranch={onChangeBranch}
+            onDeleteBranch={onDeleteBranch}
             onSetDefault={onSetDefault}
             docs={`/docs/${currentVersion?.id}`}
             files={dataschemas}
@@ -384,11 +388,20 @@ const ModelsWrapper: React.FC = () => {
     successMessage: null,
   });
 
-  useCheckResponse(setDefaultMutation, () => {}, {
-    successMessage: `${t(`alerts.branch`)} "${currentBranch?.name}" ${t(
-      "alerts.is_now_default"
-    )}`,
-  });
+  useCheckResponse(
+    setDefaultMutation,
+    (res) => {
+      const branchName = res?.update_branches_by_pk?.name;
+      if (branchName) {
+        message.success(
+          `${t(`alerts.branch`)} "${branchName}" ${t("alerts.is_now_default")}`
+        );
+      }
+    },
+    {
+      successMessage: null,
+    }
+  );
 
   useCheckResponse(deleteMutation, () => {}, {
     successMessage: t("alerts.branch_removed"),
@@ -660,7 +673,7 @@ const ModelsWrapper: React.FC = () => {
     });
   };
 
-  const onCreateBranch = async (name: string) => {
+  const onCreateBranch = async (data: CreateBranchFormValues) => {
     const newSchemas = dataschemas.map((schema: Dataschema) => ({
       name: schema.name,
       code: schema.code,
@@ -669,7 +682,7 @@ const ModelsWrapper: React.FC = () => {
     }));
 
     const branchData = {
-      name,
+      name: data.name,
       status: "created",
       user_id: currentUser.id,
       datasource_id: dataSourceId,
@@ -698,6 +711,11 @@ const ModelsWrapper: React.FC = () => {
       branch_id: branchId || currentBranchId,
       datasource_id: dataSourceId,
     });
+  };
+
+  const onDeleteBranch = (branchId?: string) => {
+    execDeleteMutation({ id: branchId });
+    setLocation(`${basePath}/${dataSourceId}`);
   };
 
   const ideMenu = [
@@ -730,23 +748,6 @@ const ModelsWrapper: React.FC = () => {
     },
   ] as MenuProps["items"];
 
-  const branchMenu = [
-    {
-      key: "versions",
-      label: t("branch_menu.show_versions"),
-      onClick: () =>
-        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/versions`),
-    },
-    branches.length > 1 && {
-      key: "remove",
-      label: t("branch_menu.remove_branch"),
-      onClick: () => {
-        execDeleteMutation({ id: currentBranchId });
-        setLocation(`${basePath}/${dataSourceId}`);
-      },
-    },
-  ].filter(Boolean) as MenuProps["items"];
-
   return (
     <Models
       onSchemaCreate={onClickCreate}
@@ -754,7 +755,6 @@ const ModelsWrapper: React.FC = () => {
       onSchemaDelete={onClickDelete}
       dataschemas={dataschemas}
       dataSource={dataSource}
-      branchMenu={branchMenu}
       ideMenu={ideMenu}
       branches={branches}
       fetching={fetching}
@@ -764,7 +764,9 @@ const ModelsWrapper: React.FC = () => {
         setLocation(`${basePath}/${dataSourceId}/${branchId}`);
       }}
       onSetDefault={onSetDefault}
+      branchLoading={createBranchMutation.fetching}
       onCreateBranch={onCreateBranch}
+      onDeleteBranch={onDeleteBranch}
       currentVersion={currentVersion}
       dataSchemaName={dataSchemaName || ""}
       onRunSQL={onRunSQL}

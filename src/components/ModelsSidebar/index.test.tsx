@@ -22,8 +22,8 @@ describe("ModelsSidebar Component", () => {
         onCreateFile={vi.fn()}
         dataSources={[]}
         onDataSourceChange={vi.fn()}
-        branchMenu={[]}
         ideMenu={[]}
+        onDeleteBranch={vi.fn()}
       />
     );
     const titleElement = screen.getByText(/common:words.branch/);
@@ -45,7 +45,7 @@ describe("ModelsSidebar Component", () => {
         onCreateFile={vi.fn()}
         dataSources={[]}
         onDataSourceChange={vi.fn()}
-        branchMenu={[]}
+        onDeleteBranch={vi.fn()}
         ideMenu={[]}
       />
     );

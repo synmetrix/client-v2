@@ -23,6 +23,7 @@ Default.args = {
     loading: false,
     data: meta,
   },
+  branches: dataSourcesMock[0].branches,
   explorationData: {
     exploration: exploreMock.exploration.data.explorations_by_pk,
     dataset: exploreMock.exploration.data.fetch_dataset,

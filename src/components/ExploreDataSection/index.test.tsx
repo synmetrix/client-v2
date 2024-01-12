@@ -37,6 +37,6 @@ describe("ExploreDataSection", () => {
         isActive={false}
       />
     );
-    expect(screen.getByText("data_section.data")).toBeInTheDocument();
+    expect(screen.getByText("data_section.results")).toBeInTheDocument();
   });
 });

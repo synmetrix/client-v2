@@ -11,6 +11,7 @@
     "delete_alert": "Delete Alert",
     "delete_report": "Delete Report",
     "delete_role": "Delete Role",
+    "delete_branch": "Delete Branch",
     "delete_member": "Delete Member",
     "no_permission": "No permission",
     "are_you_sure": "Are you sure?",
@@ -100,7 +101,8 @@
     "set_current": "Set current",
     "my_role": "My role",
     "send_request": "Send Request",
-    "rest_api_docs": "REST API docs"
+    "rest_api_docs": "REST API docs",
+    "default": "default"
   },
   "form": {
     "labels": {

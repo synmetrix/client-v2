@@ -87,53 +87,54 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
           const isActive = value === currentBranch?.id;
           const icon = isActive ? <BranchBlackIcon /> : <BranchGreyIcon />;
 
-          const title = (
-            <div className={styles.label}>
-              <span className={styles.icon}>{icon}</span>
-              <Paragraph
-                title={label as string}
-                ellipsis
-                className={styles.paragraph}
-              >
-                {label}
-              </Paragraph>
-            </div>
-          );
-
-          if (disableActions) {
-            return title;
-          }
-
           return (
             <div className={styles.container}>
-              {title}
-              <Space size={12} className={styles.actions}>
-                <Button
-                  size="small"
-                  type="text"
-                  disabled={isDefault}
-                  className={cn(
-                    styles.button,
-                    isDefault && styles.defaultButton
-                  )}
-                  onClick={(e) => onDefault(e, value as string)}
+              <div className={styles.label}>
+                <span className={styles.icon}>{icon}</span>
+                <Paragraph
+                  title={label as string}
+                  ellipsis
+                  className={styles.paragraph}
                 >
-                  {isDefault
-                    ? t("common:words.default").toUpperCase()
-                    : t("models:sidebar.set_default").toUpperCase()}
-                </Button>
+                  {label}
+                </Paragraph>
+              </div>
 
-                <div onClick={(e) => e.stopPropagation()}>
-                  <ConfirmModal
-                    title={t("common:words.delete_branch")}
-                    className={styles.deleteText}
-                    onConfirm={() => onDelete?.(value as string)}
+              <Space size={12} className={styles.actions}>
+                {(!disableActions || isDefault) && (
+                  <Button
+                    size="small"
+                    type="text"
+                    disabled={isDefault}
+                    className={cn(
+                      styles.button,
+                      isDefault && styles.defaultButton
+                    )}
+                    onClick={(e) => onDefault(e, value as string)}
                   >
-                    <Button size="small" type="text" className={styles.button}>
-                      <TrashColoredIcon />
-                    </Button>
-                  </ConfirmModal>
-                </div>
+                    {isDefault
+                      ? t("common:words.default").toUpperCase()
+                      : t("models:sidebar.set_default").toUpperCase()}
+                  </Button>
+                )}
+
+                {!disableActions && (
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <ConfirmModal
+                      title={t("common:words.delete_branch")}
+                      className={styles.deleteText}
+                      onConfirm={() => onDelete?.(value as string)}
+                    >
+                      <Button
+                        size="small"
+                        type="text"
+                        className={styles.button}
+                      >
+                        <TrashColoredIcon />
+                      </Button>
+                    </ConfirmModal>
+                  </div>
+                )}
               </Space>
             </div>
           );

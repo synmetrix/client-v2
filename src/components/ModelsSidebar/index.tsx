@@ -1,5 +1,5 @@
 import { Col, Row, Space } from "antd";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
@@ -15,7 +15,8 @@ import BranchSelection from "@/components/BranchSelection";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { Dataschema } from "@/types/dataschema";
 
-import VerticalDots from "@/assets/dots-vertical.svg";
+import TrashColoredIcon from "@/assets/trash-colored.svg";
+import EditIcon from "@/assets/edit.svg";
 import YMLIcon from "@/assets/yml-flie.svg";
 import JSIcon from "@/assets/js-file.svg";
 
@@ -141,9 +142,10 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
           </div>
         </Space>
 
-        <Space className={styles.space} size={16} direction="vertical">
+        <Space className={styles.space} size={10} direction="vertical">
           <div className={cn(styles.row, styles.searchRow)}>
             <SearchInput
+              className={styles.searchInput}
               value={searchTerm}
               onChange={(val) => setTerm(val.toLowerCase())}
               placeholder={t("common:form.placeholders.search")}
@@ -167,106 +169,101 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 />
               }
             />
-
-            {ideMenu && (
-              <PopoverButton
-                className={cn(styles.dropdown, styles.schemaMenu)}
-                popoverType="dropdown"
-                buttonProps={{ type: "ghost" }}
-                menu={{ items: ideMenu }}
-                icon={<VerticalDots />}
-                trigger={["click"]}
-                arrow
-                disabled={!branches?.length}
-              />
-            )}
           </div>
 
-          {((searchTerm && filteredSchemas) || files).map((f) => {
-            return (
-              <div
-                key={f.id}
-                className={styles.fileBtn}
-                onClick={() => onSelectFile(f.name)}
-              >
-                <Row justify={"space-between"} wrap={false}>
-                  <Col className={styles.file} span={18} title={f.name}>
-                    {icons[f.name.split(".")[1] as keyof typeof icons]}{" "}
-                    <span className={styles.fileNameText}>{f.name}</span>
-                  </Col>
+          <Space className={styles.fileList} size={4} direction="vertical">
+            {((searchTerm && filteredSchemas) || files).map((f) => {
+              return (
+                <div
+                  key={f.id}
+                  className={styles.fileBtn}
+                  onClick={() => onSelectFile(f.name)}
+                >
+                  <Row justify={"space-between"} wrap={false}>
+                    <Col className={styles.file} span={18} title={f.name}>
+                      {icons[f.name.split(".")[1] as keyof typeof icons]}{" "}
+                      <span className={styles.fileNameText}>{f.name}</span>
+                    </Col>
 
-                  <Col
-                    span={6}
-                    style={{ display: "flex", justifyContent: "end" }}
-                  >
-                    <Space align="center" size={8}>
-                      <PopoverButton
-                        className={styles.edit}
-                        trigger={["click"]}
-                        icon={<EditOutlined />}
-                        isVisible={
-                          editPopover?.id === f.id &&
-                          editPopover?.type === "edit"
-                        }
-                        onVisibleChange={onPopoverChange(f, "edit")}
-                        content={
-                          <DataSchemaForm
-                            defaultValues={f}
-                            onSubmit={(d) =>
-                              onSchemaUpdate(f.id, {
-                                ...f,
-                                ...d,
-                              })
-                            }
-                          />
-                        }
-                        buttonProps={{
-                          size: "small",
-                          type: "link",
-                          className: styles.fileControl,
-                        }}
-                      />
+                    <Col
+                      span={6}
+                      style={{ display: "flex", justifyContent: "end" }}
+                    >
+                      <Space
+                        className={styles.fileControls}
+                        align="center"
+                        size={8}
+                      >
+                        <PopoverButton
+                          className={styles.edit}
+                          trigger={["click"]}
+                          icon={<EditIcon className={styles.editIcon} />}
+                          isVisible={
+                            editPopover?.id === f.id &&
+                            editPopover?.type === "edit"
+                          }
+                          onVisibleChange={onPopoverChange(f, "edit")}
+                          content={
+                            <DataSchemaForm
+                              defaultValues={f}
+                              onSubmit={(d) =>
+                                onSchemaUpdate(f.id, {
+                                  ...f,
+                                  ...d,
+                                })
+                              }
+                            />
+                          }
+                          buttonProps={{
+                            size: "small",
+                            type: "link",
+                            className: styles.fileControl,
+                          }}
+                        />
 
-                      <PopoverButton
-                        popoverType="popconfirm"
-                        title={t("sure_delete")}
-                        buttonProps={{
-                          size: "small",
-                          type: "link",
-                          className: styles.fileControl,
-                        }}
-                        isVisible={
-                          editPopover?.id === f.id &&
-                          editPopover?.type === "remove"
-                        }
-                        onVisibleChange={onPopoverChange(f, "remove")}
-                        trigger={"click"}
-                        onConfirm={(e) => {
-                          e?.preventDefault();
-                          e?.stopPropagation();
-                          onSchemaDelete(f);
-                        }}
-                        okText={t("common:words.remove")}
-                        cancelText={t("common:words.cancel")}
-                        icon={<DeleteOutlined />}
-                      />
-                    </Space>
-                  </Col>
-                </Row>
-                {"matchedLines" in f &&
-                  Object.entries(f.matchedLines || {}).map(
-                    ([lineIndex, match]) => (
-                      <Highlight
-                        key={lineIndex}
-                        index={Number(lineIndex)}
-                        text={match.line}
-                        indices={match.indices}
-                      />
-                    )
-                  )}
-              </div>
-            );
-          })}
+                        <PopoverButton
+                          popoverType="popconfirm"
+                          title={t("sure_delete")}
+                          buttonProps={{
+                            size: "small",
+                            type: "link",
+                            className: styles.fileControl,
+                          }}
+                          isVisible={
+                            editPopover?.id === f.id &&
+                            editPopover?.type === "remove"
+                          }
+                          onVisibleChange={onPopoverChange(f, "remove")}
+                          trigger={"click"}
+                          onConfirm={(e) => {
+                            e?.preventDefault();
+                            e?.stopPropagation();
+                            onSchemaDelete(f);
+                          }}
+                          okText={t("common:words.remove")}
+                          cancelText={t("common:words.cancel")}
+                          icon={
+                            <TrashColoredIcon className={styles.trahsIcon} />
+                          }
+                        />
+                      </Space>
+                    </Col>
+                  </Row>
+                  {"matchedLines" in f &&
+                    Object.entries(f.matchedLines || {}).map(
+                      ([lineIndex, match]) => (
+                        <Highlight
+                          key={lineIndex}
+                          index={Number(lineIndex)}
+                          text={match.line}
+                          indices={match.indices}
+                        />
+                      )
+                    )}
+                </div>
+              );
+            })}
+          </Space>
         </Space>
       </div>
     </Space>

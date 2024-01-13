@@ -102,6 +102,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
         style={{
           width: "100%",
           height: "57px",
+          background: "#f9f9f9",
         }}
         hideTracksWhenNotNeeded
         autoHide

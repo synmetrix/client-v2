@@ -3,7 +3,7 @@ import Scrollbar from "react-custom-scrollbars";
 import { CloseOutlined } from "@ant-design/icons";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
-import { useResponsive, useTrackedEffect } from "ahooks";
+import { useResponsive, useSize, useTrackedEffect } from "ahooks";
 import moment from "moment";
 import cn from "classnames";
 
@@ -48,6 +48,13 @@ const CodeEditor: FC<CodeEditorProps> = ({
   const { t } = useTranslation(["models", "common"]);
   const windowSize = useResponsive();
   const isMd = windowSize?.md;
+
+  const bodySize = useSize(document.body);
+  const headerSize = useSize(document.getElementById("header"));
+  const editorHeight =
+    bodySize?.height && headerSize?.height
+      ? bodySize.height - headerSize.height
+      : 500;
 
   const [limit, setLimit] = useState<number>(1000);
   const [query, setQuery] = useState<string>("SELECT id FROM users");
@@ -185,16 +192,19 @@ const CodeEditor: FC<CodeEditorProps> = ({
               </Col>
             </Row>
           </div>
-          <Editor
-            className={styles.monaco}
-            language={language}
-            defaultLanguage={language}
-            defaultValue={files[active]?.code}
-            value={content}
-            onChange={(val) => setContent(val || "")}
-            path={files[active]?.name}
-            options={MONACO_OPTIONS}
-          />
+          <div className={styles.monacoWrapper}>
+            <Editor
+              className={styles.monaco}
+              language={language}
+              defaultLanguage={language}
+              defaultValue={files[active]?.code}
+              value={content}
+              onChange={(val) => setContent(val || "")}
+              path={files[active]?.name}
+              options={MONACO_OPTIONS}
+              height={editorHeight}
+            />
+          </div>
         </div>
       ) : (
         <SQLRunner

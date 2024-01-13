@@ -65,16 +65,6 @@ const CodeEditor: FC<CodeEditorProps> = ({
     active ? files[active]?.code : ""
   );
 
-  const saveBtn = (
-    <Button
-      className={cn(styles.save)}
-      onClick={() => active && onCodeSave(files[active].id, content)}
-      icon={<SaveIcon />}
-    >
-      {t("common:words.save")}
-    </Button>
-  );
-
   const onRun = () => {
     if (!showData) {
       setShowData(true);
@@ -182,10 +172,19 @@ const CodeEditor: FC<CodeEditorProps> = ({
                   </span>
                 )}
               </Col>
-              <Col>{saveBtn}</Col>
+              <Col>
+                <Button
+                  className={cn(styles.save)}
+                  onClick={() =>
+                    active && onCodeSave(files[active].id, content)
+                  }
+                  icon={<SaveIcon />}
+                >
+                  {t("common:words.save")}
+                </Button>
+              </Col>
             </Row>
           </div>
-          <div className={styles.editorControls}>{isMd && saveBtn}</div>
           <Editor
             className={styles.monaco}
             language={language}

@@ -33,6 +33,7 @@ const Header: React.FC<HeaderProps> = ({
         bordered && styles.headerBordered,
         isMobile && styles.mobile
       )}
+      id="header"
     >
       <Row
         className={cx(styles.root, !responsive.lg && styles.rootMobile)}

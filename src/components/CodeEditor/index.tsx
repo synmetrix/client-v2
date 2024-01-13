@@ -46,14 +46,24 @@ const CodeEditor: FC<CodeEditorProps> = ({
   sqlError = {},
 }) => {
   const { t } = useTranslation(["models", "common"]);
+  const pageHeader = useRef(null);
+  const editorHeader = useRef(null);
   const windowSize = useResponsive();
   const isMd = windowSize?.md;
 
   const bodySize = useSize(document.body);
   const headerSize = useSize(document.getElementById("header"));
+  const pageHeaderSize = useSize(pageHeader.current);
+
   const editorHeight =
     bodySize?.height && headerSize?.height
-      ? bodySize.height - headerSize.height
+      ? Math.max(
+          bodySize.height -
+            headerSize.height -
+            (pageHeaderSize?.height || 0) -
+            91,
+          300
+        )
       : 500;
 
   const [limit, setLimit] = useState<number>(1000);
@@ -115,7 +125,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
         />
       )}
     >
-      <Space className={styles.nav} size={8}>
+      <Space className={styles.nav} size={8} ref={pageHeader}>
         <Button
           className={cn(styles.btn, styles.sqlRunner, {
             [styles.active]: active === "sqlrunner",
@@ -162,7 +172,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
       {header}
       {active && active !== "sqlrunner" ? (
         <div>
-          <div className={styles.editorHeader}>
+          <div className={styles.editorHeader} ref={editorHeader}>
             <Row
               className={styles.editorHeaderInner}
               align={"middle"}

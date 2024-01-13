@@ -62,27 +62,16 @@
 }
 
 .addFile {
+  position: relative;
   width: 26px !important;
   height: 26px !important;
   border: 1.5px solid #a5a5a5;
   border-radius: 7px !important;
-}
-
-.dots {
-  position: relative;
-  top: 3px;
-  left: 2px;
-  color: inherit;
-}
-
-.plusIcon {
-  position: relative;
-  top: 1px;
-  right: 2px;
-  color: inherit;
-
   svg {
-    stroke-width: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 

@@ -137,6 +137,7 @@ export const Models: React.FC<ModelsProps> = ({
     openTab,
     openedTabs,
     openSchema,
+    tabsState,
   } = useModelsIde({
     dataSourceId: dataSource?.id || "",
     branchId: currentBranch?.id,
@@ -157,12 +158,19 @@ export const Models: React.FC<ModelsProps> = ({
       if (schema && activeTab !== schema.name) {
         openTab(schema.name);
       }
-
-      if (!schema) {
-        changeActiveTab();
-      }
     }
   }, [dataSchemaName, dataschemas, openSchema, openTab]);
+
+  const onUpdateSchema: typeof onSchemaUpdate = (editId, values) => {
+    const schema = dataschemas.find((s) => s.id === editId);
+
+    if (schema && values.name) {
+      tabsState.tabs.delete(schema.name);
+      tabsState.tabs.add(values.name);
+    }
+
+    return onSchemaUpdate(editId, values);
+  };
 
   const Layout =
     dataSources && dataSources.length === 0 ? AppLayout : SidebarLayout;
@@ -184,7 +192,7 @@ export const Models: React.FC<ModelsProps> = ({
               }
               onSchemaDelete(schema.id);
             }}
-            onSchemaUpdate={onSchemaUpdate}
+            onSchemaUpdate={onUpdateSchema}
             version={currentVersion?.checksum}
             ideMenu={ideMenu}
             branches={branches}
@@ -656,6 +664,15 @@ const ModelsWrapper: React.FC = () => {
     }
 
     await createNewVersion(checksum, newDataschemas);
+
+    if (
+      dataSchemaName ===
+      dataschemas.find((schema) => schema.id === editId)?.name
+    ) {
+      setLocation(
+        `${basePath}/${dataSourceId}/${currentBranchId}/${values.name}`
+      );
+    }
 
     return newDataschemas;
   };

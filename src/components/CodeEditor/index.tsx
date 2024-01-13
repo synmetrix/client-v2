@@ -96,66 +96,73 @@ const CodeEditor: FC<CodeEditorProps> = ({
     ? languages[active.split(".")[0] as keyof typeof languages]
     : "sql";
 
+  const header = (
+    <Scrollbar
+      style={{
+        width: "100%",
+        height: "57px",
+        background: "#f9f9f9",
+      }}
+      hideTracksWhenNotNeeded
+      autoHide
+      renderThumbHorizontal={({ style, ...props }) => (
+        <div
+          {...props}
+          style={{
+            ...style,
+            backgroundColor: "#C1BFC1",
+            height: "4px",
+            borderRadius: "2px",
+            bottom: -1,
+          }}
+        />
+      )}
+    >
+      <Space className={styles.nav} size={8}>
+        <Button
+          className={cn(styles.btn, styles.sqlRunner, {
+            [styles.active]: active === "sqlrunner",
+          })}
+          key="sqlrunner"
+          onClick={() => onTabChange()}
+        >
+          {t("common:words.sql_runner")}
+        </Button>
+        {files &&
+          Object.keys(files).map((name) => (
+            <Button
+              type="default"
+              key={name}
+              className={cn(styles.btn, {
+                [styles.active]: active && name === active,
+              })}
+              onClick={() => onTabChange(files[name])}
+            >
+              {files[name].name}
+              <Tooltip title={t("common:words.close")}>
+                <CloseOutlined
+                  className={styles.closeIcon}
+                  data-testid="close-icon"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onClose(name);
+                  }}
+                />
+              </Tooltip>
+            </Button>
+          ))}
+      </Space>
+    </Scrollbar>
+  );
+
+  if (!active) {
+    return <div className={styles.wrapper}>{header}</div>;
+  }
+
   return (
     <div className={styles.wrapper} data-testid="code-editor">
-      <Scrollbar
-        style={{
-          width: "100%",
-          height: "57px",
-          background: "#f9f9f9",
-        }}
-        hideTracksWhenNotNeeded
-        autoHide
-        renderThumbHorizontal={({ style, ...props }) => (
-          <div
-            {...props}
-            style={{
-              ...style,
-              backgroundColor: "#C1BFC1",
-              height: "4px",
-              borderRadius: "2px",
-              bottom: -1,
-            }}
-          />
-        )}
-      >
-        <Space className={styles.nav} size={8}>
-          <Button
-            className={cn(styles.btn, styles.sqlRunner, {
-              [styles.active]: active === "sqlrunner",
-            })}
-            key="sqlrunner"
-            onClick={() => onTabChange()}
-          >
-            {t("common:words.sql_runner")}
-          </Button>
-          {files &&
-            Object.keys(files).map((name) => (
-              <Button
-                type="default"
-                key={name}
-                className={cn(styles.btn, {
-                  [styles.active]: active && name === active,
-                })}
-                onClick={() => onTabChange(files[name])}
-              >
-                {files[name].name}
-                <Tooltip title={t("common:words.close")}>
-                  <CloseOutlined
-                    className={styles.closeIcon}
-                    data-testid="close-icon"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      onClose(name);
-                    }}
-                  />
-                </Tooltip>
-              </Button>
-            ))}
-        </Space>
-      </Scrollbar>
-
+      {header}
       {active && active !== "sqlrunner" ? (
         <div>
           <div className={styles.editorHeader}>

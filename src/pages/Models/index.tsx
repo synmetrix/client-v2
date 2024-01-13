@@ -38,6 +38,7 @@ import {
   useSetDefaultBranchMutation,
   useCurrentVersionQuery,
   useVersionsCountSubscription,
+  Branch_Statuses_Enum,
 } from "@/graphql/generated";
 import { EXPORT, MODELS, SOURCES } from "@/utils/constants/paths";
 
@@ -308,6 +309,13 @@ const ModelsWrapper: React.FC = () => {
     [params]
   );
 
+  const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
+    `${dataSourceId}:currentBranch`
+  );
+  const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState<
+    string | null
+  >("currentDataSourceId");
+
   const [versionsData] = useVersionsCountSubscription({
     variables: {
       branch_id: branch,
@@ -316,22 +324,24 @@ const ModelsWrapper: React.FC = () => {
 
   const versionsCount = versionsData.data?.versions_aggregate.aggregate?.count;
 
-  const dataSource = useMemo(
-    () =>
-      teamData?.dataSources?.find((d: DataSourceInfo) => d.id === dataSourceId),
-    [dataSourceId, teamData]
-  );
+  const [dataSource, currentBranch] = useMemo(() => {
+    const source =
+      (teamData?.dataSources || []).find((d) => d.id === dataSourceId) ||
+      teamData?.dataSources?.[0];
+
+    const curBranch =
+      (source?.branches || []).find((b) => b.id === branch) ||
+      (source?.branches || []).find(
+        (b) => b.status === Branch_Statuses_Enum.Active
+      );
+
+    return [source, curBranch];
+  }, [branch, dataSourceId, teamData?.dataSources]);
+
   const branches = useMemo(
     () => dataSource?.branches || [],
     [dataSource?.branches]
   );
-
-  const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
-    `${dataSourceId}:currentBranch`
-  );
-  const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState<
-    string | null
-  >("currentDataSourceId");
 
   const [version, execVersionAll] = useCurrentVersionQuery({
     variables: { branch_id: currentBranchId },
@@ -385,14 +395,14 @@ const ModelsWrapper: React.FC = () => {
     }
   );
 
-  const currentBranch = useMemo(() => {
-    const curBranch =
-      (branches || []).find((b) => b.id === currentBranchId) || branches?.[0];
-    if (curBranch?.id && curBranch?.id !== currentBranchId) {
-      setCurrentBranchId(curBranch?.id);
-    }
-    return curBranch;
-  }, [branches, currentBranchId, setCurrentBranchId]);
+  // const currentBranch = useMemo(() => {
+  //   const curBranch =
+  //     (branches || []).find((b) => b.id === currentBranchId) || branches?.[0];
+  //   if (curBranch?.id && curBranch?.id !== currentBranchId) {
+  //     setCurrentBranchId(curBranch?.id);
+  //   }
+  //   return curBranch;
+  // }, [branches, currentBranchId, setCurrentBranchId]);
   const currentVersion = useMemo(
     () => version?.data?.versions[0] || ({} as Version),
     [version]

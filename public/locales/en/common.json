@@ -103,7 +103,9 @@
     "send_request": "Send Request",
     "rest_api_docs": "REST API docs",
     "row_limit": "Row Limit",
-    "default": "default"
+    "default": "default",
+    "versions": "Versions",
+    "version": "Version"
   },
   "form": {
     "labels": {

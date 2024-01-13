@@ -1,7 +1,7 @@
 import { Spin, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
-import { useLocalStorageState } from "ahooks";
+import { useLocalStorageState, useTrackedEffect } from "ahooks";
 import { getOr } from "unchanged";
 import JSZip from "jszip";
 import { load } from "js-yaml";
@@ -150,17 +150,19 @@ export const Models: React.FC<ModelsProps> = ({
     [dataschemas, openedTabs]
   ) as Dataschema[];
 
-  useEffect(() => {
+  useTrackedEffect(() => {
     if (dataSchemaName) {
-      const schemaObj = dataschemas.find(
-        (schema) => schema.name === dataSchemaName
-      );
+      const schema = dataschemas.find((s) => s.name === dataSchemaName);
 
-      if (schemaObj) {
-        openTab(schemaObj.name);
+      if (schema && activeTab !== schema.name) {
+        openTab(schema.name);
+      }
+
+      if (!schema) {
+        changeActiveTab();
       }
     }
-  }, [dataschemas, dataSchemaName, openTab]);
+  }, [dataSchemaName, dataschemas, openSchema, openTab]);
 
   const Layout =
     dataSources && dataSources.length === 0 ? AppLayout : SidebarLayout;
@@ -457,15 +459,12 @@ const ModelsWrapper: React.FC = () => {
       const isExist = teamData?.dataSources?.find(
         (ds) => ds.id === currentDataSourceId
       );
+
       if (isExist) {
-        setLocation(`${basePath}/${currentDataSourceId}`);
+        setLocation(`${basePath}/${currentDataSourceId}/${slug}`);
       } else {
         setCurrentDataSourceId(teamData?.dataSources?.[0]?.id);
       }
-    }
-
-    if (dataSourceId && !teamData?.dataSources?.length) {
-      setLocation(basePath);
     }
 
     if (dataSourceId) {
@@ -473,10 +472,8 @@ const ModelsWrapper: React.FC = () => {
 
       if (isExist) {
         if (!branch && currentBranchId) {
-          setLocation(`${basePath}/${dataSourceId}/${currentBranchId}`);
+          setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/${slug}`);
         }
-      } else {
-        setLocation(basePath);
       }
     }
   }, [
@@ -488,6 +485,7 @@ const ModelsWrapper: React.FC = () => {
     setCurrentDataSourceId,
     branch,
     currentBranchId,
+    slug,
   ]);
 
   const inputFile = useRef<HTMLInputElement>(null);
@@ -777,7 +775,7 @@ const ModelsWrapper: React.FC = () => {
       currentBranch={currentBranch}
       onChangeBranch={(branchId) => {
         setCurrentBranchId(branchId);
-        setLocation(`${basePath}/${dataSourceId}/${branchId}`);
+        setLocation(`${basePath}/${dataSourceId}/${branchId}/${slug}`);
       }}
       onSetDefault={onSetDefault}
       branchLoading={createBranchMutation.fetching}

@@ -823,9 +823,10 @@ const ModelsWrapper: React.FC = () => {
       onModalClose={() => onModalClose(true)}
       onGenSubmit={onGenSubmit}
       onSaveVersion={createNewVersion}
-      onDataSourceChange={(ds) =>
-        setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}/sqlrunner`)
-      }
+      onDataSourceChange={(ds) => {
+        setCurrentDataSourceId(ds?.id);
+        setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}/sqlrunner`);
+      }}
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
       onConnect={() => setLocation(withAuthPrefix(`${SOURCES}/new`))}

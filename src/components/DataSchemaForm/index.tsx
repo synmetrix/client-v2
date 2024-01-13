@@ -29,7 +29,9 @@ const DataSchemaForm: FC<DataSchemaFormProps> = ({
   const { t } = useTranslation(["common"]);
 
   const { control, handleSubmit, reset } = useForm<DataSchemaFormValues>({
-    defaultValues,
+    defaultValues: {
+      name: defaultValues.name?.slice(0, defaultValues.name?.lastIndexOf(".")),
+    },
   });
 
   const onFormSubmit = (data: DataSchemaFormValues) => {
@@ -51,7 +53,9 @@ const DataSchemaForm: FC<DataSchemaFormProps> = ({
               name="type"
               fieldType="select"
               control={control}
-              defaultValue={fileTypes[0]}
+              defaultValue={defaultValues.name?.slice(
+                defaultValues.name?.lastIndexOf(".") + 1
+              )}
               options={fileTypes.map((type) => ({
                 label: `.${type}`,
                 value: type,

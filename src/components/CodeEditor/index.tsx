@@ -10,6 +10,7 @@ import cn from "classnames";
 import Button from "@/components/Button";
 import NoModels from "@/components/NoModels";
 import SQLRunner from "@/components/SQLRunner";
+import Console from "@/components/Console";
 import { MONACO_OPTIONS } from "@/utils/constants/monaco";
 import type { Dataschema } from "@/types/dataschema";
 import equals from "@/utils/helpers/equals";
@@ -29,6 +30,9 @@ interface CodeEditorProps {
   onCodeSave: (id: string, code: string) => void;
   data?: object[];
   sqlError?: object;
+  showConsole?: boolean;
+  toggleConsole?: () => void;
+  validationError: string;
 }
 
 const languages = {
@@ -45,6 +49,9 @@ const CodeEditor: FC<CodeEditorProps> = ({
   onCodeSave,
   data,
   sqlError = {},
+  showConsole = false,
+  toggleConsole = () => {},
+  validationError,
 }) => {
   const { t } = useTranslation(["models", "common"]);
   const pageHeader = useRef(null);
@@ -220,6 +227,14 @@ const CodeEditor: FC<CodeEditorProps> = ({
               options={MONACO_OPTIONS}
               height={editorHeight}
             />
+            {showConsole && active !== "sqlrunner" && (
+              <div className={styles.console}>
+                <Console
+                  onClose={() => toggleConsole?.()}
+                  errors={validationError}
+                />
+              </div>
+            )}
           </div>
         </div>
       ) : (

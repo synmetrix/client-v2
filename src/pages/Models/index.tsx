@@ -12,7 +12,6 @@ import CodeEditor from "@/components/CodeEditor";
 import ErrorFound from "@/components/ErrorFound";
 import ModelsSidebar from "@/components/ModelsSidebar";
 import SidebarLayout from "@/layouts/SidebarLayout";
-import Console from "@/components/Console";
 import Modal from "@/components/Modal";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import VersionsList from "@/components/VersionsList";
@@ -232,17 +231,11 @@ export const Models: React.FC<ModelsProps> = ({
                 onCodeSave={onCodeSave}
                 data={data}
                 sqlError={sqlError}
+                showConsole={isConsoleOpen}
+                toggleConsole={toggleConsole}
+                validationError={validationError}
               />
             </div>
-
-            {isConsoleOpen && activeTab !== "sqlrunner" && (
-              <div className={styles.console}>
-                <Console
-                  onClose={() => toggleConsole?.()}
-                  errors={validationError}
-                />
-              </div>
-            )}
           </div>
 
           {dataSource && (

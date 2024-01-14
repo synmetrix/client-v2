@@ -8,6 +8,7 @@ import moment from "moment";
 import cn from "classnames";
 
 import Button from "@/components/Button";
+import NoModels from "@/components/NoModels";
 import SQLRunner from "@/components/SQLRunner";
 import { MONACO_OPTIONS } from "@/utils/constants/monaco";
 import type { Dataschema } from "@/types/dataschema";
@@ -164,7 +165,12 @@ const CodeEditor: FC<CodeEditorProps> = ({
   );
 
   if (!active) {
-    return <div className={styles.wrapper}>{header}</div>;
+    return (
+      <div className={styles.wrapper}>
+        {header}
+        <NoModels />
+      </div>
+    );
   }
 
   return (

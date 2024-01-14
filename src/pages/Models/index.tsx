@@ -360,6 +360,7 @@ const ModelsWrapper: React.FC = () => {
   } = useSources({
     params: {
       editId: dataSourceId,
+      branchId: branch,
     },
   });
 
@@ -695,7 +696,7 @@ const ModelsWrapper: React.FC = () => {
 
   const onCodeSave = async (id: string, code: string) => {
     await onClickUpdate(id, { code }, true);
-    await execQueryMeta({ id: dataSourceId });
+    await execQueryMeta({ id: dataSourceId, branch_id: branch });
   };
 
   const onRunSQL = (query: string, limit: number) => {

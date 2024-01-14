@@ -16,6 +16,7 @@ import {
 type Params = {
   editId?: string;
   teamId?: Maybe<string>;
+  branchId?: Maybe<string>;
 };
 
 interface Props {
@@ -40,6 +41,7 @@ export default ({ params = {} }: Props) => {
     pause: true,
     variables: {
       datasource_id: editId,
+      branch_id: params.branchId,
     },
     requestPolicy: "cache-and-network",
   });

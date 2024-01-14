@@ -44,6 +44,10 @@ export default ({ params = {} }: Props) => {
     requestPolicy: "cache-and-network",
   });
 
+  useEffect(() => {
+    execQueryMeta();
+  }, [execQueryMeta]);
+
   const currentMeta = useMemo(
     () => metaData.data?.fetch_meta?.cubes || [],
     [metaData.data]

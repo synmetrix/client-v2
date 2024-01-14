@@ -350,12 +350,10 @@ const ModelsWrapper: React.FC = () => {
   const dataSchemaName = (reservedSlugs.indexOf(slug) === -1 && slug) || null;
 
   const {
-    queries: { tablesData, execQueryTables },
+    queries: { tablesData, execQueryTables, metaData, execQueryMeta },
     mutations: {
       runQueryMutation,
       execRunQueryMutation,
-      validateMutation,
-      execValidateMutation,
       genSchemaMutation,
       execGenSchemaMutation,
     },
@@ -436,15 +434,15 @@ const ModelsWrapper: React.FC = () => {
     successMessage: t("alerts.branch_removed"),
   });
 
-  useCheckResponse(validateMutation, undefined, {
+  useCheckResponse(metaData, undefined, {
     successMessage: null,
     errorMessage: t("alerts.compilation_error"),
     showResponseMessage: false,
   });
 
   const validationError = useMemo(
-    () => validateMutation?.error?.message,
-    [validateMutation.error]
+    () => metaData?.error?.message,
+    [metaData.error]
   );
 
   useEffect(() => {
@@ -510,7 +508,7 @@ const ModelsWrapper: React.FC = () => {
 
     await execGenSchemaMutation({
       datasource_id: dataSourceId,
-      branch_id: currentBranchId,
+      branch_id: branch,
       tables,
       format,
       overwrite: true,
@@ -525,7 +523,7 @@ const ModelsWrapper: React.FC = () => {
     version?.fetching ||
     deleteMutation.fetching ||
     setDefaultMutation.fetching ||
-    validateMutation.fetching ||
+    metaData.fetching ||
     genSchemaMutation.fetching ||
     tablesData.fetching ||
     runQueryMutation.fetching;
@@ -670,7 +668,8 @@ const ModelsWrapper: React.FC = () => {
 
     if (
       dataSchemaName ===
-      dataschemas.find((schema) => schema.id === editId)?.name
+        dataschemas.find((schema) => schema.id === editId)?.name &&
+      values.name
     ) {
       setLocation(
         `${basePath}/${dataSourceId}/${currentBranchId}/${values.name}`
@@ -696,7 +695,7 @@ const ModelsWrapper: React.FC = () => {
 
   const onCodeSave = async (id: string, code: string) => {
     await onClickUpdate(id, { code }, true);
-    await execValidateMutation({ id: dataSourceId });
+    await execQueryMeta({ id: dataSourceId });
   };
 
   const onRunSQL = (query: string, limit: number) => {
@@ -757,7 +756,7 @@ const ModelsWrapper: React.FC = () => {
       key: "gen",
       label: t("ide_menu.generate_schema"),
       onClick: () =>
-        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/genmodels`),
+        setLocation(`${basePath}/${dataSourceId}/${branch}/genmodels`),
     },
     {
       key: "import",

@@ -154,7 +154,6 @@ export const queryState: PlaygroundState = {
   timezone: "UTC",
   limit: 1000,
   offset: 0,
-  page: 0,
 };
 
 export const initialState: PlaygroundState = {

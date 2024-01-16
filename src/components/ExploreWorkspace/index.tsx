@@ -159,6 +159,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
       disabled={!isQueryChanged}
       state={state}
       loading={loading}
+      playgroundState={playgroundState}
       queryState={explorationState}
       disableButtons={!explorationData?.exploration?.id}
       screenshotMode={isScreenshotMode}

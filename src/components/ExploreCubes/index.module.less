@@ -29,6 +29,16 @@
   border-radius: 6px !important;
 }
 
+.panel,
+.panelSubSection {
+  :global(.ant-collapse-header .ant-collapse-expand-icon) {
+    margin: 0;
+    margin-right: 8px;
+    padding: 0;
+    padding-inline: 0 !important;
+  }
+}
+
 .panel :global(.ant-collapse-header):hover {
   background: rgba(237, 231, 240, 0.5);
 }
@@ -192,10 +202,16 @@
 .optionHeader {
   width: 90%;
   overflow: hidden;
+  font-size: 12px;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .alert div :global(.ant-alert-message) {
   white-space: normal;
+}
+
+.arrow {
+  margin: 0;
+  padding: 0;
 }

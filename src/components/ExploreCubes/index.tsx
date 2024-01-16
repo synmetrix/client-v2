@@ -224,6 +224,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
             onChange={onCollapse}
             expandIcon={({ isActive }) => (
               <ArrowIcon
+                className={styles.arrow}
                 style={{ transform: `rotate(${isActive ? -90 : 0}deg)` }}
               />
             )}

@@ -320,7 +320,6 @@ const ModelsWrapper: React.FC = () => {
   const versionsCount = versionsData.data?.versions_aggregate.aggregate?.count;
 
   const [dataSource, currentBranch] = useMemo(() => {
-    console.log(111111, location);
     const source =
       (teamData?.dataSources || []).find((d) => d.id === dataSourceId) ||
       teamData?.dataSources.find((d) => d.id === currentDataSourceId) ||

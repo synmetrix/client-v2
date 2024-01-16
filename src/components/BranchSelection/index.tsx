@@ -1,6 +1,6 @@
 import { Form, Space, Typography } from "antd";
 import { useResponsive } from "ahooks";
-import { DownOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import cn from "classnames";
@@ -16,6 +16,7 @@ import BranchGreyIcon from "@/assets/branch.svg";
 import BranchBlackIcon from "@/assets/branch-black.svg";
 import BranchColoredIcon from "@/assets/branch-colored.svg";
 import TrashColoredIcon from "@/assets/trash-colored.svg";
+import ArrowIcon from "@/assets/arrow-small.svg";
 
 import styles from "./index.module.less";
 
@@ -72,7 +73,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
         defaultValue={currentBranch?.id}
         value={currentBranch?.id}
         optionLabelProp="title"
-        suffixIcon={<DownOutlined />}
+        suffixIcon={<ArrowIcon />}
         options={(branches || []).map((b) => ({
           value: b.id,
           label: b.name,

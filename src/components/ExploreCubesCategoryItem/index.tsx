@@ -28,10 +28,10 @@ const memberTypeIcons: Record<string, JSX.Element> = {
   default: <MemberSegment />,
   boolean: <MemberBoolean />,
   time: <MemberTime />,
+  geo: <MemberGeo />,
 };
 
 const memberFormatIcons: Record<string, JSX.Element> = {
-  geo: <MemberGeo />,
   id: <MemberId />,
   link: <MemberLink />,
   imageUrl: <MemberImg />,

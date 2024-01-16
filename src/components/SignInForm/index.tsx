@@ -72,7 +72,7 @@ const SignInForm: FC<SignInFormProps> = ({ isMagicLink, onSubmit }) => {
           className={cn(styles.formItem, styles.input, {
             [styles.error]: errors?.email,
           })}
-          bordered={false}
+          variant="borderless"
           placeholder={t("common:form.placeholders.email")}
           control={control}
           rules={{
@@ -87,7 +87,7 @@ const SignInForm: FC<SignInFormProps> = ({ isMagicLink, onSubmit }) => {
             className={cn(styles.formItem, styles.input, {
               [styles.error]: errors?.password,
             })}
-            bordered={false}
+            variant="borderless"
             placeholder={t("common:form.placeholders.password")}
             control={control}
             rules={{

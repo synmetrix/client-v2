@@ -109,11 +109,7 @@ export const Members: React.FC<MembersProps> = ({
               title={t("common:words.delete_member")}
               onConfirm={() => onRemove(member)}
             >
-              <Button
-                className={styles.removeBtn}
-                type="ghost"
-                icon={<TrashIcon />}
-              />
+              <Button className={styles.removeBtn} ghost icon={<TrashIcon />} />
             </ConfirmModal>
           )
         }
@@ -141,7 +137,7 @@ export const Members: React.FC<MembersProps> = ({
                         val as unknown as ChangeableRoles
                       )
                     }
-                    bordered={false}
+                    variant="borderless"
                     value={member.role.name}
                     options={createRoleOptions(ChangeableRoles)}
                   />
@@ -159,7 +155,7 @@ export const Members: React.FC<MembersProps> = ({
                     onChange={(accessListId) => {
                       onAccessListChange(member.role.id, accessListId);
                     }}
-                    bordered={false}
+                    variant="borderless"
                     disabled={!accessLists?.length}
                     value={
                       member.accessList?.id ||

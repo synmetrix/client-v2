@@ -206,7 +206,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
           <Input
             data-testid="explore-cubes-search-input"
             className={styles.searchInput}
-            bordered={false}
+            variant="borderless"
             prefix={<SearchIcon />}
             placeholder="Find..."
             onChange={onChange}

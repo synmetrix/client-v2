@@ -277,7 +277,7 @@ const ModelsWrapper: React.FC = () => {
   const { t } = useTranslation(["models", "common"]);
 
   const { currentUser, teamData } = CurrentUserStore();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const { withAuthPrefix } = useAppSettings();
   const basePath = withAuthPrefix(MODELS);
 
@@ -307,7 +307,9 @@ const ModelsWrapper: React.FC = () => {
   );
   const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState<
     string | null
-  >("currentDataSourceId");
+  >("currentDataSourceId", {
+    defaultValue: dataSourceId,
+  });
 
   const [versionsData] = useVersionsCountSubscription({
     variables: {
@@ -318,18 +320,44 @@ const ModelsWrapper: React.FC = () => {
   const versionsCount = versionsData.data?.versions_aggregate.aggregate?.count;
 
   const [dataSource, currentBranch] = useMemo(() => {
+    console.log(111111, location);
     const source =
       (teamData?.dataSources || []).find((d) => d.id === dataSourceId) ||
+      teamData?.dataSources.find((d) => d.id === currentDataSourceId) ||
       teamData?.dataSources?.[0];
 
     const curBranch =
       (source?.branches || []).find((b) => b.id === branch) ||
+      (source?.branches || []).find((b) => b.id === currentBranchId) ||
       (source?.branches || []).find(
         (b) => b.status === Branch_Statuses_Enum.Active
       );
 
+    let path = basePath;
+
+    if (source?.id && source?.id !== dataSourceId) {
+      path += `/${source?.id}`;
+    }
+
+    if (curBranch?.id && curBranch?.id !== branch) {
+      path += `/${curBranch?.id}`;
+    }
+
+    if (!location.pathname.includes(path)) {
+      setLocation(path);
+    }
+
     return [source, curBranch];
-  }, [branch, dataSourceId, teamData?.dataSources]);
+  }, [
+    basePath,
+    branch,
+    currentBranchId,
+    currentDataSourceId,
+    dataSourceId,
+    location,
+    setLocation,
+    teamData?.dataSources,
+  ]);
 
   const branches = useMemo(
     () => dataSource?.branches || [],
@@ -337,7 +365,7 @@ const ModelsWrapper: React.FC = () => {
   );
 
   const [version, execVersionAll] = useCurrentVersionQuery({
-    variables: { branch_id: currentBranchId },
+    variables: { branch_id: branch },
   });
 
   const onModalClose = (goBack: boolean = false) => {
@@ -387,14 +415,6 @@ const ModelsWrapper: React.FC = () => {
     }
   );
 
-  // const currentBranch = useMemo(() => {
-  //   const curBranch =
-  //     (branches || []).find((b) => b.id === currentBranchId) || branches?.[0];
-  //   if (curBranch?.id && curBranch?.id !== currentBranchId) {
-  //     setCurrentBranchId(curBranch?.id);
-  //   }
-  //   return curBranch;
-  // }, [branches, currentBranchId, setCurrentBranchId]);
   const currentVersion = useMemo(
     () => version?.data?.versions[0] || ({} as Version),
     [version]
@@ -464,39 +484,39 @@ const ModelsWrapper: React.FC = () => {
     }
   }, [sourceTablesSchema]);
 
-  useLayoutEffect(() => {
-    if (!dataSourceId && teamData?.dataSources?.length) {
-      const isExist = teamData?.dataSources?.find(
-        (ds) => ds.id === currentDataSourceId
-      );
+  // useLayoutEffect(() => {
+  //   if (!dataSourceId && teamData?.dataSources?.length) {
+  //     const isExist = teamData?.dataSources?.find(
+  //       (ds) => ds.id === currentDataSourceId
+  //     );
 
-      if (isExist) {
-        setLocation(`${basePath}/${currentDataSourceId}/${slug}`);
-      } else {
-        setCurrentDataSourceId(teamData?.dataSources?.[0]?.id);
-      }
-    }
+  //     if (isExist) {
+  //       setLocation(`${basePath}/${currentDataSourceId}/${slug}`);
+  //     } else {
+  //       setCurrentDataSourceId(teamData?.dataSources?.[0]?.id);
+  //     }
+  //   }
 
-    if (dataSourceId) {
-      const isExist = teamData?.dataSources?.find((d) => d.id === dataSourceId);
+  //   if (dataSourceId) {
+  //     const isExist = teamData?.dataSources?.find((d) => d.id === dataSourceId);
 
-      if (isExist) {
-        if (!branch && currentBranchId) {
-          setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/${slug}`);
-        }
-      }
-    }
-  }, [
-    dataSourceId,
-    teamData,
-    basePath,
-    setLocation,
-    currentDataSourceId,
-    setCurrentDataSourceId,
-    branch,
-    currentBranchId,
-    slug,
-  ]);
+  //     if (isExist) {
+  //       if (!branch && currentBranchId) {
+  //         setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/${slug}`);
+  //       }
+  //     }
+  //   }
+  // }, [
+  //   dataSourceId,
+  //   teamData,
+  //   basePath,
+  //   setLocation,
+  //   currentDataSourceId,
+  //   setCurrentDataSourceId,
+  //   branch,
+  //   currentBranchId,
+  //   slug,
+  // ]);
 
   const inputFile = useRef<HTMLInputElement>(null);
 
@@ -553,7 +573,7 @@ const ModelsWrapper: React.FC = () => {
     const versionData = {
       checksum,
       user_id: currentUser?.id,
-      branch_id: currentBranchId,
+      branch_id: branch,
       dataschemas: {
         data: preparedDataschemas,
       },
@@ -818,7 +838,7 @@ const ModelsWrapper: React.FC = () => {
       onSaveVersion={createNewVersion}
       onDataSourceChange={(ds) => {
         setCurrentDataSourceId(ds?.id);
-        setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}/sqlrunner`);
+        setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}`);
       }}
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}

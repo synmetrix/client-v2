@@ -1,4 +1,4 @@
-import { Col, Divider, Radio, Row } from "antd";
+import { Col, Divider, Radio, Row, Tooltip } from "antd";
 import { CSVLink } from "react-csv";
 import { useResponsive, useSetState } from "ahooks";
 import { useTranslation } from "react-i18next";
@@ -326,26 +326,46 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
               <Col style={growColumns}>
                 <Row gutter={[8, 8]}>
                   <Col style={growColumns}>
-                    <Button
-                      icon={<AlertIcon />}
-                      className={cn(s.alertButton, isMobile && s.mobileButton)}
-                      type="default"
-                      onClick={() => onOpenModal("alert")}
-                      disabled={disableButtons}
+                    <Tooltip
+                      placement="top"
+                      title={t("data_section.create_alert")}
+                      trigger="focus"
+                      open={isMinSize ? undefined : false}
                     >
-                      {!isMinSize && t("data_section.create_alert")}
-                    </Button>
+                      <Button
+                        icon={<AlertIcon />}
+                        className={cn(
+                          s.alertButton,
+                          isMobile && s.mobileButton
+                        )}
+                        type="default"
+                        onClick={() => onOpenModal("alert")}
+                        disabled={disableButtons}
+                      >
+                        {!isMinSize && t("data_section.create_alert")}
+                      </Button>
+                    </Tooltip>
                   </Col>
                   <Col style={growColumns}>
-                    <Button
-                      icon={<ReportIcon />}
-                      className={cn(s.alertButton, isMobile && s.mobileButton)}
-                      type="default"
-                      onClick={() => onOpenModal("report")}
-                      disabled={disableButtons}
+                    <Tooltip
+                      placement="top"
+                      title={t("data_section.create_report")}
+                      trigger="focus"
+                      open={isMinSize ? undefined : false}
                     >
-                      {!isMinSize && t("data_section.create_report")}
-                    </Button>
+                      <Button
+                        icon={<ReportIcon />}
+                        className={cn(
+                          s.alertButton,
+                          isMobile && s.mobileButton
+                        )}
+                        type="default"
+                        onClick={() => onOpenModal("report")}
+                        disabled={disableButtons}
+                      >
+                        {!isMinSize && t("data_section.create_report")}
+                      </Button>
+                    </Tooltip>
                   </Col>
                 </Row>
               </Col>

@@ -1,45 +1,42 @@
-name: Build and Release
+name: Release
 on:
   push:
     branches:
       - master
 
+permissions:
+  contents: read # for checkout
+
 jobs:
-  build-and-release:
+  release:
+    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18' # Specify your Node.js version
-
-    - name: Install dependencies
-      run: yarn install
-
-    - name: Build React app
-      run: yarn run build
-        
-    - name: Semantic Release
-      uses: semantic-release/semantic-release@23.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      with:
-        plugins: |
-          "@semantic-release/commit-analyzer",
-          "@semantic-release/release-notes-generator",
-          "@semantic-release/changelog",
-          "@semantic-release/npm",
-          ["@semantic-release/git", {
-            "assets": ["dist/**", "package.json"],
-            "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-          }]
-
-    - name: Get next version
-      uses: reecetech/version-increment@2023.10.2
-      id: version
-      with:
-        scheme: semver
-        increment: patch
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
+      - name: Get next version
+        uses: reecetech/version-increment@2023.10.2
+        id: version
+        with:
+          scheme: semver
+          increment: patch

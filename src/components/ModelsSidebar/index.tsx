@@ -152,10 +152,10 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               trigger={["click"]}
               open={isCreateFormOpen}
               onOpenChange={setIsCreateFormOpen}
-              icon={<PlusOutlined className={styles.plusIcon} />}
               buttonProps={{
-                className: styles.addFile,
+                className: cn(styles.button, styles.plusButton),
                 disabled: !branches?.length,
+                icon: <PlusOutlined />,
               }}
               content={
                 <DataSchemaForm
@@ -171,9 +171,11 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
               <PopoverButton
                 className={cn(styles.dropdown, styles.schemaMenu)}
                 popoverType="dropdown"
-                buttonProps={{ className: styles.addFile }}
+                buttonProps={{
+                  className: cn(styles.button, styles.plusButton),
+                  icon: <VerticalDots />,
+                }}
                 menu={{ items: ideMenu }}
-                icon={<VerticalDots className={styles.dots} />}
                 trigger={["click"]}
                 arrow
                 disabled={!branches?.length}

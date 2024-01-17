@@ -414,9 +414,11 @@ const VirtualTable: FC<VirtualTableProps> = ({
                   const value = col.render("Header");
 
                   const colSortConfig =
-                    sortBy.find((sortItem) => sortItem.id === col.id) ||
+                    sortBy.find((sortItem) => sortItem.id === columnMemberId) ||
                     //@ts-ignore
-                    state.sortBy.find((sortItem) => sortItem.id === col.id);
+                    state.sortBy.find(
+                      (sortItem) => sortItem.id === columnMemberId
+                    );
 
                   const sortDirection =
                     !!colSortConfig &&
@@ -432,8 +434,7 @@ const VirtualTable: FC<VirtualTableProps> = ({
                       cellDataGetter={cellDataGetter}
                       cellRenderer={internalCellRenderer}
                       columnData={{
-                        memberId: columnMemberId,
-                        columnId: col.id,
+                        columnId: columnMemberId,
                         onSortChange,
                         sortDirection,
                         granularity,

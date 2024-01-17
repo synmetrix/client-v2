@@ -3,7 +3,7 @@ import { getOr } from "unchanged";
 
 import fromPairs from "@/utils/helpers/fromPairs";
 import type { CubeMember, CubeMembers } from "@/types/cube";
-import type { PlaygroundState } from "@/hooks/usePlayground";
+import type { PlaygroundState } from "@/types/exploration";
 
 const operators = {
   string: [

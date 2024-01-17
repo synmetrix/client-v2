@@ -11,7 +11,6 @@ import type { Alert } from "@/types/alert";
 import ConfirmModal from "@/components/ConfirmModal";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import useLocation from "@/hooks/useLocation";
-import useAppSettings from "@/hooks/useAppSettings";
 import useAlerts from "@/hooks/useAlerts";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import { DOCS_CREATE_ALERT_LINK } from "@/utils/constants/links";
@@ -37,9 +36,8 @@ const Alerts: React.FC<AlertsProps> = ({
 }) => {
   const { t } = useTranslation(["alerts", "pages"]);
   const responsive = useResponsive();
-  const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
-  const basePath = withAuthPrefix(ALERTS);
+  const basePath = ALERTS;
   const { teamData } = CurrentUserStore();
   const { alertId } = useParams();
 

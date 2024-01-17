@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { Dropdown, Button, Space, Tag } from "antd";
-import { DownOutlined } from "@ant-design/icons";
 import cn from "classnames";
 
 import Avatar from "@/components/Avatar";
@@ -10,6 +9,8 @@ import useLocation from "@/hooks/useLocation";
 
 import TeamIcon from "@/assets/team.svg";
 import DocsIcon from "@/assets/docs.svg";
+import ArrowIcon from "@/assets/arrow-big-bold.svg";
+import ArrowMiddleIcon from "@/assets/arrow-middle.svg";
 
 import styles from "./index.module.less";
 
@@ -105,7 +106,7 @@ const Navbar: FC<NavbarProps> = ({
       <Space className={styles.dropdownHeader} align="center">
         <Avatar username={username} img={userAvatar} />
         <span className={cn(styles.icon, { [styles.rotate]: accountOpen })}>
-          <DownOutlined />
+          <ArrowIcon />
         </span>
       </Space>
     </Dropdown>
@@ -152,15 +153,15 @@ const Navbar: FC<NavbarProps> = ({
           }}
         >
           <Button>
-            <Space align="start">
+            <div className={styles.teamContainer}>
               <TeamIcon />
               <span className={styles.team}>
                 {currentTeam ? currentTeam.name : t("common:words.team")}
               </span>
-              <span className={cn(styles.icon, { [styles.rotate]: teamsOpen })}>
-                <DownOutlined />
-              </span>
-            </Space>
+              <ArrowMiddleIcon
+                className={cn(styles.icon, { [styles.rotate]: teamsOpen })}
+              />
+            </div>
           </Button>
         </Dropdown>
       )}

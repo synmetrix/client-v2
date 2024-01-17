@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { Button } from "antd";
+import { Button, Space } from "antd";
 
 import type { CubeMember } from "@/types/cube";
 
@@ -49,7 +49,7 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
   }
 
   return (
-    <div style={{ textAlign: "right" }}>
+    <Space>
       <Button
         size="small"
         type="text"
@@ -64,14 +64,13 @@ const CategoryItemFilter: FC<CategoryItemFilterProps> = ({
         <Button
           size="small"
           className={cn(s.filter, s.plus)}
-          style={{ marginLeft: 5 }}
           onClick={addFilter}
           onMouseDown={(e) => e.preventDefault()}
         >
           +
         </Button>
       )}
-    </div>
+    </Space>
   );
 };
 

@@ -18,9 +18,12 @@ import type { FC } from "react";
 const { Title, Text } = Typography;
 
 export const CONNECTION_DEFAULT = "psql";
-const CUBEJS_MYSQL_API_URL = import.meta.env
-  .VITE_CUBEJS_MYSQL_API_URL as string;
-const CUBEJS_PG_API_URL = import.meta.env.VITE_CUBEJS_PG_API_URL as string;
+const CUBEJS_MYSQL_API_URL =
+  window.CUBEJS_MYSQL_API_URL ||
+  (import.meta.env.VITE_CUBEJS_MYSQL_API_URL as string);
+const CUBEJS_PG_API_URL =
+  window.CUBEJS_PG_API_URL ||
+  (import.meta.env.VITE_CUBEJS_PG_API_URL as string);
 
 export const connectionUrls: Record<string, string> = {
   mysql: CUBEJS_MYSQL_API_URL,

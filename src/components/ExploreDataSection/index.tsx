@@ -1,8 +1,8 @@
-import { Col, Radio, Row, Space } from "antd";
-import { RightOutlined } from "@ant-design/icons";
+import { Col, Divider, Radio, Row, Tooltip } from "antd";
 import { CSVLink } from "react-csv";
-import { useSetState } from "ahooks";
+import { useResponsive, useSetState } from "ahooks";
 import { useTranslation } from "react-i18next";
+import cn from "classnames";
 
 import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
 import Button from "@/components/Button";
@@ -17,13 +17,13 @@ import type { ExploreWorkspaceState } from "@/hooks/useExploreWorkspace";
 import type { SortBySet } from "@/components/VirtualTable";
 import type { ErrorMessage } from "@/types/errorMessage";
 import type { CubeMember } from "@/types/cube";
-import type { ExplorationState } from "@/types/exploration";
+import type { ExplorationState, PlaygroundState } from "@/types/exploration";
 import EmptyExploration from "@/components/EmptyExploration";
-import membersToCubeQuery from "@/utils/helpers/membersToCubeQuery";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 
 import AlertIcon from "@/assets/alert.svg";
 import ReportIcon from "@/assets/report.svg";
+import ArrowIcon from "@/assets/arrow-small-right.svg";
 
 import s from "./index.module.less";
 
@@ -41,6 +41,7 @@ interface ExploreDataSectionProps extends Omit<CollapsePanelProps, "header"> {
   onExec: any;
   onQueryChange: (query: string, ...args: any) => void | SortUpdater;
   disabled: boolean;
+  playgroundState: PlaygroundState;
   dataSource?: DataSourceInfo;
   currentBranch?: Branch;
   state: ExploreWorkspaceState;
@@ -68,6 +69,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     onExec = () => {},
     onQueryChange = () => {},
     state: workspaceState,
+    playgroundState,
     queryState,
     selectedQueryMembers,
     disableSectionChange,
@@ -78,7 +80,9 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     disableButtons,
   } = props;
   const { t } = useTranslation(["explore", "common"]);
-
+  const windowSize = useResponsive();
+  const isMobile = windowSize?.lg === false;
+  const isMinSize = windowSize?.sm === false;
   const [currState, updateState] = useSetState({
     section: workspaceState?.dataSection || "sql",
   });
@@ -145,6 +149,15 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     settings: queryState?.settings,
   });
 
+  const empty = useMemo(
+    () => (
+      <div className={s.empty}>
+        <EmptyExploration />
+      </div>
+    ),
+    []
+  );
+
   const Table = useMemo(() => {
     const messages: ErrorMessage[] = [];
 
@@ -184,6 +197,10 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         ).toFixed(2)} secs...`
       : progress?.stage;
 
+    if (!rows.length && !columns.length) {
+      return empty;
+    }
+
     return (
       <VirtualTable
         sortinMode="server-side"
@@ -214,21 +231,24 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
   }, [
     hitLimit,
     skippedMembers,
-    progress,
+    progress?.error,
+    progress?.timeElapsed,
+    progress?.stage,
     error,
+    rows,
     screenshotMode,
     loading,
     width,
     height,
     columns,
-    rows,
     order,
     onQueryChange,
     settings,
     rowHeight,
-    limit,
-    membersIndex,
     t,
+    limit,
+    empty,
+    membersIndex,
     offset,
   ]);
 
@@ -236,7 +256,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     const { rawSql } = queryState;
 
     if (!rawSql?.sql) {
-      return <EmptyExploration />;
+      return empty;
     }
 
     return (
@@ -249,7 +269,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         />
       </>
     );
-  }, [queryState, t]);
+  }, [empty, queryState, t]);
 
   const RestApi = useMemo(() => {
     if (dataSource?.id && currentBranch?.id) {
@@ -257,19 +277,11 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
         <RestAPI
           dataSourceId={dataSource.id}
           branchId={currentBranch.id}
-          query={membersToCubeQuery(selectedQueryMembers)}
-          limit={queryState?.limit}
-          offset={queryState?.offset}
+          playgroundState={playgroundState}
         />
       );
     }
-  }, [
-    currentBranch?.id,
-    dataSource?.id,
-    queryState?.limit,
-    queryState?.offset,
-    selectedQueryMembers,
-  ]);
+  }, [currentBranch?.id, dataSource?.id, playgroundState]);
 
   const onChange = (values: Partial<DataSchemaFormValues>) => {
     if (values.limit !== limit) {
@@ -280,57 +292,94 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
     }
   };
 
-  return (
-    <div data-testid="explore-data-section">
-      <div className={s.header}>
-        <Row justify={"space-between"} align={"middle"} gutter={[16, 16]}>
-          <Col>
-            <Space wrap>
-              <Button
-                className={s.run}
-                type="primary"
-                onClick={onExec}
-                disabled={!queryState?.columns?.length || disabled || loading}
-              >
-                {t("data_section.run_query")}
-                <RightOutlined />
-              </Button>
-              <ExploreSettingsForm
-                defaultValues={{
-                  limit,
-                  offset,
-                }}
-                onChange={onChange}
-              />
-              <Button
-                icon={<AlertIcon />}
-                className={s.alertButton}
-                type="default"
-                onClick={() => onOpenModal("alert")}
-                disabled={disableButtons}
-              >
-                {t("data_section.create_alert")}
-              </Button>
-              <Button
-                icon={<ReportIcon />}
-                className={s.alertButton}
-                type="default"
-                onClick={() => onOpenModal("report")}
-                disabled={disableButtons}
-              >
-                {t("data_section.create_report")}
-              </Button>
-            </Space>
-          </Col>
+  const growColumns = isMobile ? { flexGrow: 1 } : undefined;
 
-          <Col style={{ justifySelf: "end" }}>
-            <Space wrap>
-              <CSVLink data={rows} filename={`exploration-${genName(5)}.csv`}>
-                <Button className={s.csvBtn} disabled={disableButtons}>
-                  {t("data_section.export")} .CSV
-                </Button>
-              </CSVLink>
-            </Space>
+  return (
+    <div data-testid="explore-data-section" className={s.container}>
+      <div className={s.header}>
+        <Row justify={"start"} align={"middle"} gutter={[8, 8]}>
+          <Col order={isMobile ? 1 : -1} xs={isMobile ? 24 : undefined}>
+            <Button
+              className={s.run}
+              type="primary"
+              onClick={onExec}
+              disabled={!queryState?.columns?.length || disabled || loading}
+            >
+              <span style={{ marginRight: 10 }}>
+                {t("data_section.run_query")}
+              </span>
+              <ArrowIcon />
+            </Button>
+          </Col>
+          <Col xs={isMobile ? 24 : undefined}>
+            <ExploreSettingsForm
+              defaultValues={{
+                limit,
+                offset,
+              }}
+              onChange={onChange}
+            />
+          </Col>
+          {!isMobile && <Divider className={s.divider} type="vertical" />}
+          <Col style={{ flexGrow: 1 }} xs={isMobile ? 24 : undefined}>
+            <Row justify={"space-between"} align={"middle"} gutter={[8, 8]}>
+              <Col style={growColumns}>
+                <Row gutter={[8, 8]}>
+                  <Col style={growColumns}>
+                    <Tooltip
+                      placement="top"
+                      title={t("data_section.create_alert")}
+                      trigger="focus"
+                      open={isMinSize ? undefined : false}
+                    >
+                      <Button
+                        icon={<AlertIcon />}
+                        className={cn(
+                          s.alertButton,
+                          isMobile && s.mobileButton
+                        )}
+                        type="default"
+                        onClick={() => onOpenModal("alert")}
+                        disabled={disableButtons}
+                      >
+                        {!isMinSize && t("data_section.create_alert")}
+                      </Button>
+                    </Tooltip>
+                  </Col>
+                  <Col style={growColumns}>
+                    <Tooltip
+                      placement="top"
+                      title={t("data_section.create_report")}
+                      trigger="focus"
+                      open={isMinSize ? undefined : false}
+                    >
+                      <Button
+                        icon={<ReportIcon />}
+                        className={cn(
+                          s.alertButton,
+                          isMobile && s.mobileButton
+                        )}
+                        type="default"
+                        onClick={() => onOpenModal("report")}
+                        disabled={disableButtons}
+                      >
+                        {!isMinSize && t("data_section.create_report")}
+                      </Button>
+                    </Tooltip>
+                  </Col>
+                </Row>
+              </Col>
+              <Col style={growColumns}>
+                <CSVLink data={rows} filename={`exploration-${genName(5)}.csv`}>
+                  <Button
+                    className={cn(s.csvBtn, isMobile && s.mobileButton)}
+                    disabled={disableButtons}
+                  >
+                    {t("data_section.export")} .CSV
+                  </Button>
+                </CSVLink>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </div>
@@ -340,7 +389,7 @@ const ExploreDataSection: FC<ExploreDataSectionProps> = (props) => {
           value={currState.section}
           onChange={onRadioClick}
           disabled={disableSectionChange}
-          className={s.buttonGroup}
+          className={cn(s.buttonGroup, isMobile && s.buttonGroupMobile)}
         >
           <Radio.Button value="results" type="text" className={s.radioButton}>
             {t("data_section.results")}

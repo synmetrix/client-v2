@@ -41,6 +41,7 @@ export interface CubeMember {
   }[];
   operator?: string;
   values?: any;
+  format?: string;
 }
 
 export interface Dimension {

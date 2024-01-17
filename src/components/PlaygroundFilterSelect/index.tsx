@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import type { CubeMember } from "@/types/cube";
 
-import ArrowBottom from "@/assets/select.svg";
+import ArrowBottom from "@/assets/arrow-big.svg";
 
 import type { FC } from "react";
 

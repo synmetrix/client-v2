@@ -24,9 +24,23 @@
 
 .panel :global(.ant-collapse-header) {
   align-items: center !important;
-  padding: 2px 6px !important;
+  padding: 2px 4px 2px 6px !important;
   background: rgba(240, 241, 243, 1);
   border-radius: 6px !important;
+}
+
+.panel,
+.panelSubSection {
+  :global(.ant-collapse-header .ant-collapse-expand-icon) {
+    margin: 0;
+    margin-right: 8px;
+    padding: 0;
+    padding-inline: 0 !important;
+  }
+}
+
+.panel :global(.ant-collapse-header):hover {
+  background: rgba(237, 231, 240, 0.5);
 }
 
 .collapse :global(.ant-collapse-item-active > .ant-collapse-header) {
@@ -69,6 +83,7 @@
   padding-top: 2px;
   padding-bottom: 3px;
   overflow: hidden;
+  border-radius: 6px;
 }
 
 .filterControls {
@@ -105,6 +120,25 @@
   span {
     color: rgba(0, 0, 0, 0.5);
     font-weight: 700;
+  }
+
+  > label {
+    &::after {
+      position: absolute;
+      top: 5px;
+      right: -1px;
+      display: block;
+      height: 24px;
+      border-left: 0.5px solid rgba(102, 112, 133, 0.3);
+      content: "";
+    }
+  }
+
+  & :global(.ant-radio-button-wrapper-checked),
+  :last-child {
+    &::after {
+      display: none;
+    }
   }
 }
 
@@ -168,10 +202,16 @@
 .optionHeader {
   width: 90%;
   overflow: hidden;
+  font-size: 12px;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .alert div :global(.ant-alert-message) {
   white-space: normal;
+}
+
+.arrow {
+  margin: 0;
+  padding: 0;
 }

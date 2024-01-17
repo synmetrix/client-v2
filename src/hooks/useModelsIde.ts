@@ -2,7 +2,6 @@ import { useCallback } from "react";
 
 import useLocation from "@/hooks/useLocation";
 import useTabs from "@/hooks/useTabs";
-import useAppSettings from "@/hooks/useAppSettings";
 import { MODELS } from "@/utils/constants/paths";
 
 interface Props {
@@ -17,7 +16,6 @@ interface Tab {
 
 export default ({ dataSourceId, branchId }: Props) => {
   const [location, setLocation] = useLocation();
-  const { withAuthPrefix } = useAppSettings();
   const defaultTabId = "sqlrunner";
 
   const {
@@ -30,12 +28,7 @@ export default ({ dataSourceId, branchId }: Props) => {
 
   const changePath = useCallback(
     (activeKey?: string) => {
-      const basePath = [
-        withAuthPrefix(MODELS),
-        dataSourceId,
-        branchId,
-        activeKey,
-      ]
+      const basePath = [MODELS, dataSourceId, branchId, activeKey]
         .filter((v) => !!v)
         .join("/");
 
@@ -43,7 +36,7 @@ export default ({ dataSourceId, branchId }: Props) => {
         setLocation(basePath);
       }
     },
-    [withAuthPrefix, dataSourceId, branchId, location.pathname, setLocation]
+    [dataSourceId, branchId, location.pathname, setLocation]
   );
 
   const changeTab = useCallback(

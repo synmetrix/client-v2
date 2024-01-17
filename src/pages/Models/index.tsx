@@ -17,7 +17,6 @@ import Modal from "@/components/Modal";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import VersionsList from "@/components/VersionsList";
 import NoDataSource from "@/components/NoDataSource";
-import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
 import useModelsIde from "@/hooks/useModelsIde";
 import useSources from "@/hooks/useSources";
@@ -302,9 +301,8 @@ const ModelsWrapper: React.FC = () => {
   const { t } = useTranslation(["models", "common"]);
 
   const { currentUser, teamData } = CurrentUserStore();
-  const [location, setLocation] = useLocation();
-  const { withAuthPrefix } = useAppSettings();
-  const basePath = withAuthPrefix(MODELS);
+  const [, setLocation] = useLocation();
+  const basePath = MODELS;
 
   const [deleteMutation, execDeleteMutation] = useDeleteSchemaMutation();
   const [createBranchMutation, execCreateBranchMutation] =
@@ -507,40 +505,6 @@ const ModelsWrapper: React.FC = () => {
       setTablesSchema(sourceTablesSchema);
     }
   }, [sourceTablesSchema]);
-
-  // useLayoutEffect(() => {
-  //   if (!dataSourceId && teamData?.dataSources?.length) {
-  //     const isExist = teamData?.dataSources?.find(
-  //       (ds) => ds.id === currentDataSourceId
-  //     );
-
-  //     if (isExist) {
-  //       setLocation(`${basePath}/${currentDataSourceId}/${slug}`);
-  //     } else {
-  //       setCurrentDataSourceId(teamData?.dataSources?.[0]?.id);
-  //     }
-  //   }
-
-  //   if (dataSourceId) {
-  //     const isExist = teamData?.dataSources?.find((d) => d.id === dataSourceId);
-
-  //     if (isExist) {
-  //       if (!branch && currentBranchId) {
-  //         setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/${slug}`);
-  //       }
-  //     }
-  //   }
-  // }, [
-  //   dataSourceId,
-  //   teamData,
-  //   basePath,
-  //   setLocation,
-  //   currentDataSourceId,
-  //   setCurrentDataSourceId,
-  //   branch,
-  //   currentBranchId,
-  //   slug,
-  // ]);
 
   const inputFile = useRef<HTMLInputElement>(null);
 
@@ -866,11 +830,7 @@ const ModelsWrapper: React.FC = () => {
       }}
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
-      onConnect={() => setLocation(withAuthPrefix(`${SOURCES}/new`))}
-      versionsCount={versionsCount}
-      onVersionsOpen={() =>
-        setLocation(`${basePath}/${dataSourceId}/${branch}/versions`)
-      }
+      onConnect={() => setLocation(`${SOURCES}/new`)}
     />
   );
 };

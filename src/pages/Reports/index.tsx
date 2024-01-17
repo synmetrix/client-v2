@@ -13,7 +13,6 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useReports from "@/hooks/useReports";
 import useLocation from "@/hooks/useLocation";
-import useAppSettings from "@/hooks/useAppSettings";
 import { DOCS_CREATE_REPORT_LINK } from "@/utils/constants/links";
 import StatusBadge from "@/components/StatusBadge";
 import formatTime from "@/utils/helpers/formatTime";
@@ -38,9 +37,8 @@ const Reports: React.FC<ReportsProps> = ({
 }) => {
   const { t } = useTranslation(["reports", "pages"]);
   const responsive = useResponsive();
-  const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
-  const basePath = withAuthPrefix(REPORTS);
+  const basePath = REPORTS;
   const { teamData } = CurrentUserStore();
   const { reportId } = useParams?.() || {};
 

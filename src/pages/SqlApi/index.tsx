@@ -19,7 +19,6 @@ import {
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
-import useAppSettings from "@/hooks/useAppSettings";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { ApiSetupForm, DataSourceInfo } from "@/types/dataSource";
 import type { Member } from "@/types/team";
@@ -221,10 +220,9 @@ const SqlApiWrapper = () => {
   const { t } = useTranslation(["apiSetup", "pages"]);
   const { currentTeam, teamData } = CurrentUserStore();
   const [, setLocation] = useLocation();
-  const { withAuthPrefix } = useAppSettings();
   const { editId } = useParams();
   const isNew = editId === "new";
-  const basePath = withAuthPrefix(SQL_API);
+  const basePath = SQL_API;
 
   const [createMutation, execCreateMutation] =
     useInsertSqlCredentialsMutation();

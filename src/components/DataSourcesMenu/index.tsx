@@ -1,7 +1,7 @@
-import { DownOutlined } from "@ant-design/icons";
-
 import PopoverButton from "@/components/PopoverButton";
 import type { DataSourceInfo } from "@/types/dataSource";
+
+import ArrowIcon from "@/assets/arrow-small.svg";
 
 import s from "./index.module.less";
 
@@ -32,11 +32,11 @@ const DataSourcesMenu: FC<DataSourcesMenuProps> = ({
 
   return (
     <div className={s.wrapper}>
-      <div className={s.value} title={entities[selectedIdx]?.name}>
+      <span className={s.value} title={entities[selectedIdx]?.name}>
         {entities[selectedIdx]?.name || "Select datasource"}
-      </div>
+      </span>
       <PopoverButton
-        icon={<DownOutlined />}
+        icon={<ArrowIcon style={{ display: "block" }} />}
         popoverType="dropdown"
         trigger={["hover"]}
         disabled={!items || items.length < 1}

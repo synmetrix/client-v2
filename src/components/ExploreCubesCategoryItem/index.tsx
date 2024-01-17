@@ -7,6 +7,14 @@ import type { CubeMember } from "@/types/cube";
 import MemberString from "@/assets/member-string.svg";
 import MemberNumber from "@/assets/member-number.svg";
 import MemberSegment from "@/assets/member-segment.svg";
+import MemberBoolean from "@/assets/member-boolean.svg";
+import MemberCurrency from "@/assets/member-currency.svg";
+import MemberGeo from "@/assets/member-geo.svg";
+import MemberId from "@/assets/member-id.svg";
+import MemberImg from "@/assets/member-img.svg";
+import MemberLink from "@/assets/member-link.svg";
+import MemberPercent from "@/assets/member-percent.svg";
+import MemberTime from "@/assets/member-time.svg";
 
 import s from "./index.module.less";
 
@@ -14,10 +22,21 @@ import type { FC } from "react";
 
 const { Paragraph } = Typography;
 
-const memberIcons: Record<string, JSX.Element> = {
+const memberTypeIcons: Record<string, JSX.Element> = {
   string: <MemberString />,
   number: <MemberNumber />,
   default: <MemberSegment />,
+  boolean: <MemberBoolean />,
+  time: <MemberTime />,
+  geo: <MemberGeo />,
+};
+
+const memberFormatIcons: Record<string, JSX.Element> = {
+  id: <MemberId />,
+  link: <MemberLink />,
+  imageUrl: <MemberImg />,
+  percent: <MemberPercent />,
+  currency: <MemberCurrency />,
 };
 
 const CategoryItem: FC<CategoryItemProps> = ({
@@ -30,6 +49,11 @@ const CategoryItem: FC<CategoryItemProps> = ({
   hoverState,
 }) => {
   const isFilterVisible = member.type !== "time" && category !== "segments";
+  const icon =
+    memberFormatIcons?.[member?.format || ""] ||
+    memberTypeIcons?.[member?.type] ||
+    memberTypeIcons.default;
+
   return (
     <div
       key={member.name}
@@ -53,9 +77,7 @@ const CategoryItem: FC<CategoryItemProps> = ({
         <Row justify="space-between" align="middle">
           <Col xs={16}>
             <div className={s.memberRow}>
-              <div className={s.memberIcon}>
-                {memberIcons?.[member?.type] || memberIcons.default}
-              </div>
+              <div className={s.memberIcon}>{icon}</div>
               <a className={cn(s.member)}>{member.shortTitle}</a>
             </div>
           </Col>

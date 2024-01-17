@@ -226,7 +226,7 @@ const ExploreWrapper = () => {
     trackEvent("Run Query");
 
     const newExplorationObj = {
-      branch_id: currentBranchId,
+      branch_id: currentBranch?.id,
       datasource_id: dataSourceId,
       playground_state: explorationQueryState,
       playground_settings: settings,

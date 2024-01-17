@@ -8,6 +8,8 @@ import Button from "@/components/Button";
 import InfoBlock from "@/components/InfoBlock";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import validations from "@/utils/helpers/validations";
+import type { PlaygroundState } from "@/types/exploration";
+import type { SortBy } from "@/types/sort";
 
 import styles from "./index.module.less";
 
@@ -23,14 +25,11 @@ const CUBEJS_API_DOCS_URL =
 interface RestApiProps {
   dataSourceId: string;
   branchId: string;
-  query: any;
-  limit?: number;
-  offset?: number;
+  playgroundState: PlaygroundState;
 }
 
 interface RestApiState {
   loading: boolean;
-  response?: string;
   loadingTip?: string;
 }
 
@@ -41,33 +40,36 @@ interface ApiResponse {
 
 const defaultState = {
   loading: false,
-  response: undefined,
+};
+
+const normalizeOrders = (orders: SortBy[]) => {
+  return (orders || []).reduce(
+    (acc, cur) => ({ ...acc, [cur.id]: cur.desc ? "desc" : "asc" }),
+    {}
+  );
 };
 
 const RestAPI: FC<RestApiProps> = ({
   dataSourceId,
   branchId,
-  query,
-  limit = 1000,
-  offset = 0,
+  playgroundState,
 }) => {
   const { t } = useTranslation(["explore", "common"], { useSuspense: false });
   const { accessToken } = AuthTokensStore();
   const [state, setState] = useState<RestApiState>(defaultState);
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue, watch } = useForm({
     values: {
       json: JSON.stringify(
         {
-          limit,
-          offset,
-          ...query,
+          ...playgroundState,
+          order: normalizeOrders(playgroundState?.order || []),
         },
         null,
         2
       ),
       token: accessToken,
       url: CUBEJS_REST_API_URL,
-      response: state.response,
+      response: "",
     },
   });
 
@@ -103,8 +105,11 @@ const RestAPI: FC<RestApiProps> = ({
       response.error = e?.message || e;
     }
 
-    setState({ loading: false, response: JSON.stringify(response, null, 2) });
+    setValue("response", JSON.stringify(response, null, 2));
+    setState(defaultState);
   };
+
+  const response = watch("response");
 
   return (
     <Spin spinning={state.loading} tip={state.loadingTip}>
@@ -166,7 +171,7 @@ const RestAPI: FC<RestApiProps> = ({
           />
         </Space>
 
-        {state.response && (
+        {response && (
           <Row style={{ width: "100%", marginTop: 20 }} gutter={10}>
             <Col xs={24}>
               <Input

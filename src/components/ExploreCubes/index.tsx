@@ -1,5 +1,4 @@
 import { Collapse, Badge, Radio, Input, Alert } from "antd";
-import { RightOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useResponsive } from "ahooks";
 import cn from "classnames";
@@ -9,6 +8,7 @@ import ExploreCubesSection from "@/components//ExploreCubesSection";
 import type { Cube, CubeMember } from "@/types/cube";
 
 import SearchIcon from "@/assets/search.svg";
+import ArrowIcon from "@/assets/arrow-right.svg";
 
 import styles from "./index.module.less";
 
@@ -208,7 +208,7 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
             className={styles.searchInput}
             bordered={false}
             prefix={<SearchIcon />}
-            placeholder="Find..."
+            placeholder={t("common:words.find")}
             onChange={onChange}
             allowClear
           />
@@ -223,7 +223,10 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
             defaultActiveKey={state.openedCubes}
             onChange={onCollapse}
             expandIcon={({ isActive }) => (
-              <RightOutlined rotate={isActive ? -90 : 0} />
+              <ArrowIcon
+                className={styles.arrow}
+                style={{ transform: `rotate(${isActive ? -90 : 0}deg)` }}
+              />
             )}
           >
             {options}

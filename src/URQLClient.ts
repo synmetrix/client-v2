@@ -28,6 +28,17 @@ const HASURA_WS_ENDPOINT =
     ? window.HASURA_WS_ENDPOINT
     : import.meta.env.VITE_HASURA_WS_ENDPOINT;
 
+const getWsUrl = (path: string) => {
+  // if url contains ws:// already
+  if (path.includes("ws://") || path.includes("wss://")) {
+    return path;
+  }
+
+  // if only the path
+  const protocolPrefix = window.location.protocol === "https:" ? "wss:" : "ws:";
+  return `${protocolPrefix}//${window.location.host}${path}`;
+};
+
 type Headers = {
   "content-type": string;
   "x-hasura-role"?: string;
@@ -40,7 +51,7 @@ export default () => {
 
   const client = useMemo(() => {
     const wsClient = createWsClient({
-      url: HASURA_WS_ENDPOINT,
+      url: getWsUrl(HASURA_WS_ENDPOINT),
       connectionParams: () => ({
         headers: {
           Authorization: `Bearer ${accessToken}`,

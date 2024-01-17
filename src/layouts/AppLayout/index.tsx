@@ -91,8 +91,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             )
           }
         />
-        <div className={styles.main}>{children}</div>
-        <Footer />
+        <main className={styles.main} id="main">
+          {children}
+        </main>
+        {/* <Footer /> */}
       </Layout>
     </div>
   );

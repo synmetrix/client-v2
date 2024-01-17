@@ -10,11 +10,18 @@ import AuthTokensStore from "@/stores/AuthTokensStore";
 import type { Operation, CombinedError } from "urql";
 import type { SubscribePayload } from "graphql-ws";
 
+declare global {
+  interface Window {
+    HASURA_GRAPHQL_ENDPOINT: string;
+    HASURA_WS_ENDPOINT: string;
+  }
+}
+
 const HASURA_GRAPHQL_ENDPOINT =
-  window.HASURA_GRAPHQL_ENDPOINT ||
+  window?.HASURA_GRAPHQL_ENDPOINT ||
   import.meta.env.VITE_HASURA_GRAPHQL_ENDPOINT;
 const HASURA_WS_ENDPOINT =
-  windo.HASURA_WS_ENDPOINT || import.meta.env.VITE_HASURA_WS_ENDPOINT;
+  window?.HASURA_WS_ENDPOINT || import.meta.env.VITE_HASURA_WS_ENDPOINT;
 
 type Headers = {
   "content-type": string;

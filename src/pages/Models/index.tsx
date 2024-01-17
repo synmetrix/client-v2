@@ -1,7 +1,7 @@
-import { Spin, message } from "antd";
+import { Space, Spin, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
-import { useLocalStorageState } from "ahooks";
+import { useLocalStorageState, useResponsive, useTrackedEffect } from "ahooks";
 import { getOr } from "unchanged";
 import JSZip from "jszip";
 import { load } from "js-yaml";
@@ -11,8 +11,8 @@ import AppLayout from "@/layouts/AppLayout";
 import CodeEditor from "@/components/CodeEditor";
 import ErrorFound from "@/components/ErrorFound";
 import ModelsSidebar from "@/components/ModelsSidebar";
+import StatusBadge from "@/components/StatusBadge";
 import SidebarLayout from "@/layouts/SidebarLayout";
-import Console from "@/components/Console";
 import Modal from "@/components/Modal";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import VersionsList from "@/components/VersionsList";
@@ -36,6 +36,8 @@ import {
   useCreateVersionMutation,
   useSetDefaultBranchMutation,
   useCurrentVersionQuery,
+  useVersionsCountSubscription,
+  Branch_Statuses_Enum,
 } from "@/graphql/generated";
 import { EXPORT, MODELS, SOURCES } from "@/utils/constants/paths";
 
@@ -85,6 +87,8 @@ interface ModelsProps {
   sqlError?: object;
   dataSources?: DataSourceInfo[];
   onConnect: () => void;
+  versionsCount?: number;
+  onVersionsOpen?: () => void;
 }
 
 export const Models: React.FC<ModelsProps> = ({
@@ -121,8 +125,12 @@ export const Models: React.FC<ModelsProps> = ({
   dataSources,
   sqlError,
   onConnect,
+  versionsCount,
+  onVersionsOpen,
 }) => {
-  const { t } = useTranslation(["pages"]);
+  const { t } = useTranslation(["pages", "models"]);
+  const windowSize = useResponsive();
+  const isMobile = windowSize.md === false;
 
   const {
     editTab,
@@ -131,6 +139,7 @@ export const Models: React.FC<ModelsProps> = ({
     openTab,
     openedTabs,
     openSchema,
+    tabsState,
   } = useModelsIde({
     dataSourceId: dataSource?.id || "",
     branchId: currentBranch?.id,
@@ -144,17 +153,34 @@ export const Models: React.FC<ModelsProps> = ({
     [dataschemas, openedTabs]
   ) as Dataschema[];
 
-  useEffect(() => {
-    if (dataSchemaName) {
-      const schemaObj = dataschemas.find(
-        (schema) => schema.name === dataSchemaName
-      );
+  useTrackedEffect(
+    (changes, prevDeps, newDeps) => {
+      if (dataSchemaName) {
+        const schema = dataschemas.find((s) => s.name === dataSchemaName);
 
-      if (schemaObj) {
-        openTab(schemaObj.name);
+        if (schema && activeTab !== schema.name) {
+          openTab(schema.name);
+        } else if (
+          dataSchemaName === "sqlrunner" &&
+          prevDeps?.[0] !== newDeps?.[0]
+        ) {
+          openTab(dataSchemaName);
+        }
       }
+    },
+    [dataSchemaName, dataschemas, openSchema, openTab]
+  );
+
+  const onUpdateSchema: typeof onSchemaUpdate = (editId, values) => {
+    const schema = dataschemas.find((s) => s.id === editId);
+
+    if (schema && values.name) {
+      tabsState.tabs.delete(schema.name);
+      tabsState.tabs.add(values.name);
     }
-  }, [dataschemas, dataSchemaName, openTab]);
+
+    return onSchemaUpdate(editId, values);
+  };
 
   const Layout =
     dataSources && dataSources.length === 0 ? AppLayout : SidebarLayout;
@@ -162,7 +188,21 @@ export const Models: React.FC<ModelsProps> = ({
   return (
     <Layout
       icon={<ModelsActiveIcon />}
-      title={dataSource?.name || t("models")}
+      title={
+        dataSource?.name ? (
+          <Space align="start" size={16}>
+            {dataSource.name}
+
+            {!isMobile && validationError && (
+              <StatusBadge className={styles.errorBadge} status="error">
+                {t("models:alerts.compilation_error")}
+              </StatusBadge>
+            )}
+          </Space>
+        ) : (
+          t("models")
+        )
+      }
       subTitle={t("models")}
       burgerTitle={t("models")}
       divider
@@ -176,7 +216,7 @@ export const Models: React.FC<ModelsProps> = ({
               }
               onSchemaDelete(schema.id);
             }}
-            onSchemaUpdate={onSchemaUpdate}
+            onSchemaUpdate={onUpdateSchema}
             version={currentVersion?.checksum}
             ideMenu={ideMenu}
             branches={branches}
@@ -192,6 +232,8 @@ export const Models: React.FC<ModelsProps> = ({
             onSelectFile={openSchema}
             dataSources={dataSources || []}
             dataSourceId={dataSource?.id}
+            versionsCount={versionsCount}
+            onVersionsOpen={onVersionsOpen}
           />
         </Spin>
       }
@@ -213,17 +255,11 @@ export const Models: React.FC<ModelsProps> = ({
                 onCodeSave={onCodeSave}
                 data={data}
                 sqlError={sqlError}
+                showConsole={isConsoleOpen}
+                toggleConsole={toggleConsole}
+                validationError={validationError}
               />
             </div>
-
-            {isConsoleOpen && activeTab !== "sqlrunner" && (
-              <div className={styles.console}>
-                <Console
-                  onClose={() => toggleConsole?.()}
-                  errors={validationError}
-                />
-              </div>
-            )}
           </div>
 
           {dataSource && (
@@ -288,25 +324,70 @@ const ModelsWrapper: React.FC = () => {
     ],
     [params]
   );
-  const dataSource = useMemo(
-    () =>
-      teamData?.dataSources?.find((d: DataSourceInfo) => d.id === dataSourceId),
-    [dataSourceId, teamData]
-  );
-  const branches = useMemo(
-    () => dataSource?.branches || [],
-    [dataSource?.branches]
-  );
 
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
     `${dataSourceId}:currentBranch`
   );
   const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState<
     string | null
-  >("currentDataSourceId");
+  >("currentDataSourceId", {
+    defaultValue: dataSourceId,
+  });
+
+  const [versionsData] = useVersionsCountSubscription({
+    variables: {
+      branch_id: branch,
+    },
+  });
+
+  const versionsCount = versionsData.data?.versions_aggregate.aggregate?.count;
+
+  const [dataSource, currentBranch] = useMemo(() => {
+    const source =
+      (teamData?.dataSources || []).find((d) => d.id === dataSourceId) ||
+      teamData?.dataSources.find((d) => d.id === currentDataSourceId) ||
+      teamData?.dataSources?.[0];
+
+    const curBranch =
+      (source?.branches || []).find((b) => b.id === branch) ||
+      (source?.branches || []).find((b) => b.id === currentBranchId) ||
+      (source?.branches || []).find(
+        (b) => b.status === Branch_Statuses_Enum.Active
+      );
+
+    let path = basePath;
+
+    if (source?.id && source?.id !== dataSourceId) {
+      path += `/${source?.id}`;
+    }
+
+    if (curBranch?.id && curBranch?.id !== branch) {
+      path += `/${curBranch?.id}`;
+    }
+
+    if (!location.pathname.includes(path)) {
+      setLocation(path);
+    }
+
+    return [source, curBranch];
+  }, [
+    basePath,
+    branch,
+    currentBranchId,
+    currentDataSourceId,
+    dataSourceId,
+    location,
+    setLocation,
+    teamData?.dataSources,
+  ]);
+
+  const branches = useMemo(
+    () => dataSource?.branches || [],
+    [dataSource?.branches]
+  );
 
   const [version, execVersionAll] = useCurrentVersionQuery({
-    variables: { branch_id: currentBranchId },
+    variables: { branch_id: branch },
   });
 
   const onModalClose = (goBack: boolean = false) => {
@@ -319,18 +400,17 @@ const ModelsWrapper: React.FC = () => {
   const dataSchemaName = (reservedSlugs.indexOf(slug) === -1 && slug) || null;
 
   const {
-    queries: { tablesData, execQueryTables },
+    queries: { tablesData, execQueryTables, metaData, execQueryMeta },
     mutations: {
       runQueryMutation,
       execRunQueryMutation,
-      validateMutation,
-      execValidateMutation,
       genSchemaMutation,
       execGenSchemaMutation,
     },
   } = useSources({
     params: {
       editId: dataSourceId,
+      branchId: branch,
     },
   });
 
@@ -357,14 +437,6 @@ const ModelsWrapper: React.FC = () => {
     }
   );
 
-  const currentBranch = useMemo(() => {
-    const curBranch =
-      (branches || []).find((b) => b.id === currentBranchId) || branches?.[0];
-    if (curBranch?.id && curBranch?.id !== currentBranchId) {
-      setCurrentBranchId(curBranch?.id);
-    }
-    return curBranch;
-  }, [branches, currentBranchId, setCurrentBranchId]);
   const currentVersion = useMemo(
     () => version?.data?.versions[0] || ({} as Version),
     [version]
@@ -405,15 +477,15 @@ const ModelsWrapper: React.FC = () => {
     successMessage: t("alerts.branch_removed"),
   });
 
-  useCheckResponse(validateMutation, undefined, {
+  useCheckResponse(metaData, undefined, {
     successMessage: null,
     errorMessage: t("alerts.compilation_error"),
     showResponseMessage: false,
   });
 
   const validationError = useMemo(
-    () => validateMutation?.error?.message,
-    [validateMutation.error]
+    () => metaData?.error?.message,
+    [metaData.error]
   );
 
   useEffect(() => {
@@ -434,44 +506,6 @@ const ModelsWrapper: React.FC = () => {
     }
   }, [sourceTablesSchema]);
 
-  useLayoutEffect(() => {
-    if (!dataSourceId && teamData?.dataSources?.length) {
-      const isExist = teamData?.dataSources?.find(
-        (ds) => ds.id === currentDataSourceId
-      );
-      if (isExist) {
-        setLocation(`${basePath}/${currentDataSourceId}`);
-      } else {
-        setCurrentDataSourceId(teamData?.dataSources?.[0]?.id);
-      }
-    }
-
-    if (dataSourceId && !teamData?.dataSources?.length) {
-      setLocation(basePath);
-    }
-
-    if (dataSourceId) {
-      const isExist = teamData?.dataSources?.find((d) => d.id === dataSourceId);
-
-      if (isExist) {
-        if (!branch && currentBranchId) {
-          setLocation(`${basePath}/${dataSourceId}/${currentBranchId}`);
-        }
-      } else {
-        setLocation(basePath);
-      }
-    }
-  }, [
-    dataSourceId,
-    teamData,
-    basePath,
-    setLocation,
-    currentDataSourceId,
-    setCurrentDataSourceId,
-    branch,
-    currentBranchId,
-  ]);
-
   const inputFile = useRef<HTMLInputElement>(null);
 
   const uploadFile = () => {
@@ -483,7 +517,7 @@ const ModelsWrapper: React.FC = () => {
 
     await execGenSchemaMutation({
       datasource_id: dataSourceId,
-      branch_id: currentBranchId,
+      branch_id: branch,
       tables,
       format,
       overwrite: true,
@@ -498,7 +532,7 @@ const ModelsWrapper: React.FC = () => {
     version?.fetching ||
     deleteMutation.fetching ||
     setDefaultMutation.fetching ||
-    validateMutation.fetching ||
+    metaData.fetching ||
     genSchemaMutation.fetching ||
     tablesData.fetching ||
     runQueryMutation.fetching;
@@ -527,7 +561,7 @@ const ModelsWrapper: React.FC = () => {
     const versionData = {
       checksum,
       user_id: currentUser?.id,
-      branch_id: currentBranchId,
+      branch_id: branch,
       dataschemas: {
         data: preparedDataschemas,
       },
@@ -641,6 +675,16 @@ const ModelsWrapper: React.FC = () => {
 
     await createNewVersion(checksum, newDataschemas);
 
+    if (
+      dataSchemaName ===
+        dataschemas.find((schema) => schema.id === editId)?.name &&
+      values.name
+    ) {
+      setLocation(
+        `${basePath}/${dataSourceId}/${currentBranchId}/${values.name}`
+      );
+    }
+
     return newDataschemas;
   };
 
@@ -660,7 +704,7 @@ const ModelsWrapper: React.FC = () => {
 
   const onCodeSave = async (id: string, code: string) => {
     await onClickUpdate(id, { code }, true);
-    await execValidateMutation({ id: dataSourceId });
+    await execQueryMeta({ id: dataSourceId, branch_id: branch });
   };
 
   const onRunSQL = (query: string, limit: number) => {
@@ -721,7 +765,7 @@ const ModelsWrapper: React.FC = () => {
       key: "gen",
       label: t("ide_menu.generate_schema"),
       onClick: () =>
-        setLocation(`${basePath}/${dataSourceId}/${currentBranchId}/genmodels`),
+        setLocation(`${basePath}/${dataSourceId}/${branch}/genmodels`),
     },
     {
       key: "import",
@@ -759,14 +803,14 @@ const ModelsWrapper: React.FC = () => {
       currentBranch={currentBranch}
       onChangeBranch={(branchId) => {
         setCurrentBranchId(branchId);
-        setLocation(`${basePath}/${dataSourceId}/${branchId}`);
+        setLocation(`${basePath}/${dataSourceId}/${branchId}/${slug}`);
       }}
       onSetDefault={onSetDefault}
       branchLoading={createBranchMutation.fetching}
       onCreateBranch={onCreateBranch}
       onDeleteBranch={onDeleteBranch}
       currentVersion={currentVersion}
-      dataSchemaName={dataSchemaName || ""}
+      dataSchemaName={dataSchemaName || slug}
       onRunSQL={onRunSQL}
       onCodeSave={onCodeSave}
       genSchemaModalVisible={genSchemaModalVisible}
@@ -780,9 +824,10 @@ const ModelsWrapper: React.FC = () => {
       onModalClose={() => onModalClose(true)}
       onGenSubmit={onGenSubmit}
       onSaveVersion={createNewVersion}
-      onDataSourceChange={(ds) =>
-        setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}/sqlrunner`)
-      }
+      onDataSourceChange={(ds) => {
+        setCurrentDataSourceId(ds?.id);
+        setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}`);
+      }}
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
       onConnect={() => setLocation(`${SOURCES}/new`)}

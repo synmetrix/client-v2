@@ -1,5 +1,4 @@
 import RootLayout from "@/layouts/RootLayout";
-import { versions } from "@/mocks/versions";
 
 import VersionsList from ".";
 
@@ -19,7 +18,5 @@ const Template: StoryFn<typeof VersionsList> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  versions,
   onRestore: console.log,
-  onSave: () => console.log("save"),
 };

@@ -57,3 +57,11 @@ query CurrentVersion($branch_id: uuid!) {
     }
   }
 }
+
+subscription VersionsCount($branch_id: uuid!) {
+  versions_aggregate(where: { branch_id: { _eq: $branch_id } }) {
+    aggregate {
+      count
+    }
+  }
+}

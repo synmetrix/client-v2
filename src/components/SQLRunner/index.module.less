@@ -1,12 +1,24 @@
+.sqlRunner {
+  width: 100%;
+  padding: 16px;
+}
+
+.resize {
+  margin-bottom: 30px;
+}
+
 .resizeIcon {
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid #eee;
+  padding: 5px 0;
   cursor: n-resize;
 }
 
-.sqlRunner {
-  width: 100%;
+.monacoWrapper {
+  padding: 5px;
+  background: #f3f4f5 !important;
+  border: 1px solid rgba(102, 112, 133, 0.1);
+  border-radius: 6px;
 }
 
 .monaco {
@@ -15,6 +27,47 @@
   }
 }
 
-.data {
-  padding: 0 40px;
+.run {
+  height: auto;
+  padding: 10px 7px 10px 13px;
+
+  font-size: 12px !important;
+  background: #a31bcb;
+  box-shadow: none !important;
+
+  span {
+    font-size: 12px;
+  }
+}
+
+.error {
+  font-weight: 700;
+}
+
+.limit {
+  width: 160px;
+}
+
+.limit :global(input) {
+  height: 40px;
+  padding: 5px 5px 5px 5px;
+  color: rgba(0, 0, 0, 0.54) !important;
+  font-weight: 600;
+  font-size: 12px !important;
+}
+
+.limit :global(.ant-input-number-group-addon) {
+  font-weight: 600;
+  font-size: 12px;
+  background: white;
+}
+
+.runner {
+  display: flex;
+  gap: 10px;
+}
+
+.controlMobile {
+  display: block;
+  width: 50%;
 }

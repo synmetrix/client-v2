@@ -155,7 +155,7 @@ const ExploreWrapper = () => {
     "currentDataSourceId"
   );
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
-    `${currentDataSourceId}:exploreCurrentBranch`
+    `${currentDataSourceId}:currentBranch`
   );
 
   const { dataSourceId, explorationId, modalType, delivery } = useParams();

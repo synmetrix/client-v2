@@ -1,5 +1,6 @@
-import { Tabs, Card, Button } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import { Card, Button } from "antd";
+
+import CloseIcon from "@/assets/console-close.svg";
 
 import s from "./index.module.less";
 
@@ -12,29 +13,18 @@ interface ConsoleProps {
 
 const Console: FC<ConsoleProps> = ({ errors, onClose }) => {
   return (
-    <Card className={s.card}>
-      <Tabs
-        activeKey="errors"
-        animated={false}
-        hideAdd
-        tabBarExtraContent={
-          <Button
-            data-testid="close-console"
-            style={{ marginRight: 18 }}
-            size="small"
-            icon={<CloseOutlined />}
-            onClick={onClose}
-          />
-        }
-        items={[
-          {
-            key: "errors",
-            label: "Errors",
-            closable: false,
-            children: <div className={s.errorText}>{errors}</div>,
-          },
-        ]}
-      />
+    <Card className={s.card} bordered={false}>
+      <div className={s.header}>
+        <div className={s.tabBtn}>Errors</div>
+        <CloseIcon
+          className={s.closeButton}
+          data-testid="close-console"
+          onClick={onClose}
+        />
+      </div>
+      <div className={s.body}>
+        <div className={s.errorText}>{errors}</div>
+      </div>
     </Card>
   );
 };

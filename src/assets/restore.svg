@@ -1,0 +1,15 @@
+<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="iconoir:database-backup" clip-path="url(#clip0_5817_6871)">
+<g id="Group">
+<path id="Vector" d="M3.33398 5.35547V10.3555C3.33398 10.3555 3.33398 12.8555 9.16732 12.8555C9.66065 12.8555 10.1132 12.838 10.5265 12.8055M15.0007 5.35547V10.3555" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M9.16732 17.8555C3.33398 17.8555 3.33398 15.3555 3.33398 15.3555V10.3555M18.889 15.078C18.374 13.7696 17.1957 12.8555 15.8257 12.8555C14.3607 12.8555 13.1157 13.9013 12.6648 15.3555M9.16732 2.85547C15.0007 2.85547 15.0007 5.35547 15.0007 5.35547C15.0007 5.35547 15.0007 7.85547 9.16732 7.85547C3.33398 7.85547 3.33398 5.35547 3.33398 5.35547C3.33398 5.35547 3.33398 2.85547 9.16732 2.85547Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M17.4968 15.0777H18.8893C19.0435 15.0777 19.1676 14.9527 19.1676 14.7994V13.2261M12.7793 17.2994C13.2943 18.6077 14.4726 19.5219 15.8426 19.5219C17.3076 19.5219 18.5526 18.4761 19.0035 17.0219" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M14.1708 17.2998H12.7783C12.7045 17.2998 12.6337 17.3291 12.5815 17.3813C12.5293 17.4335 12.5 17.5043 12.5 17.5781V19.1515" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_5817_6871">
+<rect width="20" height="20" fill="white" transform="translate(0 0.355469)"/>
+</clipPath>
+</defs>
+</svg>

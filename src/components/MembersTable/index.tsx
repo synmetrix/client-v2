@@ -90,7 +90,7 @@ const MembersTable: FC<MembersTableProps> = ({
                     value as unknown as ChangeableRoles
                   )
                 }
-                bordered={false}
+                variant="borderless"
                 value={role}
                 options={createRoleOptions(ChangeableRoles)}
               />
@@ -120,7 +120,7 @@ const MembersTable: FC<MembersTableProps> = ({
                   onChange={(accessListId) => {
                     onAccessListChange(record.role.id, accessListId);
                   }}
-                  bordered={false}
+                  variant="borderless"
                   disabled={!accessLists?.length}
                   value={
                     curAccessList?.id ||

@@ -1,4 +1,4 @@
-import { Spin, message } from "antd";
+import { Badge, Space, Spin, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { useLocalStorageState, useTrackedEffect } from "ahooks";
@@ -11,6 +11,7 @@ import AppLayout from "@/layouts/AppLayout";
 import CodeEditor from "@/components/CodeEditor";
 import ErrorFound from "@/components/ErrorFound";
 import ModelsSidebar from "@/components/ModelsSidebar";
+import StatusBadge from "@/components/StatusBadge";
 import SidebarLayout from "@/layouts/SidebarLayout";
 import Modal from "@/components/Modal";
 import DataModelGeneration from "@/components/DataModelGeneration";
@@ -128,7 +129,7 @@ export const Models: React.FC<ModelsProps> = ({
   versionsCount,
   onVersionsOpen,
 }) => {
-  const { t } = useTranslation(["pages"]);
+  const { t } = useTranslation(["pages", "models"]);
 
   const {
     editTab,
@@ -183,10 +184,25 @@ export const Models: React.FC<ModelsProps> = ({
   const Layout =
     dataSources && dataSources.length === 0 ? AppLayout : SidebarLayout;
 
+  console.log(sqlError);
+
   return (
     <Layout
       icon={<ModelsActiveIcon />}
-      title={dataSource?.name || t("models")}
+      title={
+        dataSource?.name ? (
+          <Space align="start" size={16} wrap>
+            {dataSource.name}
+            {validationError && (
+              <StatusBadge className={styles.errorBadge} status="error">
+                {t("models:alerts.compilation_error")}
+              </StatusBadge>
+            )}
+          </Space>
+        ) : (
+          t("models")
+        )
+      }
       subTitle={t("models")}
       burgerTitle={t("models")}
       divider

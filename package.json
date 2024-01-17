@@ -16,7 +16,7 @@
     "loadschema": "gq http://localhost:8080/v1/graphql -H \"X-Hasura-Admin-Secret: devsecret\" --introspect --format json > src/graphql/schemas/hasura.json",
     "prepare": "husky install .husky",
     "prettier": "prettier --check --write \"src/**/*\"",
-    "semantic-release": "semantic-release",
+    "semantic-release": "semantic-release --debug",
     "serve": "vite preview --host",
     "start": "npm run dev",
     "storybook": "storybook dev -p 6007",

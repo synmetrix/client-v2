@@ -110,17 +110,17 @@ const SQLRunner: FC<SQLRunnerProps> = ({
       </div>
 
       <Space className={styles.runner} align="start">
+        <Button className={styles.run} type="primary" key="run" onClick={onRun}>
+          {t("common:words.run")}
+          <RightOutlined />
+        </Button>
+
         <InputNumber
           addonBefore={t("common:words.row_limit")}
           value={limit}
           className={styles.limit}
           onChange={(val) => onChangeLimit(val || 0)}
         />
-
-        <Button className={styles.run} type="primary" key="run" onClick={onRun}>
-          {t("common:words.run")}
-          <RightOutlined />
-        </Button>
       </Space>
 
       {showData && (

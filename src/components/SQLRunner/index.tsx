@@ -1,5 +1,7 @@
 import { Alert, InputNumber, Space } from "antd";
+import cn from "classnames";
 import { RightOutlined, VerticalAlignMiddleOutlined } from "@ant-design/icons";
+import { useResponsive } from "ahooks";
 import { ResizableBox } from "react-resizable";
 import { Editor } from "@monaco-editor/react";
 import { useTranslation } from "react-i18next";
@@ -37,6 +39,8 @@ const SQLRunner: FC<SQLRunnerProps> = ({
   onChangeLimit = () => {},
 }) => {
   const { t } = useTranslation(["common"]);
+  const windowSize = useResponsive();
+  const isMobile = windowSize.md === false;
 
   const monacoRef: MutableRefObject<editor.IStandaloneCodeEditor | null> =
     useRef(null);
@@ -109,19 +113,25 @@ const SQLRunner: FC<SQLRunnerProps> = ({
         </ResizableBox>
       </div>
 
-      <Space className={styles.runner} align="start">
-        <Button className={styles.run} type="primary" key="run" onClick={onRun}>
+      <div className={styles.runner}>
+        <Button
+          className={cn(styles.run, isMobile && styles.controlMobile)}
+          type="primary"
+          key="run"
+          onClick={onRun}
+        >
           {t("common:words.run")}
           <RightOutlined />
         </Button>
 
         <InputNumber
+          width={isMobile ? "50%" : "auto"}
           addonBefore={t("common:words.row_limit")}
           value={limit}
-          className={styles.limit}
+          className={cn(styles.limit, isMobile && styles.controlMobile)}
           onChange={(val) => onChangeLimit(val || 0)}
         />
-      </Space>
+      </div>
 
       {showData && (
         <div className={styles.data}>

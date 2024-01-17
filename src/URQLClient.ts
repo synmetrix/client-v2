@@ -19,10 +19,14 @@ declare global {
 }
 
 const HASURA_GRAPHQL_ENDPOINT =
-  window?.HASURA_GRAPHQL_ENDPOINT ||
-  import.meta.env.VITE_HASURA_GRAPHQL_ENDPOINT;
+  window.HASURA_GRAPHQL_ENDPOINT !== undefined
+    ? window.HASURA_GRAPHQL_ENDPOINT
+    : import.meta.env.VITE_HASURA_GRAPHQL_ENDPOINT;
+
 const HASURA_WS_ENDPOINT =
-  window?.HASURA_WS_ENDPOINT || import.meta.env.VITE_HASURA_WS_ENDPOINT;
+  window.HASURA_WS_ENDPOINT !== undefined
+    ? window.HASURA_WS_ENDPOINT
+    : import.meta.env.VITE_HASURA_WS_ENDPOINT;
 
 type Headers = {
   "content-type": string;

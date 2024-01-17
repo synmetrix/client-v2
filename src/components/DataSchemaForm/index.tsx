@@ -56,9 +56,11 @@ const DataSchemaForm: FC<DataSchemaFormProps> = ({
               name="type"
               fieldType="select"
               control={control}
-              defaultValue={defaultValues.name?.slice(
-                defaultValues.name?.lastIndexOf(".") + 1
-              )}
+              defaultValue={
+                defaultValues.name?.slice(
+                  defaultValues.name?.lastIndexOf(".") + 1
+                ) || fileTypes[0]
+              }
               options={fileTypes.map((type) => ({
                 label: `.${type}`,
                 value: type,

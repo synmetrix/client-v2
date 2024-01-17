@@ -39,15 +39,13 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       [
-        "@semantic-release/git",
+        "@semantic-release/github",
         {
           "assets": [
-            "dist/**"
-          ],
-          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+            { "path": "dist" }
+          ]
         }
-      ],
-      "@semantic-release/github"
+      ]
     ]
   },
   "dependencies": {

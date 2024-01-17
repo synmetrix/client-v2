@@ -172,7 +172,11 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                 className={cn(styles.dropdown, styles.schemaMenu)}
                 popoverType="dropdown"
                 buttonProps={{
-                  className: cn(styles.button, styles.plusButton),
+                  className: cn(
+                    styles.button,
+                    styles.plusButton,
+                    styles.menuBtn
+                  ),
                   icon: <VerticalDots />,
                 }}
                 menu={{ items: ideMenu }}

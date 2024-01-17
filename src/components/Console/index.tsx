@@ -12,7 +12,7 @@ interface ConsoleProps {
 
 const Console: FC<ConsoleProps> = ({ errors, onClose }) => {
   return (
-    <Card className={s.card}>
+    <Card className={s.card} bordered={false}>
       <Tabs
         activeKey="errors"
         animated={false}
@@ -20,7 +20,7 @@ const Console: FC<ConsoleProps> = ({ errors, onClose }) => {
         tabBarExtraContent={
           <Button
             data-testid="close-console"
-            style={{ marginRight: 18 }}
+            className={s.closeButton}
             size="small"
             icon={<CloseOutlined />}
             onClick={onClose}
@@ -29,7 +29,7 @@ const Console: FC<ConsoleProps> = ({ errors, onClose }) => {
         items={[
           {
             key: "errors",
-            label: "Errors",
+            label: <span className={s.tabBtn}>Errors</span>,
             closable: false,
             children: <div className={s.errorText}>{errors}</div>,
           },

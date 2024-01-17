@@ -16,6 +16,7 @@
     "loadschema": "gq http://localhost:8080/v1/graphql -H \"X-Hasura-Admin-Secret: devsecret\" --introspect --format json > src/graphql/schemas/hasura.json",
     "prepare": "husky install .husky",
     "prettier": "prettier --check --write \"src/**/*\"",
+    "semantic-release": "semantic-release",
     "serve": "vite preview --host",
     "start": "npm run dev",
     "storybook": "storybook dev -p 6007",
@@ -32,6 +33,23 @@
     "last 2 versions",
     "not ie <= 10"
   ],
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "dist/**",
+            "package.json"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
+      "@semantic-release/github"
+    ]
+  },
   "dependencies": {
     "@ant-design/icons": "^5.1.4",
     "@ant-design/pro-card": "^2.4.1",

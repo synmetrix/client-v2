@@ -376,7 +376,6 @@ const ModelsWrapper: React.FC = () => {
     currentBranchId,
     currentDataSourceId,
     dataSourceId,
-    location,
     setLocation,
     teamData?.dataSources,
   ]);
@@ -831,6 +830,7 @@ const ModelsWrapper: React.FC = () => {
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
       onConnect={() => setLocation(`${SOURCES}/new`)}
+      versionsCount={versionsCount}
     />
   );
 };

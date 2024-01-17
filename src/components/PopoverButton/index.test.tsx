@@ -19,7 +19,7 @@ describe("PopoverButton Component", () => {
   });
 
   test("calls onVisibleChange when the popover is opened or closed", () => {
-    const mockOnVisibleChange = vi.fn(console.log);
+    const mockOnVisibleChange = vi.fn();
     render(
       <PopoverButton
         actionText={"action"}

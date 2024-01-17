@@ -15,6 +15,8 @@ describe("CodeEditor", () => {
         onClose={vi.fn()}
         onRunSQL={vi.fn()}
         onCodeSave={vi.fn()}
+        validationError={""}
+        active={"sqlrunner"}
       />
     );
     const codeEditorElement = screen.getByTestId("code-editor");
@@ -30,6 +32,7 @@ describe("CodeEditor", () => {
         onRunSQL={vi.fn()}
         onCodeSave={vi.fn()}
         onTabChange={mockOnTabChange}
+        validationError={""}
       />
     );
     const tabButton = screen.getByText(dataschemasMock[0].name);
@@ -46,6 +49,7 @@ describe("CodeEditor", () => {
         onRunSQL={vi.fn()}
         onCodeSave={vi.fn()}
         onClose={mockOnClose}
+        validationError={""}
       />
     );
     const closeIcon = screen.getAllByTestId("close-icon")[0];

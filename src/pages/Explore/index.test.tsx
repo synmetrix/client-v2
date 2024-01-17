@@ -50,7 +50,7 @@ describe("Explore", () => {
 
   test("renders ExploreWorkspace", () => {
     const { getByText } = render(<Explore {...defaultProps} />);
-    expect(getByText("pages:explore")).toBeInTheDocument();
+    expect(getByText("Explore")).toBeInTheDocument();
   });
 
   test('does not render AlertModal when modalType is not "alert"', () => {

@@ -193,9 +193,12 @@ const ExploreWrapper = () => {
       (source?.branches || []).find(
         (b) => b.status === Branch_Statuses_Enum.Active
       );
+    if (branch && branch.id !== currentBranchId) {
+      setCurrentBranchId(branch.id);
+    }
 
     return [source, branch];
-  }, [currentBranchId, currentDataSourceId, datasources]);
+  }, [currentBranchId, currentDataSourceId, datasources, setCurrentBranchId]);
 
   const [metaData, execMetaQuery] = useFetchMetaQuery({
     variables: {

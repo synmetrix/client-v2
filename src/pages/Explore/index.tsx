@@ -193,12 +193,9 @@ const ExploreWrapper = () => {
       (source?.branches || []).find(
         (b) => b.status === Branch_Statuses_Enum.Active
       );
-    if (branch && branch.id !== currentBranchId) {
-      setCurrentBranchId(branch.id);
-    }
 
     return [source, branch];
-  }, [currentBranchId, currentDataSourceId, datasources, setCurrentBranchId]);
+  }, [currentBranchId, currentDataSourceId, datasources]);
 
   const [metaData, execMetaQuery] = useFetchMetaQuery({
     variables: {
@@ -231,7 +228,7 @@ const ExploreWrapper = () => {
     trackEvent("Run Query");
 
     const newExplorationObj = {
-      branch_id: currentBranchId,
+      branch_id: currentBranch?.id,
       datasource_id: dataSourceId,
       playground_state: explorationQueryState,
       playground_settings: settings,

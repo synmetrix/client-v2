@@ -5,7 +5,6 @@ import { useResponsive } from "ahooks";
 import DataSourceForm from "@/components/DataSourceForm";
 import Navbar from "@/components/Navbar";
 import BasicLayout from "@/layouts/BasicLayout";
-import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
 import useOnboarding from "@/hooks/useOnboarding";
 import DataSourceStore from "@/stores/DataSourceStore";
@@ -75,8 +74,7 @@ const OnboardingWrapper = () => {
   const { step: pageStep } = useParams();
   const [, setLocation] = useLocation();
   const { loading } = CurrentUserStore();
-  const { withAuthPrefix } = useAppSettings();
-  const basePath = withAuthPrefix(ONBOARDING);
+  const basePath = ONBOARDING;
 
   const step = useMemo(() => parseInt(pageStep || "0", 10) - 1, [pageStep]);
 
@@ -94,7 +92,7 @@ const OnboardingWrapper = () => {
 
   const onFinish = () => {
     clean();
-    setLocation(withAuthPrefix(MODELS));
+    setLocation(MODELS);
   };
 
   const onChangeStep = (value: number) => {

@@ -14,7 +14,6 @@ import formatTime from "@/utils/helpers/formatTime";
 import DataSourceTag from "@/components/DataSourceTag";
 import ConfirmModal from "@/components/ConfirmModal";
 import { useDeleteDataSourceMutation } from "@/graphql/generated";
-import useAppSettings from "@/hooks/useAppSettings";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import useLocation from "@/hooks/useLocation";
 import useOnboarding from "@/hooks/useOnboarding";
@@ -234,12 +233,11 @@ export const DataSources = ({
 const DataSourcesWrapper = () => {
   const { t } = useTranslation(["dataSourceStepForm"]);
   const { currentTeam, loading, setLoading } = CurrentUserStore();
-  const { withAuthPrefix } = useAppSettings();
   const [, setLocation] = useLocation();
   const { editId, generate } = useParams();
 
-  const basePath = withAuthPrefix(SOURCES);
-  const modelsPath = withAuthPrefix(MODELS);
+  const basePath = SOURCES;
+  const modelsPath = MODELS;
   const connect = editId === "new";
 
   const {

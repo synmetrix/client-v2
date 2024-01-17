@@ -17,7 +17,6 @@ import Modal from "@/components/Modal";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import VersionsList from "@/components/VersionsList";
 import NoDataSource from "@/components/NoDataSource";
-import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
 import useModelsIde from "@/hooks/useModelsIde";
 import useSources from "@/hooks/useSources";
@@ -267,8 +266,7 @@ const ModelsWrapper: React.FC = () => {
 
   const { currentUser, teamData } = CurrentUserStore();
   const [, setLocation] = useLocation();
-  const { withAuthPrefix } = useAppSettings();
-  const basePath = withAuthPrefix(MODELS);
+  const basePath = MODELS;
 
   const [deleteMutation, execDeleteMutation] = useDeleteSchemaMutation();
   const [createBranchMutation, execCreateBranchMutation] =
@@ -787,7 +785,7 @@ const ModelsWrapper: React.FC = () => {
       }
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
-      onConnect={() => setLocation(withAuthPrefix(`${SOURCES}/new`))}
+      onConnect={() => setLocation(`${SOURCES}/new`)}
     />
   );
 };

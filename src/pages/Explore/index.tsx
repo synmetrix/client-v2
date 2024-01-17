@@ -24,7 +24,6 @@ import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
 import useAnalyticsQuery, { initialState } from "@/hooks/useAnalyticsQuery";
 import useCheckResponse from "@/hooks/useCheckResponse";
-import useAppSettings from "@/hooks/useAppSettings";
 import type { Exploration, ExplorationData, RawSql } from "@/types/exploration";
 import type { AlertType } from "@/types/alert";
 import type { Meta } from "@/types/cube";
@@ -162,7 +161,6 @@ const ExploreWrapper = () => {
   const { dataSourceId, explorationId, modalType, delivery } = useParams();
 
   const { state: playgroundState, doReset } = useAnalyticsQuery();
-  const { withAuthPrefix } = useAppSettings();
   const [createData, execCreateMutation] = useCreateExplorationMutation();
   const [sqlData, execSqlGenMutation] = useGenSqlMutation();
   const [currentExploration, execCurrentExploration] =
@@ -175,7 +173,7 @@ const ExploreWrapper = () => {
       pause: true,
     });
 
-  const dataSourcePath = withAuthPrefix(`${EXPLORE}/${dataSourceId}`);
+  const dataSourcePath = `${EXPLORE}/${dataSourceId}`;
   const explorePath = `${dataSourcePath}/${explorationId}`;
 
   const datasources = useMemo(

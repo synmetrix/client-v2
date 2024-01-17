@@ -6,7 +6,6 @@ import QueryLogsTable from "@/components/QueryLogsTable";
 import AppLayout from "@/layouts/AppLayout";
 import useLogs from "@/hooks/useLogs";
 import useTableState from "@/hooks/useTableState";
-import useAppSettings from "@/hooks/useAppSettings";
 import useLocation from "@/hooks/useLocation";
 import type { Request_Logs } from "@/graphql/generated";
 import QueryFilters from "@/components/QueryFilters";
@@ -99,9 +98,8 @@ export const QueryLogs: React.FC<QueryLogsProps> = ({
 
 const QueryLogsWrapper = () => {
   const { teamData, currentTeam } = CurrentUserStore();
-  const { withAuthPrefix } = useAppSettings();
   const [location, setLocation] = useLocation();
-  const basePath = withAuthPrefix(QUERY_LOGS);
+  const basePath = QUERY_LOGS;
 
   const {
     dataSourceId = null,

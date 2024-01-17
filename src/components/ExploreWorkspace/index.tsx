@@ -12,7 +12,6 @@ import useLocation from "@/hooks/useLocation";
 import ExploreFiltersSection from "@/components/ExploreFiltersSection";
 import AppLayout from "@/layouts/AppLayout";
 import pickKeys from "@/utils/helpers/pickKeys";
-import useAppSettings from "@/hooks/useAppSettings";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
 import type { ExplorationData, RawSql } from "@/types/exploration";
@@ -67,7 +66,6 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
     ? document.querySelector(".ant-layout-content")
     : document.querySelector("#data-view");
 
-  const { withAuthPrefix } = useAppSettings();
   const { size } = useDimensions(selector);
   const width = size?.width;
 
@@ -217,9 +215,7 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
           )}
         </div>
       ) : (
-        <NoDataSource
-          onConnect={() => setLocation(withAuthPrefix(`${SOURCES}/new`))}
-        />
+        <NoDataSource onConnect={() => setLocation(`${SOURCES}/new`)} />
       )}
     </Layout>
   );

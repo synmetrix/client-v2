@@ -23,11 +23,7 @@
     "test": "vitest"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
-    "src/**/*.{js,jsx,tsx,ts,css,less,scss,sass,md,json}": [
-      "prettier --write"
-    ],
-    "!dist/**/*": []
+    "{,!(node_modules)/**/}*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"]
   },
   "browserslist": [
     "> 1%",

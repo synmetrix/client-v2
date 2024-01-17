@@ -151,15 +151,23 @@ export const Models: React.FC<ModelsProps> = ({
     [dataschemas, openedTabs]
   ) as Dataschema[];
 
-  useTrackedEffect(() => {
-    if (dataSchemaName) {
-      const schema = dataschemas.find((s) => s.name === dataSchemaName);
+  useTrackedEffect(
+    (changes, prevDeps, newDeps) => {
+      if (dataSchemaName) {
+        const schema = dataschemas.find((s) => s.name === dataSchemaName);
 
-      if (schema && activeTab !== schema.name) {
-        openTab(schema.name);
+        if (schema && activeTab !== schema.name) {
+          openTab(schema.name);
+        } else if (
+          dataSchemaName === "sqlrunner" &&
+          prevDeps?.[0] !== newDeps?.[0]
+        ) {
+          openTab(dataSchemaName);
+        }
       }
-    }
-  }, [dataSchemaName, dataschemas, openSchema, openTab]);
+    },
+    [dataSchemaName, dataschemas, openSchema, openTab]
+  );
 
   const onUpdateSchema: typeof onSchemaUpdate = (editId, values) => {
     const schema = dataschemas.find((s) => s.id === editId);
@@ -821,7 +829,7 @@ const ModelsWrapper: React.FC = () => {
       onCreateBranch={onCreateBranch}
       onDeleteBranch={onDeleteBranch}
       currentVersion={currentVersion}
-      dataSchemaName={dataSchemaName || ""}
+      dataSchemaName={dataSchemaName || slug}
       onRunSQL={onRunSQL}
       onCodeSave={onCodeSave}
       genSchemaModalVisible={genSchemaModalVisible}

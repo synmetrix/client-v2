@@ -26,7 +26,7 @@ export default ({ dataSourceId, branchId }: Props) => {
     closeTab,
     changeActiveTab,
     reset,
-  } = useTabs({});
+  } = useTabs({ defaultTab: defaultTabId });
 
   const changePath = useCallback(
     (activeKey?: string) => {

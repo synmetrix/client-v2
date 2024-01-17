@@ -6,6 +6,7 @@ import type { Reducer } from "react";
 interface State {
   tabs: Set<string>;
   activeTab: string | null;
+  defaultTab?: string;
 }
 
 interface OpenAction {

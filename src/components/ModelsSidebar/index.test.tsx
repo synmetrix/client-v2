@@ -26,7 +26,7 @@ describe("ModelsSidebar Component", () => {
         onDeleteBranch={vi.fn()}
       />
     );
-    const titleElement = screen.getByText(/common:words.branch/);
+    const titleElement = screen.getByText(/common:words.select_branch/);
     expect(titleElement).toBeDefined();
   });
 

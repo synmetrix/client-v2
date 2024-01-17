@@ -1,7 +1,7 @@
 import { Space, Spin, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
-import { useLocalStorageState, useTrackedEffect } from "ahooks";
+import { useLocalStorageState, useResponsive, useTrackedEffect } from "ahooks";
 import { getOr } from "unchanged";
 import JSZip from "jszip";
 import { load } from "js-yaml";
@@ -130,6 +130,8 @@ export const Models: React.FC<ModelsProps> = ({
   onVersionsOpen,
 }) => {
   const { t } = useTranslation(["pages", "models"]);
+  const windowSize = useResponsive();
+  const isMobile = windowSize.md === false;
 
   const {
     editTab,
@@ -184,16 +186,15 @@ export const Models: React.FC<ModelsProps> = ({
   const Layout =
     dataSources && dataSources.length === 0 ? AppLayout : SidebarLayout;
 
-  console.log(sqlError);
-
   return (
     <Layout
       icon={<ModelsActiveIcon />}
       title={
         dataSource?.name ? (
-          <Space align="start" size={16} wrap>
+          <Space align="start" size={16}>
             {dataSource.name}
-            {validationError && (
+
+            {!isMobile && validationError && (
               <StatusBadge className={styles.errorBadge} status="error">
                 {t("models:alerts.compilation_error")}
               </StatusBadge>

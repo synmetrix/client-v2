@@ -1,4 +1,5 @@
 import i18n from "i18next.config";
+import { LOGOUT } from "@/utils/constants/paths";
 
 export const user = {
   displayName: "Full Name",
@@ -17,6 +18,6 @@ export const userMenu = [
   },
   {
     label: i18n.t("common:words.logout"),
-    href: "/auth/logout",
+    href: LOGOUT,
   },
 ];

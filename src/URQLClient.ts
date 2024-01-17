@@ -1,14 +1,15 @@
-import { createClient, fetchExchange, subscriptionExchange } from "urql";
 import { authExchange } from "@urql/exchange-auth";
 import { retryExchange } from "@urql/exchange-retry";
-import { createClient as createWsClient } from "graphql-ws";
 import { history } from "@vitjs/runtime";
+import { createClient as createWsClient } from "graphql-ws";
+import { createClient, fetchExchange, subscriptionExchange } from "urql";
 
 import { fetchRefreshToken } from "@/hooks/useAuth";
 import AuthTokensStore from "@/stores/AuthTokensStore";
+import { SIGNIN } from "@/utils/constants/paths";
 
-import type { Operation, CombinedError } from "urql";
 import type { SubscribePayload } from "graphql-ws";
+import type { CombinedError, Operation } from "urql";
 
 declare global {
   interface Window {
@@ -86,7 +87,7 @@ export default () => {
 
             if (result.error) {
               cleanTokens();
-              history.push("/auth/signin");
+              history.push(SIGNIN);
               return;
             }
 

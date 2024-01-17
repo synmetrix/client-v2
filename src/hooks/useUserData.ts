@@ -1,31 +1,32 @@
-import { useEffect } from "react";
 import { useDeepCompareEffect } from "ahooks";
+import { useEffect } from "react";
 
-import {
-  useCurrentUserQuery,
-  useSubCurrentUserSubscription,
-  useCreateTeamMutation,
-  useTeamDataQuery,
-  useSubTeamDataSubscription,
-} from "@/graphql/generated";
-import AuthTokensStore from "@/stores/AuthTokensStore";
-import CurrentUserStore, { LAST_TEAM_ID_KEY } from "@/stores/CurrentUserStore";
+import type { DataSourceCredentials } from "@/components/CredentialsTable";
 import type {
-  SubCurrentUserSubscription,
-  SubTeamDataSubscription,
   CurrentUserQuery,
   Datasources,
-  TeamDataQuery,
   Members as MembersType,
+  SubCurrentUserSubscription,
+  SubTeamDataSubscription,
+  TeamDataQuery,
 } from "@/graphql/generated";
-import type { User, TeamData } from "@/types/user";
-import type { DataSourceInfo } from "@/types/dataSource";
+import {
+  useCreateTeamMutation,
+  useCurrentUserQuery,
+  useSubCurrentUserSubscription,
+  useSubTeamDataSubscription,
+  useTeamDataQuery,
+} from "@/graphql/generated";
 import { dbTiles } from "@/mocks/dataSources";
-import { Roles } from "@/types/team";
-import type { AccessList, Member, Team, TeamRole } from "@/types/team";
+import AuthTokensStore from "@/stores/AuthTokensStore";
+import CurrentUserStore, { LAST_TEAM_ID_KEY } from "@/stores/CurrentUserStore";
 import type { Alert, RawAlert } from "@/types/alert";
-import type { Report, RawReport } from "@/types/report";
-import type { DataSourceCredentials } from "@/components/CredentialsTable";
+import type { DataSourceInfo } from "@/types/dataSource";
+import type { RawReport, Report } from "@/types/report";
+import type { AccessList, Member, Team, TeamRole } from "@/types/team";
+import { Roles } from "@/types/team";
+import type { TeamData, User } from "@/types/user";
+import { SIGNIN } from "@/utils/constants/paths";
 import formatTime from "@/utils/helpers/formatTime";
 
 const DEFAULT_TEAM_NAME = "Default team";
@@ -253,7 +254,7 @@ export default () => {
     }
 
     if (!accessToken) {
-      window.location.href = "/auth/signin";
+      window.location.href = SIGNIN;
     }
   }, [accessToken, userId, currentTeam?.id]);
 

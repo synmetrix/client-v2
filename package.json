@@ -26,7 +26,8 @@
     "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
     "**/*.{js,jsx,tsx,ts,css,less,scss,sass,md,json}": [
       "prettier --write"
-    ]
+    ],
+    "!dist/**/*": []
   },
   "browserslist": [
     "> 1%",
@@ -41,8 +42,7 @@
         "@semantic-release/git",
         {
           "assets": [
-            "dist/**",
-            "package.json"
+            "dist/**"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }

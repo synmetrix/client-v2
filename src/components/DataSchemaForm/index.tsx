@@ -50,6 +50,9 @@ const DataSchemaForm: FC<DataSchemaFormProps> = ({
           label={t("common:words.filename")}
           addonAfter={
             <Input
+              style={{
+                minWidth: 60,
+              }}
               name="type"
               fieldType="select"
               control={control}

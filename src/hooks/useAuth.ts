@@ -2,8 +2,9 @@ import AuthTokensStore from "@/stores/AuthTokensStore";
 import type { SignInFormType } from "@/components/SignInForm";
 import type { SignUpFormType } from "@/components/SignUpForm";
 
-const VITE_GRAPHQL_PLUS_SERVER_URL = import.meta.env
-  .VITE_GRAPHQL_PLUS_SERVER_URL;
+const VITE_GRAPHQL_PLUS_SERVER_URL =
+  window.GRAPHQL_PLUS_SERVER_URL ||
+  import.meta.env.VITE_GRAPHQL_PLUS_SERVER_URL;
 
 type Response = {
   statusCode?: number;

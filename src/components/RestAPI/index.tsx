@@ -13,8 +13,12 @@ import styles from "./index.module.less";
 
 import type { FC } from "react";
 
-const CUBEJS_REST_API_URL = import.meta.env.VITE_CUBEJS_REST_API_URL as string;
-const CUBEJS_API_DOCS_URL = import.meta.env.VITE_CUBEJS_API_DOCS_URL as string;
+const CUBEJS_REST_API_URL =
+  window.CUBEJS_REST_API_URL ||
+  (import.meta.env.VITE_CUBEJS_REST_API_URL as string);
+const CUBEJS_API_DOCS_URL =
+  window.CUBEJS_API_DOCS_URL ||
+  (import.meta.env.VITE_CUBEJS_API_DOCS_URL as string);
 
 interface RestApiProps {
   dataSourceId: string;

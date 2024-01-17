@@ -37,10 +37,7 @@
       [
         "@semantic-release/github",
         {
-          "assets": [
-            { "path": "dist.zip", "label": "Dist (zip)" },
-            { "path": "dist.tar.gz", "label": "Dist (tar.gz)" }
-          ]
+          "assets": "dist.zip"
         }
       ]
     ]

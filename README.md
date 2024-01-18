@@ -66,6 +66,7 @@ Maintain code consistency and quality in the Synmetrix client by implementing li
   "editor.formatOnSave": true
 }
 ```
+
 This configures VS Code to run ESLint and Prettier on file save.
 
 ## Conventional Commits
@@ -80,8 +81,34 @@ We adhere to the Conventional Commits specification to ensure consistent and mea
 [optional footer(s)]
 ```
 
-
 For a detailed understanding of Conventional Commits, refer to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
+
+## Component Structure
+
+In the Synmetrix project, components follow a consistent structure to enhance maintainability and organization. Each component typically consists of the following files:
+
+1. **index.tsx:**
+   The main file containing the component's implementation. This file includes the React component code.
+
+2. **index.module.less:**
+   A Less file containing the component's styles. Using module.less ensures that styles are scoped to the component and won't conflict with styles from other components.
+
+3. **index.stories.tsx:**
+   A file dedicated to Storybook stories for the component. Storybook stories help in visually testing and documenting the component's variations and use cases.
+
+4. **index.test.tsx:**
+   The file containing unit tests for the component using testing frameworks like Jest. Writing tests ensures the reliability and correctness of the component's functionality.
+
+Here's an example directory structure for a component named `ExampleComponent`:
+
+```plaintext
+/src
+  /components
+    /ExampleComponent
+      index.tsx
+      index.module.less
+      index.stories.tsx
+      index.test.tsx
 
 ## Testing
 
@@ -92,6 +119,7 @@ To run tests, use the following command:
 ```bash
 yarn test
 ```
+
 Executing this command will initiate the testing suite, allowing you to assess the client's performance and functionality. Any detected issues or failures will be highlighted, providing valuable insights for debugging and maintaining code quality.
 
 ## Build

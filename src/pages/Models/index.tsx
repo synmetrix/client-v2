@@ -39,7 +39,7 @@ import {
   useVersionsCountSubscription,
   Branch_Statuses_Enum,
 } from "@/graphql/generated";
-import { EXPORT, MODELS, SOURCES } from "@/utils/constants/paths";
+import { EXPORT, MODELS, ONBOARDING, SOURCES } from "@/utils/constants/paths";
 
 import ModelsActiveIcon from "@/assets/models-active.svg";
 
@@ -504,6 +504,12 @@ const ModelsWrapper: React.FC = () => {
       setTablesSchema(sourceTablesSchema);
     }
   }, [sourceTablesSchema]);
+
+  useEffect(() => {
+    if (currentUser.id && !teamData?.dataSources.length) {
+      setLocation(ONBOARDING);
+    }
+  }, [currentUser.id, setLocation, teamData?.dataSources.length]);
 
   const inputFile = useRef<HTMLInputElement>(null);
 

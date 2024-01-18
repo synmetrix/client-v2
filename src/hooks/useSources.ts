@@ -24,7 +24,7 @@ interface Props {
 }
 
 export default ({ params = {} }: Props) => {
-  const { editId } = params;
+  const { editId, branchId } = params;
 
   const [createMutation, execCreateMutation] = useCreateDataSourceMutation();
   const [updateMutation, execUpdateMutation] = useUpdateDataSourceMutation();
@@ -41,14 +41,16 @@ export default ({ params = {} }: Props) => {
     pause: true,
     variables: {
       datasource_id: editId,
-      branch_id: params.branchId,
+      branch_id: branchId,
     },
     requestPolicy: "cache-and-network",
   });
 
   useEffect(() => {
-    execQueryMeta();
-  }, [execQueryMeta]);
+    if (editId && branchId) {
+      execQueryMeta();
+    }
+  }, [branchId, editId, execQueryMeta]);
 
   const currentMeta = useMemo(
     () => metaData.data?.fetch_meta?.cubes || [],

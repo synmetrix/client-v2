@@ -109,6 +109,7 @@ Here's an example directory structure for a component named `ExampleComponent`:
       index.module.less
       index.stories.tsx
       index.test.tsx
+```
 
 ## Testing
 

@@ -1,7 +1,5 @@
 <p align="center"><a href="https://synmetrix.org"><img src="https://github.com/mlcraft-io/client-v2/blob/master/src/assets/logo_with_text.png" alt="Synmetrix" width="300px"></a></p>
 
-[Website](https://synmetrix.org) • [Docs](https://docs.synmetrix.org/) • [Cube.js Models docs](https://cube.dev/docs/schema/getting-started) • [Docker Hub](https://hub.docker.com/u/mlcraft) • [Slack community](https://join.slack.com/t/mlcraft/shared_invite/zt-1x2gxwn37-J3tTvCR5xSFVfxwUU_YKtg)
-
 # Synmetrix Client
 
 This is a client-side of the Synmetrix project!
@@ -63,7 +61,6 @@ Maintain code consistency and quality in the Synmetrix client by implementing li
 2. Open your VS Code settings (settings.json) and add the following configuration:
 ```json
 {
-  ...
   "eslint.enable": true,
   "eslint.format.enable": true,
   "editor.formatOnSave": true

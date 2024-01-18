@@ -27,7 +27,7 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 import type { Exploration, ExplorationData, RawSql } from "@/types/exploration";
 import type { AlertType } from "@/types/alert";
 import type { Meta } from "@/types/cube";
-import { EXPLORE } from "@/utils/constants/paths";
+import { EXPLORE, ONBOARDING } from "@/utils/constants/paths";
 
 import ExploreIcon from "@/assets/explore-active.svg";
 
@@ -147,7 +147,7 @@ export const Explore = ({
 
 const ExploreWrapper = () => {
   const { t } = useTranslation(["explore", "alerts", "reports"]);
-  const { teamData } = CurrentUserStore();
+  const { teamData, currentUser } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { branchId } = location.query;
 
@@ -330,6 +330,12 @@ const ExploreWrapper = () => {
     explorationData?.exploration?.branch_id,
     setCurrentBranchId,
   ]);
+
+  useEffect(() => {
+    if (currentUser?.id && !teamData?.dataSources?.length) {
+      setLocation(ONBOARDING);
+    }
+  }, [currentUser?.id, setLocation, teamData?.dataSources?.length]);
 
   useLayoutEffect(() => {
     const noCurSource = dataSourceId && !curSource;

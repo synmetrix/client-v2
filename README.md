@@ -97,7 +97,7 @@ In the Synmetrix project, components follow a consistent structure to enhance ma
    A file dedicated to Storybook stories for the component. Storybook stories help in visually testing and documenting the component's variations and use cases.
 
 4. **index.test.tsx:**
-   The file containing unit tests for the component using testing frameworks like Jest. Writing tests ensures the reliability and correctness of the component's functionality.
+   The file containing unit tests for the component using testing framework vitest. Writing tests ensures the reliability and correctness of the component's functionality.
 
 Here's an example directory structure for a component named `ExampleComponent`:
 

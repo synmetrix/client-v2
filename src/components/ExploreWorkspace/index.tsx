@@ -15,6 +15,7 @@ import pickKeys from "@/utils/helpers/pickKeys";
 import type { Branch, DataSourceInfo } from "@/types/dataSource";
 import type { QuerySettings } from "@/types/querySettings";
 import type { ExplorationData, RawSql } from "@/types/exploration";
+import ExploreSegmentsSection from "@/components/ExploreSegmentsSection";
 import type { Meta } from "@/types/cube";
 import { SOURCES } from "@/utils/constants/paths";
 
@@ -202,7 +203,15 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
       {!!dataSources?.length ? (
         <div id="data-view">
           {dataSection}
-
+          {selectedQueryMembers.segments.length > 0 && (
+            <ExploreSegmentsSection
+              segments={selectedQueryMembers.segments}
+              onRemove={(segment) => updateMember("segments").remove(segment)}
+              key={"segmentsSec"}
+              onToggleSection={onToggleSection}
+              isActive={collapseState.activePanelKey.includes("segmentsSec")}
+            />
+          )}
           {showFiltersSection && (
             <ExploreFiltersSection
               key="filtersSec"

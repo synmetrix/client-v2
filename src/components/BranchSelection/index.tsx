@@ -47,7 +47,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
   onSetDefault = () => {},
   onDeleteBranch = () => {},
 }) => {
-  const { t } = useTranslation(["models", "common"]);
+  const { t } = useTranslation(["models", "common"], { useSuspense: false });
 
   const { control, handleSubmit } = useForm<CreateBranchFormValues>();
 

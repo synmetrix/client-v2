@@ -506,10 +506,10 @@ const ModelsWrapper: React.FC = () => {
   }, [sourceTablesSchema]);
 
   useEffect(() => {
-    if (currentUser.id && !teamData?.dataSources.length) {
+    if (currentUser.id && teamData && !teamData?.dataSources.length) {
       setLocation(ONBOARDING);
     }
-  }, [currentUser.id, setLocation, teamData?.dataSources.length]);
+  }, [currentUser.id, setLocation, teamData, teamData?.dataSources.length]);
 
   const inputFile = useRef<HTMLInputElement>(null);
 

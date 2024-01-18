@@ -5,8 +5,6 @@
 # Synmetrix Client
 
 This is a client-side of the Synmetrix project!
-Synmetrix is a cutting-edge solution designed as a user-friendly, API-first, four-part semantic layer. The project aims to empower data engineers and developers by providing a platform that ensures data consistency, security, speed, and easy accessibility across all applications. 
-For specific details and in-depth information, please refer to the [website](https://synmetrix.org)
 
 ## Requirements
 
@@ -49,6 +47,44 @@ To launch Storybook, use the following command:
 yarn storybook
 ```
 Once the command is executed, navigate to [](http://localhost:6007)
+
+## Code Linting
+
+Maintain code consistency and quality in the Synmetrix client by implementing linting. Follow these steps to configure linting in Visual Studio Code (VS Code):
+
+### Requirements:
+
+- [ESLint Extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [Prettier Extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+### Configuration:
+
+1. Install ESLint and Prettier VS Code extensions.
+2. Open your VS Code settings (settings.json) and add the following configuration:
+```json
+{
+  ...
+  "eslint.enable": true,
+  "eslint.format.enable": true,
+  "editor.formatOnSave": true
+}
+```
+This configures VS Code to run ESLint and Prettier on file save.
+
+## Conventional Commits
+
+We adhere to the Conventional Commits specification to ensure consistent and meaningful commit messages. The structure of our commits follows the pattern:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+
+For a detailed understanding of Conventional Commits, refer to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ## Testing
 

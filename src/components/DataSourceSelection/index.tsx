@@ -88,7 +88,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
         <Col xs={24} md={18}>
           <Button
             className={cn(styles.submit, {
-              [styles.fullwidth]: !isMobile,
+              [styles.fullwidth]: isMobile,
             })}
             type="primary"
             size="large"
@@ -104,12 +104,12 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
             xs={24}
             md={6}
             className={cn(styles.skip, {
-              [styles.center]: !isMobile,
+              [styles.center]: isMobile,
             })}
           >
             <Button
               className={cn(styles.link, {
-                [styles.fullwidth]: !isMobile,
+                [styles.fullwidth]: isMobile,
               })}
               type="link"
               onClick={onSkip}

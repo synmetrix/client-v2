@@ -40,12 +40,12 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
   const [keyword, setKeyword] = useState<string>("");
 
   const tileWidth = useMemo(() => {
-    const tiles = Math.floor(
-      ((tilesContainerSize?.width || 0) + 2) / TILE_SIZE
-    );
-    const tilesPadding = (tiles - 1) * TILE_GAP;
-    const width = ((tilesContainerSize?.width || 0) - 2 - tilesPadding) / tiles;
-    return Math.floor(width);
+    if (tilesContainerSize?.width) {
+      const tiles = Math.floor((tilesContainerSize.width + 2) / TILE_SIZE);
+      const tilesPadding = (tiles - 1) * TILE_GAP;
+      const width = (tilesContainerSize?.width - 2 - tilesPadding) / tiles;
+      return Math.floor(width);
+    }
   }, [tilesContainerSize?.width]);
 
   return (

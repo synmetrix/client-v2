@@ -81,7 +81,7 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
                   count={state.filtersCount}
                   style={{
                     backgroundColor: "#EDE7F0",
-                    color: "#000",
+                    color: "rgba(0, 0, 0, 0.56)",
                     padding: "0 10px",
                   }}
                 />
@@ -90,6 +90,7 @@ const ExploreFiltersSection: FC<ExploreFiltersSectionProps> = (props) => {
             <RightOutlined className={s.arrow} rotate={isActive ? 90 : 0} />
           </div>
         }
+        showArrow={false}
         key={"filtersSec"}
       >
         <ExploreDataFilters

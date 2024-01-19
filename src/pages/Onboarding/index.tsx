@@ -48,6 +48,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
       username={currentUser.displayName}
       userAvatar={currentUser.avatarUrl}
       userMenu={userMenu}
+      teams={currentUser.teams}
       type={!responsive.lg ? "dropdown" : "inline"}
     />
   );

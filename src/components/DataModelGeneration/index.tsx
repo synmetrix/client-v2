@@ -113,7 +113,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
         <Text>{t("text")}</Text>
         <Title level={5}>{t("title")}</Title>
         <SearchInput
-          placeholder="Placeholder"
+          placeholder={t("common:words.find")}
           value={searchValue}
           onChange={(val) => setSearchValue(val.toLowerCase())}
         />

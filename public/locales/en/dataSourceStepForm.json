@@ -10,5 +10,6 @@
   "datasource_deleted": "Data Source deleted",
   "datasource_update_error": "Data Source update error",
   "schema_generated": "Schema successfully generated",
-  "no_schema": "Schema was not generated"
+  "no_schema": "Schema was not generated",
+  "no_branch": "No branches found for datasource"
 }

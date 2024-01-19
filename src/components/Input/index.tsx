@@ -182,17 +182,11 @@ const Input: <T extends FieldValues>(props: InputProps<T>) => JSX.Element = ({
           name={name}
           defaultValue={defaultValue}
           render={({ field: { onChange, value }, fieldState: { invalid } }) => (
-            <WrapperComponent
-              {...wrapperProps}
-              label=""
-              onClick={() => onChange(!value as any)}
-            >
+            <WrapperComponent {...wrapperProps}>
               <Checkbox
                 className={cn({ [styles.error]: invalid })}
                 checked={value}
-                onChange={() => {
-                  onChange(value as any);
-                }}
+                onClick={() => onChange(!value as any)}
               >
                 <span
                   className={cn(styles.checkbox, { [styles.error]: invalid })}

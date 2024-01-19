@@ -1,7 +1,7 @@
 import { Col, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
-import { useResponsive } from "ahooks";
+import { useResponsive, useSize } from "ahooks";
 
 import SearchInput from "@/components/SearchInput";
 import FormTile from "@/components/FormTile";
@@ -14,21 +14,36 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
+const TILE_WIDTH = 103;
+const TILE_GAP = 8 * 2;
+
 interface DataSourceSelectionProps {
   options: DataSource[];
   initialValue?: DataSource;
+  onSkip?: () => void;
   onSubmit?: (option: DataSource) => void;
 }
 
 const DataSourceSelection: FC<DataSourceSelectionProps> = ({
   options,
-  onSubmit,
   initialValue,
+  onSkip,
+  onSubmit,
 }) => {
   const { t } = useTranslation(["dataSourceSelecton", "common"]);
   const windowSize = useResponsive();
+  const [ref, setRef] = useState<HTMLDivElement | null>();
 
+  const tilesContainerSize = useSize(ref);
   const [keyword, setKeyword] = useState<string>("");
+
+  const rowWidth = useMemo(() => {
+    if (tilesContainerSize?.width) {
+      const tileSize = TILE_WIDTH + TILE_GAP;
+      const tiles = Math.floor((tilesContainerSize?.width + 2) / tileSize);
+      return tiles * tileSize;
+    }
+  }, [tilesContainerSize?.width]);
 
   return (
     <div className={styles.wrapper}>
@@ -42,29 +57,29 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
         onChange={setKeyword}
         placeholder={t("search_placeholder")}
       />
-      <Row className={styles.tiles} gutter={[16, 16]} justify={"center"}>
-        {options
-          .filter((db) =>
-            db.name?.toLowerCase().includes(keyword.toLowerCase())
-          )
-          .map((tile) => (
-            <Col
-              className={styles.tile}
-              key={tile.name}
-              xs={24}
-              sm={12}
-              md={8}
-              lg={4}
-            >
-              <FormTile
-                title={tile.name || ""}
-                icon={tile.icon}
-                active={initialValue?.value === tile.value}
-                onClick={() => onSubmit?.(tile)}
-              />
-            </Col>
-          ))}
-      </Row>
+      <div className={styles.tilesWrapper} ref={(newRef) => setRef(newRef)}>
+        <Row
+          className={styles.tiles}
+          style={{ width: rowWidth }}
+          gutter={[TILE_GAP, TILE_GAP]}
+          justify={"start"}
+        >
+          {options
+            .filter((db) =>
+              db.name?.toLowerCase().includes(keyword.toLowerCase())
+            )
+            .map((tile) => (
+              <Col className={styles.tile} key={tile.name}>
+                <FormTile
+                  title={tile.name || ""}
+                  icon={tile.icon}
+                  active={initialValue?.value === tile.value}
+                  onClick={() => onSubmit?.(tile)}
+                />
+              </Col>
+            ))}
+        </Row>
+      </div>
 
       <Row align="middle" justify="space-between">
         <Col xs={24} md={18}>
@@ -80,6 +95,26 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
             {t("common:words.next")}
           </Button>
         </Col>
+
+        {!!onSkip && (
+          <Col
+            xs={24}
+            md={6}
+            className={cn(styles.skip, {
+              [styles.center]: !windowSize.md,
+            })}
+          >
+            <Button
+              className={cn(styles.link, {
+                [styles.fullwidth]: !windowSize.md,
+              })}
+              type="link"
+              onClick={onSkip}
+            >
+              {t("common:words.skip")}
+            </Button>
+          </Col>
+        )}
       </Row>
     </div>
   );

@@ -19,6 +19,13 @@ const { Title, Text } = Typography;
 
 export const CONNECTION_DEFAULT = "psql";
 
+declare global {
+  interface Window {
+    CUBEJS_MYSQL_API_URL?: string;
+    CUBEJS_PG_API_URL?: string;
+  }
+}
+
 const CUBEJS_MYSQL_API_URL =
   window.CUBEJS_MYSQL_API_URL !== undefined
     ? window.CUBEJS_MYSQL_API_URL

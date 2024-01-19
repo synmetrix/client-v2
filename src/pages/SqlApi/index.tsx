@@ -190,8 +190,6 @@ export const SqlApi = ({
         <ApiSetup
           isNew={isNew}
           isOnboarding={!!editId}
-          dataSources={dataSources}
-          teamMembers={teamMembers}
           initialValue={initialValue}
           onSubmit={onFinish}
         />

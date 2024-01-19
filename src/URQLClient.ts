@@ -13,8 +13,8 @@ import type { CombinedError, Operation } from "urql";
 
 declare global {
   interface Window {
-    HASURA_GRAPHQL_ENDPOINT: string;
-    HASURA_WS_ENDPOINT: string;
+    HASURA_GRAPHQL_ENDPOINT?: string;
+    HASURA_WS_ENDPOINT?: string;
   }
 }
 

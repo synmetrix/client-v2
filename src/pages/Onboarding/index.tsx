@@ -159,6 +159,8 @@ const OnboardingWrapper = () => {
     }
   }, [isOnboarding, setIsOnboarding]);
 
+  useEffect(() => () => clean(), [clean]);
+
   return (
     <Onboarding
       loading={loading}

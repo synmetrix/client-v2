@@ -91,7 +91,7 @@ const DataAccessSelection: FC<DataAccessSelectionProps> = ({
 
       <Input
         className={styles.input}
-        placeholder="Placeholder"
+        placeholder={t("find")}
         size="large"
         value={searchValue}
         onChange={onSearch}

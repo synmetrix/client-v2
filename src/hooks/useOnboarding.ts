@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type {
@@ -84,8 +85,11 @@ export default ({ editId }: Props) => {
       dataSources.find((d) => d.id === editId || d.id === dataSourceSetup?.id),
     [editId, dataSourceSetup?.id, dataSources]
   );
-  const activeBranchId = useMemo(
-    () => curDataSource?.branches?.find((b) => b.status === "active")?.id,
+  const branchId = useMemo(
+    () =>
+      curDataSource?.branches?.find(
+        (b) => b.status === Branch_Statuses_Enum.Active
+      )?.id || curDataSource?.branches?.[0].id,
     [curDataSource?.branches]
   );
 
@@ -102,10 +106,15 @@ export default ({ editId }: Props) => {
       []
     );
 
+    if (curDataSource && !branchId) {
+      message.error(`${t("no_branch")} ${curDataSource.name}`);
+      return;
+    }
+
     if (dataSourceSetup) {
       const res = await execGenSchemaMutation({
         datasource_id: dataSourceSetup.id,
-        branch_id: activeBranchId,
+        branch_id: branchId,
         tables,
         format: data?.type || "yaml",
         overwrite: true,

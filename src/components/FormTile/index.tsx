@@ -6,6 +6,7 @@ import styles from "./index.module.less";
 import type { FC, ReactNode } from "react";
 
 interface FormTileProps {
+  width?: number;
   title: string;
   icon: ReactNode;
   onClick?: (title: string) => void;
@@ -13,13 +14,14 @@ interface FormTileProps {
 }
 
 const FormTile: FC<FormTileProps> = ({
+  width,
   title,
   icon,
   onClick,
   active = false,
 }) => {
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} style={{ width }}>
       <Card
         className={styles.card}
         bodyStyle={{ padding: 10 }}

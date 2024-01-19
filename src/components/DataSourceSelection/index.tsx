@@ -16,6 +16,7 @@ const { Title, Text } = Typography;
 
 const TILE_WIDTH = 103;
 const TILE_GAP = 8 * 2;
+const TILE_SIZE = TILE_WIDTH + TILE_GAP;
 
 interface DataSourceSelectionProps {
   options: DataSource[];
@@ -32,16 +33,18 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
 }) => {
   const { t } = useTranslation(["dataSourceSelecton", "common"]);
   const windowSize = useResponsive();
+  const isMobile = windowSize?.md !== true;
   const [ref, setRef] = useState<HTMLDivElement | null>();
 
   const tilesContainerSize = useSize(ref);
   const [keyword, setKeyword] = useState<string>("");
 
-  const rowWidth = useMemo(() => {
+  const tileWidth = useMemo(() => {
     if (tilesContainerSize?.width) {
-      const tileSize = TILE_WIDTH + TILE_GAP;
-      const tiles = Math.floor((tilesContainerSize?.width + 2) / tileSize);
-      return tiles * tileSize;
+      const tiles = Math.floor((tilesContainerSize.width + 2) / TILE_SIZE);
+      const tilesPadding = (tiles - 1) * TILE_GAP;
+      const width = (tilesContainerSize?.width - 2 - tilesPadding) / tiles;
+      return Math.floor(width);
     }
   }, [tilesContainerSize?.width]);
 
@@ -60,7 +63,6 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
       <div className={styles.tilesWrapper} ref={(newRef) => setRef(newRef)}>
         <Row
           className={styles.tiles}
-          style={{ width: rowWidth }}
           gutter={[TILE_GAP, TILE_GAP]}
           justify={"start"}
         >
@@ -71,6 +73,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
             .map((tile) => (
               <Col className={styles.tile} key={tile.name}>
                 <FormTile
+                  width={tileWidth}
                   title={tile.name || ""}
                   icon={tile.icon}
                   active={initialValue?.value === tile.value}
@@ -85,7 +88,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
         <Col xs={24} md={18}>
           <Button
             className={cn(styles.submit, {
-              [styles.fullwidth]: !windowSize.md,
+              [styles.fullwidth]: isMobile,
             })}
             type="primary"
             size="large"
@@ -101,12 +104,12 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
             xs={24}
             md={6}
             className={cn(styles.skip, {
-              [styles.center]: !windowSize.md,
+              [styles.center]: isMobile,
             })}
           >
             <Button
               className={cn(styles.link, {
-                [styles.fullwidth]: !windowSize.md,
+                [styles.fullwidth]: isMobile,
               })}
               type="link"
               onClick={onSkip}

@@ -32,9 +32,9 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
 }) => {
   const { t } = useTranslation(["dataSourceSelecton", "common"]);
   const windowSize = useResponsive();
-  const tilesContainer = useRef(null);
+  const [ref, setRef] = useState<HTMLDivElement | null>();
 
-  const tilesContainerSize = useSize(tilesContainer.current);
+  const tilesContainerSize = useSize(ref);
   const [keyword, setKeyword] = useState<string>("");
 
   const rowWidth = useMemo(() => {
@@ -57,7 +57,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
         onChange={setKeyword}
         placeholder={t("search_placeholder")}
       />
-      <div className={styles.tilesWrapper} ref={tilesContainer}>
+      <div className={styles.tilesWrapper} ref={(newRef) => setRef(newRef)}>
         <Row
           className={styles.tiles}
           style={{ width: rowWidth }}

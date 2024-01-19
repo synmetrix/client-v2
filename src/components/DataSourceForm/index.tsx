@@ -23,6 +23,7 @@ interface DataSourceFormProps {
   onDataSourceSetupSubmit?: (data: DataSourceSetupForm) => void;
   onDataModelGenerationSubmit?: (data: DynamicForm) => void;
   onChangeStep?: (value: number) => void;
+  onSkip?: () => void;
   bordered?: boolean;
   loading?: boolean;
   shadow?: boolean;
@@ -34,6 +35,7 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
   onTestConnection = () => {},
   onDataSourceSetupSubmit = () => {},
   onDataModelGenerationSubmit = () => {},
+  onSkip,
   onChangeStep,
   bordered = true,
   loading = false,
@@ -61,8 +63,9 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
         )}
         <Suspense fallback={<BouncingDotsLoader />}>
           <DataSourceFormBody
-            onChangeStep={onChangeStep}
+            onSkip={onSkip}
             onFinish={onFinish}
+            onChangeStep={onChangeStep}
             onDataSourceSelect={onDataSourceSelect}
             onTestConnection={onTestConnection}
             onDataSourceSetupSubmit={onDataSourceSetupSubmit}

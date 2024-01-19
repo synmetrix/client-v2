@@ -15,12 +15,13 @@ import type {
   DataSourceSetupForm,
   DynamicForm,
 } from "@/types/dataSource";
-import { MODELS, ONBOARDING } from "@/utils/constants/paths";
+import { MODELS, ONBOARDING, SOURCES } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
 interface OnboardingProps {
   loading: boolean;
+  onSkip: () => void;
   onFinish: () => void;
   onDataSourceSelect: (data: DataSource) => void;
   onTestConnection: (data: DataSourceSetupForm) => void;
@@ -31,6 +32,7 @@ interface OnboardingProps {
 
 const Onboarding: React.FC<OnboardingProps> = ({
   loading = false,
+  onSkip = () => {},
   onFinish = () => {},
   onChangeStep = () => {},
   onTestConnection = () => {},
@@ -56,6 +58,7 @@ const Onboarding: React.FC<OnboardingProps> = ({
         <Col xs={24}>
           <DataSourceForm
             bordered
+            onSkip={onSkip}
             onChangeStep={onChangeStep}
             loading={loading}
             onFinish={onFinish}
@@ -108,6 +111,11 @@ const OnboardingWrapper = () => {
     onNextStep();
   };
 
+  const onSkip = () => {
+    clean();
+    setLocation(SOURCES);
+  };
+
   const onDatasourceSetup = async (data: DataSourceSetupForm) => {
     await onDataSourceSetupSubmit(data, false, onNextStep);
   };
@@ -153,6 +161,7 @@ const OnboardingWrapper = () => {
   return (
     <Onboarding
       loading={loading}
+      onSkip={onSkip}
       onFinish={onFinish}
       onChangeStep={onChangeStep}
       onDataSourceSelect={onDataSourceSelect}

@@ -18,6 +18,7 @@ import type { FC } from "react";
 interface DataSourceFormBodyProps {
   activeStep?: number;
   formState?: FormState;
+  onSkip?: () => void;
   onChangeStep?: (value: number) => void;
   onFinish: () => void;
   onTestConnection?: (data: DataSourceSetupForm) => void;
@@ -29,6 +30,7 @@ interface DataSourceFormBodyProps {
 const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   activeStep,
   formState,
+  onSkip,
   onChangeStep,
   onFinish = () => {},
   onTestConnection = () => {},
@@ -46,7 +48,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   } = DataSourceStore();
 
   const onGoBack = () => onChangeStep?.(step - 1) || setStep(step - 1);
-  const onSkip = () => onChangeStep?.(step + 1) || setStep(step + 1);
+  const onGoForward = () => onChangeStep?.(step + 1) || setStep(step + 1);
 
   const onDataSourceSetup = async (data: DataSourceSetupForm) => {
     await onDataSourceSetupSubmit(data);
@@ -68,6 +70,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
     case 0:
       return (
         <DataSourceSelection
+          onSkip={onSkip}
           onSubmit={onDataSourceSelect}
           initialValue={curDataSource}
           options={dbTiles}
@@ -89,6 +92,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
             isOnboarding={isOnboarding}
             initialValue={initialValue}
             onSubmit={onDataSourceSetup}
+            onSkip={onSkip}
             onGoBack={onGoBack}
             onTestConnection={onTestConnection}
           />
@@ -106,7 +110,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
           schema={schema}
           onSubmit={onDataModelGeneration}
           onGoBack={onGoBack}
-          onSkip={onSkip}
+          onSkip={onSkip || onGoForward}
           loading={false}
           initialValue={formState?.step2 || formData?.step2 || {}}
         />
@@ -128,6 +132,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
       onSubmit={onDataSourceSelect}
       initialValue={curDataSource}
       options={dbTiles}
+      onSkip={onSkip}
     />
   );
 };

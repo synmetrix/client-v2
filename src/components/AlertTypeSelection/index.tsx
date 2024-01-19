@@ -52,14 +52,7 @@ const AlertTypeSelection: FC<AlertTypeSelectionProps> = ({
       </Row>
       <Row className={styles.tiles} gutter={[16, 16]}>
         {options.map((tile) => (
-          <Col
-            className={styles.tile}
-            key={tile.name}
-            xs={24}
-            sm={12}
-            md={8}
-            lg={4}
-          >
+          <Col className={styles.tile} key={tile.name}>
             <FormTile
               title={tile.name}
               icon={tile.icon}

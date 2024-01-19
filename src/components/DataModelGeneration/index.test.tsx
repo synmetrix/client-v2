@@ -51,7 +51,7 @@ describe("DataModelGeneration", () => {
   });
 
   test("renders search input", () => {
-    const searchInput = screen.getByPlaceholderText("Placeholder");
+    const searchInput = screen.getByPlaceholderText("common:words.find");
     expect(searchInput).toBeInTheDocument();
   });
 

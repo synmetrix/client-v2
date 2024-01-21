@@ -337,36 +337,34 @@ const ExploreWrapper = () => {
     }
   }, [currentUser?.id, setLocation, teamData, teamData?.dataSources?.length]);
 
-  useLayoutEffect(() => {
-    const noCurSource = dataSourceId && !curSource;
-    if (datasources.length && (noCurSource || !dataSourceId)) {
-      if (noCurSource) {
-        message.error(t("explore:errors.data_source_not_found"));
-      }
+  // useLayoutEffect(() => {
+  //   const noCurSource = dataSourceId && !curSource;
+  //   if (datasources.length && (noCurSource || !dataSourceId)) {
+  //     if (noCurSource) {
+  //       message.error(t("explore:errors.data_source_not_found"));
+  //     }
 
-      const isExist = teamData?.dataSources?.find(
-        (d) => d.id === currentDataSourceId
-      );
+  //     const isExist = teamData?.dataSources?.find(
+  //       (d) => d.id === currentDataSourceId
+  //     );
 
-      if (isExist) {
-        setLocation(`${EXPLORE}/${currentDataSourceId}`);
-      } else {
-        setLocation(`${EXPLORE}/${datasources?.[0]?.id}`);
-        setCurrentDataSourceId(datasources?.[0]?.id);
-      }
-    } else if (!datasources?.length && dataSourceId) {
-      setLocation(EXPLORE);
-    }
-  }, [
-    curSource,
-    currentDataSourceId,
-    dataSourceId,
-    datasources,
-    setCurrentDataSourceId,
-    setLocation,
-    t,
-    teamData?.dataSources,
-  ]);
+  //     if (isExist) {
+  //       setLocation(`${EXPLORE}/${currentDataSourceId}`);
+  //     } else {
+  //       setLocation(`${EXPLORE}/${datasources?.[0]?.id}`);
+  //       setCurrentDataSourceId(datasources?.[0]?.id);
+  //     }
+  //   }
+  // }, [
+  //   curSource,
+  //   currentDataSourceId,
+  //   dataSourceId,
+  //   datasources,
+  //   setCurrentDataSourceId,
+  //   setLocation,
+  //   t,
+  //   teamData?.dataSources,
+  // ]);
 
   const meta = {
     data: metaData?.data?.fetch_meta?.cubes || [],

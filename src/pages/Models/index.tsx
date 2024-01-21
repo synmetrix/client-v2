@@ -345,7 +345,7 @@ const ModelsWrapper: React.FC = () => {
 
   const [versionsData] = useVersionsCountSubscription({
     variables: {
-      branch_id: currentBranch.id,
+      branch_id: currentBranch?.id,
     },
   });
 
@@ -357,7 +357,7 @@ const ModelsWrapper: React.FC = () => {
   );
 
   const [version, execVersionAll] = useCurrentVersionQuery({
-    variables: { branch_id: currentBranch.id },
+    variables: { branch_id: currentBranch?.id },
   });
 
   const onModalClose = (goBack: boolean = false) => {
@@ -379,8 +379,8 @@ const ModelsWrapper: React.FC = () => {
     },
   } = useSources({
     params: {
-      editId: curSource.id,
-      branchId: currentBranch.id,
+      editId: curSource?.id,
+      branchId: currentBranch?.id,
     },
   });
 
@@ -388,10 +388,10 @@ const ModelsWrapper: React.FC = () => {
   const versionsModalVisible = slug === "versions";
 
   useEffect(() => {
-    if (genSchemaModalVisible && curSource.id) {
+    if (genSchemaModalVisible && curSource?.id) {
       execQueryTables();
     }
-  }, [curSource.id, execQueryTables, genSchemaModalVisible]);
+  }, [curSource?.id, execQueryTables, genSchemaModalVisible]);
 
   useCheckResponse(
     tablesData,
@@ -517,8 +517,8 @@ const ModelsWrapper: React.FC = () => {
     const tables = getTables(values);
 
     await execGenSchemaMutation({
-      datasource_id: curSource.id,
-      branch_id: currentBranch.id,
+      datasource_id: curSource?.id,
+      branch_id: currentBranch?.id,
       tables,
       format,
       overwrite: true,
@@ -553,7 +553,7 @@ const ModelsWrapper: React.FC = () => {
         name: schema?.name,
         code: schema?.code || "",
         user_id: schema?.user_id || currentUser?.id,
-        datasource_id: schema?.datasource_id || curSource.id,
+        datasource_id: schema?.datasource_id || curSource?.id,
       };
 
       return updatedData;
@@ -562,7 +562,7 @@ const ModelsWrapper: React.FC = () => {
     const versionData = {
       checksum,
       user_id: currentUser?.id,
-      branch_id: currentBranch.id,
+      branch_id: currentBranch?.id,
       dataschemas: {
         data: preparedDataschemas,
       },
@@ -682,7 +682,7 @@ const ModelsWrapper: React.FC = () => {
       values.name
     ) {
       setLocation(
-        `${basePath}/${curSource.id}/${currentBranch.id}/${values.name}`
+        `${basePath}/${curSource?.id}/${currentBranch?.id}/${values.name}`
       );
     }
 
@@ -705,12 +705,12 @@ const ModelsWrapper: React.FC = () => {
 
   const onCodeSave = async (id: string, code: string) => {
     await onClickUpdate(id, { code }, true);
-    await execQueryMeta({ id: curSource.id, branch_id: currentBranch.id });
+    await execQueryMeta({ id: curSource?.id, branch_id: currentBranch?.id });
   };
 
   const onRunSQL = (query: string, limit: number) => {
     execRunQueryMutation({
-      datasource_id: curSource.id,
+      datasource_id: curSource?.id,
       query,
       limit,
     });
@@ -721,14 +721,14 @@ const ModelsWrapper: React.FC = () => {
       name: schema.name,
       code: schema.code,
       user_id: currentUser.id,
-      datasource_id: curSource.id,
+      datasource_id: curSource?.id,
     }));
 
     const branchData = {
       name: data.name,
       status: "created",
       user_id: currentUser.id,
-      datasource_id: curSource.id,
+      datasource_id: curSource?.id,
       versions: {
         data: {
           user_id: currentUser.id,
@@ -751,14 +751,14 @@ const ModelsWrapper: React.FC = () => {
 
   const onSetDefault = (branchId?: string) => {
     execSetDefaultMutation({
-      branch_id: branchId || currentBranch.id,
-      datasource_id: curSource.id,
+      branch_id: branchId || currentBranch?.id,
+      datasource_id: curSource?.id,
     });
   };
 
   const onDeleteBranch = (branchId?: string) => {
     execDeleteMutation({ id: branchId });
-    setLocation(`${basePath}/${curSource.id}`);
+    setLocation(`${basePath}/${curSource?.id}`);
   };
 
   const onDataSourceChange = (ds: DataSourceInfo | null) => {
@@ -772,7 +772,7 @@ const ModelsWrapper: React.FC = () => {
       label: t("ide_menu.generate_schema"),
       onClick: () =>
         setLocation(
-          `${basePath}/${curSource.id}/${currentBranch.id}/genmodels`
+          `${basePath}/${curSource?.id}/${currentBranch.id}/genmodels`
         ),
     },
     {
@@ -794,7 +794,7 @@ const ModelsWrapper: React.FC = () => {
     {
       key: "export",
       label: t("ide_menu.export_models"),
-      onClick: () => window.open(`${EXPORT}/${curSource.id}`),
+      onClick: () => window.open(`${EXPORT}/${curSource?.id}`),
     },
   ] as MenuProps["items"];
 
@@ -811,7 +811,7 @@ const ModelsWrapper: React.FC = () => {
       currentBranch={currentBranch}
       onChangeBranch={(branchId) => {
         setCurrentBranchId(branchId);
-        setLocation(`${basePath}/${curSource.id}/${branchId}/${slug}`);
+        setLocation(`${basePath}/${curSource?.id}/${branchId}/${slug}`);
       }}
       onSetDefault={onSetDefault}
       branchLoading={createBranchMutation.fetching}
@@ -839,7 +839,7 @@ const ModelsWrapper: React.FC = () => {
       versionsCount={versionsCount}
       onVersionsOpen={() =>
         setLocation(
-          `${basePath}/${currentBranch.id}/${currentBranch.id}/versions`
+          `${basePath}/${currentBranch?.id}/${currentBranch?.id}/versions`
         )
       }
     />

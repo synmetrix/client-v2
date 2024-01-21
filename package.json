@@ -24,7 +24,10 @@
     "test": "vitest"
   },
   "lint-staged": {
-    "{,!(node_modules)/**/}*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"]
+    "{,!(node_modules)/**/}*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "browserslist": [
     "> 1%",
@@ -38,7 +41,10 @@
       [
         "@semantic-release/github",
         {
-          "assets": ["dist.zip", "dist.tar.gz"]
+          "assets": [
+            "dist.zip",
+            "dist.tar.gz"
+          ]
         }
       ]
     ]
@@ -90,6 +96,7 @@
     "swiper": "^10.0.4",
     "unchanged": "^2.2.1",
     "urql": "^4.0.5",
+    "use-local-storage-state": "^19.1.0",
     "zustand": "^4.4.1"
   },
   "devDependencies": {

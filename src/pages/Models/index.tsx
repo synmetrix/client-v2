@@ -1,7 +1,9 @@
+import { useEffect, type ChangeEvent } from "react";
 import { Space, Spin, message } from "antd";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
-import { useLocalStorageState, useResponsive, useTrackedEffect } from "ahooks";
+import { useResponsive, useTrackedEffect } from "ahooks";
+import useLocalStorageState from "use-local-storage-state";
 import { getOr } from "unchanged";
 import JSZip from "jszip";
 import { load } from "js-yaml";
@@ -17,6 +19,7 @@ import Modal from "@/components/Modal";
 import DataModelGeneration from "@/components/DataModelGeneration";
 import VersionsList from "@/components/VersionsList";
 import NoDataSource from "@/components/NoDataSource";
+import { getSourceAndBranch } from "@/pages/Explore";
 import useLocation from "@/hooks/useLocation";
 import useModelsIde from "@/hooks/useModelsIde";
 import useSources from "@/hooks/useSources";
@@ -37,7 +40,6 @@ import {
   useSetDefaultBranchMutation,
   useCurrentVersionQuery,
   useVersionsCountSubscription,
-  Branch_Statuses_Enum,
 } from "@/graphql/generated";
 import { EXPORT, MODELS, ONBOARDING, SOURCES } from "@/utils/constants/paths";
 
@@ -46,7 +48,6 @@ import ModelsActiveIcon from "@/assets/models-active.svg";
 import styles from "./index.module.less";
 
 import type { MenuProps } from "antd";
-import type { ChangeEvent } from "react";
 
 interface ModelsProps {
   ideMenu: MenuProps["items"];
@@ -330,63 +331,33 @@ const ModelsWrapper: React.FC = () => {
   );
   const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState<
     string | null
-  >("currentDataSourceId", {
-    defaultValue: dataSourceId,
-  });
+  >("currentDataSourceId");
+
+  const { curSource, currentBranch } = useMemo(
+    () =>
+      getSourceAndBranch(
+        teamData?.dataSources || ([] as DataSourceInfo[]),
+        currentDataSourceId as string,
+        currentBranchId
+      ),
+    [currentBranchId, currentDataSourceId, teamData?.dataSources]
+  );
 
   const [versionsData] = useVersionsCountSubscription({
     variables: {
-      branch_id: branch,
+      branch_id: currentBranch.id,
     },
   });
 
   const versionsCount = versionsData.data?.versions_aggregate.aggregate?.count;
 
-  const [dataSource, currentBranch] = useMemo(() => {
-    const source =
-      (teamData?.dataSources || []).find((d) => d.id === dataSourceId) ||
-      teamData?.dataSources.find((d) => d.id === currentDataSourceId) ||
-      teamData?.dataSources?.[0];
-
-    const curBranch =
-      (source?.branches || []).find((b) => b.id === branch) ||
-      (source?.branches || []).find((b) => b.id === currentBranchId) ||
-      (source?.branches || []).find(
-        (b) => b.status === Branch_Statuses_Enum.Active
-      );
-
-    let path = basePath;
-
-    if (source?.id && source?.id !== dataSourceId) {
-      path += `/${source?.id}`;
-    }
-
-    if (curBranch?.id && curBranch?.id !== branch) {
-      path += `/${curBranch?.id}`;
-    }
-
-    if (!location.pathname.includes(path)) {
-      setLocation(path);
-    }
-
-    return [source, curBranch];
-  }, [
-    basePath,
-    branch,
-    currentBranchId,
-    currentDataSourceId,
-    dataSourceId,
-    setLocation,
-    teamData?.dataSources,
-  ]);
-
   const branches = useMemo(
-    () => dataSource?.branches || [],
-    [dataSource?.branches]
+    () => curSource?.branches || [],
+    [curSource?.branches]
   );
 
   const [version, execVersionAll] = useCurrentVersionQuery({
-    variables: { branch_id: branch },
+    variables: { branch_id: currentBranch.id },
   });
 
   const onModalClose = (goBack: boolean = false) => {
@@ -408,8 +379,8 @@ const ModelsWrapper: React.FC = () => {
     },
   } = useSources({
     params: {
-      editId: dataSourceId,
-      branchId: branch,
+      editId: curSource.id,
+      branchId: currentBranch.id,
     },
   });
 
@@ -417,10 +388,10 @@ const ModelsWrapper: React.FC = () => {
   const versionsModalVisible = slug === "versions";
 
   useEffect(() => {
-    if (genSchemaModalVisible && dataSourceId) {
+    if (genSchemaModalVisible && curSource.id) {
       execQueryTables();
     }
-  }, [dataSourceId, execQueryTables, genSchemaModalVisible]);
+  }, [curSource.id, execQueryTables, genSchemaModalVisible]);
 
   useCheckResponse(
     tablesData,
@@ -500,6 +471,31 @@ const ModelsWrapper: React.FC = () => {
   const sourceTablesSchema = tablesData.data?.fetch_tables?.schema;
 
   useEffect(() => {
+    if (dataSourceId && teamData?.dataSources?.length) {
+      if (teamData.dataSources.find((d) => d.id === dataSourceId)) {
+        setCurrentDataSourceId(dataSourceId);
+      } else {
+        message.error(t("common:alerts.datasource_not_found"));
+      }
+    }
+  }, [dataSourceId, setCurrentDataSourceId, t, teamData?.dataSources]);
+
+  useEffect(() => {
+    if (
+      currentDataSourceId &&
+      teamData?.dataSources.find((d) => d.id === currentDataSourceId)
+    ) {
+      setCurrentDataSourceId(currentDataSourceId);
+    }
+  }, [currentDataSourceId, setCurrentDataSourceId, teamData?.dataSources]);
+
+  useEffect(() => {
+    if (branch && branches.find((b) => b.id === branch)) {
+      setCurrentBranchId(branch);
+    }
+  }, [branch, branches, setCurrentBranchId]);
+
+  useEffect(() => {
     if (Object.keys(sourceTablesSchema || {}).length) {
       setTablesSchema(sourceTablesSchema);
     }
@@ -521,8 +517,8 @@ const ModelsWrapper: React.FC = () => {
     const tables = getTables(values);
 
     await execGenSchemaMutation({
-      datasource_id: dataSourceId,
-      branch_id: branch,
+      datasource_id: curSource.id,
+      branch_id: currentBranch.id,
       tables,
       format,
       overwrite: true,
@@ -557,7 +553,7 @@ const ModelsWrapper: React.FC = () => {
         name: schema?.name,
         code: schema?.code || "",
         user_id: schema?.user_id || currentUser?.id,
-        datasource_id: schema?.datasource_id || dataSourceId,
+        datasource_id: schema?.datasource_id || curSource.id,
       };
 
       return updatedData;
@@ -566,7 +562,7 @@ const ModelsWrapper: React.FC = () => {
     const versionData = {
       checksum,
       user_id: currentUser?.id,
-      branch_id: branch,
+      branch_id: currentBranch.id,
       dataschemas: {
         data: preparedDataschemas,
       },
@@ -686,7 +682,7 @@ const ModelsWrapper: React.FC = () => {
       values.name
     ) {
       setLocation(
-        `${basePath}/${dataSourceId}/${currentBranchId}/${values.name}`
+        `${basePath}/${curSource.id}/${currentBranch.id}/${values.name}`
       );
     }
 
@@ -709,12 +705,12 @@ const ModelsWrapper: React.FC = () => {
 
   const onCodeSave = async (id: string, code: string) => {
     await onClickUpdate(id, { code }, true);
-    await execQueryMeta({ id: dataSourceId, branch_id: branch });
+    await execQueryMeta({ id: curSource.id, branch_id: currentBranch.id });
   };
 
   const onRunSQL = (query: string, limit: number) => {
     execRunQueryMutation({
-      datasource_id: dataSourceId,
+      datasource_id: curSource.id,
       query,
       limit,
     });
@@ -725,14 +721,14 @@ const ModelsWrapper: React.FC = () => {
       name: schema.name,
       code: schema.code,
       user_id: currentUser.id,
-      datasource_id: dataSourceId,
+      datasource_id: curSource.id,
     }));
 
     const branchData = {
       name: data.name,
       status: "created",
       user_id: currentUser.id,
-      datasource_id: dataSourceId,
+      datasource_id: curSource.id,
       versions: {
         data: {
           user_id: currentUser.id,
@@ -755,14 +751,19 @@ const ModelsWrapper: React.FC = () => {
 
   const onSetDefault = (branchId?: string) => {
     execSetDefaultMutation({
-      branch_id: branchId || currentBranchId,
-      datasource_id: dataSourceId,
+      branch_id: branchId || currentBranch.id,
+      datasource_id: curSource.id,
     });
   };
 
   const onDeleteBranch = (branchId?: string) => {
     execDeleteMutation({ id: branchId });
-    setLocation(`${basePath}/${dataSourceId}`);
+    setLocation(`${basePath}/${curSource.id}`);
+  };
+
+  const onDataSourceChange = (ds: DataSourceInfo | null) => {
+    setCurrentDataSourceId(ds?.id);
+    setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}`);
   };
 
   const ideMenu = [
@@ -770,7 +771,9 @@ const ModelsWrapper: React.FC = () => {
       key: "gen",
       label: t("ide_menu.generate_schema"),
       onClick: () =>
-        setLocation(`${basePath}/${dataSourceId}/${branch}/genmodels`),
+        setLocation(
+          `${basePath}/${curSource.id}/${currentBranch.id}/genmodels`
+        ),
     },
     {
       key: "import",
@@ -791,7 +794,7 @@ const ModelsWrapper: React.FC = () => {
     {
       key: "export",
       label: t("ide_menu.export_models"),
-      onClick: () => window.open(`${EXPORT}/${dataSourceId}`),
+      onClick: () => window.open(`${EXPORT}/${curSource.id}`),
     },
   ] as MenuProps["items"];
 
@@ -801,14 +804,14 @@ const ModelsWrapper: React.FC = () => {
       onSchemaUpdate={onClickUpdate}
       onSchemaDelete={onClickDelete}
       dataschemas={dataschemas}
-      dataSource={dataSource}
+      dataSource={curSource}
       ideMenu={ideMenu}
       branches={branches}
       fetching={fetching}
       currentBranch={currentBranch}
       onChangeBranch={(branchId) => {
         setCurrentBranchId(branchId);
-        setLocation(`${basePath}/${dataSourceId}/${branchId}/${slug}`);
+        setLocation(`${basePath}/${curSource.id}/${branchId}/${slug}`);
       }}
       onSetDefault={onSetDefault}
       branchLoading={createBranchMutation.fetching}
@@ -829,16 +832,15 @@ const ModelsWrapper: React.FC = () => {
       onModalClose={() => onModalClose(true)}
       onGenSubmit={onGenSubmit}
       onSaveVersion={createNewVersion}
-      onDataSourceChange={(ds) => {
-        setCurrentDataSourceId(ds?.id);
-        setLocation(`${basePath}/${ds?.id}/${getCurrentBranch(ds)}`);
-      }}
+      onDataSourceChange={onDataSourceChange}
       dataSources={teamData?.dataSources}
       sqlError={runQueryMutation?.error}
       onConnect={() => setLocation(`${SOURCES}/new`)}
       versionsCount={versionsCount}
       onVersionsOpen={() =>
-        setLocation(`${basePath}/${dataSourceId}/${branch}/versions`)
+        setLocation(
+          `${basePath}/${currentBranch.id}/${currentBranch.id}/versions`
+        )
       }
     />
   );

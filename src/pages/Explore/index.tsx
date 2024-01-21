@@ -2,7 +2,8 @@ import { useEffect, useMemo } from "react";
 import { useParams } from "@vitjs/runtime";
 import { useTranslation } from "react-i18next";
 import { Space, message } from "antd";
-import { useLocalStorageState, useTrackedEffect } from "ahooks";
+import { useTrackedEffect } from "ahooks";
+import useLocalStorageState from "use-local-storage-state";
 
 import type { FetchDatasetOutput } from "@/graphql/generated";
 import {
@@ -145,15 +146,30 @@ export const Explore = ({
   );
 };
 
+export const getSourceAndBranch = (
+  datasources: DataSourceInfo[],
+  dataSourceId?: string,
+  branchId?: string
+) => {
+  const curSource =
+    (datasources || []).find((d) => d.id === dataSourceId) || datasources?.[0];
+
+  const currentBranch =
+    (curSource?.branches || []).find(
+      (b) => b.id === branchId || b.id === Branch_Statuses_Enum.Active
+    ) || (curSource?.branches || [])?.[0];
+
+  return { curSource, currentBranch };
+};
+
 const ExploreWrapper = () => {
   const { t } = useTranslation(["explore", "alerts", "reports"]);
   const { teamData, currentUser } = CurrentUserStore();
   const [location, setLocation] = useLocation();
   const { branchId } = location.query;
 
-  const [currentDataSourceId, setCurrentDataSourceId] = useLocalStorageState(
-    "currentDataSourceId"
-  );
+  const [currentDataSourceId, setCurrentDataSourceId] =
+    useLocalStorageState<string>("currentDataSourceId");
   const [currentBranchId, setCurrentBranchId] = useLocalStorageState<string>(
     `${currentDataSourceId}:currentBranch`
   );
@@ -173,27 +189,18 @@ const ExploreWrapper = () => {
       pause: true,
     });
 
-  const dataSourcePath = `${EXPLORE}/${dataSourceId}`;
-  const explorePath = `${dataSourcePath}/${explorationId}`;
-
   const datasources = useMemo(
     () => teamData?.dataSources || [],
     [teamData]
   ) as DataSourceInfo[];
 
-  const [curSource, currentBranch] = useMemo(() => {
-    const source =
-      (datasources || []).find((d) => d.id === currentDataSourceId) ||
-      datasources?.[0];
+  const { curSource, currentBranch } = useMemo(
+    () => getSourceAndBranch(datasources, currentDataSourceId, currentBranchId),
+    [currentBranchId, currentDataSourceId, datasources]
+  );
 
-    const branch =
-      (source?.branches || []).find((b) => b.id === currentBranchId) ||
-      (source?.branches || []).find(
-        (b) => b.status === Branch_Statuses_Enum.Active
-      );
-
-    return [source, branch];
-  }, [currentBranchId, currentDataSourceId, datasources]);
+  const dataSourcePath = `${EXPLORE}/${curSource?.id}`;
+  const explorePath = `${dataSourcePath}/${explorationId}`;
 
   const [metaData, execMetaQuery] = useFetchMetaQuery({
     variables: {
@@ -218,7 +225,7 @@ const ExploreWrapper = () => {
   );
 
   const onSelectDataSource = (dataSource: DataSourceInfo | null) => {
-    setCurrentDataSourceId(dataSource?.id);
+    setCurrentDataSourceId(dataSource?.id as string);
     setLocation(`${EXPLORE}/${dataSource?.id}`);
   };
 
@@ -227,7 +234,7 @@ const ExploreWrapper = () => {
 
     const newExplorationObj = {
       branch_id: currentBranch?.id,
-      datasource_id: dataSourceId,
+      datasource_id: curSource?.id,
       playground_state: explorationQueryState,
       playground_settings: settings,
     };
@@ -259,17 +266,20 @@ const ExploreWrapper = () => {
   };
 
   useEffect(() => {
+    if (dataSourceId && datasources.length) {
+      if (datasources.find((d) => d.id === dataSourceId)) {
+        setCurrentDataSourceId(dataSourceId);
+      } else {
+        message.error(t("common:alerts.datasource_not_found"));
+      }
+    }
+  }, [dataSourceId, datasources, setCurrentDataSourceId, t]);
+
+  useEffect(() => {
     if (branchId) {
       setCurrentBranchId(branchId);
-      setLocation(dataSourcePath);
     }
-  }, [
-    branchId,
-    currentBranchId,
-    dataSourcePath,
-    setCurrentBranchId,
-    setLocation,
-  ]);
+  }, [branchId, setCurrentBranchId]);
 
   useEffect(() => {
     const newExplorationId = createData.data?.insert_explorations_one?.id;
@@ -336,35 +346,6 @@ const ExploreWrapper = () => {
       setLocation(ONBOARDING);
     }
   }, [currentUser?.id, setLocation, teamData, teamData?.dataSources?.length]);
-
-  // useLayoutEffect(() => {
-  //   const noCurSource = dataSourceId && !curSource;
-  //   if (datasources.length && (noCurSource || !dataSourceId)) {
-  //     if (noCurSource) {
-  //       message.error(t("explore:errors.data_source_not_found"));
-  //     }
-
-  //     const isExist = teamData?.dataSources?.find(
-  //       (d) => d.id === currentDataSourceId
-  //     );
-
-  //     if (isExist) {
-  //       setLocation(`${EXPLORE}/${currentDataSourceId}`);
-  //     } else {
-  //       setLocation(`${EXPLORE}/${datasources?.[0]?.id}`);
-  //       setCurrentDataSourceId(datasources?.[0]?.id);
-  //     }
-  //   }
-  // }, [
-  //   curSource,
-  //   currentDataSourceId,
-  //   dataSourceId,
-  //   datasources,
-  //   setCurrentDataSourceId,
-  //   setLocation,
-  //   t,
-  //   teamData?.dataSources,
-  // ]);
 
   const meta = {
     data: metaData?.data?.fetch_meta?.cubes || [],

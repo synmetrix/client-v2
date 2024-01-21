@@ -167,7 +167,8 @@
   },
   "alerts": {
     "default_success": "Succefully finished",
-    "default_failure": "Something went wrong"
+    "default_failure": "Something went wrong",
+    "datasource_not_found": "Datasource not found"
   },
   "operators": {
     "set": "is set",

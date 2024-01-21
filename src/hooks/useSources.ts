@@ -14,7 +14,7 @@ import {
 } from "@/graphql/generated";
 
 type Params = {
-  editId?: string;
+  editId?: string | null;
   teamId?: Maybe<string>;
   branchId?: Maybe<string>;
 };

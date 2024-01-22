@@ -839,7 +839,7 @@ const ModelsWrapper: React.FC = () => {
       versionsCount={versionsCount}
       onVersionsOpen={() =>
         setLocation(
-          `${basePath}/${currentBranch?.id}/${currentBranch?.id}/versions`
+          `${basePath}/${curSource?.id}/${currentBranch?.id}/versions`
         )
       }
     />

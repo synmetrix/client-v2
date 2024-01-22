@@ -1,7 +1,7 @@
 import { Result } from "antd";
 import { useTranslation } from "react-i18next";
 import { useParams } from "@vitjs/runtime";
-import { useLocalStorageState } from "ahooks";
+import useLocalStorageState from "use-local-storage-state";
 
 import Button from "@/components/Button";
 import AppLayout from "@/layouts/AppLayout";

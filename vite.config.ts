@@ -84,8 +84,10 @@ export default defineConfig({
     pluginRewriteAll(),
   ],
   server: {
-    // open: true,
     port: 8000,
+    proxy: {
+      "/api/v1": "http://localhost:4000",
+    },
   },
   resolve: {
     preserveSymlinks: true,

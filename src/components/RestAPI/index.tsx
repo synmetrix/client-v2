@@ -4,12 +4,14 @@ import { useForm } from "react-hook-form";
 import cn from "classnames";
 
 import Input from "@/components/Input";
-import Button from "@/components/Button";
 import InfoBlock from "@/components/InfoBlock";
+import Button from "@/components/Button";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import validations from "@/utils/helpers/validations";
 import type { PlaygroundState } from "@/types/exploration";
 import type { SortBy } from "@/types/sort";
+
+import CopyIcon from "@/assets/copy.svg";
 
 import styles from "./index.module.less";
 
@@ -60,7 +62,7 @@ const RestAPI: FC<RestApiProps> = ({
   const { t } = useTranslation(["explore", "common"], { useSuspense: false });
   const { accessToken } = AuthTokensStore();
   const [state, setState] = useState<RestApiState>(defaultState);
-  const { control, handleSubmit, setValue, watch } = useForm({
+  const { control, handleSubmit, setValue, getValues, watch } = useForm<any>({
     values: {
       json: JSON.stringify(
         {
@@ -70,7 +72,9 @@ const RestAPI: FC<RestApiProps> = ({
         null,
         2
       ),
-      token: accessToken,
+      "x-hasura-datasource-id": dataSourceId,
+      "x-hasura-branch-id": branchId,
+      token: `Bearer ${accessToken}`,
       url: CUBEJS_REST_API_URL,
       response: "",
     },
@@ -85,10 +89,10 @@ const RestAPI: FC<RestApiProps> = ({
       const rawResponse = await fetch(values.url, {
         method: "POST",
         headers: {
-          authorization: `Bearer ${values.token}`,
+          authorization: values.token,
           "Content-Type": "application/json",
-          "x-hasura-datasource-id": dataSourceId,
-          "x-hasura-branch-id": branchId,
+          "x-hasura-datasource-id": values["x-hasura-datasource-id"],
+          "x-hasura-branch-id": values["x-hasura-branch-id"],
         },
         body: JSON.stringify({
           query: values.json,
@@ -112,83 +116,190 @@ const RestAPI: FC<RestApiProps> = ({
     setState(defaultState);
   };
 
+  useEffect(() => {
+    const subscription = watch((values, { name }) => {
+      if (name === "token") {
+        if (!values.token.includes("Bearer ")) {
+          setValue("token", `Bearer ${values.token}`);
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setValue, watch]);
+
   const response = watch("response");
 
   return (
-    <Spin spinning={state.loading} tip={state.loadingTip}>
+    <Spin
+      spinning={state.loading}
+      tip={state.loadingTip}
+      data-testid="rest-api"
+    >
       <Form layout="vertical" className={styles.form}>
-        <Row style={{ width: "100%" }} gutter={10}>
-          <Col xs={24}>
+        <Space style={{ width: "100%" }} direction="vertical" size={16}>
+          <Form.Item
+            label={t("common:form.labels.headers")}
+            className={styles.label}
+          >
             <Input
               className={styles.input}
-              label={t("common:form.labels.json")}
-              name="json"
-              style={{ height: 300, resize: "vertical" }}
-              fieldType="textarea"
-              control={control}
-              rules={{
-                required: true,
-                validate: (v: string) =>
-                  validations.json(v) || t("common:form.errors.json"),
-              }}
-            />
-          </Col>
-        </Row>
-
-        <Row style={{ width: "100%" }} gutter={10}>
-          <Col xs={12}>
-            <Input
-              className={styles.input}
-              label={t("common:form.labels.auth_token")}
+              addonBefore={
+                <span className={styles.inputBefore}>Authorization</span>
+              }
               name="token"
               control={control}
+              placeholder="Bearer ...."
               rules={{
                 required: true,
               }}
+              suffix={
+                <CopyIcon
+                  className={styles.copy}
+                  onClick={() =>
+                    navigator.clipboard.writeText(getValues("token") || "")
+                  }
+                />
+              }
             />
-          </Col>
-          <Col xs={12}>
-            <Input
-              className={cn(styles.input, styles.disabledInput)}
-              disabled
-              label={t("common:form.labels.url")}
-              name="url"
-              control={control}
-            />
-          </Col>
-        </Row>
+          </Form.Item>
 
-        <Space>
-          <Button
-            className={styles.submit}
-            size="large"
-            type="primary"
-            onClick={handleSubmit(onSubmit)}
-          >
-            {t("common:words.send_request")}
-          </Button>
-          <InfoBlock
-            className={styles.infoBlock}
-            href={CUBEJS_API_DOCS_URL}
-            linkText={t("common:words.rest_api_docs")}
-          />
-        </Space>
-
-        {response && (
-          <Row style={{ width: "100%", marginTop: 20 }} gutter={10}>
-            <Col xs={24}>
+          <Row gutter={[16, 16]}>
+            <Col flex={"auto"}>
               <Input
-                className={cn(styles.input, styles.disabledInput)}
-                label={t("common:form.labels.request_output")}
-                name="response"
-                style={{ height: 300, resize: "vertical" }}
-                fieldType="textarea"
+                className={styles.input}
+                addonBefore={
+                  <span className={styles.inputBefore}>
+                    x-hasura-datasource-id
+                  </span>
+                }
+                name="x-hasura-datasource-id"
                 control={control}
-                disabled
+                placeholder="datasource uuid ...."
+                rules={{
+                  required: true,
+                }}
+                suffix={
+                  <CopyIcon
+                    className={styles.copy}
+                    onClick={() =>
+                      navigator.clipboard.writeText(
+                        getValues("x-hasura-datasource-id") || ""
+                      )
+                    }
+                  />
+                }
+              />
+            </Col>
+            <Col flex={"auto"}>
+              <Input
+                className={styles.input}
+                addonBefore={
+                  <span className={styles.inputBefore}>x-hasura-branch-id</span>
+                }
+                name="x-hasura-branch-id"
+                control={control}
+                placeholder="branch uuid"
+                rules={{
+                  required: true,
+                }}
+                suffix={
+                  <CopyIcon
+                    className={styles.copy}
+                    onClick={() =>
+                      navigator.clipboard.writeText(
+                        getValues("x-hasura-branch-id") || ""
+                      )
+                    }
+                  />
+                }
               />
             </Col>
           </Row>
-        )}
+
+          <Input
+            className={cn(styles.input)}
+            label={t("common:form.labels.url")}
+            name="url"
+            control={control}
+            addonBefore={<span className={styles.inputBefore}>POST</span>}
+            suffix={
+              <CopyIcon
+                className={styles.copy}
+                onClick={() =>
+                  navigator.clipboard.writeText(getValues("url") || "")
+                }
+              />
+            }
+          />
+          <Row style={{ width: "100%" }} gutter={10}>
+            <Col xs={24} className={styles.textAreaWrapper}>
+              <Input
+                className={styles.input}
+                label={t("common:form.labels.body")}
+                name="json"
+                style={{ height: 300, resize: "vertical" }}
+                fieldType="textarea"
+                control={control}
+                rules={{
+                  required: true,
+                  validate: (v: string) =>
+                    validations.json(v) || t("common:form.errors.json"),
+                }}
+                starColor="transparent"
+              />
+              <CopyIcon
+                className={cn(styles.copy, styles.textAreaCopy)}
+                onClick={() =>
+                  navigator.clipboard.writeText(getValues("json") || "")
+                }
+              />
+            </Col>
+          </Row>
+
+          <Space>
+            <Button
+              className={styles.submit}
+              size="large"
+              type="primary"
+              onClick={handleSubmit(onSubmit)}
+            >
+              {t("common:words.send_request")}
+            </Button>
+            <InfoBlock
+              className={styles.infoBlock}
+              href={CUBEJS_API_DOCS_URL}
+              linkText={t("common:words.rest_api_docs")}
+            />
+          </Space>
+
+          {response && (
+            <Row
+              style={{ width: "100%", marginTop: 20 }}
+              gutter={10}
+              data-testid="response"
+            >
+              <Col xs={24} className={styles.textAreaWrapper}>
+                <Input
+                  className={cn(styles.input, styles.disabledInput)}
+                  label={`${t("common:form.labels.request_output")}:`}
+                  name="response"
+                  style={{ height: 50, resize: "vertical" }}
+                  fieldType="textarea"
+                  control={control}
+                  disabled
+                  autoSize
+                />
+                <CopyIcon
+                  className={cn(styles.copy, styles.textAreaCopy)}
+                  onClick={() =>
+                    navigator.clipboard.writeText(getValues("json") || "")
+                  }
+                />
+              </Col>
+            </Row>
+          )}
+        </Space>
       </Form>
     </Spin>
   );

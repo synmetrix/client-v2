@@ -124,7 +124,7 @@
       "ssl_cert": "SSL CERT",
       "ssl_ciphers": "SSL CIPHERS",
       "ssl_passphrase": "SSL PASSPHRASE",
-      "url": "Url",
+      "url": "URL",
       "api_id": "API ID",
       "api_key": "API KEY",
       "catalog": "Catalog",
@@ -147,7 +147,9 @@
       "team_member": "Team member",
       "auth_token": "Auth Token",
       "json": "JSON",
-      "request_output": "Request Output"
+      "body": "Body",
+      "request_output": "Request Output",
+      "headers": "Headers"
     },
     "placeholders": {
       "name": "Name",

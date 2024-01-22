@@ -6,10 +6,8 @@ import { Typography } from "antd";
 import { SHOWN_CATEGORIES } from "@/components/ExploreCubes";
 import ExploreCubesSubSection from "@/components/ExploreCubesSubSection";
 import ExploreCubesCategoryItem from "@/components/ExploreCubesCategoryItem";
-import useKeyPress from "@/hooks/useKeyPress";
 import useAnalyticsQueryMembers from "@/hooks/useAnalyticsQueryMembers";
 import { granularities } from "@/utils/constants/granularities";
-import clearSelection from "@/utils/helpers/clearSelection";
 import type {
   CubeMeta,
   SubSection,
@@ -120,8 +118,6 @@ const Cube = ({
     baseMembers: { index: membersIndex },
   } = useAnalyticsQueryMembers({ selectedQueryMembers: selectedMembers });
 
-  const shiftPress = useKeyPress("Shift");
-
   const [state, setState] = useState<CubeMeta>({
     lastClickedMember: {},
     hovered: {},
@@ -149,59 +145,9 @@ const Cube = ({
     const name = getMemberId(member);
 
     if (type === "click") {
-      const {
-        category: nextCategory,
-        index: nextIndex,
-        selectedIndex,
-      } = memberMeta;
+      const { category: nextCategory, selectedIndex } = memberMeta;
 
       setState((prev) => set(["lastClickedMember"], memberMeta, prev));
-
-      // select more than one members if shift pressed
-      if (shiftPress) {
-        const { category: prevCategory, index: prevIndex } =
-          state.lastClickedMember;
-
-        // don't fire if not the same category
-        if (prevCategory !== nextCategory) {
-          return;
-        }
-
-        let catFilter: (_: unknown, index: number) => any = () => {};
-
-        if (nextIndex && nextIndex > prevIndex) {
-          catFilter = (_: unknown, index: number) =>
-            index <= nextIndex && index > prevIndex;
-        } else {
-          catFilter = (_: unknown, index: number) =>
-            nextIndex && index >= nextIndex && index < prevIndex;
-        }
-
-        const selectMembers =
-          getMembersCategory(nextCategory).filter(catFilter);
-        const categoryCubeMembers = getSelectedCategoryMembers(nextCategory);
-
-        // need buffer because selectedMembers update is not immediately
-        const categoryCubeMembersBuffer = categoryCubeMembers;
-        selectMembers.forEach((catMember) => {
-          const catSelectedIndex = categoryCubeMembersBuffer.indexOf(
-            catMember.name
-          );
-
-          if (catSelectedIndex === -1) {
-            onMemberSelect(nextCategory).add(catMember);
-          } else {
-            onMemberSelect(nextCategory).remove({
-              ...catMember,
-              index: catSelectedIndex,
-            });
-            categoryCubeMembersBuffer.splice(catSelectedIndex, 1);
-          }
-        });
-
-        clearSelection();
-        return;
-      }
 
       if (selectedIndex === -1) {
         onMemberSelect(nextCategory).add(member);

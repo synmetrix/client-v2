@@ -129,7 +129,10 @@ query TeamData($team_id: uuid!) {
       db_type
       created_at
       updated_at
-      branches(where: { status: { _in: [active, created] } }, order_by: { created_at: desc }) {
+      branches(
+        where: { status: { _in: [active, created] } }
+        order_by: { created_at: desc }
+      ) {
         ...BranchesFields
       }
       sql_credentials(order_by: { updated_at: desc }) {
@@ -202,7 +205,10 @@ subscription SubTeamData($team_id: uuid!) {
       db_type
       created_at
       updated_at
-      branches(where: { status: { _in: [active, created] } }, order_by: { created_at: desc }) {
+      branches(
+        where: { status: { _in: [active, created] } }
+        order_by: { created_at: desc }
+      ) {
         ...BranchesFields
       }
       sql_credentials {

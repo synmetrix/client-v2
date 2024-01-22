@@ -1,16 +1,16 @@
-mutation CreateExploration ($object: explorations_insert_input!) {
+mutation CreateExploration($object: explorations_insert_input!) {
   insert_explorations_one(object: $object) {
     id
   }
 }
 
-mutation GenSQL ($exploration_id: uuid!) {
+mutation GenSQL($exploration_id: uuid!) {
   gen_sql(exploration_id: $exploration_id) {
     result
   }
 }
 
-query CurrentExploration ($id: uuid!, $offset: Int, $limit: Int) {
+query CurrentExploration($id: uuid!, $offset: Int, $limit: Int) {
   explorations_by_pk(id: $id) {
     id
     branch_id

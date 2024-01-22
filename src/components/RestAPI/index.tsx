@@ -74,7 +74,7 @@ const RestAPI: FC<RestApiProps> = ({
       ),
       "x-hasura-datasource-id": dataSourceId,
       "x-hasura-branch-id": branchId,
-      token: accessToken,
+      token: `Bearer ${accessToken}`,
       url: CUBEJS_REST_API_URL,
       response: "",
     },
@@ -89,6 +89,7 @@ const RestAPI: FC<RestApiProps> = ({
       const rawResponse = await fetch(values.url, {
         method: "POST",
         headers: {
+          authorization: values.token,
           "Content-Type": "application/json",
           "x-hasura-datasource-id": values["x-hasura-datasource-id"],
           "x-hasura-branch-id": values["x-hasura-branch-id"],

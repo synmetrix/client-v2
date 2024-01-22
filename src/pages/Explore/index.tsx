@@ -262,7 +262,7 @@ const ExploreWrapper = () => {
 
   const onChangeBranch = (id: string) => {
     setCurrentBranchId(id);
-    setLocation(dataSourcePath);
+    setLocation(`${dataSourcePath}?branchId=${id}`);
   };
 
   useEffect(() => {

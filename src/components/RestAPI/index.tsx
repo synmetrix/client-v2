@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import cn from "classnames";
 
 import Input from "@/components/Input";
+import InfoBlock from "@/components/InfoBlock";
 import Button from "@/components/Button";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import validations from "@/utils/helpers/validations";
@@ -249,11 +250,11 @@ const RestAPI: FC<RestApiProps> = ({
             >
               {t("common:words.send_request")}
             </Button>
-            {/* <InfoBlock
+            <InfoBlock
               className={styles.infoBlock}
               href={CUBEJS_API_DOCS_URL}
               linkText={t("common:words.rest_api_docs")}
-            /> */}
+            />
           </Space>
 
           {response && (

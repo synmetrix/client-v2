@@ -89,7 +89,6 @@ const RestAPI: FC<RestApiProps> = ({
       const rawResponse = await fetch(values.url, {
         method: "POST",
         headers: {
-          authorization: values.token,
           "Content-Type": "application/json",
           "x-hasura-datasource-id": values["x-hasura-datasource-id"],
           "x-hasura-branch-id": values["x-hasura-branch-id"],

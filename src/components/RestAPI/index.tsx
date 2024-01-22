@@ -72,8 +72,8 @@ const RestAPI: FC<RestApiProps> = ({
         null,
         2
       ),
-      "hasura-datasource-id": dataSourceId,
-      "hasura-branch-id": branchId,
+      "x-hasura-datasource-id": dataSourceId,
+      "x-hasura-branch-id": branchId,
       token: accessToken,
       url: CUBEJS_REST_API_URL,
       response: "",
@@ -89,10 +89,10 @@ const RestAPI: FC<RestApiProps> = ({
       const rawResponse = await fetch(values.url, {
         method: "POST",
         headers: {
-          authorization: `Bearer ${values.token}`,
+          authorization: values.token,
           "Content-Type": "application/json",
-          "x-hasura-datasource-id": values["hasura-datasource-id"],
-          "x-hasura-branch-id": values["hasura-branch-id"],
+          "x-hasura-datasource-id": values["x-hasura-datasource-id"],
+          "x-hasura-branch-id": values["x-hasura-branch-id"],
         },
         body: JSON.stringify({
           query: values.json,
@@ -115,6 +115,18 @@ const RestAPI: FC<RestApiProps> = ({
     setValue("response", JSON.stringify(response, null, 2));
     setState(defaultState);
   };
+
+  useEffect(() => {
+    const subscription = watch((values, { name }) => {
+      if (name === "token") {
+        if (!values.token.includes("Bearer ")) {
+          setValue("token", `Bearer ${values.token}`);
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setValue, watch]);
 
   const response = watch("response");
 
@@ -158,10 +170,10 @@ const RestAPI: FC<RestApiProps> = ({
                 className={styles.input}
                 addonBefore={
                   <span className={styles.inputBefore}>
-                    hasura-datasource-id
+                    x-hasura-datasource-id
                   </span>
                 }
-                name="hasura-datasource-id"
+                name="x-hasura-datasource-id"
                 control={control}
                 placeholder="datasource uuid ...."
                 rules={{
@@ -172,7 +184,7 @@ const RestAPI: FC<RestApiProps> = ({
                     className={styles.copy}
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        getValues("hasura-datasource-id") || ""
+                        getValues("x-hasura-datasource-id") || ""
                       )
                     }
                   />

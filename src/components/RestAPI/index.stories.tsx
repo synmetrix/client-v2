@@ -11,7 +11,7 @@ export default {
 
 const Template: StoryFn<typeof RestAPI> = (args) => (
   <RootLayout>
-    <RestAPI {...args} />
+    <RestAPI {...args} dataSourceId="123" branchId="456" />
   </RootLayout>
 );
 

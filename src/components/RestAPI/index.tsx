@@ -119,7 +119,11 @@ const RestAPI: FC<RestApiProps> = ({
   const response = watch("response");
 
   return (
-    <Spin spinning={state.loading} tip={state.loadingTip}>
+    <Spin
+      spinning={state.loading}
+      tip={state.loadingTip}
+      data-testid="rest-api"
+    >
       <Form layout="vertical" className={styles.form}>
         <Space style={{ width: "100%" }} direction="vertical" size={16}>
           <Form.Item
@@ -258,7 +262,11 @@ const RestAPI: FC<RestApiProps> = ({
           </Space>
 
           {response && (
-            <Row style={{ width: "100%", marginTop: 20 }} gutter={10}>
+            <Row
+              style={{ width: "100%", marginTop: 20 }}
+              gutter={10}
+              data-testid="response"
+            >
               <Col xs={24} className={styles.textAreaWrapper}>
                 <Input
                   className={cn(styles.input, styles.disabledInput)}

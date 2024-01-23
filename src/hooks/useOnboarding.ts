@@ -19,6 +19,7 @@ import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { DataSourceState } from "@/stores/DataSourceStore";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
 import type {
+  ApiSetupForm,
   DataSourceInfo,
   DataSourceSetupForm,
   DynamicForm,
@@ -27,6 +28,13 @@ import useCheckResponse from "@/hooks/useCheckResponse";
 
 interface Props {
   editId?: string;
+}
+
+interface CredentialParams {
+  user_id: string;
+  username: string;
+  password: string;
+  datasource_id?: string;
 }
 
 export default ({ editId }: Props) => {
@@ -43,10 +51,9 @@ export default ({ editId }: Props) => {
     useGenDataSchemasMutation();
 
   const {
-    formState: { step0: dataSource, step1: dataSourceSetup, step3: apiSetup },
+    formState: { step0: dataSource, step1: dataSourceSetup },
     schema,
     step,
-    isOnboarding,
     setSchema,
     setFormStateData,
   } = DataSourceStore();
@@ -85,13 +92,6 @@ export default ({ editId }: Props) => {
       dataSources.find((d) => d.id === editId || d.id === dataSourceSetup?.id),
     [editId, dataSourceSetup?.id, dataSources]
   );
-  const branchId = useMemo(
-    () =>
-      curDataSource?.branches?.find(
-        (b) => b.status === Branch_Statuses_Enum.Active
-      )?.id || curDataSource?.branches?.[0].id,
-    [curDataSource?.branches]
-  );
 
   const onDataModelGenerationSubmit = async (data: DynamicForm) => {
     setLoading(true);
@@ -106,15 +106,15 @@ export default ({ editId }: Props) => {
       []
     );
 
-    if (curDataSource && !branchId) {
-      message.error(`${t("no_branch")} ${curDataSource.name}`);
+    if (dataSourceSetup && !dataSourceSetup.branchId) {
+      message.error(`${t("no_branch")} ${dataSourceSetup.name}`);
       return;
     }
 
     if (dataSourceSetup) {
       const res = await execGenSchemaMutation({
         datasource_id: dataSourceSetup.id,
-        branch_id: branchId,
+        branch_id: dataSourceSetup.branchId,
         tables,
         format: data?.type || "yaml",
         overwrite: true,
@@ -128,8 +128,60 @@ export default ({ editId }: Props) => {
     }
   };
 
+  const prepareSqlApiData = (
+    dataSourceName?: string,
+    dataSourceId?: string
+  ): { apiConfig: ApiSetupForm; credentialParams: CredentialParams } => {
+    const apiConfig: ApiSetupForm = prepareInitValues(
+      dataSourceId,
+      currentUser.id,
+      dataSourceName
+    );
+    const credentialParams: CredentialParams = {
+      user_id: currentUser.id,
+      username: apiConfig.db_username,
+      password: apiConfig.password,
+    };
+
+    if (dataSourceId) {
+      credentialParams.datasource_id = dataSourceId;
+    }
+
+    return { apiConfig, credentialParams };
+  };
+
+  const tryInsertSqlCredentials = async (
+    dataSourceId?: string,
+    dataSourceName?: string,
+    attemptsLeft: number = 5
+  ): Promise<ApiSetupForm | any> => {
+    if (attemptsLeft === 0) {
+      return false;
+    }
+
+    const { apiConfig, credentialParams } = prepareSqlApiData(
+      dataSourceName,
+      dataSourceId
+    );
+    const res = await execInsertSqlCredentialsMutation({
+      object: credentialParams,
+    });
+
+    const newCredentials = res.data?.insert_sql_credentials_one;
+    if (res.error || !newCredentials) {
+      return await tryInsertSqlCredentials(
+        dataSourceId,
+        dataSourceName,
+        attemptsLeft - 1
+      );
+    }
+
+    return apiConfig;
+  };
+
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
     let dataSourceId;
+    let newBranchId;
 
     if (!dataSourceSetup?.id) {
       const newData = {
@@ -141,6 +193,8 @@ export default ({ editId }: Props) => {
         newData.team_id = currentTeam?.id;
       }
 
+      // eslint-disable-next-line prefer-const
+      let { apiConfig, credentialParams } = prepareSqlApiData(data.name);
       const result = await execCreateMutation({
         object: {
           ...newData,
@@ -151,11 +205,36 @@ export default ({ editId }: Props) => {
                 user_id: currentUser.id,
               },
             ],
+            // on_conflict: {
+            //   constraint: ,
+            //   update_columns: ,
+            // }
+          },
+          sql_credentials: {
+            data: [credentialParams],
           },
         },
       });
 
-      dataSourceId = result?.data?.insert_datasources_one?.id;
+      const newDataSource = result?.data?.insert_datasources_one;
+      dataSourceId = newDataSource?.id;
+      newBranchId = newDataSource?.branches[0]?.id;
+
+      const newCredentials =
+        !!result?.data?.insert_datasources_one?.sql_credentials?.[0];
+      if (!newCredentials) {
+        apiConfig = await tryInsertSqlCredentials(dataSourceId, data.name);
+
+        if (!apiConfig) {
+          message.error(`${t("sql_credentials_error")} ${data.name}`);
+          return;
+        }
+      }
+
+      setFormStateData(3, {
+        datasource_id: dataSourceId,
+        ...apiConfig,
+      });
     } else {
       delete data.id;
       const newData = {
@@ -166,42 +245,18 @@ export default ({ editId }: Props) => {
       const result = await execUpdateMutation(newData);
 
       dataSourceId = result?.data?.update_datasources_by_pk?.id;
+      newBranchId = result?.data?.update_datasources_by_pk?.branches?.[0]?.id;
     }
 
     if (dataSourceId) {
       setFormStateData(1, {
         ...data,
         id: dataSourceId,
+        branchId: newBranchId,
       });
       return dataSourceId;
     }
   };
-
-  const createSQLApi = useCallback(
-    async (dataSourceId: string, dataSourceName: string) => {
-      const apiConfig = prepareInitValues(
-        dataSourceId,
-        dataSourceName,
-        currentUser.id
-      );
-      const credentialParams = {
-        user_id: currentUser.id,
-        datasource_id: dataSourceId,
-        username: apiConfig.db_username,
-        password: apiConfig.password,
-      };
-
-      const sqlApiResult = await execInsertSqlCredentialsMutation({
-        object: credentialParams,
-      });
-      const newSqlApiId = sqlApiResult.data?.insert_sql_credentials_one?.id;
-
-      if (newSqlApiId) {
-        setFormStateData(3, apiConfig);
-      }
-    },
-    [currentUser.id, execInsertSqlCredentialsMutation, setFormStateData]
-  );
 
   const onTestConnection = async (data: DataSourceSetupForm) => {
     const test = await execCheckConnection({
@@ -228,10 +283,6 @@ export default ({ editId }: Props) => {
 
     if (!testResult || isTest) {
       return;
-    }
-
-    if (!apiSetup && isOnboarding) {
-      await createSQLApi(resultId, data.name);
     }
 
     callback?.();
@@ -296,7 +347,6 @@ export default ({ editId }: Props) => {
   return {
     dataSources,
     curDataSource,
-    createSQLApi,
     onTestConnection,
     createOrUpdateDataSource,
     onDataModelGenerationSubmit,

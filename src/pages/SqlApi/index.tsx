@@ -49,8 +49,6 @@ interface SqlApiProps {
 
 export const SqlApi = ({
   editPermission,
-  teamMembers,
-  dataSources,
   credentials = [],
   initialValue,
   isNew,
@@ -200,9 +198,9 @@ export const SqlApi = ({
 
 export const prepareInitValues = (
   dataSourceId: string | null | undefined,
-  dataSourceName: string,
   userId: string,
-  username: string | undefined = undefined
+  dataSourceName?: string,
+  username?: string | undefined
 ): ApiSetupForm =>
   ({
     user_id: userId,

@@ -17,6 +17,7 @@ export interface FormState {
 
 export interface DataSourceData {
   step: number;
+  branchId: string | undefined;
   isGenerate: boolean;
   isOnboarding: boolean;
   formState: FormState;
@@ -43,6 +44,7 @@ export const defaultFormState = {
 
 const defaultState = {
   step: 0,
+  branchId: undefined,
   isOnboarding: false,
   isGenerate: false,
   formState: defaultFormState,

@@ -2,19 +2,16 @@ import gql from "graphql-tag";
 import * as Urql from "urql";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
+export type Exact<T extends Record<string, unknown>> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]?: Maybe<T[SubKey]>;
 };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T
-> = { [_ in K]?: never };
+export type MakeEmpty<T extends Record<string, unknown>, K extends keyof T> = {
+  [_ in K]?: never;
+};
 export type Incremental<T> =
   | T
   | {
@@ -12306,6 +12303,7 @@ export type CreateDataSourceMutation = {
     id: any;
     name: string;
     branches: Array<{ __typename?: "branches"; id: any }>;
+    sql_credentials: Array<{ __typename?: "sql_credentials"; id: any }>;
   } | null;
 };
 
@@ -12433,7 +12431,11 @@ export type UpdateDataSourceMutationVariables = Exact<{
 
 export type UpdateDataSourceMutation = {
   __typename?: "mutation_root";
-  update_datasources_by_pk?: { __typename?: "datasources"; id: any } | null;
+  update_datasources_by_pk?: {
+    __typename?: "datasources";
+    id: any;
+    branches: Array<{ __typename?: "branches"; id: any }>;
+  } | null;
 };
 
 export type CheckConnectionMutationVariables = Exact<{
@@ -12902,7 +12904,7 @@ export type CurrentTeamQuery = {
   } | null;
 };
 
-export type GetUsersQueryVariables = Exact<{ [key: string]: never }>;
+export type GetUsersQueryVariables = Exact<Record<string, never>>;
 
 export type GetUsersQuery = {
   __typename?: "query_root";
@@ -13624,6 +13626,9 @@ export const CreateDataSourceDocument = gql`
       branches {
         id
       }
+      sql_credentials {
+        id
+      }
     }
   }
 `;
@@ -13808,6 +13813,9 @@ export const UpdateDataSourceDocument = gql`
   ) {
     update_datasources_by_pk(pk_columns: $pk_columns, _set: $_set) {
       id
+      branches(where: { status: { _eq: active } }) {
+        id
+      }
     }
   }
 `;

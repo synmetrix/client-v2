@@ -1,5 +1,6 @@
 import { message } from "antd";
 import { useTranslation } from "react-i18next";
+import { dequal } from "dequal";
 
 import type {
   Datasources_Pk_Columns_Input,
@@ -16,8 +17,8 @@ import {
 } from "@/graphql/generated";
 import { prepareInitValues } from "@/pages/SqlApi";
 import CurrentUserStore from "@/stores/CurrentUserStore";
-import type { DataSourceState } from "@/stores/DataSourceStore";
 import DataSourceStore, { defaultFormState } from "@/stores/DataSourceStore";
+import type { DataSourceState } from "@/stores/DataSourceStore";
 import type {
   ApiSetupForm,
   DataSourceInfo,
@@ -25,6 +26,7 @@ import type {
   DynamicForm,
 } from "@/types/dataSource";
 import useCheckResponse from "@/hooks/useCheckResponse";
+import { getSourceAndBranch } from "@/pages/Explore";
 
 interface Props {
   editId?: string;
@@ -52,6 +54,7 @@ export default ({ editId }: Props) => {
 
   const {
     formState: { step0: dataSource, step1: dataSourceSetup },
+    branchId,
     schema,
     step,
     clean,
@@ -105,7 +108,7 @@ export default ({ editId }: Props) => {
       []
     );
 
-    if (dataSourceSetup && !dataSourceSetup.branchId) {
+    if (dataSourceSetup && !branchId) {
       message.error(`${t("no_branch")} ${dataSourceSetup.name}`);
       return;
     }
@@ -113,7 +116,7 @@ export default ({ editId }: Props) => {
     if (dataSourceSetup) {
       const res = await execGenSchemaMutation({
         datasource_id: dataSourceSetup.id,
-        branch_id: dataSourceSetup.branchId,
+        branch_id: branchId,
         tables,
         format: data?.type || "yaml",
         overwrite: true,
@@ -232,7 +235,6 @@ export default ({ editId }: Props) => {
       });
     } else {
       delete data.id;
-      delete data.branchId;
       const newData = {
         pk_columns: { id: dataSourceSetup?.id } as Datasources_Pk_Columns_Input,
         _set: data as Datasources_Set_Input,
@@ -245,11 +247,16 @@ export default ({ editId }: Props) => {
     }
 
     if (dataSourceId) {
-      setFormStateData(1, {
-        ...data,
-        id: dataSourceId,
-        branchId: newBranchId,
-      });
+      setFormStateData(
+        1,
+        {
+          ...data,
+          id: dataSourceId,
+        },
+        {
+          branchId: newBranchId,
+        }
+      );
       return dataSourceId;
     }
   };
@@ -270,10 +277,13 @@ export default ({ editId }: Props) => {
     isTest?: boolean,
     callback?: () => void
   ) => {
-    const resultId = await createOrUpdateDataSource(data);
+    let dataSourceId = dataSourceSetup?.id;
+    if (!dataSourceSetup?.id || !dequal({ ...data }, { ...dataSourceSetup })) {
+      dataSourceId = await createOrUpdateDataSource(data);
+    }
 
     const testResult = await onTestConnection({
-      id: resultId,
+      id: dataSourceId,
     } as DataSourceSetupForm);
 
     if (!testResult || isTest) {
@@ -285,6 +295,10 @@ export default ({ editId }: Props) => {
 
   useEffect(() => {
     if (curDataSource) {
+      const { currentBranch } = getSourceAndBranch(
+        dataSources,
+        editId || dataSourceSetup?.id
+      );
       DataSourceStore.setState(
         (prev) =>
           ({
@@ -300,10 +314,11 @@ export default ({ editId }: Props) => {
                 ...prev.formState.step1,
               },
             },
+            branchId: currentBranch.id,
           } as Partial<DataSourceState>)
       );
     }
-  }, [curDataSource]);
+  }, [curDataSource, dataSourceSetup?.id, dataSources, editId]);
 
   useEffect(() => {
     if (step === 2 && dataSourceSetup?.id && !schema) {

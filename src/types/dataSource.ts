@@ -52,7 +52,6 @@ export interface ApiSetupForm {
 
 export interface DataSourceSetupForm {
   id?: string;
-  branchId?: string;
   name: string;
   db_params?: DynamicForm;
 }

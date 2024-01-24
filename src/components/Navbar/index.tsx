@@ -85,7 +85,7 @@ const Navbar: FC<NavbarProps> = ({
 
   teamsMenu.push({
     key: "/settings/teams",
-    label: "Edit teams",
+    label: t("common:words.edit_teams"),
     onClick: () => onClick("/settings/teams"),
   });
 

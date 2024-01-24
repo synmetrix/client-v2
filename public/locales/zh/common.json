@@ -106,7 +106,10 @@
     "versions": "版本",
     "version": "版本",
     "default": "默认",
-    "find": "查找"
+    "find": "查找",
+    "edit_teams": "编辑命令",
+    "roles_and_access": "角色与访问",
+    "sql_api": "SQL API"
   },
   "form": {
     "labels": {
@@ -183,5 +186,12 @@
     "does not contain": "不包含",
     "equals": "等于",
     "does not equals": "不等于"
+  },
+  "sidemenu": {
+    "explore": "探索",
+    "models": "模型",
+    "signals": "信号",
+    "logs": "日志",
+    "settings": "设置"
   }
 }

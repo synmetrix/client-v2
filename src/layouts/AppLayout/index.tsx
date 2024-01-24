@@ -1,5 +1,6 @@
 import { Col, Layout, Row, Space, Typography } from "antd";
 import { useResponsive } from "ahooks";
+import { useTranslation } from "react-i18next";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -7,8 +8,8 @@ import Navbar from "@/components/Navbar";
 import LanguageToggler from "@/components/LanguageToggler";
 import BurgerMenu from "@/components/BurgerMenu";
 import SideMenu from "@/components/SideMenu";
-import { userMenu } from "@/mocks/user";
 import CurrentUserStore from "@/stores/CurrentUserStore";
+import { LOGOUT } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -33,6 +34,18 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const responsive = useResponsive();
   const { currentUser } = CurrentUserStore();
+  const { t } = useTranslation(["common"]);
+
+  const userMenu = [
+    {
+      label: t("common:words.personal_info"),
+      href: "/settings/info",
+    },
+    {
+      label: t("common:words.logout"),
+      href: LOGOUT,
+    },
+  ];
 
   const content = (
     <Navbar

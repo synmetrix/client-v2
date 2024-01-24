@@ -13,5 +13,6 @@
     "query": "Query Logs"
   },
   "models": "Models",
-  "explore": "Explore"
+  "explore": "Explore",
+  "settings": "Settings"
 }

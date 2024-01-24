@@ -29,7 +29,7 @@
     "columns": "столбцы",
     "select_all": "Выбрать все",
     "clear": "Очистить",
-    "docs": "Документы",
+    "docs": "Документация",
     "team": "Команда",
     "host": "Хост",
     "type": "Тип",
@@ -54,7 +54,7 @@
     "create": "Создать",
     "sign_in": "Войти",
     "sign_up": "Зарегистрироваться",
-    "measures": "меры",
+    "measures": "метрики",
     "dimensions": "измерения",
     "segments": "сегменты",
     "or": "или",
@@ -106,7 +106,10 @@
     "versions": "Версии",
     "version": "Версия",
     "default": "по умолчанию",
-    "find": "Найти"
+    "find": "Найти",
+    "edit_teams": "Редактировать команды",
+    "roles_and_access": "Роли и доступ",
+    "sql_api": "SQL API"
   },
   "form": {
     "labels": {
@@ -183,5 +186,12 @@
     "does not contain": "не содержит",
     "equals": "равно",
     "does not equals": "не равно"
+  },
+  "sidemenu": {
+    "explore": "Исследование",
+    "models": "Модели",
+    "signals": "Сигналы",
+    "logs": "Логи",
+    "settings": "Настройки"
   }
 }

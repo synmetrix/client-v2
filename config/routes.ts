@@ -25,7 +25,7 @@ export default [
             component: "./pages/Logout",
           },
           {
-            redirect: paths.SIGNIN + "/",
+            redirect: paths.SIGNIN,
           },
         ],
       },

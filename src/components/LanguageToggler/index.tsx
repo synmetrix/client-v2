@@ -30,9 +30,9 @@ const LanguageToggler: FC = () => {
       onOpenChange={setIsOpen}
       menu={{
         items: [
-          { key: "en", label: "EN" },
-          { key: "ru", label: "РУ" },
-          { key: "zh", label: "中国人" },
+          { key: "en", label: "EN", onClick: () => toggleLanguage("en") },
+          { key: "ru", label: "РУ", onClick: () => toggleLanguage("ru") },
+          { key: "zh", label: "中国人", onClick: () => toggleLanguage("zh") },
         ],
       }}
     >
@@ -47,28 +47,6 @@ const LanguageToggler: FC = () => {
         </div>
       </Button>
     </Dropdown>
-  );
-
-  return (
-    <Select
-      dropdownStyle={{ width: 75 }}
-      value={i18n.language}
-      onChange={toggleLanguage}
-      options={[
-        {
-          label: "РУ",
-          value: "ru",
-        },
-        {
-          label: "EN",
-          value: "en",
-        },
-        {
-          label: "中国人",
-          value: "zh",
-        },
-      ]}
-    />
   );
 };
 

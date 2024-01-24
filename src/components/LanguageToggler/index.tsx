@@ -1,4 +1,4 @@
-import { Dropdown, Select } from "antd";
+import { Dropdown } from "antd";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 

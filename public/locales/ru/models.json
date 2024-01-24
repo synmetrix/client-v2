@@ -1,0 +1,38 @@
+{
+  "sidebar": {
+    "open_docs": "Открыть документацию",
+    "version": "Версия",
+    "set_default": "Установить по умолчанию"
+  },
+  "versions_list": "Список версий",
+  "alerts": {
+    "no_changes": "Нет изменений.",
+    "branch_removed": "Ветка удалена",
+    "branch": "Ветка",
+    "is_now_default": "теперь установлена по умолчанию",
+    "version_created": "Версия создана",
+    "branch_created": "Ветка создана",
+    "schema_generated": "Модели сгенерированы",
+    "wrong_archive": "Неверный архив",
+    "bad_archive": "Плохой архив",
+    "format_is_unsupported": "Формат не поддерживается",
+    "checksum_of_file": "Контрольная сумма файла",
+    "do_not_match": "не совпадают. Пропущено",
+    "deleting_a_file": "Удаление файла",
+    "file_change": "Изменение файла",
+    "compilation_error": "Ошибка компиляции",
+    "compilation_success": "Компиляция прошла успешно"
+  },
+  "sure_delete": "Вы уверены, что хотите удалить эту схему данных?",
+  "ide_menu": {
+    "import_models": "Импорт моделей данных",
+    "export_models": "Экспорт моделей данных",
+    "generate_schema": "Генерация моделей"
+  },
+  "branch_menu": {
+    "show_versions": "Показать версии",
+    "remove_branch": "Удалить ветку"
+  },
+  "last_modify": "Последнее изменение",
+  "no_model": "Выберите модель для редактирования"
+}

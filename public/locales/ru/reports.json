@@ -1,0 +1,32 @@
+{
+  "new_report": "Новый отчет",
+  "edit_report": "Редактировать отчет",
+  "preview": "превью",
+  "delivery_settings": "Настройки доставки",
+  "trigger_settings": "Настройки триггера",
+  "schedule": "Расписание",
+  "build_cron_expression": "Создать выражение cron",
+  "advanced_settings": "Дополнительные настройки",
+  "summary": "Сводка",
+  "at": "В",
+  "on_day-of-month": "в день месяца",
+  "schedule_not_set": "Расписание не установлено",
+  "via": "через",
+  "not_found": "Отчет не найден",
+  "title": "Список и управление вашими отчетами",
+  "title_mobile": "Управление отчетами",
+  "action": "Как создать отчет?",
+  "action_mobile": "Как создать?",
+  "form": {
+    "report_name": "Имя отчета:",
+    "type": "Тип:"
+  },
+  "report_created": "Отчет создан",
+  "report_updated": "Отчет обновлен",
+  "report_deleted": "Отчет удален",
+  "test_report_sent": "Тестовый отчет отправлен",
+  "not": {
+    "title": "Отчеты не найдены",
+    "text": "На данный момент нет отчетов для отображения."
+  }
+}

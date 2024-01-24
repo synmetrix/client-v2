@@ -1,18 +1,36 @@
+import { Select } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type { FC } from "react";
 
 const LanguageToggler: FC = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
-  const toggleLanguage = () => {
-    const lng = i18n.language;
-    console.log(lng);
-    i18n.changeLanguage(lng === "ru" ? "en" : "ru");
-    console.log(t("switch_language"));
+  const toggleLanguage = (val: string) => {
+    i18n.changeLanguage(val);
   };
 
-  return <button onClick={toggleLanguage}>{t("switch_language")}</button>;
+  return (
+    <Select
+      dropdownStyle={{ width: 75 }}
+      value={i18n.language}
+      onChange={toggleLanguage}
+      options={[
+        {
+          label: "РУ",
+          value: "ru",
+        },
+        {
+          label: "EN",
+          value: "en",
+        },
+        {
+          label: "中国人",
+          value: "zh",
+        },
+      ]}
+    />
+  );
 };
 
 export default LanguageToggler;

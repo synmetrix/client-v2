@@ -39,7 +39,7 @@ interface CredentialParams {
 
 export default ({ editId }: Props) => {
   const { t } = useTranslation(["dataSourceStepForm"]);
-  const { currentTeam, teamData, currentUser, setLoading } = CurrentUserStore();
+  const { currentTeam, teamData, currentUser } = CurrentUserStore();
 
   const [, execInsertSqlCredentialsMutation] =
     useInsertSqlCredentialsMutation();
@@ -54,6 +54,7 @@ export default ({ editId }: Props) => {
     formState: { step0: dataSource, step1: dataSourceSetup },
     schema,
     step,
+    clean,
     setSchema,
     setFormStateData,
   } = DataSourceStore();
@@ -94,8 +95,6 @@ export default ({ editId }: Props) => {
   );
 
   const onDataModelGenerationSubmit = async (data: DynamicForm) => {
-    setLoading(true);
-
     let tables = { ...data } as any;
     delete tables.type;
     tables = Object.values(tables).reduce(
@@ -205,10 +204,6 @@ export default ({ editId }: Props) => {
                 user_id: currentUser.id,
               },
             ],
-            // on_conflict: {
-            //   constraint: ,
-            //   update_columns: ,
-            // }
           },
           sql_credentials: {
             data: [credentialParams],
@@ -232,11 +227,12 @@ export default ({ editId }: Props) => {
       }
 
       setFormStateData(3, {
-        datasource_id: dataSourceId,
         ...apiConfig,
+        datasource_id: dataSourceId,
       });
     } else {
       delete data.id;
+      delete data.branchId;
       const newData = {
         pk_columns: { id: dataSourceSetup?.id } as Datasources_Pk_Columns_Input,
         _set: data as Datasources_Set_Input,
@@ -263,7 +259,6 @@ export default ({ editId }: Props) => {
       id: dataSourceSetup?.id || data?.id,
     });
 
-    setLoading(false);
     if (!test.data?.check_connection) {
       return null;
     }
@@ -302,6 +297,7 @@ export default ({ editId }: Props) => {
                 id: curDataSource?.id,
                 db_params: { ...curDataSource.dbParams },
                 name: curDataSource.name,
+                ...prev.formState.step1,
               },
             },
           } as Partial<DataSourceState>)
@@ -317,34 +313,34 @@ export default ({ editId }: Props) => {
 
   useEffect(() => {
     if (fetchTablesQuery.data) {
-      setLoading(false);
       setSchema(fetchTablesQuery.data?.fetch_tables?.schema);
     }
-  }, [fetchTablesQuery.data, setSchema, setLoading]);
+  }, [fetchTablesQuery.data, setSchema]);
 
   useEffect(() => {
-    const isLoading =
-      createMutation.fetching ||
-      updateMutation.fetching ||
-      checkConnectionMutation.fetching ||
-      genSchemaMutation.fetching ||
-      fetchTablesQuery.fetching;
-
-    if (isLoading) {
-      setLoading(true);
-    } else {
-      setLoading(false);
+    if (step === 0) {
+      clean();
     }
-  }, [
-    createMutation.fetching,
-    updateMutation.fetching,
-    checkConnectionMutation.fetching,
-    genSchemaMutation.fetching,
-    fetchTablesQuery.fetching,
-    setLoading,
-  ]);
+  }, [clean, step]);
+
+  const loading = useMemo(
+    () =>
+      createMutation.fetching ||
+      checkConnectionMutation.fetching ||
+      updateMutation.fetching ||
+      genSchemaMutation.fetching ||
+      fetchTablesQuery.fetching,
+    [
+      createMutation.fetching,
+      updateMutation.fetching,
+      checkConnectionMutation.fetching,
+      genSchemaMutation.fetching,
+      fetchTablesQuery.fetching,
+    ]
+  );
 
   return {
+    loading,
     dataSources,
     curDataSource,
     onTestConnection,

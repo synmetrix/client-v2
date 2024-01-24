@@ -8076,7 +8076,7 @@
           },
           {
             "name": "user_roles_account_id_role_key",
-            "description": "unique or primary key constraint on columns \"role\", \"account_id\"",
+            "description": "unique or primary key constraint on columns \"account_id\", \"role\"",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -18442,6 +18442,12 @@
         "inputFields": null,
         "interfaces": null,
         "enumValues": [
+          {
+            "name": "branches_datasource_id_name_key",
+            "description": "unique or primary key constraint on columns \"datasource_id\", \"name\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "branches_pkey",
             "description": "unique or primary key constraint on columns \"id\"",
@@ -31877,7 +31883,7 @@
         "enumValues": [
           {
             "name": "member_roles_member_id_team_role_key",
-            "description": "unique or primary key constraint on columns \"member_id\", \"team_role\"",
+            "description": "unique or primary key constraint on columns \"team_role\", \"member_id\"",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -33545,6 +33551,12 @@
           {
             "name": "members_pkey",
             "description": "unique or primary key constraint on columns \"id\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "members_user_id_team_id_key",
+            "description": "unique or primary key constraint on columns \"user_id\", \"team_id\"",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -56447,9 +56459,13 @@
             "description": "An object relationship",
             "args": [],
             "type": {
-              "kind": "OBJECT",
-              "name": "users",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "users",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -56459,9 +56475,13 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "uuid",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "uuid",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -56609,6 +56629,18 @@
         "description": "aggregate fields of \"request_logs\"",
         "fields": [
           {
+            "name": "avg",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "request_logs_avg_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "count",
             "description": null,
             "args": [
@@ -56672,6 +56704,90 @@
             "type": {
               "kind": "OBJECT",
               "name": "request_logs_min_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "stddev",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "request_logs_stddev_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "stddev_pop",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "request_logs_stddev_pop_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "stddev_samp",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "request_logs_stddev_samp_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "sum",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "request_logs_sum_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "var_pop",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "request_logs_var_pop_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "var_samp",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "request_logs_var_samp_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "variance",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "request_logs_variance_fields",
               "ofType": null
             },
             "isDeprecated": false,
@@ -56764,6 +56880,29 @@
           }
         ],
         "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "request_logs_avg_fields",
+        "description": "aggregate avg on columns",
+        "fields": [
+          {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -57148,6 +57287,18 @@
             "deprecationReason": null
           },
           {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "end_time",
             "description": null,
             "args": [],
@@ -57362,6 +57513,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
               "ofType": null
             },
             "isDeprecated": false,
@@ -58034,6 +58197,75 @@
         "possibleTypes": null
       },
       {
+        "kind": "OBJECT",
+        "name": "request_logs_stddev_fields",
+        "description": "aggregate stddev on columns",
+        "fields": [
+          {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "request_logs_stddev_pop_fields",
+        "description": "aggregate stddev_pop on columns",
+        "fields": [
+          {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "request_logs_stddev_samp_fields",
+        "description": "aggregate stddev_samp on columns",
+        "fields": [
+          {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "request_logs_stream_cursor_input",
         "description": "Streaming cursor of the table \"request_logs\"",
@@ -58170,6 +58402,29 @@
         "possibleTypes": null
       },
       {
+        "kind": "OBJECT",
+        "name": "request_logs_sum_fields",
+        "description": "aggregate sum on columns",
+        "fields": [
+          {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "ENUM",
         "name": "request_logs_update_column",
         "description": "update columns of table \"request_logs\"",
@@ -58266,6 +58521,75 @@
           }
         ],
         "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "request_logs_var_pop_fields",
+        "description": "aggregate var_pop on columns",
+        "fields": [
+          {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "request_logs_var_samp_fields",
+        "description": "aggregate var_samp on columns",
+        "fields": [
+          {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "request_logs_variance_fields",
+        "description": "aggregate variance on columns",
+        "fields": [
+          {
+            "name": "duration",
+            "description": "A computed field, executes function \"duration\"",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "float8",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -58872,7 +59196,7 @@
         "enumValues": [
           {
             "name": "sql_credentials_datasource_id_user_id_username_key",
-            "description": "unique or primary key constraint on columns \"datasource_id\", \"username\", \"user_id\"",
+            "description": "unique or primary key constraint on columns \"user_id\", \"username\", \"datasource_id\"",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -69849,7 +70173,7 @@
           },
           {
             "name": "teams_user_id_name_key",
-            "description": "unique or primary key constraint on columns \"name\", \"user_id\"",
+            "description": "unique or primary key constraint on columns \"user_id\", \"name\"",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -76316,7 +76640,11 @@
       {
         "name": "include",
         "description": "whether this query should be included",
-        "locations": ["FIELD", "FRAGMENT_SPREAD", "INLINE_FRAGMENT"],
+        "locations": [
+          "FIELD",
+          "FRAGMENT_SPREAD",
+          "INLINE_FRAGMENT"
+        ],
         "args": [
           {
             "name": "if",
@@ -76337,7 +76665,11 @@
       {
         "name": "skip",
         "description": "whether this query should be skipped",
-        "locations": ["FIELD", "FRAGMENT_SPREAD", "INLINE_FRAGMENT"],
+        "locations": [
+          "FIELD",
+          "FRAGMENT_SPREAD",
+          "INLINE_FRAGMENT"
+        ],
         "args": [
           {
             "name": "if",
@@ -76358,7 +76690,9 @@
       {
         "name": "cached",
         "description": "whether this query should be cached (Hasura Cloud only)",
-        "locations": ["QUERY"],
+        "locations": [
+          "QUERY"
+        ],
         "args": [
           {
             "name": "ttl",

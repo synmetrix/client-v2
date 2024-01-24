@@ -87,6 +87,12 @@ export default defineConfig({
     port: 8000,
     proxy: {
       "/v1/graphql": "http://localhost:8080",
+      "/v1/ws": {
+        target: "ws://localhost:8080",
+        ws: true,
+        changeOrigin: true,
+        rewrite: (p) => p.replace("/ws", "/graphql"),
+      },
       "/auth": "http://localhost:8081",
       "/api/v1": "http://localhost:4000",
     },

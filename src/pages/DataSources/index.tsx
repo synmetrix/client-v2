@@ -252,6 +252,7 @@ const DataSourcesWrapper = () => {
   } = DataSourceStore();
 
   const {
+    loading: sourceLoading,
     dataSources,
     curDataSource,
     onDataModelGenerationSubmit,
@@ -360,7 +361,7 @@ const DataSourcesWrapper = () => {
       defaultOpen={!!editId}
       disableCreate={isMember}
       dataSources={dataSources}
-      loading={loading}
+      loading={loading || sourceLoading}
       onEdit={onEdit}
       onDelete={onDelete}
       onFinish={onFinish}

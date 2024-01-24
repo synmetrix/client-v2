@@ -1173,7 +1173,7 @@ export type Auth_Account_Roles_Bool_Exp = {
 export enum Auth_Account_Roles_Constraint {
   /** unique or primary key constraint on columns "id" */
   AccountRolesPkey = "account_roles_pkey",
-  /** unique or primary key constraint on columns "role", "account_id" */
+  /** unique or primary key constraint on columns "account_id", "role" */
   UserRolesAccountIdRoleKey = "user_roles_account_id_role_key",
 }
 
@@ -2853,6 +2853,8 @@ export type Branches_Bool_Exp = {
 
 /** unique or primary key constraints on table "branches" */
 export enum Branches_Constraint {
+  /** unique or primary key constraint on columns "datasource_id", "name" */
+  BranchesDatasourceIdNameKey = "branches_datasource_id_name_key",
   /** unique or primary key constraint on columns "id" */
   BranchesPkey = "branches_pkey",
 }
@@ -4909,7 +4911,7 @@ export type Member_Roles_Bool_Exp = {
 
 /** unique or primary key constraints on table "member_roles" */
 export enum Member_Roles_Constraint {
-  /** unique or primary key constraint on columns "member_id", "team_role" */
+  /** unique or primary key constraint on columns "team_role", "member_id" */
   MemberRolesMemberIdTeamRoleKey = "member_roles_member_id_team_role_key",
   /** unique or primary key constraint on columns "id" */
   MemberRolesPkey = "member_roles_pkey",
@@ -5169,6 +5171,8 @@ export type Members_Bool_Exp = {
 export enum Members_Constraint {
   /** unique or primary key constraint on columns "id" */
   MembersPkey = "members_pkey",
+  /** unique or primary key constraint on columns "user_id", "team_id" */
+  MembersUserIdTeamIdKey = "members_user_id_team_id_key",
 }
 
 /** input type for inserting data into table "members" */
@@ -8932,8 +8936,8 @@ export type Request_Logs = {
   start_time: Scalars["timestamptz"]["output"];
   updated_at: Scalars["timestamptz"]["output"];
   /** An object relationship */
-  user?: Maybe<Users>;
-  user_id?: Maybe<Scalars["uuid"]["output"]>;
+  user: Users;
+  user_id: Scalars["uuid"]["output"];
 };
 
 /** columns and relationships of "request_logs" */
@@ -8975,9 +8979,17 @@ export type Request_Logs_Aggregate_Bool_Exp_Count = {
 /** aggregate fields of "request_logs" */
 export type Request_Logs_Aggregate_Fields = {
   __typename?: "request_logs_aggregate_fields";
+  avg?: Maybe<Request_Logs_Avg_Fields>;
   count: Scalars["Int"]["output"];
   max?: Maybe<Request_Logs_Max_Fields>;
   min?: Maybe<Request_Logs_Min_Fields>;
+  stddev?: Maybe<Request_Logs_Stddev_Fields>;
+  stddev_pop?: Maybe<Request_Logs_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Request_Logs_Stddev_Samp_Fields>;
+  sum?: Maybe<Request_Logs_Sum_Fields>;
+  var_pop?: Maybe<Request_Logs_Var_Pop_Fields>;
+  var_samp?: Maybe<Request_Logs_Var_Samp_Fields>;
+  variance?: Maybe<Request_Logs_Variance_Fields>;
 };
 
 /** aggregate fields of "request_logs" */
@@ -8998,6 +9010,13 @@ export type Request_Logs_Arr_Rel_Insert_Input = {
   data: Array<Request_Logs_Insert_Input>;
   /** upsert condition */
   on_conflict?: InputMaybe<Request_Logs_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Request_Logs_Avg_Fields = {
+  __typename?: "request_logs_avg_fields";
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
 };
 
 /** Boolean expression to filter rows from the table "request_logs". All fields are combined with a logical 'AND'. */
@@ -9050,6 +9069,8 @@ export type Request_Logs_Max_Fields = {
   __typename?: "request_logs_max_fields";
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
   datasource_id?: Maybe<Scalars["uuid"]["output"]>;
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
   end_time?: Maybe<Scalars["timestamptz"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   path?: Maybe<Scalars["String"]["output"]>;
@@ -9077,6 +9098,8 @@ export type Request_Logs_Min_Fields = {
   __typename?: "request_logs_min_fields";
   created_at?: Maybe<Scalars["timestamptz"]["output"]>;
   datasource_id?: Maybe<Scalars["uuid"]["output"]>;
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
   end_time?: Maybe<Scalars["timestamptz"]["output"]>;
   id?: Maybe<Scalars["uuid"]["output"]>;
   path?: Maybe<Scalars["String"]["output"]>;
@@ -9179,6 +9202,27 @@ export type Request_Logs_Set_Input = {
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
 };
 
+/** aggregate stddev on columns */
+export type Request_Logs_Stddev_Fields = {
+  __typename?: "request_logs_stddev_fields";
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Request_Logs_Stddev_Pop_Fields = {
+  __typename?: "request_logs_stddev_pop_fields";
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Request_Logs_Stddev_Samp_Fields = {
+  __typename?: "request_logs_stddev_samp_fields";
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
+};
+
 /** Streaming cursor of the table "request_logs" */
 export type Request_Logs_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -9198,6 +9242,13 @@ export type Request_Logs_Stream_Cursor_Value_Input = {
   start_time?: InputMaybe<Scalars["timestamptz"]["input"]>;
   updated_at?: InputMaybe<Scalars["timestamptz"]["input"]>;
   user_id?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** aggregate sum on columns */
+export type Request_Logs_Sum_Fields = {
+  __typename?: "request_logs_sum_fields";
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
 };
 
 /** update columns of table "request_logs" */
@@ -9227,6 +9278,27 @@ export type Request_Logs_Updates = {
   _set?: InputMaybe<Request_Logs_Set_Input>;
   /** filter the rows which have to be updated */
   where: Request_Logs_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Request_Logs_Var_Pop_Fields = {
+  __typename?: "request_logs_var_pop_fields";
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
+};
+
+/** aggregate var_samp on columns */
+export type Request_Logs_Var_Samp_Fields = {
+  __typename?: "request_logs_var_samp_fields";
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
+};
+
+/** aggregate variance on columns */
+export type Request_Logs_Variance_Fields = {
+  __typename?: "request_logs_variance_fields";
+  /** A computed field, executes function "duration" */
+  duration?: Maybe<Scalars["float8"]["output"]>;
 };
 
 /** columns and relationships of "sql_credentials" */
@@ -9309,7 +9381,7 @@ export type Sql_Credentials_Bool_Exp = {
 
 /** unique or primary key constraints on table "sql_credentials" */
 export enum Sql_Credentials_Constraint {
-  /** unique or primary key constraint on columns "datasource_id", "username", "user_id" */
+  /** unique or primary key constraint on columns "user_id", "username", "datasource_id" */
   SqlCredentialsDatasourceIdUserIdUsernameKey = "sql_credentials_datasource_id_user_id_username_key",
   /** unique or primary key constraint on columns "id" */
   SqlCredentialsPkey = "sql_credentials_pkey",
@@ -10798,7 +10870,7 @@ export type Teams_Bool_Exp = {
 export enum Teams_Constraint {
   /** unique or primary key constraint on columns "id" */
   TeamsPkey = "teams_pkey",
-  /** unique or primary key constraint on columns "name", "user_id" */
+  /** unique or primary key constraint on columns "user_id", "name" */
   TeamsUserIdNameKey = "teams_user_id_name_key",
 }
 
@@ -12622,7 +12694,7 @@ export type DefaultFieldsFragment = {
   start_time: any;
   duration?: any | null;
   path?: string | null;
-  user_id?: any | null;
+  user_id: any;
   datasource_id: any;
 };
 
@@ -12642,7 +12714,7 @@ export type CurrentLogQuery = {
     start_time: any;
     duration?: any | null;
     path?: string | null;
-    user_id?: any | null;
+    user_id: any;
     datasource_id: any;
     request_event_logs: Array<{
       __typename?: "request_event_logs";
@@ -12678,7 +12750,7 @@ export type AllLogsQuery = {
     start_time: any;
     duration?: any | null;
     path?: string | null;
-    user_id?: any | null;
+    user_id: any;
     datasource_id: any;
     request_event_logs_aggregate: {
       __typename?: "request_event_logs_aggregate";

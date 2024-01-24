@@ -129,6 +129,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
                       <Button
                         size="small"
                         type="text"
+                        disabled={isDefault}
                         className={styles.button}
                       >
                         <TrashColoredIcon />

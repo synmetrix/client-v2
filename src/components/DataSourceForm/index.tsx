@@ -51,28 +51,27 @@ const DataSourceForm: FC<DataSourceFormProps> = ({
       }}
       bordered={bordered}
     >
-      <Spin spinning={loading}>
-        {onChangeStep && (
-          <div className={styles.header}>
-            <StepFormHeader
-              currentStep={step}
-              steps={[t("step1"), t("step2"), t("step3"), t("step4")]}
-              onChange={onChangeStep}
-            />
-          </div>
-        )}
-        <Suspense fallback={<BouncingDotsLoader />}>
-          <DataSourceFormBody
-            onSkip={onSkip}
-            onFinish={onFinish}
-            onChangeStep={onChangeStep}
-            onDataSourceSelect={onDataSourceSelect}
-            onTestConnection={onTestConnection}
-            onDataSourceSetupSubmit={onDataSourceSetupSubmit}
-            onDataModelGenerationSubmit={onDataModelGenerationSubmit}
+      {onChangeStep && (
+        <div className={styles.header}>
+          <StepFormHeader
+            currentStep={step}
+            steps={[t("step1"), t("step2"), t("step3"), t("step4")]}
+            onChange={onChangeStep}
           />
-        </Suspense>
-      </Spin>
+        </div>
+      )}
+      <Suspense fallback={<BouncingDotsLoader />}>
+        <DataSourceFormBody
+          loading={loading}
+          onSkip={onSkip}
+          onFinish={onFinish}
+          onChangeStep={onChangeStep}
+          onDataSourceSelect={onDataSourceSelect}
+          onTestConnection={onTestConnection}
+          onDataSourceSetupSubmit={onDataSourceSetupSubmit}
+          onDataModelGenerationSubmit={onDataModelGenerationSubmit}
+        />
+      </Suspense>
     </Card>
   );
 };

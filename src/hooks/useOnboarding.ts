@@ -323,21 +323,12 @@ export default ({ editId }: Props) => {
     }
   }, [clean, step]);
 
-  const loading = useMemo(
-    () =>
-      createMutation.fetching ||
-      checkConnectionMutation.fetching ||
-      updateMutation.fetching ||
-      genSchemaMutation.fetching ||
-      fetchTablesQuery.fetching,
-    [
-      createMutation.fetching,
-      updateMutation.fetching,
-      checkConnectionMutation.fetching,
-      genSchemaMutation.fetching,
-      fetchTablesQuery.fetching,
-    ]
-  );
+  const loading =
+    createMutation.fetching ||
+    checkConnectionMutation.fetching ||
+    updateMutation.fetching ||
+    genSchemaMutation.fetching ||
+    fetchTablesQuery.fetching;
 
   return {
     loading,

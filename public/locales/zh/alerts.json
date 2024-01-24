@@ -1,0 +1,36 @@
+{
+  "new_alert": "新警报",
+  "edit_alert": "编辑警报",
+  "preview": "预览",
+  "set_metrics_boundaries": "设置指标边界",
+  "delivery_settings": "投递设置",
+  "trigger_settings": "触发器设置",
+  "schedule": "计划",
+  "build_cron_expression": "构建 cron 表达式",
+  "advanced_settings": "高级设置",
+  "summary": "摘要",
+  "at": "在",
+  "on_day-of-month": "在月的某一天",
+  "via": "通过",
+  "schedule_not_set": "未设置计划",
+  "form": {
+    "alert_name": "警报名称:",
+    "type": "类型:",
+    "request_timeout": "请求超时（分钟）:",
+    "timeout_on_fire": "触发后超时（分钟）:"
+  },
+  "title": "列出并管理您的警报",
+  "title_mobile": "管理警报",
+  "action": "如何创建警报？",
+  "action_mobile": "如何创建？",
+  "not_found": {
+    "wrong_id": "未找到警报",
+    "title": "未找到警报",
+    "text": "当前没有可显示的警报",
+    "explore_btn": "探索"
+  },
+  "alert_created": "警报已创建",
+  "alert_updated": "警报已更新",
+  "alert_deleted": "警报已删除",
+  "test_alert_sent": "测试警报已发送"
+}

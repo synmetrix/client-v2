@@ -1,0 +1,53 @@
+{
+  "event_time": "事件时间",
+  "trigger_name": "触发器名称",
+  "status": "状态",
+  "alert_type": "警报类型",
+  "message": "消息",
+  "alerts": {
+    "title": "跟踪系统警报和通知的历史记录",
+    "action": "什么是警报日志？"
+  },
+  "reports": {
+    "title": "跟踪生成的报告及其更改的历史记录",
+    "action": "什么是报告日志？"
+  },
+  "query": {
+    "title": "从记录的搜索查询中获取洞察",
+    "action": "什么是查询日志？",
+    "request": "请求",
+    "filter": {
+      "data_source": "按数据源：",
+      "from": "从：",
+      "to": "到：",
+      "sort": "按持续时间排序：",
+      "select": "选择"
+    },
+    "table": {
+      "data_source": "数据源",
+      "path": "路径",
+      "events": "事件",
+      "event": "事件",
+      "creator": "创建者",
+      "duration": "持续时间",
+      "start_time": "开始时间",
+      "created_at": "创建时间",
+      "ms": "毫秒",
+      "time_in_queue": "排队时间（毫秒）",
+      "timestamp": "时间戳"
+    },
+    "info": {
+      "request_id": "请求ID",
+      "start_time": "开始时间",
+      "path": "路径",
+      "end_time": "结束时间",
+      "duration": "持续时间",
+      "query_key_md5": "查询密钥md5"
+    },
+    "details": {
+      "query_key": "查询键",
+      "sql": "SQL",
+      "query": "查询"
+    }
+  }
+}

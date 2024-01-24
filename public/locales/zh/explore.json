@@ -1,0 +1,40 @@
+{
+  "data_section": {
+    "create_alert": "添加警报",
+    "how_to_create_alert": "如何创建警报？",
+    "create_report": "添加报告",
+    "how_to_create_report": "如何创建报告？",
+    "query": "查询",
+    "row_limit": "行限制",
+    "additional_offset": "附加偏移",
+    "settings": "设置",
+    "hide_cube_names": "隐藏立方体名称",
+    "hide_index_column": "隐藏索引列",
+    "epty_desc": "从左侧菜单选择维度和度量，然后运行查询",
+    "limit_error_1": "您达到了限制。您的数据集超过了",
+    "limit_error_2": "行。请尝试调整您的查询",
+    "skipped": "已跳过",
+    "shown": "已显示",
+    "offset": "偏移",
+    "columns": "列",
+    "data": "数据",
+    "sql": "生成的 SQL",
+    "rest_api": "REST API",
+    "run_query": "运行查询",
+    "export": "导出",
+    "new": "新建",
+    "results": "结果",
+    "empty_desc": "从左侧菜单选择维度和度量，然后运行查询"
+  },
+  "filters": {
+    "filter_name": "过滤器名称"
+  },
+  "errors": {
+    "exploration_not_found": "探索未找到",
+    "data_source_not_found": "数据源未找到"
+  },
+  "no_query": {
+    "header": "选择模型、维度、度量",
+    "text": "然后运行查询"
+  }
+}

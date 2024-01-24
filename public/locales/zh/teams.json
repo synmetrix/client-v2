@@ -1,0 +1,13 @@
+{
+  "manage_teams": "管理团队",
+  "create_team": "创建团队",
+  "not_found": {
+    "title": "您还没有团队",
+    "text": "请创建团队以管理角色",
+    "btn": "创建新团队"
+  },
+  "team_created": "团队已创建",
+  "team_updated": "团队已更新",
+  "team_deleted": "团队已删除",
+  "team_name_error": "团队名称已被使用"
+}

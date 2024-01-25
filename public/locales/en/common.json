@@ -192,6 +192,7 @@
     "models": "Models",
     "signals": "Signals",
     "logs": "Logs",
-    "settings": "Settings"
+    "settings": "Settings",
+    "alerts": "Alerts"
   }
 }

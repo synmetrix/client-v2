@@ -78,13 +78,13 @@ const SettingsLayout: React.FC<SidebarLayoutProps> = ({
       key: "alerts",
       icon: <AlertsIcon />,
       href: "/signals/alerts",
-      label: "Alerts",
+      label: t("common:words.alerts"),
     },
     {
       key: "reports",
       icon: <ReportsIcon />,
       href: "/signals/reports",
-      label: "Reports",
+      label: t("common:words.reports"),
     },
   ];
 

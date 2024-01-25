@@ -192,6 +192,8 @@
     "models": "模型",
     "signals": "信号",
     "logs": "日志",
-    "settings": "设置"
+    "settings": "设置",
+    "alerts": "警报",
+    "reports": "报告"
   }
 }

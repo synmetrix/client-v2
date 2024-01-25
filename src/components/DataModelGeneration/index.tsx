@@ -186,6 +186,7 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                   type="primary"
                   size="large"
                   htmlType="submit"
+                  loading={loading}
                   form="data-model-generation"
                   onClick={handleSubmit((data) =>
                     onFormSubmit(data, data.type)

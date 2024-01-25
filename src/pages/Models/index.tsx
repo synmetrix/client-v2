@@ -772,7 +772,7 @@ const ModelsWrapper: React.FC = () => {
       label: t("ide_menu.generate_schema"),
       onClick: () =>
         setLocation(
-          `${basePath}/${curSource?.id}/${currentBranch.id}/genmodels`
+          `${basePath}/${curSource?.id}/${currentBranch?.id}/genmodels`
         ),
     },
     {
@@ -828,7 +828,7 @@ const ModelsWrapper: React.FC = () => {
       isConsoleOpen={isConsoleOpen}
       toggleConsole={() => toggleConsole(false)}
       tablesSchema={tablesSchema}
-      schemaFetching={tablesData?.fetching}
+      schemaFetching={tablesData?.fetching || genSchemaMutation?.fetching}
       onModalClose={() => onModalClose(true)}
       onGenSubmit={onGenSubmit}
       onSaveVersion={createNewVersion}

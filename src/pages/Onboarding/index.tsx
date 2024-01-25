@@ -77,7 +77,6 @@ const Onboarding: React.FC<OnboardingProps> = ({
 const OnboardingWrapper = () => {
   const { step: pageStep } = useParams();
   const [, setLocation] = useLocation();
-  const { loading } = CurrentUserStore();
   const basePath = ONBOARDING;
 
   const step = useMemo(() => parseInt(pageStep || "0", 10) - 1, [pageStep]);
@@ -91,7 +90,7 @@ const OnboardingWrapper = () => {
     clean,
   } = DataSourceStore();
 
-  const { onDataModelGenerationSubmit, onDataSourceSetupSubmit } =
+  const { loading, onDataSourceSetupSubmit, onDataModelGenerationSubmit } =
     useOnboarding({});
 
   const onFinish = () => {

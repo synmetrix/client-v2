@@ -43,7 +43,7 @@ const SideMenu: FC<SideMenuProps> = () => {
     (item: SidebarItem) => {
       let newHref = item.href;
 
-      if (curSource?.id) {
+      if (curSource?.id && currentBranch?.id) {
         switch (item.key) {
           case "explore":
             newHref += `/${curSource.id}?branchId=${currentBranch.id}`;

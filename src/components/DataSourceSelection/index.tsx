@@ -84,21 +84,7 @@ const DataSourceSelection: FC<DataSourceSelectionProps> = ({
         </Row>
       </div>
 
-      <Row align="middle" justify="space-between">
-        <Col xs={24} md={18}>
-          <Button
-            className={cn(styles.submit, {
-              [styles.fullwidth]: isMobile,
-            })}
-            type="primary"
-            size="large"
-            htmlType="submit"
-            onClick={() => initialValue && onSubmit?.(initialValue)}
-          >
-            {t("common:words.next")}
-          </Button>
-        </Col>
-
+      <Row align="middle" justify="end">
         {!!onSkip && (
           <Col
             xs={24}

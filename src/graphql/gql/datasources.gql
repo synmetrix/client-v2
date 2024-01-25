@@ -5,6 +5,9 @@ mutation CreateDataSource($object: datasources_insert_input!) {
     branches {
       id
     }
+    sql_credentials {
+      id
+    }
   }
 }
 
@@ -117,6 +120,9 @@ mutation UpdateDataSource(
 ) {
   update_datasources_by_pk(pk_columns: $pk_columns, _set: $_set) {
     id
+    branches (where: { status: { _eq: active }}) {
+      id
+    }
   }
 }
 

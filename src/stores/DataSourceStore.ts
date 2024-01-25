@@ -17,6 +17,7 @@ export interface FormState {
 
 export interface DataSourceData {
   step: number;
+  branchId: string | undefined;
   isGenerate: boolean;
   isOnboarding: boolean;
   formState: FormState;
@@ -28,7 +29,7 @@ export interface DataSourceState extends DataSourceData {
   nextStep: () => void;
   setSchema: (schema: Schema) => void;
   setEditId: (id: string) => void;
-  setFormStateData: (step: number, data: any) => void;
+  setFormStateData: (step: number, data: any, stateData?: any) => void;
   setIsGenerate: (value: boolean) => void;
   setIsOnboarding: (value: boolean) => void;
   clean: () => void;
@@ -43,6 +44,7 @@ export const defaultFormState = {
 
 const defaultState = {
   step: 0,
+  branchId: undefined,
   isOnboarding: false,
   isGenerate: false,
   formState: defaultFormState,
@@ -55,7 +57,7 @@ const dataSourceStore = create<DataSourceState>((set) => ({
     set((prev) => ({ ...prev, isGenerate: value })),
   setSchema: (schema: Schema) => set((prev) => ({ ...prev, schema })),
   setEditId: (id: string) => set((prev) => ({ ...prev, id })),
-  setFormStateData: (step: number, data: any) =>
+  setFormStateData: (step: number, data: any, stateData?: any) =>
     set((prev) => {
       const formStep = `step${step}` as string;
 
@@ -65,6 +67,7 @@ const dataSourceStore = create<DataSourceState>((set) => ({
           ...prev.formState,
           [formStep]: data,
         },
+        ...stateData,
       } as Partial<DataSourceState>;
     }),
   setStep: (step: number) => set((prev) => ({ ...prev, step })),

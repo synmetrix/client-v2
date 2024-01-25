@@ -18,6 +18,7 @@ import type { FC } from "react";
 interface DataSourceFormBodyProps {
   activeStep?: number;
   formState?: FormState;
+  loading?: boolean;
   onSkip?: () => void;
   onChangeStep?: (value: number) => void;
   onFinish: () => void;
@@ -30,6 +31,7 @@ interface DataSourceFormBodyProps {
 const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
   activeStep,
   formState,
+  loading = false,
   onSkip,
   onChangeStep,
   onFinish = () => {},
@@ -89,6 +91,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
                 ) ?? "default"
               ]
             }
+            loading={loading}
             isOnboarding={isOnboarding}
             initialValue={initialValue}
             onSubmit={onDataSourceSetup}
@@ -111,7 +114,7 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
           onSubmit={onDataModelGeneration}
           onGoBack={onGoBack}
           onSkip={onSkip || onGoForward}
-          loading={false}
+          loading={loading}
           initialValue={formState?.step2 || formData?.step2 || {}}
         />
       );

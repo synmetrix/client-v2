@@ -48,36 +48,30 @@ const ExploreSettingsForm: FC<ExploreSettingsFormProps> = ({
     <Form
       id="explore-settings-form"
       layout="vertical"
-      style={{ width: isMobile ? "auto" : 280 }}
+      style={{ width: isMobile ? "auto" : 306, display: "flex", gap: 8 }}
     >
-      <Row justify={"space-between"} align={"middle"} gutter={[8, 8]}>
-        <Col xs={isMobile ? 12 : 15}>
-          <Input
-            className={cn(s.input, s.limit, isMobile && s.mobileInput)}
-            rules={{ required: true }}
-            name="limit"
-            fieldType="number"
-            size="middle"
-            min={1}
-            addonAfter={null}
-            max={MAX_ROWS_LIMIT}
-            control={control}
-            addonBefore={t("data_section.row_limit")}
-          />
-        </Col>
-        <Col xs={isMobile ? 12 : 9}>
-          <Input
-            className={cn(s.input, s.offset, isMobile && s.mobileInput)}
-            rules={{ required: true }}
-            name="offset"
-            fieldType="number"
-            size="middle"
-            min={0}
-            control={control}
-            addonBefore={t("data_section.offset")}
-          />
-        </Col>
-      </Row>
+      <Input
+        className={cn(s.input, s.limit, isMobile && s.mobileInput)}
+        rules={{ required: true }}
+        name="limit"
+        fieldType="number"
+        size="middle"
+        min={1}
+        addonAfter={null}
+        max={MAX_ROWS_LIMIT}
+        control={control}
+        addonBefore={t("data_section.row_limit")}
+      />
+      <Input
+        className={cn(s.input, s.offset, isMobile && s.mobileInput)}
+        rules={{ required: true }}
+        name="offset"
+        fieldType="number"
+        size="middle"
+        min={0}
+        control={control}
+        addonBefore={t("data_section.offset")}
+      />
     </Form>
   );
 };

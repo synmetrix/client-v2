@@ -41,7 +41,7 @@
 .btn {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  // align-items: center;
   justify-content: center;
 
   width: 72px;
@@ -87,8 +87,16 @@
 }
 
 .label {
+  display: block;
+  overflow: hidden;
   font-weight: 600 !important;
   font-size: 12px !important;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.icon {
+  height: 28px;
 }
 
 .active {

@@ -179,7 +179,7 @@ const SideMenu: FC<SideMenuProps> = () => {
               href={item.href}
               key={item.key}
             >
-              {item.icon}
+              <div className={styles.icon}>{item.icon}</div>
               <span className={styles.label}>{item.label}</span>
             </Button>
           );

@@ -76,7 +76,7 @@ export const Explore = ({
   onSelectDataSource = () => {},
   onChangeBranch = () => {},
 }: ExploreProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("pages");
   const { modalType } = params;
 
   const header = useMemo(
@@ -112,7 +112,7 @@ export const Explore = ({
     <>
       <ExploreWorkspace
         header={header}
-        subTitle={t("pages:explore")}
+        subTitle={t("explore")}
         icon={<ExploreIcon />}
         rawSql={rawSql}
         explorationData={explorationData}

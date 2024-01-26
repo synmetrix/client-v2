@@ -193,10 +193,10 @@ const ExploreWorkspace: FC<ExploreWorkspaceProps> = (props) => {
 
   return (
     <Layout
-      title={dataSource?.name || t("explore")}
+      title={dataSource?.name || subTitle}
       icon={icon}
       divider
-      subTitle={t("explore")}
+      subTitle={subTitle}
       items={sidebar}
       burgerTitle={subTitle as any}
     >

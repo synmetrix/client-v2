@@ -1,0 +1,9 @@
+{
+  "title": "设置 SQL API",
+  "text": "您可以使用下面指定的详细信息连接任何 BI 工具或其他兼容 SQL 的软件",
+  "sql_credentials_created": "SQL 凭据已创建",
+  "sql_credentials_updated": "SQL 凭据已更新",
+  "sql_credentials_deleted": "SQL 凭据已删除",
+  "uniq_violation": "用户名已被使用",
+  "not_found": "未找到凭据"
+}

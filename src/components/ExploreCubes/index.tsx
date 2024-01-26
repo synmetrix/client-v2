@@ -182,21 +182,21 @@ const ExploreCubes: FC<ExploreCubesProps> = ({
           className={styles.buttonGroup}
         >
           <Radio.Button className={styles.radioButton} type="text" value="all">
-            {t("All")}
+            {t("common:words.all")}
           </Radio.Button>
           <Radio.Button
             className={styles.radioButton}
             type="text"
             value="dimensions"
           >
-            {t("Dimensions")}
+            {t("common:words.dimensions")}
           </Radio.Button>
           <Radio.Button
             className={styles.radioButton}
             type="text"
             value="measures"
           >
-            {t("Measures")}
+            {t("common:words.measures")}
           </Radio.Button>
         </Radio.Group>
       </div>

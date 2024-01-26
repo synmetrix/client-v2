@@ -1,0 +1,18 @@
+{
+  "roles": "角色和访问",
+  "sources": "数据源",
+  "members": "成员",
+  "info": "个人信息",
+  "sql-api": "SQL API",
+  "alerts": "警报",
+  "reports": "报告",
+  "teams": "团队",
+  "logs": {
+    "alerts": "警报日志",
+    "reports": "报告日志",
+    "query": "查询日志"
+  },
+  "models": "模型",
+  "explore": "探索",
+  "signals": "信号"
+}

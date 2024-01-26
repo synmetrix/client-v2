@@ -1,0 +1,15 @@
+{
+  "step1": "连接数据源",
+  "step2": "数据源设置",
+  "step3": "生成数据模型文件",
+  "step4": "SQL API",
+  "connection_ok": "连接正常",
+  "connection_error": "连接错误",
+  "datasource_created": "数据源已创建",
+  "datasource_updated": "数据源已更新",
+  "datasource_deleted": "数据源已删除",
+  "datasource_update_error": "数据源更新错误",
+  "schema_generated": "架构成功生成",
+  "no_schema": "未生成架构",
+  "no_branch": "未找到数据源的分支"
+}

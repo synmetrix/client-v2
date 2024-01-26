@@ -1,4 +1,4 @@
-import { Col, Form, Row } from "antd";
+import { Form, Row, Col } from "antd";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import cn from "classnames";

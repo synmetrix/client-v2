@@ -1,0 +1,32 @@
+{
+  "new_report": "新建报告",
+  "edit_report": "编辑报告",
+  "preview": "预览",
+  "delivery_settings": "交付设置",
+  "trigger_settings": "触发器设置",
+  "schedule": "时间表",
+  "build_cron_expression": "生成 Cron 表达式",
+  "advanced_settings": "高级设置",
+  "summary": "摘要",
+  "at": "在",
+  "on_day-of-month": "在月的某一天",
+  "schedule_not_set": "未设置时间表",
+  "via": "通过",
+  "not_found": "未找到报告",
+  "title": "列出和管理您的报告",
+  "title_mobile": "管理报告",
+  "action": "如何创建报告？",
+  "action_mobile": "如何创建？",
+  "form": {
+    "report_name": "报告名称：",
+    "type": "类型："
+  },
+  "report_created": "报告已创建",
+  "report_updated": "报告已更新",
+  "report_deleted": "报告已删除",
+  "test_report_sent": "测试报告已发送",
+  "not": {
+    "title": "未找到报告",
+    "text": "当前没有要显示的警报。"
+  }
+}

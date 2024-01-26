@@ -106,7 +106,10 @@
     "versions": "Versions",
     "version": "Version",
     "default": "default",
-    "find": "Find"
+    "find": "Find",
+    "edit_teams": "Edit teams",
+    "roles_and_access": "Roles and access",
+    "sql_api": "SQL API"
   },
   "form": {
     "labels": {
@@ -183,5 +186,13 @@
     "does not contain": "does not contain",
     "equals": "equals",
     "does not equals": "does not equals"
+  },
+  "sidemenu": {
+    "explore": "Explore",
+    "models": "Models",
+    "signals": "Signals",
+    "logs": "Logs",
+    "settings": "Settings",
+    "alerts": "Alerts"
   }
 }

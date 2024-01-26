@@ -1,15 +1,30 @@
 import { useResponsive } from "ahooks";
 import useLocalStorageState from "use-local-storage-state";
 import { Space, Tooltip } from "antd";
+import { useTranslation } from "react-i18next";
 import cn from "classnames";
 
 import Button from "@/components/Button";
-import { items } from "@/mocks/sideMenu";
 import type { SidebarItem } from "@/mocks/sideMenu";
 import useLocation from "@/hooks/useLocation";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import { getSourceAndBranch } from "@/pages/Explore";
 import { Roles } from "@/types/team";
+import {
+  ALERTS,
+  EXPLORE,
+  MODELS,
+  QUERY_LOGS,
+  SOURCES,
+} from "@/utils/constants/paths";
+
+import ExploreIcon from "@/assets/explore.svg";
+import ModelsIcon from "@/assets/models.svg";
+import AlertsIcon from "@/assets/alerts.svg";
+import LogsIcon from "@/assets/logs.svg";
+import SettingsIcon from "@/assets/settings.svg";
+import SettingsActiveIcon from "@/assets/settings-active.svg";
+import LogsActiveIcon from "@/assets/logs-active.svg";
 
 import styles from "./index.module.less";
 
@@ -19,6 +34,7 @@ import type { ButtonProps } from "antd";
 interface SideMenuProps {}
 
 const SideMenu: FC<SideMenuProps> = () => {
+  const { t } = useTranslation(["common"]);
   const [location, setLocation] = useLocation();
   const { currentTeam, teamData } = CurrentUserStore();
 
@@ -78,7 +94,48 @@ const SideMenu: FC<SideMenuProps> = () => {
     [setLocation]
   );
 
-  const updatedItems = useMemo(() => items.map(updateHref), [updateHref]);
+  const items: SidebarItem[] = useMemo(
+    () => [
+      {
+        key: "explore",
+        label: t("common:sidemenu.explore"),
+        href: EXPLORE,
+        icon: <ExploreIcon />,
+      },
+      {
+        key: "models",
+        label: t("common:sidemenu.models"),
+        href: MODELS,
+        icon: <ModelsIcon />,
+      },
+      {
+        key: "signals",
+        label: t("common:sidemenu.signals"),
+        href: ALERTS,
+        icon: <AlertsIcon />,
+      },
+      {
+        key: "logs",
+        label: t("common:sidemenu.logs"),
+        href: QUERY_LOGS,
+        icon: <LogsIcon />,
+        activeIcon: <LogsActiveIcon />,
+      },
+      {
+        key: "settings",
+        label: t("common:sidemenu.settings"),
+        href: SOURCES,
+        icon: <SettingsIcon />,
+        activeIcon: <SettingsActiveIcon />,
+      },
+    ],
+    [t]
+  );
+
+  const updatedItems = useMemo(
+    () => items.map(updateHref),
+    [items, updateHref]
+  );
   const buttons = useMemo(
     () =>
       updatedItems
@@ -121,8 +178,9 @@ const SideMenu: FC<SideMenuProps> = () => {
               {...buttonProps}
               href={item.href}
               key={item.key}
+              title={item.label}
             >
-              {item.icon}
+              <div className={styles.icon}>{item.icon}</div>
               <span className={styles.label}>{item.label}</span>
             </Button>
           );

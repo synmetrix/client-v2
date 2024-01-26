@@ -229,7 +229,7 @@ const Cube = ({
 
     return (
       <div key={category} className={s.categorySection}>
-        <Text className={s.categoryTitle}>{t(category)}</Text>
+        <Text className={s.categoryTitle}>{t(`common:words.${category}`)}</Text>
         <div className={s.freeMembers}>
           {freeMembers.map((member, index) =>
             getItem(

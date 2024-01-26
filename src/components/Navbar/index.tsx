@@ -3,6 +3,7 @@ import { Dropdown, Button, Space, Tag } from "antd";
 import cn from "classnames";
 
 import Avatar from "@/components/Avatar";
+import LanguageToggler from "@/components/LanguageToggler";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { Team } from "@/types/team";
 import useLocation from "@/hooks/useLocation";
@@ -84,7 +85,7 @@ const Navbar: FC<NavbarProps> = ({
 
   teamsMenu.push({
     key: "/settings/teams",
-    label: "Edit teams",
+    label: t("common:words.edit_teams"),
     onClick: () => onClick("/settings/teams"),
   });
 
@@ -165,6 +166,7 @@ const Navbar: FC<NavbarProps> = ({
           </Button>
         </Dropdown>
       )}
+      {type === "inline" && <LanguageToggler />}
       {account}
     </Space>
   );

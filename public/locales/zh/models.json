@@ -1,0 +1,38 @@
+{
+  "sidebar": {
+    "open_docs": "打开文档",
+    "version": "版本",
+    "set_default": "设为默认"
+  },
+  "versions_list": "版本列表",
+  "alerts": {
+    "no_changes": "没有更改。",
+    "branch_removed": "分支已移除",
+    "branch": "分支",
+    "is_now_default": "现在是默认的",
+    "version_created": "版本已创建",
+    "branch_created": "分支已创建",
+    "schema_generated": "模型已生成",
+    "wrong_archive": "错误的存档",
+    "bad_archive": "无效的存档",
+    "format_is_unsupported": "不支持的格式",
+    "checksum_of_file": "文件的校验和",
+    "do_not_match": "不匹配。已跳过",
+    "deleting_a_file": "正在删除文件",
+    "file_change": "文件更改",
+    "compilation_error": "编译错误",
+    "compilation_success": "编译成功"
+  },
+  "sure_delete": "您确定要删除此数据模式吗？",
+  "ide_menu": {
+    "import_models": "导入数据模型",
+    "export_models": "导出数据模型",
+    "generate_schema": "生成模型"
+  },
+  "branch_menu": {
+    "show_versions": "显示版本",
+    "remove_branch": "删除分支"
+  },
+  "last_modify": "上次修改",
+  "no_model": "选择要编辑的模型"
+}

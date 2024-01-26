@@ -48,9 +48,9 @@ describe("Explore", () => {
     onCreateReport: vi.fn(),
   };
 
-  test("renders ExploreWorkspace", () => {
+  test("renders Explore", () => {
     const { getByText } = render(<Explore {...defaultProps} />);
-    expect(getByText("Explore")).toBeInTheDocument();
+    expect(getByText("explore")).toBeInTheDocument();
   });
 
   test('does not render AlertModal when modalType is not "alert"', () => {

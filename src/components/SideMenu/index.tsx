@@ -178,6 +178,7 @@ const SideMenu: FC<SideMenuProps> = () => {
               {...buttonProps}
               href={item.href}
               key={item.key}
+              title={item.label}
             >
               <div className={styles.icon}>{item.icon}</div>
               <span className={styles.label}>{item.label}</span>

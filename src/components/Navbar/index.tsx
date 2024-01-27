@@ -60,7 +60,11 @@ const Navbar: FC<NavbarProps> = ({
   };
 
   const docs = (
-    <Button className={styles.docs} href="/">
+    <Button
+      className={styles.docs}
+      href="https://docs.synmetrix.org"
+      target="_blank"
+    >
       <Space size={10} align="start">
         <span className={styles.docsIcon}>
           <DocsIcon />

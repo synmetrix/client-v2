@@ -105,10 +105,18 @@ const ApiSetup: FC<ApiSetupProps> = ({
       user = initialValue?.db_username,
       password = initialValue?.password,
       database = initialValue?.db,
-    }) => `${connection}  --host=${host}
-    - -user=${user}
-    - -password=${"*".repeat(password?.length || 0)}
-    - -database=${database}`,
+    }) => {
+      const [hostname, port] = host.split(":");
+
+      const portOption = port ? `-P ${port}` : "";
+      const psqlPortOption = port ? `--port=${port}` : "";
+
+      if (connection === "mysql") {
+        return `mysql -u ${user} -p -h ${hostname} ${portOption} -D ${database}`;
+      }
+
+      return `psql --host=${hostname} ${psqlPortOption} --username=${user} --dbname=${database}`;
+    },
     [initialValue?.password, initialValue?.db_username, initialValue?.db]
   );
 

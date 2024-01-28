@@ -302,8 +302,8 @@ const SqlApiWrapper = () => {
       if (curCredentials) {
         return prepareInitValues(
           curCredentials.dataSourceData.id,
-          curCredentials.dataSourceData.name,
           curCredentials.member.userId,
+          curCredentials.dataSourceData.name,
           curCredentials.login
         );
       } else {
@@ -313,8 +313,8 @@ const SqlApiWrapper = () => {
 
     return prepareInitValues(
       dataSources?.[0]?.id,
-      dataSources?.[0]?.name,
-      teamData?.members?.[0]?.user_id as string
+      teamData?.members?.[0]?.user_id as string,
+      dataSources?.[0]?.name
     );
   }, [credentials, isNew, editId, teamData?.members, dataSources, t]);
 

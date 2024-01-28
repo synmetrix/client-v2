@@ -8,6 +8,7 @@
     "how_to_create_reports": "How to create Reports?",
     "in_utc_timezone": "In UTC timezone",
     "delete_datasource": "Delete Data Source",
+    "delete_sqlapi": "Delete SQL API",
     "delete_alert": "Delete Alert",
     "delete_report": "Delete Report",
     "delete_role": "Delete Role",

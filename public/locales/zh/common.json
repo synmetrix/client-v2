@@ -8,6 +8,7 @@
     "how_to_create_reports": "如何创建报告？",
     "in_utc_timezone": "在UTC时区",
     "delete_datasource": "删除数据源",
+    "delete_sqlapi": "删除 SQL API",
     "delete_alert": "删除警报",
     "delete_report": "删除报告",
     "delete_role": "删除角色",

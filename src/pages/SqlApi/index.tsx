@@ -88,7 +88,7 @@ export const SqlApi = ({
                   key: "delete",
                   label: (
                     <ConfirmModal
-                      title={t("common:words.delete_datasource")}
+                      title={t("common:words.delete_sqlapi")}
                       onConfirm={() => credential.id && onRemove(credential.id)}
                     >
                       {t("common:words.delete")}

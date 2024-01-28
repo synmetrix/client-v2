@@ -8,6 +8,7 @@
     "how_to_create_reports": "Как создать отчеты?",
     "in_utc_timezone": "В часовом поясе UTC",
     "delete_datasource": "Удалить источник данных",
+    "delete_sqlapi": "Удалить SQL API",
     "delete_alert": "Удалить оповещение",
     "delete_report": "Удалить отчет",
     "delete_role": "Удалить роль",

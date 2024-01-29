@@ -100,13 +100,17 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   useTrackedEffect(
     (changes, previousDeps, currentDeps) => {
-      if (!equals(previousDeps?.[0], currentDeps?.[0]) && active) {
+      const isSchemasChanged = !equals(previousDeps?.[0], currentDeps?.[0]);
+      const isTabChanges = previousDeps?.[1] !== currentDeps?.[1];
+
+      if (active && (isSchemasChanged || isTabChanges)) {
         const code = files?.[active]?.code ?? "";
         setContent(code);
       }
     },
-    [schemas]
+    [schemas, active]
   );
+
   const language = active
     ? languages[active.split(".")[0] as keyof typeof languages]
     : "sql";

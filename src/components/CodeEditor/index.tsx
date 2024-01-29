@@ -85,11 +85,10 @@ const CodeEditor: FC<CodeEditorProps> = ({
     }),
     {}
   ) as Record<string, Dataschema>;
-  const activeFileId = files?.[active || ""]?.id;
 
   const getFilesContent = () => {
     return schemas?.reduce(
-      (acc, s) => ({ ...acc, [s.id]: s.code }),
+      (acc, s) => ({ ...acc, [s.name]: s.code }),
       {} as Record<string, string>
     );
   };
@@ -112,7 +111,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
       if (active && isSchemasChanged) {
         const updatedCode = getFilesContent();
-        setContent(updatedCode);
+        setContent((prev) => ({ ...prev, [active]: updatedCode?.[active] }));
       }
     },
     [schemas]
@@ -164,8 +163,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
               })}
               onClick={() => onTabChange(files[name])}
             >
-              {files[name].name}{" "}
-              {files[name].code !== content?.[files[name].id] && "*"}
+              {files[name].name} {files[name].code !== content?.[name] && "*"}
               <Tooltip title={t("common:words.close")}>
                 <CloseOutlined
                   className={styles.closeIcon}
@@ -218,7 +216,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
                 <Button
                   className={cn(styles.save)}
                   onClick={() =>
-                    active && onCodeSave(activeFileId, content?.[activeFileId])
+                    active && onCodeSave(files?.[active].id, content?.[active])
                   }
                   icon={<SaveIcon />}
                 >
@@ -232,10 +230,10 @@ const CodeEditor: FC<CodeEditorProps> = ({
               className={styles.monaco}
               language={language}
               defaultLanguage={language}
-              defaultValue={content?.[activeFileId]}
-              value={content?.[activeFileId]}
+              defaultValue={content?.[active]}
+              value={content?.[active]}
               onChange={(val) =>
-                setContent((prev) => ({ ...prev, [activeFileId]: val || " " }))
+                setContent((prev) => ({ ...prev, [active]: val || " " }))
               }
               path={files[active]?.name}
               options={MONACO_OPTIONS}

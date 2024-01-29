@@ -89,7 +89,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
 
   const getFilesContent = () => {
     return schemas?.reduce(
-      (s) => ({ [s.id]: s.code }),
+      (acc, s) => ({ ...acc, [s.id]: s.code }),
       {} as Record<string, string>
     );
   };
@@ -111,7 +111,8 @@ const CodeEditor: FC<CodeEditorProps> = ({
       const isSchemasChanged = !equals(previousDeps?.[0], currentDeps?.[0]);
 
       if (active && isSchemasChanged) {
-        setContent(getFilesContent());
+        const updatedCode = getFilesContent();
+        setContent(updatedCode);
       }
     },
     [schemas]
@@ -163,7 +164,8 @@ const CodeEditor: FC<CodeEditorProps> = ({
               })}
               onClick={() => onTabChange(files[name])}
             >
-              {files[name].name}
+              {files[name].name}{" "}
+              {files[name].code !== content?.[files[name].id] && "*"}
               <Tooltip title={t("common:words.close")}>
                 <CloseOutlined
                   className={styles.closeIcon}
@@ -230,8 +232,8 @@ const CodeEditor: FC<CodeEditorProps> = ({
               className={styles.monaco}
               language={language}
               defaultLanguage={language}
-              defaultValue={files[active]?.code}
-              value={content?.[active]}
+              defaultValue={content?.[activeFileId]}
+              value={content?.[activeFileId]}
               onChange={(val) =>
                 setContent((prev) => ({ ...prev, [activeFileId]: val || " " }))
               }

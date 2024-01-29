@@ -507,6 +507,18 @@ const ModelsWrapper: React.FC = () => {
     }
   }, [currentUser.id, setLocation, teamData, teamData?.dataSources.length]);
 
+  useEffect(() => {
+    if (createVersionMutation.data || genSchemaMutation.data) {
+      execQueryMeta({ id: curSource?.id, branch_id: currentBranch?.id });
+    }
+  }, [
+    createVersionMutation.data,
+    curSource?.id,
+    currentBranch?.id,
+    execQueryMeta,
+    genSchemaMutation.data,
+  ]);
+
   const inputFile = useRef<HTMLInputElement>(null);
 
   const uploadFile = () => {
@@ -705,7 +717,6 @@ const ModelsWrapper: React.FC = () => {
 
   const onCodeSave = async (id: string, code: string) => {
     await onClickUpdate(id, { code }, true);
-    await execQueryMeta({ id: curSource?.id, branch_id: currentBranch?.id });
   };
 
   const onRunSQL = (query: string, limit: number) => {

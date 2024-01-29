@@ -85,9 +85,17 @@ const CodeEditor: FC<CodeEditorProps> = ({
     }),
     {}
   ) as Record<string, Dataschema>;
+  const activeFileId = files?.[active || ""]?.id;
 
-  const [content, setContent] = useState<string>(
-    active ? files[active]?.code : ""
+  const getFilesContent = () => {
+    return schemas?.reduce(
+      (s) => ({ [s.id]: s.code }),
+      {} as Record<string, string>
+    );
+  };
+
+  const [content, setContent] = useState<Record<string, string>>(
+    getFilesContent()
   );
 
   const onRun = () => {
@@ -101,14 +109,12 @@ const CodeEditor: FC<CodeEditorProps> = ({
   useTrackedEffect(
     (changes, previousDeps, currentDeps) => {
       const isSchemasChanged = !equals(previousDeps?.[0], currentDeps?.[0]);
-      const isTabChanges = previousDeps?.[1] !== currentDeps?.[1];
 
-      if (active && (isSchemasChanged || isTabChanges)) {
-        const code = files?.[active]?.code ?? "";
-        setContent(code);
+      if (active && isSchemasChanged) {
+        setContent(getFilesContent());
       }
     },
-    [schemas, active]
+    [schemas]
   );
 
   const language = active
@@ -210,7 +216,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
                 <Button
                   className={cn(styles.save)}
                   onClick={() =>
-                    active && onCodeSave(files[active].id, content)
+                    active && onCodeSave(activeFileId, content?.[activeFileId])
                   }
                   icon={<SaveIcon />}
                 >
@@ -225,8 +231,10 @@ const CodeEditor: FC<CodeEditorProps> = ({
               language={language}
               defaultLanguage={language}
               defaultValue={files[active]?.code}
-              value={content}
-              onChange={(val) => setContent(val || "")}
+              value={content?.[active]}
+              onChange={(val) =>
+                setContent((prev) => ({ ...prev, [activeFileId]: val || " " }))
+              }
               path={files[active]?.name}
               options={MONACO_OPTIONS}
               height={editorHeight}

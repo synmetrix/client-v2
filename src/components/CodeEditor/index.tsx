@@ -27,7 +27,7 @@ interface CodeEditorProps {
   onTabChange: (dataschema?: Dataschema) => void;
   onClose: (fileName: string) => void;
   onRunSQL: (query: string, limit: number) => void;
-  onCodeSave: (id: string, code: string) => void;
+  onCodeSave: (files: Partial<Dataschema>[]) => void;
   data?: object[];
   sqlError?: object;
   showConsole?: boolean;
@@ -86,8 +86,15 @@ const CodeEditor: FC<CodeEditorProps> = ({
     {}
   ) as Record<string, Dataschema>;
 
-  const [content, setContent] = useState<string>(
-    active ? files[active]?.code : ""
+  const getFilesContent = () => {
+    return schemas?.reduce(
+      (acc, s) => ({ ...acc, [s.name]: s.code }),
+      {} as Record<string, string>
+    );
+  };
+
+  const [content, setContent] = useState<Record<string, string>>(
+    getFilesContent()
   );
 
   const onRun = () => {
@@ -98,15 +105,25 @@ const CodeEditor: FC<CodeEditorProps> = ({
     onRunSQL(query, limit);
   };
 
+  const onSave = async () => {
+    const newFiles: Partial<Dataschema>[] = Object.entries(content).map(
+      ([name, code]) => ({ name, code })
+    );
+    await onCodeSave(newFiles);
+  };
+
   useTrackedEffect(
     (changes, previousDeps, currentDeps) => {
-      if (!equals(previousDeps?.[0], currentDeps?.[0]) && active) {
-        const code = files?.[active]?.code ?? "";
-        setContent(code);
+      const isSchemasChanged = !equals(previousDeps?.[0], currentDeps?.[0]);
+
+      if (active && isSchemasChanged) {
+        const updatedCode = getFilesContent();
+        setContent(updatedCode);
       }
     },
     [schemas]
   );
+
   const language = active
     ? languages[active.split(".")[0] as keyof typeof languages]
     : "sql";
@@ -153,7 +170,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
               })}
               onClick={() => onTabChange(files[name])}
             >
-              {files[name].name}
+              {files[name].name} {files[name].code !== content?.[name] && "*"}
               <Tooltip title={t("common:words.close")}>
                 <CloseOutlined
                   className={styles.closeIcon}
@@ -205,9 +222,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
               <Col>
                 <Button
                   className={cn(styles.save)}
-                  onClick={() =>
-                    active && onCodeSave(files[active].id, content)
-                  }
+                  onClick={() => active && onSave()}
                   icon={<SaveIcon />}
                 >
                   {t("common:words.save")}
@@ -220,9 +235,11 @@ const CodeEditor: FC<CodeEditorProps> = ({
               className={styles.monaco}
               language={language}
               defaultLanguage={language}
-              defaultValue={files[active]?.code}
-              value={content}
-              onChange={(val) => setContent(val || "")}
+              defaultValue={content?.[active]}
+              value={content?.[active]}
+              onChange={(val) =>
+                setContent((prev) => ({ ...prev, [active]: val || " " }))
+              }
               path={files[active]?.name}
               options={MONACO_OPTIONS}
               height={editorHeight}

@@ -57,13 +57,16 @@ interface ModelsProps {
   onCreateBranch: (data: CreateBranchFormValues) => Promise<void>;
   onDeleteBranch: (branchId: string) => void;
   onSchemaDelete: (id: string) => void;
-  onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
+  onSchemaUpdate: (
+    files: Partial<Dataschema>[],
+    editFile: Partial<Dataschema>
+  ) => void;
   dataSource?: DataSourceInfo;
   currentBranch?: Branch;
   currentVersion?: Version;
   dataschemas?: Dataschema[];
   onSchemaCreate: (values: Partial<Dataschema>) => void;
-  onCodeSave: (id: string, code: string) => void;
+  onCodeSave: (files: Partial<Dataschema>[]) => void;
   onRunSQL: (query: string, limit: number) => void;
   dataSchemaName: string;
   fetching?: boolean;
@@ -172,15 +175,15 @@ export const Models: React.FC<ModelsProps> = ({
     [dataSchemaName, dataschemas, openSchema, openTab]
   );
 
-  const onUpdateSchema: typeof onSchemaUpdate = (editId, values) => {
-    const schema = dataschemas.find((s) => s.id === editId);
+  const onUpdateSchema: typeof onSchemaUpdate = (values, editFile) => {
+    const schema = dataschemas.find((s) => s.name === editFile.name);
 
-    if (schema && values.name) {
+    if (schema) {
       tabsState.tabs.delete(schema.name);
-      tabsState.tabs.add(values.name);
+      tabsState.tabs.add(schema.name);
     }
 
-    return onSchemaUpdate(editId, values);
+    return onSchemaUpdate(values, editFile);
   };
 
   const Layout =
@@ -507,6 +510,18 @@ const ModelsWrapper: React.FC = () => {
     }
   }, [currentUser.id, setLocation, teamData, teamData?.dataSources.length]);
 
+  useEffect(() => {
+    if (createVersionMutation.data || genSchemaMutation.data) {
+      execQueryMeta({ id: curSource?.id, branch_id: currentBranch?.id });
+    }
+  }, [
+    createVersionMutation.data,
+    curSource?.id,
+    currentBranch?.id,
+    execQueryMeta,
+    genSchemaMutation.data,
+  ]);
+
   const inputFile = useRef<HTMLInputElement>(null);
 
   const uploadFile = () => {
@@ -651,21 +666,27 @@ const ModelsWrapper: React.FC = () => {
   };
 
   const onClickUpdate = async (
-    editId: string,
-    values: Partial<Dataschema>,
+    files: Partial<Dataschema>[],
+    editFile?: Partial<Dataschema>,
     compareChecksum?: boolean
   ) => {
-    const newDataschemas = [...dataschemas];
-    const editSchemaIndex = newDataschemas.findIndex(
-      (schema) => schema.id === editId
-    );
+    let newFiles = files || [];
 
-    newDataschemas[editSchemaIndex] = {
-      ...newDataschemas[editSchemaIndex],
-      ...values,
-    };
+    dataschemas.forEach((d) => {
+      if (!newFiles.find((f) => f.name === d.name)) {
+        newFiles.push(d);
+      }
+    });
 
-    const checksum = calcChecksum(newDataschemas);
+    if (editFile) {
+      const editIndex = newFiles?.findIndex((f) => f.id === editFile.id);
+      newFiles[editIndex] = editFile;
+    }
+
+    newFiles = newFiles
+      .map((f) => ({ name: f.name, code: f.code }))
+      .sort((a: any, b: any) => (a.name > b.name ? 1 : -1));
+    const checksum = calcChecksum(newFiles);
 
     if (compareChecksum) {
       if (currentVersion.checksum === checksum) {
@@ -674,19 +695,15 @@ const ModelsWrapper: React.FC = () => {
       }
     }
 
-    await createNewVersion(checksum, newDataschemas);
+    await createNewVersion(checksum, newFiles);
 
-    if (
-      dataSchemaName ===
-        dataschemas.find((schema) => schema.id === editId)?.name &&
-      values.name
-    ) {
+    if (editFile) {
       setLocation(
-        `${basePath}/${curSource?.id}/${currentBranch?.id}/${values.name}`
+        `${basePath}/${curSource?.id}/${currentBranch?.id}/${editFile.name}`
       );
     }
 
-    return newDataschemas;
+    return newFiles;
   };
 
   const onClickDelete = async (id: string) => {
@@ -703,9 +720,8 @@ const ModelsWrapper: React.FC = () => {
     await createNewVersion(checksum, newDataschemas);
   };
 
-  const onCodeSave = async (id: string, code: string) => {
-    await onClickUpdate(id, { code }, true);
-    await execQueryMeta({ id: curSource?.id, branch_id: currentBranch?.id });
+  const onCodeSave = async (files: Partial<Dataschema>[]) => {
+    return await onClickUpdate(files, undefined, true);
   };
 
   const onRunSQL = (query: string, limit: number) => {

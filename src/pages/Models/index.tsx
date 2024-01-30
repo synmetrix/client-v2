@@ -670,7 +670,7 @@ const ModelsWrapper: React.FC = () => {
     editFile?: Partial<Dataschema>,
     compareChecksum?: boolean
   ) => {
-    const newFiles = files || [];
+    let newFiles = files || [];
 
     dataschemas.forEach((d) => {
       if (!newFiles.find((f) => f.name === d.name)) {
@@ -683,6 +683,9 @@ const ModelsWrapper: React.FC = () => {
       newFiles[editIndex] = editFile;
     }
 
+    newFiles = newFiles
+      .map((f) => ({ name: f.name, code: f.code }))
+      .sort((a: any, b: any) => (a.name > b.name ? 1 : -1));
     const checksum = calcChecksum(newFiles);
 
     if (compareChecksum) {

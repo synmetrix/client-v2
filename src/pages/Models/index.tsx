@@ -694,6 +694,12 @@ const ModelsWrapper: React.FC = () => {
 
     await createNewVersion(checksum, newFiles);
 
+    if (editFile) {
+      setLocation(
+        `${basePath}/${curSource?.id}/${currentBranch?.id}/${editFile.name}`
+      );
+    }
+
     return newFiles;
   };
 

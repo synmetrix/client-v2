@@ -14586,7 +14586,7 @@ export const VersionByBranchIdDocument = gql`
       user {
         display_name
       }
-      dataschemas {
+      dataschemas(order_by: { name: asc }) {
         created_at
         updated_at
         datasource_id
@@ -14622,7 +14622,7 @@ export const CurrentVersionDocument = gql`
     ) {
       id
       checksum
-      dataschemas {
+      dataschemas(order_by: { name: asc }) {
         created_at
         updated_at
         datasource_id

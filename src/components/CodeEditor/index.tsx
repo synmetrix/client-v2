@@ -27,7 +27,7 @@ interface CodeEditorProps {
   onTabChange: (dataschema?: Dataschema) => void;
   onClose: (fileName: string) => void;
   onRunSQL: (query: string, limit: number) => void;
-  onCodeSave: (id: string, code: string) => void;
+  onCodeSave: (files: Partial<Dataschema>[]) => void;
   data?: object[];
   sqlError?: object;
   showConsole?: boolean;
@@ -105,13 +105,20 @@ const CodeEditor: FC<CodeEditorProps> = ({
     onRunSQL(query, limit);
   };
 
+  const onSave = async () => {
+    const newFiles: Partial<Dataschema>[] = Object.entries(content).map(
+      ([name, code]) => ({ name, code })
+    );
+    await onCodeSave(newFiles);
+  };
+
   useTrackedEffect(
     (changes, previousDeps, currentDeps) => {
       const isSchemasChanged = !equals(previousDeps?.[0], currentDeps?.[0]);
 
       if (active && isSchemasChanged) {
         const updatedCode = getFilesContent();
-        setContent((prev) => ({ ...prev, [active]: updatedCode?.[active] }));
+        setContent(updatedCode);
       }
     },
     [schemas]
@@ -215,9 +222,7 @@ const CodeEditor: FC<CodeEditorProps> = ({
               <Col>
                 <Button
                   className={cn(styles.save)}
-                  onClick={() =>
-                    active && onCodeSave(files?.[active].id, content?.[active])
-                  }
+                  onClick={() => active && onSave()}
                   icon={<SaveIcon />}
                 >
                   {t("common:words.save")}

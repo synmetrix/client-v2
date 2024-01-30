@@ -41,7 +41,10 @@ export interface ModelsSidebarProps {
   onChangeBranch: (branchId?: string) => void;
   onDeleteBranch: (branchId: string) => void;
   onSchemaDelete: (schema: Dataschema) => void;
-  onSchemaUpdate: (editId: string, values: Partial<Dataschema>) => void;
+  onSchemaUpdate: (
+    values: Partial<Dataschema>[],
+    editFile: Partial<Dataschema>
+  ) => void;
   onCreateFile: (values: Partial<Dataschema>) => void;
   dataSources: DataSourceInfo[];
   onDataSourceChange: (dataSource: DataSourceInfo | null) => void;
@@ -223,7 +226,7 @@ const ModelsSidebar: FC<ModelsSidebarProps> = ({
                             <DataSchemaForm
                               defaultValues={f}
                               onSubmit={(d) =>
-                                onSchemaUpdate(f.id, {
+                                onSchemaUpdate(files, {
                                   ...f,
                                   ...d,
                                 })

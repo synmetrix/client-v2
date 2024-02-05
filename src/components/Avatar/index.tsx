@@ -28,6 +28,7 @@ const Avatar: FC<AvatarProps> = ({
       <BasicAvatar
         style={{ width, height, background: color }}
         className={cn(styles.avatar, className)}
+        data-testid="user-outlined-icon"
       >
         <UserOutlined />
       </BasicAvatar>
@@ -46,6 +47,7 @@ const Avatar: FC<AvatarProps> = ({
       }}
       src={img}
       className={cn(styles.avatar, className)}
+      data-testid="user-outlined-icon"
     >
       <div>
         {name?.[0]?.[0]}

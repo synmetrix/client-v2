@@ -12,7 +12,7 @@ const { Title, Text } = Typography;
 const NoTeams: FC = () => {
   const { t } = useTranslation(["teams", "common"]);
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-testid="no-teams">
       <img className={styles.img} src={NoTeamsImg} alt="" />
       <Title level={4}>{t("not_found.title")}</Title>
       <Text className={styles.text}>{t("not_found.text")}</Text>

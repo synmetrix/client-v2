@@ -1,7 +1,7 @@
 import { Result } from "antd";
 import { useTranslation } from "react-i18next";
 
-import { EXPLORE, SIGNIN } from "@/utils/constants/paths";
+import { EXPLORE } from "@/utils/constants/paths";
 import BasicLayout from "@/layouts/BasicLayout";
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import Button from "@/components/Button";
@@ -13,7 +13,7 @@ import s from "./index.module.less";
 const Callback: React.FC = () => {
   const { t } = useTranslation(["callback"]);
   const [error, setError] = useState<boolean>(false);
-  const { setAuthData } = AuthTokensStore();
+  const { setAuthData, cleanTokens } = AuthTokensStore();
   const [location, setLocation] = useLocation();
   const { refresh_token } = location.query;
 
@@ -23,6 +23,7 @@ const Callback: React.FC = () => {
     if (result.error) {
       setError(true);
     } else {
+      cleanTokens();
       setAuthData({
         accessToken: result.jwt_token,
         refreshToken: result.refresh_token,
@@ -43,7 +44,11 @@ const Callback: React.FC = () => {
         title={error ? t("error.title") : t("title")}
         subTitle={error ? t("error.subtitle") : t("subtitle")}
         extra={[
-          <Button type="primary" key="back" onClick={() => setLocation(SIGNIN)}>
+          <Button
+            type="primary"
+            key="back"
+            onClick={() => setLocation(EXPLORE)}
+          >
             {t("action")}
           </Button>,
         ]}

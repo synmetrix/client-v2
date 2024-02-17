@@ -22,10 +22,15 @@ export interface SignInFormType {
 
 interface SignInFormProps {
   isMagicLink: boolean;
+  loading: boolean;
   onSubmit: (data: SignInFormType) => void;
 }
 
-const SignInForm: FC<SignInFormProps> = ({ isMagicLink, onSubmit }) => {
+const SignInForm: FC<SignInFormProps> = ({
+  isMagicLink,
+  loading,
+  onSubmit,
+}) => {
   const [, setLocation] = useLocation();
 
   const { t } = useTranslation(["sign", "common"]);
@@ -102,6 +107,7 @@ const SignInForm: FC<SignInFormProps> = ({ isMagicLink, onSubmit }) => {
           type="primary"
           htmlType="submit"
           size="large"
+          loading={loading}
           onClick={handleSubmit(onSubmit)}
         >
           {isMagicLink ? t("sign_in.send_link") : t("sign_in.login")}

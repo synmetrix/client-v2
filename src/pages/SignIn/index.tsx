@@ -14,6 +14,7 @@ import styles from "./index.module.less";
 const SignIn: React.FC = () => {
   const { t } = useTranslation(["sign"]);
   const [error, setError] = useState<string | null>();
+  const [loading, setLoading] = useState<boolean>(false);
   const { login } = useAuth();
   const [location, setLocation] = useLocation();
   const { magicLink } = location.query;
@@ -21,7 +22,9 @@ const SignIn: React.FC = () => {
 
   const onSubmit = async (data: SignInFormType) => {
     setError(null);
+    setLoading(true);
     const res = await login(data);
+    setLoading(false);
 
     if (res?.magicLink) {
       message.success(t("sign_in.link_sended"));
@@ -42,7 +45,11 @@ const SignIn: React.FC = () => {
     <BasicLayout header={<AuthLinks currentPage="signin" />}>
       <Row className={styles.container} justify="center" align="middle">
         <Col xs={24} style={{ maxWidth: 356 }}>
-          <SignInForm onSubmit={onSubmit} isMagicLink={isMagicLink} />
+          <SignInForm
+            loading={loading}
+            onSubmit={onSubmit}
+            isMagicLink={isMagicLink}
+          />
           {error && <Alert message={<span>{error}</span>} type="error" />}
         </Col>
       </Row>

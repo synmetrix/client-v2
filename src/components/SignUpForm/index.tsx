@@ -22,11 +22,12 @@ export interface SignUpFormType {
 }
 
 interface SignUpProps {
-  onSubmit: (data: SignUpFormType) => void;
   isMagicLink: boolean;
+  loading: boolean;
+  onSubmit: (data: SignUpFormType) => void;
 }
 
-const SignUpForm: FC<SignUpProps> = ({ onSubmit, isMagicLink }) => {
+const SignUpForm: FC<SignUpProps> = ({ isMagicLink, loading, onSubmit }) => {
   const [, setLocation] = useLocation();
 
   const { t } = useTranslation(["sign", "common"]);
@@ -131,6 +132,7 @@ const SignUpForm: FC<SignUpProps> = ({ onSubmit, isMagicLink }) => {
           type="primary"
           htmlType="submit"
           size="large"
+          loading={loading}
           onClick={handleSubmit(onSubmit)}
         >
           {t("sign_up.sign_up")}

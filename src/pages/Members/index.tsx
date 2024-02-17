@@ -1,19 +1,16 @@
+import { useParams } from "@vitjs/runtime";
 import { Col, Row, Select, Space, Spin, Tag, Typography, message } from "antd";
 import { useTranslation } from "react-i18next";
-import { useParams } from "@vitjs/runtime";
 
+import Avatar from "@/components/Avatar";
+import Button from "@/components/Button";
+import Card from "@/components/Card";
+import ConfirmModal from "@/components/ConfirmModal";
 import type { Invite } from "@/components/MembersForm";
 import MembersForm from "@/components/MembersForm";
-import Card from "@/components/Card";
-import Avatar from "@/components/Avatar";
 import Modal from "@/components/Modal";
-import PageHeader from "@/components/PageHeader";
-import ConfirmModal from "@/components/ConfirmModal";
 import NoMember from "@/components/NoMember";
-import Button from "@/components/Button";
-import formatTime from "@/utils/helpers/formatTime";
-import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
-import { capitalize } from "@/utils/helpers/capitalize";
+import PageHeader from "@/components/PageHeader";
 import type {
   AllAccessListsQuery,
   Member_Roles_Set_Input,
@@ -26,12 +23,16 @@ import {
   useUpdateMemberRoleMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
+import useLocation from "@/hooks/useLocation";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import type { AccessList, Member } from "@/types/team";
 import { ChangeableRoles, Roles } from "@/types/team";
-import useLocation from "@/hooks/useLocation";
 import { MEMBERS } from "@/utils/constants/paths";
+import { capitalize } from "@/utils/helpers/capitalize";
+import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
+import formatTime from "@/utils/helpers/formatTime";
 
+import TrashColoredIcon from "@/assets/trash-colored.svg";
 import TrashIcon from "@/assets/trash.svg";
 
 import styles from "./index.module.less";
@@ -109,7 +110,9 @@ export const Members: React.FC<MembersProps> = ({
               title={t("common:words.delete_member")}
               onConfirm={() => onRemove(member)}
             >
-              <Button className={styles.removeBtn} ghost icon={<TrashIcon />} />
+              <Button size="small" type="text" className={styles.removeBtn}>
+                <TrashColoredIcon />
+              </Button>
             </ConfirmModal>
           )
         }

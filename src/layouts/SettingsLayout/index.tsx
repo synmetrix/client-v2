@@ -1,20 +1,21 @@
 import { useTranslation } from "react-i18next";
 
-import SidebarLayout from "@/layouts/SidebarLayout";
 import SidebarMenu from "@/components/SidebarMenu";
 import type { Location } from "@/hooks/useLocation";
+import SidebarLayout from "@/layouts/SidebarLayout";
 import type { SidebarMenuItem } from "@/mocks/sidebarMenu";
+import CurrentUserStore from "@/stores/CurrentUserStore";
+import { Roles } from "@/types/team";
 
-import DataSourceIcon from "@/assets/data-source.svg";
-import SQLAPIIcon from "@/assets/sql-api.svg";
-import MembersIcon from "@/assets/members.svg";
-import RolesAndAccessIcon from "@/assets/roles-and-access.svg";
-import PersonalInfoIcon from "@/assets/personal-info.svg";
 import AlertsIcon from "@/assets/alert-logs.svg";
+import DataSourceIcon from "@/assets/data-source.svg";
+import MembersIcon from "@/assets/members.svg";
+import PersonalInfoIcon from "@/assets/personal-info.svg";
 import ReportsIcon from "@/assets/report-logs.svg";
-import QueryIcon from "@/assets/query-logs.svg";
-import TeamsIcon from "@/assets/team.svg";
+import RolesAndAccessIcon from "@/assets/roles-and-access.svg";
 import Icon from "@/assets/settings-active.svg";
+import SQLAPIIcon from "@/assets/sql-api.svg";
+import TeamsIcon from "@/assets/team.svg";
 
 import type { ReactNode } from "react";
 
@@ -31,6 +32,8 @@ const SettingsLayout: React.FC<SidebarLayoutProps> = ({
 }) => {
   const { t } = useTranslation(["pages"]);
   const splitedPath = (location?.pathname || "").split("/");
+  const { currentTeam } = CurrentUserStore();
+  const isMember = currentTeam?.role === Roles.member;
   const titleKey = splitedPath?.[2];
   const subKey = splitedPath?.[1];
 
@@ -53,12 +56,13 @@ const SettingsLayout: React.FC<SidebarLayoutProps> = ({
       href: "/settings/members",
       icon: <MembersIcon />,
     },
-    {
+    (!isMember && {
       key: "roles",
       label: t("common:words.roles_and_access"),
       href: "/settings/roles",
       icon: <RolesAndAccessIcon />,
-    },
+    }) ||
+      null,
     {
       key: "teams",
       label: t("common:words.teams"),
@@ -71,7 +75,7 @@ const SettingsLayout: React.FC<SidebarLayoutProps> = ({
       href: "/settings/info",
       icon: <PersonalInfoIcon />,
     },
-  ];
+  ].filter((item) => !!item?.key);
 
   const singalsMenuItems: SidebarMenuItem[] = [
     {

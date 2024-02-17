@@ -88,42 +88,48 @@ export const DataSources = ({
       <Card
         title={dataSource.name}
         titleTooltip={dataSource.name}
-        onTitleClick={() => dataSource.id && onEdit(dataSource.id)}
+        onTitleClick={() =>
+          !disableCreate && dataSource.id && onEdit(dataSource.id)
+        }
         extra={
-          <Dropdown
-            className={styles.btn}
-            trigger={["click"]}
-            menu={{
-              items: [
-                {
-                  key: "edit",
-                  label: t("common:words.edit"),
-                  onClick: () => dataSource.id && onEdit(dataSource.id),
-                },
-                {
-                  key: "generate",
-                  label: t("common:words.generate_models"),
-                  onClick: () =>
-                    dataSource.id && onGenerateModel(dataSource.id),
-                },
-                {
-                  key: "delete",
-                  className: styles.deleteItem,
-                  label: (
-                    <ConfirmModal
-                      title={t("common:words.delete_datasource")}
-                      className={styles.deleteText}
-                      onConfirm={() => dataSource.id && onDelete(dataSource.id)}
-                    >
-                      {t("common:words.delete")}
-                    </ConfirmModal>
-                  ),
-                },
-              ],
-            }}
-          >
-            <SettingOutlined key="setting" />
-          </Dropdown>
+          !disableCreate && (
+            <Dropdown
+              className={styles.btn}
+              trigger={["click"]}
+              menu={{
+                items: [
+                  {
+                    key: "edit",
+                    label: t("common:words.edit"),
+                    onClick: () => dataSource.id && onEdit(dataSource.id),
+                  },
+                  {
+                    key: "generate",
+                    label: t("common:words.generate_models"),
+                    onClick: () =>
+                      dataSource.id && onGenerateModel(dataSource.id),
+                  },
+                  {
+                    key: "delete",
+                    className: styles.deleteItem,
+                    label: (
+                      <ConfirmModal
+                        title={t("common:words.delete_datasource")}
+                        className={styles.deleteText}
+                        onConfirm={() =>
+                          dataSource.id && onDelete(dataSource.id)
+                        }
+                      >
+                        {t("common:words.delete")}
+                      </ConfirmModal>
+                    ),
+                  },
+                ],
+              }}
+            >
+              <SettingOutlined key="setting" />
+            </Dropdown>
+          )
         }
       >
         <dl>

@@ -84,13 +84,6 @@ subscription AllDataSources(
   }
 }
 
-mutation ValidateDataSource($id: uuid!) {
-  validate_datasource(id: $id) {
-    code
-    message
-  }
-}
-
 query FetchTables($id: uuid!) {
   fetch_tables(datasource_id: $id) {
     schema

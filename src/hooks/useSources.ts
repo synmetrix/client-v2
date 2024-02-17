@@ -7,7 +7,6 @@ import {
   useCheckConnectionMutation,
   useGenDataSchemasMutation,
   useRunSourceSqlQueryMutation,
-  useValidateDataSourceMutation,
   useUpdateDataSourceMutation,
   useFetchMetaQuery,
   useFetchTablesQuery,
@@ -34,8 +33,6 @@ export default ({ params = {} }: Props) => {
     useGenDataSchemasMutation();
   const [runQueryMutation, execRunQueryMutation] =
     useRunSourceSqlQueryMutation();
-  const [validateMutation, execValidateMutation] =
-    useValidateDataSourceMutation();
 
   const [metaData, execQueryMeta] = useFetchMetaQuery({
     pause: true,
@@ -83,8 +80,6 @@ export default ({ params = {} }: Props) => {
 
       runQueryMutation,
       execRunQueryMutation,
-      validateMutation,
-      execValidateMutation,
       genSchemaMutation,
       execGenSchemaMutation,
     },

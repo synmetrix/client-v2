@@ -178,12 +178,6 @@ export type String_Comparison_Exp = {
   _similar?: InputMaybe<Scalars["String"]["input"]>;
 };
 
-export type ValidateSourceOutput = {
-  __typename?: "ValidateSourceOutput";
-  code: Scalars["String"]["output"];
-  message?: Maybe<Scalars["String"]["output"]>;
-};
-
 /** columns and relationships of "access_lists" */
 export type Access_Lists = {
   __typename?: "access_lists";
@@ -5744,7 +5738,6 @@ export type Mutation_Root = {
   update_versions_by_pk?: Maybe<Versions>;
   /** update multiples rows of table: "versions" */
   update_versions_many?: Maybe<Array<Maybe<Versions_Mutation_Response>>>;
-  validate_datasource?: Maybe<ValidateSourceOutput>;
 };
 
 /** mutation root */
@@ -6959,11 +6952,6 @@ export type Mutation_RootUpdate_Versions_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Versions_ManyArgs = {
   updates: Array<Versions_Updates>;
-};
-
-/** mutation root */
-export type Mutation_RootValidate_DatasourceArgs = {
-  id: Scalars["uuid"]["input"];
 };
 
 /** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
@@ -12444,19 +12432,6 @@ export type AllDataSourcesSubscription = {
   }>;
 };
 
-export type ValidateDataSourceMutationVariables = Exact<{
-  id: Scalars["uuid"]["input"];
-}>;
-
-export type ValidateDataSourceMutation = {
-  __typename?: "mutation_root";
-  validate_datasource?: {
-    __typename?: "ValidateSourceOutput";
-    code: string;
-    message?: string | null;
-  } | null;
-};
-
 export type FetchTablesQueryVariables = Exact<{
   id: Scalars["uuid"]["input"];
 }>;
@@ -13811,21 +13786,6 @@ export function useAllDataSourcesSubscription<
     AllDataSourcesSubscriptionVariables
   >({ query: AllDataSourcesDocument, ...options }, handler);
 }
-export const ValidateDataSourceDocument = gql`
-  mutation ValidateDataSource($id: uuid!) {
-    validate_datasource(id: $id) {
-      code
-      message
-    }
-  }
-`;
-
-export function useValidateDataSourceMutation() {
-  return Urql.useMutation<
-    ValidateDataSourceMutation,
-    ValidateDataSourceMutationVariables
-  >(ValidateDataSourceDocument);
-}
 export const FetchTablesDocument = gql`
   query FetchTables($id: uuid!) {
     fetch_tables(datasource_id: $id) {
@@ -14701,7 +14661,6 @@ export const namedOperations = {
     CreateBranch: "CreateBranch",
     UpdateUserInfo: "UpdateUserInfo",
     CreateDataSource: "CreateDataSource",
-    ValidateDataSource: "ValidateDataSource",
     UpdateDataSource: "UpdateDataSource",
     CheckConnection: "CheckConnection",
     DeleteDataSource: "DeleteDataSource",

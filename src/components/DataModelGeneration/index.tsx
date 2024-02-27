@@ -75,17 +75,14 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   };
 
   const onFormSubmit = (data: DynamicForm, type: string) => {
-    Object.keys(data).forEach((k) => {
-      if (k === "type") return;
-      if (typeof data[k] === "object") {
-        Object.keys(data[k]).forEach((kk: string) => {
-          const descriptor = Object.getOwnPropertyDescriptor(data[k], kk)!;
-          Object.defineProperty(data[k], kk.replace(`${k}.`, ""), descriptor);
-          delete data[k][kk];
-        });
+    Object.keys(data).forEach((db) => {
+      if (typeof data?.[db] === "object") {
+        data[db] = Object.keys(data[db]).reduce((res: any, table) => ({
+          ...res,
+          [table.replace(`${db}.`, "")]: data[db][table],
+        }));
       }
     });
-
     onSubmit(data, type);
     if (resetOnSubmit) reset();
   };

@@ -79,7 +79,6 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
       if (k === "type") return;
       if (typeof data[k] === "object") {
         Object.keys(data[k]).forEach((kk: string) => {
-          console.log(kk);
           const descriptor = Object.getOwnPropertyDescriptor(data[k], kk)!;
           Object.defineProperty(data[k], kk.replace(`${k}.`, ""), descriptor);
           delete data[k][kk];

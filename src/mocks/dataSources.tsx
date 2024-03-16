@@ -20,6 +20,7 @@ import Crate from "@/assets/databases/crate.svg";
 import Quest from "@/assets/databases/quest.svg";
 import Snowflake from "@/assets/databases/snowflake.svg";
 import Materialize from "@/assets/databases/materialize.svg";
+import Vertica from "@/assets/databases/vertica.svg";
 
 export const dataSourcesMock: DataSourceInfo[] = [
   {
@@ -135,6 +136,7 @@ export const dbTiles = [
   { name: "QuestDB", value: "questdb", icon: <Quest /> },
   { name: "Snowflake", value: "snowflake", icon: <Snowflake /> },
   { name: "Materialize", value: "default", icon: <Materialize /> },
+  { name: "Vertica", value: "vertica", icon: <Vertica /> },
 ];
 
 export const defaultForm: DataSoureSetupField[] = [

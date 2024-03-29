@@ -674,7 +674,7 @@ export const dataSourceForms: Form = {
   athena: [
     {
       name: "db_params.awsKey",
-      label: "awsKey",
+      label: "aws_key",
       rules: {
         required: true,
       },
@@ -683,7 +683,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.awsSecret",
-      label: "awsSecret",
+      label: "aws_secret",
       rules: {
         required: true,
       },
@@ -692,7 +692,7 @@ export const dataSourceForms: Form = {
     },
     {
       name: "db_params.awsRegion",
-      label: "awsRegion",
+      label: "aws_region",
       rules: {
         required: true,
       },
@@ -708,6 +708,12 @@ export const dataSourceForms: Form = {
   ],
   duckdb: [
     {
+      name: "db_params.duckdbMotherDuckToken",
+      label: "mother_duck_token",
+      placeholder: "******",
+      type: "text",
+    },
+    {
       name: "db_params.duckdbS3SessionToken",
       label: "S3_session_token",
       rules: {
@@ -719,36 +725,24 @@ export const dataSourceForms: Form = {
     {
       name: "db_params.duckdbS3Region",
       label: "S3_region",
-      rules: {
-        required: true,
-      },
       placeholder: "us-west-1",
       type: "text",
     },
     {
       name: "db_params.duckdbS3Endpoint",
       label: "S3_endpoint",
-      rules: {
-        required: true,
-      },
       placeholder: "s3.us-west-1.amazonaws.com",
       type: "text",
     },
     {
       name: "db_params.duckdbS3AccessKeyId",
-      label: "awsKey",
+      label: "aws_key",
       placeholder: "AKIA***",
       type: "text",
     },
     {
       name: "db_params.duckdbS3SecretAccessKeyId",
-      label: "awsSecret",
-      placeholder: "******",
-      type: "text",
-    },
-    {
-      name: "db_params.duckdbMotherDuckToken",
-      label: "motherDuckToken",
+      label: "aws_secret",
       placeholder: "******",
       type: "text",
     },

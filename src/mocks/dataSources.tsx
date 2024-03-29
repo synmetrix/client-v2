@@ -716,9 +716,6 @@ export const dataSourceForms: Form = {
     {
       name: "db_params.duckdbS3SessionToken",
       label: "S3_session_token",
-      rules: {
-        required: true,
-      },
       placeholder: "******",
       type: "text",
     },

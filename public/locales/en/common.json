@@ -153,7 +153,18 @@
       "json": "JSON",
       "body": "Body",
       "request_output": "Request Output",
-      "headers": "Headers"
+      "headers": "Headers",
+      "awsKey": "AWS Key",
+      "awsSecret": "AWS Secret",
+      "awsS3OutputLocation": "AWS S3 Output Location",
+      "awsRegion": "AWS Region",
+      "S3_session_token": "S3 Session Token",
+      "S3_region": "S3 Region",
+      "S3_endpoint": "S3 Endpoint",
+      "motherDuckToken": "Mother Duck Token",
+      "jdbc_driver": "JDBC Driver",
+      "jdbc_dbType": "JDBC DB Type",
+      "jdbc_dbMaxPoolSize": "JDBC DB Max Pool Size"
     },
     "placeholders": {
       "name": "Name",

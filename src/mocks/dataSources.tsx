@@ -22,9 +22,6 @@ import Snowflake from "@/assets/databases/snowflake.svg";
 import Materialize from "@/assets/databases/materialize.svg";
 import Vertica from "@/assets/databases/vertica.svg";
 import Athena from "@/assets/databases/athena.svg";
-import Hive from "@/assets/databases/hive.svg";
-import DuckDB from "@/assets/databases/duckdb.svg";
-import JDBC from "@/assets/databases/jdbc.svg";
 
 export const dataSourcesMock: DataSourceInfo[] = [
   {
@@ -142,9 +139,6 @@ export const dbTiles = [
   { name: "Materialize", value: "default", icon: <Materialize /> },
   { name: "Vertica", value: "vertica", icon: <Vertica /> },
   { name: "Athena", value: "athena", icon: <Athena /> },
-  { name: "Hive", value: "hive", icon: <Hive /> },
-  { name: "DuckDB", value: "duckdb", icon: <DuckDB /> },
-  { name: "JDBC", value: "jdbc", icon: <JDBC /> },
 ];
 
 export const defaultForm: DataSoureSetupField[] = [
@@ -704,78 +698,6 @@ export const dataSourceForms: Form = {
       label: "awsS3OutputLocation",
       placeholder: "s3://bucket/path",
       type: "text",
-    },
-  ],
-  duckdb: [
-    {
-      name: "db_params.duckdbMotherDuckToken",
-      label: "mother_duck_token",
-      placeholder: "******",
-      type: "text",
-    },
-    {
-      name: "db_params.duckdbS3SessionToken",
-      label: "S3_session_token",
-      placeholder: "******",
-      type: "text",
-    },
-    {
-      name: "db_params.duckdbS3Region",
-      label: "S3_region",
-      placeholder: "us-west-1",
-      type: "text",
-    },
-    {
-      name: "db_params.duckdbS3Endpoint",
-      label: "S3_endpoint",
-      placeholder: "s3.us-west-1.amazonaws.com",
-      type: "text",
-    },
-    {
-      name: "db_params.duckdbS3AccessKeyId",
-      label: "aws_key",
-      placeholder: "AKIA***",
-      type: "text",
-    },
-    {
-      name: "db_params.duckdbS3SecretAccessKeyId",
-      label: "aws_secret",
-      placeholder: "******",
-      type: "text",
-    },
-  ],
-  jdbc: [
-    {
-      name: "db_params.dbType",
-      label: "jdbc_dbType",
-      rules: {
-        required: true,
-      },
-      placeholder: "mysql",
-      type: "text",
-    },
-    {
-      name: "db_params.jdbcDriver",
-      label: "jdbc_driver",
-      rules: {
-        required: true,
-      },
-      placeholder: "com.mysql.jdbc.Driver",
-      type: "text",
-    },
-    {
-      name: "db_params.url",
-      label: "url",
-      rules: {
-        required: true,
-      },
-      type: "text",
-    },
-    {
-      name: "db_params.dbMaxPoolSize",
-      label: "jdbc_dbMaxPoolSize",
-      placeholder: "8",
-      type: "number",
     },
   ],
 };

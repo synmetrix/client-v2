@@ -153,18 +153,7 @@
       "json": "JSON",
       "body": "Тело",
       "request_output": "Выход запроса",
-      "headers": "Заголовки",
-      "aws_key": "Ключ доступа AWS",
-      "aws_secret": "Секретный ключ AWS",
-      "aws_s3_output_location": "Путь к файлу вывода в AWS S3",
-      "aws_region": "Регион AWS",
-      "S3_session_token": "Токен для сессии в S3",
-      "S3_region": "Регион S3",
-      "S3_endpoint": "Путь до S3",
-      "mother_duck_token": "Токен для сервиса Mother Duck",
-      "jdbc_driver": "Драйвер JDBC",
-      "jdbc_dbType": "Тип базы данных JDBC",
-      "jdbc_dbMaxPoolSize": "Максимальный размер пула подключений JDBC"
+      "headers": "Заголовки"
     },
     "placeholders": {
       "name": "Имя",

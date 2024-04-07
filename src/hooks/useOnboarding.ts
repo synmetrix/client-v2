@@ -60,10 +60,11 @@ export default ({ editId }: Props) => {
     clean,
     setSchema,
     setFormStateData,
+    formState,
   } = DataSourceStore();
 
   const [fetchTablesQuery, execFetchTables] = useFetchTablesQuery({
-    variables: { id: dataSourceSetup?.id },
+    variables: { id: editId },
     pause: true,
   });
 
@@ -309,12 +310,7 @@ export default ({ editId }: Props) => {
               ...defaultFormState,
               ...prev.formState,
               step0: curDataSource.type,
-              step1: {
-                id: curDataSource?.id,
-                db_params: { ...curDataSource.dbParams },
-                name: curDataSource.name,
-                ...prev.formState.step1,
-              },
+              step1: curDataSource,
             },
             branchId: currentBranch.id,
           } as Partial<DataSourceState>)

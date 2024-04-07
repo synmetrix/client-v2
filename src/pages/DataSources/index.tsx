@@ -251,11 +251,9 @@ const DataSourcesWrapper = () => {
     isGenerate,
     setIsGenerate,
     setStep,
-    setIsOnboarding,
     clean,
     nextStep,
     setFormStateData,
-    isOnboarding,
   } = DataSourceStore();
 
   const {

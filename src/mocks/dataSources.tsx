@@ -22,6 +22,7 @@ import Snowflake from "@/assets/databases/snowflake.svg";
 import Materialize from "@/assets/databases/materialize.svg";
 import Vertica from "@/assets/databases/vertica.svg";
 import Athena from "@/assets/databases/athena.svg";
+import Hive from "@/assets/databases/hive.svg";
 
 export const dataSourcesMock: DataSourceInfo[] = [
   {
@@ -139,6 +140,7 @@ export const dbTiles = [
   { name: "Materialize", value: "default", icon: <Materialize /> },
   { name: "Vertica", value: "vertica", icon: <Vertica /> },
   { name: "Athena", value: "athena", icon: <Athena /> },
+  { name: "Hive", value: "hive", icon: <Hive /> },
 ];
 
 export const defaultForm: DataSoureSetupField[] = [

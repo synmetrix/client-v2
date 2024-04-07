@@ -81,7 +81,8 @@ const dataSourceStore = create<DataSourceState>((set) => ({
       ...prev,
       isOnboarding: value,
     })),
-  clean: () => set({ ...defaultState }),
+  clean: () =>
+    set((prev) => ({ ...defaultState, isOnboarding: prev.isOnboarding })),
 }));
 
 export default dataSourceStore;

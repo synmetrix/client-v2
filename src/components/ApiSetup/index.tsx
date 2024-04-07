@@ -106,7 +106,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
       password = initialValue?.password,
       database = initialValue?.db,
     }) => {
-      const [hostname, port] = host.split(":");
+      const [hostname, port] = host?.split(":");
 
       const portOption = port ? `-P ${port}` : "";
       const psqlPortOption = port ? `--port=${port}` : "";

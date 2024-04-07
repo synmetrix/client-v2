@@ -255,6 +255,7 @@ const DataSourcesWrapper = () => {
     clean,
     nextStep,
     setFormStateData,
+    isOnboarding,
   } = DataSourceStore();
 
   const {
@@ -331,12 +332,6 @@ const DataSourcesWrapper = () => {
   const onTestConnection = async (data: DataSourceSetupForm) => {
     await onDataSourceSetupSubmit(data, true, nextStep);
   };
-
-  useEffect(() => {
-    if (connect) {
-      setIsOnboarding(true);
-    }
-  }, [connect, setIsOnboarding]);
 
   useEffect(() => {
     if (!connect && editId && !generate) {

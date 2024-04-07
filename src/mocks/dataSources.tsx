@@ -150,7 +150,7 @@ export const defaultForm: DataSoureSetupField[] = [
     rules: {
       required: true,
     },
-    placeholder: "ML_dbname",
+    placeholder: "db_name",
     type: "text",
   },
   {
@@ -513,7 +513,7 @@ export const dataSourceForms: Form = {
       rules: {
         required: false,
       },
-      placeholder: "ML_dbname",
+      placeholder: "db_name",
       type: "text",
     },
     {

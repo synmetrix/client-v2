@@ -39,6 +39,8 @@ const TableSelection: FC<TableSelectionProps> = ({
     defaultValue: initialValue,
   });
 
+  console.log(value);
+
   const isAllSelected = () =>
     Object.keys(schema[path]).every((tb) => value[`${path}.${tb}`] === true);
 
@@ -66,7 +68,7 @@ const TableSelection: FC<TableSelectionProps> = ({
         </Button>
       </div>
       {Object.keys(schema[path]).map((tb) => (
-        <div key={tb}>
+        <div key={`${path}.${tb}`}>
           <div className={cn(styles.field)}>
             <Checkbox
               checked={value?.[`${path}.${tb}`]}

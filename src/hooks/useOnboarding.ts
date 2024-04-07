@@ -91,9 +91,11 @@ export default ({ editId }: Props) => {
     () => teamData?.dataSources || [],
     [teamData]
   ) as DataSourceInfo[];
+
   const curDataSource = useMemo(
     () =>
-      dataSources.find((d) => d.id === editId || d.id === dataSourceSetup?.id),
+      dataSources.find((d) => d.id === editId) ||
+      dataSources.find((d) => d.id === dataSourceSetup?.id),
     [editId, dataSourceSetup?.id, dataSources]
   );
 
@@ -321,10 +323,10 @@ export default ({ editId }: Props) => {
   }, [curDataSource, dataSourceSetup?.id, dataSources, editId]);
 
   useEffect(() => {
-    if (step === 2 && dataSourceSetup?.id && !schema) {
+    if (step === 2 && curDataSource?.id && !schema) {
       execFetchTables();
     }
-  }, [dataSourceSetup?.id, schema, step, execFetchTables]);
+  }, [curDataSource?.id, schema, step, execFetchTables]);
 
   useEffect(() => {
     if (fetchTablesQuery.data) {

@@ -310,7 +310,12 @@ export default ({ editId }: Props) => {
               ...defaultFormState,
               ...prev.formState,
               step0: curDataSource.type,
-              step1: curDataSource,
+              step1: {
+                id: curDataSource?.id,
+                db_params: { ...curDataSource.dbParams },
+                name: curDataSource.name,
+                ...prev.formState.step1,
+              },
             },
             branchId: currentBranch.id,
           } as Partial<DataSourceState>)

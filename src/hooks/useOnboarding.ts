@@ -330,12 +330,6 @@ export default ({ editId }: Props) => {
     }
   }, [fetchTablesQuery.data, setSchema]);
 
-  useEffect(() => {
-    if (step === 0) {
-      clean();
-    }
-  }, [clean, step]);
-
   const loading =
     createMutation.fetching ||
     checkConnectionMutation.fetching ||

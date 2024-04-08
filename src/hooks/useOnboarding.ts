@@ -133,56 +133,70 @@ export default ({ editId }: Props) => {
     }
   };
 
-  const prepareSqlApiData = (
-    dataSourceName?: string,
-    dataSourceId?: string
-  ): { apiConfig: ApiSetupForm; credentialParams: CredentialParams } => {
-    const apiConfig: ApiSetupForm = prepareInitValues(
-      dataSourceId,
-      currentUser.id,
-      dataSourceName
-    );
-    const credentialParams: CredentialParams = {
-      user_id: currentUser.id,
-      username: apiConfig.db_username,
-      password: apiConfig.password,
-    };
-
-    if (dataSourceId) {
-      credentialParams.datasource_id = dataSourceId;
-    }
-
-    return { apiConfig, credentialParams };
-  };
-
-  const tryInsertSqlCredentials = async (
-    dataSourceId?: string,
-    dataSourceName?: string,
-    attemptsLeft: number = 5
-  ): Promise<ApiSetupForm | any> => {
-    if (attemptsLeft === 0) {
-      return false;
-    }
-
-    const { apiConfig, credentialParams } = prepareSqlApiData(
-      dataSourceName,
-      dataSourceId
-    );
-    const res = await execInsertSqlCredentialsMutation({
-      object: credentialParams,
-    });
-
-    const newCredentials = res.data?.insert_sql_credentials_one;
-    if (res.error || !newCredentials) {
-      return await tryInsertSqlCredentials(
+  const prepareSqlApiData = useCallback(
+    (
+      dataSourceName?: string,
+      dataSourceId?: string
+    ): { apiConfig: ApiSetupForm; credentialParams: CredentialParams } => {
+      const apiConfig: ApiSetupForm = prepareInitValues(
         dataSourceId,
-        dataSourceName,
-        attemptsLeft - 1
+        currentUser.id,
+        dataSourceName
       );
-    }
+      const credentialParams: CredentialParams = {
+        user_id: currentUser.id,
+        username: apiConfig.db_username,
+        password: apiConfig.password,
+      };
 
-    return apiConfig;
-  };
+      if (dataSourceId) {
+        credentialParams.datasource_id = dataSourceId;
+      }
+
+      return { apiConfig, credentialParams };
+    },
+    [currentUser.id]
+  );
+
+  const tryInsertSqlCredentials = useCallback(
+    async (
+      dataSourceId?: string,
+      dataSourceName?: string,
+      attemptsLeft: number = 5
+    ): Promise<ApiSetupForm | any> => {
+      if (attemptsLeft === 0) {
+        return false;
+      }
+
+      const { apiConfig, credentialParams } = prepareSqlApiData(
+        dataSourceName,
+        dataSourceId
+      );
+      const res = await execInsertSqlCredentialsMutation({
+        object: credentialParams,
+      });
+
+      const newCredentials = res.data?.insert_sql_credentials_one;
+      if (res.error || !newCredentials) {
+        return await tryInsertSqlCredentials(
+          dataSourceId,
+          dataSourceName,
+          attemptsLeft - 1
+        );
+      }
+
+      DataSourceStore.setState((prev) => ({
+        ...prev,
+        formState: {
+          ...prev.formState,
+          step3: { ...apiConfig },
+        },
+      }));
+
+      return apiConfig;
+    },
+    [execInsertSqlCredentialsMutation, prepareSqlApiData]
+  );
 
   const createOrUpdateDataSource = async (data: DataSourceSetupForm) => {
     let dataSourceId;
@@ -334,6 +348,15 @@ export default ({ editId }: Props) => {
       setSchema(fetchTablesQuery.data?.fetch_tables?.schema);
     }
   }, [fetchTablesQuery.data, setSchema]);
+
+  useEffect(() => {
+    if (step === 3) {
+      tryInsertSqlCredentials(
+        curDataSource?.id as string | undefined,
+        curDataSource?.name as string | undefined
+      );
+    }
+  }, [curDataSource?.id, curDataSource?.name, step, tryInsertSqlCredentials]);
 
   const loading =
     createMutation.fetching ||

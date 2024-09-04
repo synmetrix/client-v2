@@ -162,6 +162,7 @@
       "schema": "模式",
       "password": "密码",
       "email": "电子邮件",
+      "username": "用户名/电子邮件",
       "search": "搜索"
     },
     "errors": {

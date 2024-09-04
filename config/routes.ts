@@ -13,10 +13,6 @@ export default [
         path: paths.AUTH,
         routes: [
           {
-            path: paths.SIGNUP,
-            component: "./pages/SignUp",
-          },
-          {
             path: paths.SIGNIN,
             component: "./pages/SignIn",
           },

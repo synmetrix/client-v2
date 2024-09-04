@@ -161,6 +161,7 @@
       "attach_file_credentials": "Attach the file credentials, please",
       "schema": "schema",
       "password": "Password",
+      "username": "Username/E-mail",
       "email": "E-mail",
       "search": "Search"
     },

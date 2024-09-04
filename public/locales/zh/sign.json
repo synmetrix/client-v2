@@ -1,27 +1,12 @@
 {
   "sign_in": {
-    "sign_in_password": "使用密码登录",
     "title": "欢迎回来",
     "text": "请输入您的详细信息",
     "bottom_text": "还没有帐户？",
     "sign_up_link": "免费注册",
     "login": "登录",
     "send_link": "发送链接",
-    "magic_link_login": "使用魔法链接登录",
     "link_sended": "链接已成功发送。请检查您的电子邮件",
     "or": "或"
-  },
-  "sign_up": {
-    "or": "或",
-    "title": "注册",
-    "text": "请输入您的详细信息",
-    "magic_link_login": "使用魔法链接注册",
-    "privacy_text_1": "通过勾选此框，您接受我们的",
-    "privacy_link_1": "使用条款",
-    "privacy_text_2": "和我们的",
-    "privacy_link_2": "隐私政策",
-    "bottom_text": "已经有帐户？",
-    "sign_in_link": "免费登录",
-    "sign_up": "注册"
   }
 }

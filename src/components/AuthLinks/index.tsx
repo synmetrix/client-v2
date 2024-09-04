@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import Button from "@/components/Button";
 import useLocation from "@/hooks/useLocation";
-import { SIGNIN, SIGNUP } from "@/utils/constants/paths";
+import { SIGNIN } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
 
@@ -22,21 +22,10 @@ const AuthLinks: FC<AuthLinksProps> = ({ currentPage }) => {
       {currentPage !== "signin" && (
         <Button
           className={styles.btn}
-          type={currentPage === "signup" ? "primary" : "link"}
+          type="link"
           onClick={() => setLocation(SIGNIN)}
         >
-          {currentPage === "signup"
-            ? t("common:words.login")
-            : t("common:words.sign_in")}
-        </Button>
-      )}
-      {currentPage !== "signup" && (
-        <Button
-          className={styles.btn}
-          type="primary"
-          onClick={() => setLocation(SIGNUP)}
-        >
-          {t("common:words.sign_up")}
+          {t("common:words.sign_in")}
         </Button>
       )}
     </Space>

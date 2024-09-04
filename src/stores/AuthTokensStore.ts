@@ -7,10 +7,11 @@ import type { JwtPayload } from "jwt-decode";
 interface HasuraJWTPayload extends JwtPayload {
   "x-hasura-role": string;
   "x-hasura-user-id": string;
+  "x-hasura-allowed-roles": [string];
 }
 
 interface Payload extends JwtPayload {
-  hasura?: HasuraJWTPayload | null;
+  "https://hasura.io/jwt/claims"?: HasuraJWTPayload | null;
 }
 
 type AuthData = {
@@ -42,9 +43,9 @@ const AuthTokensStore = create<TokensState>()(
 
         const JWTpayload = {
           ...payload,
-          ...payload.hasura,
+          ...payload["https://hasura.io/jwt/claims"],
         };
-        delete JWTpayload.hasura;
+        delete JWTpayload["https://hasura.io/jwt/claims"];
 
         const newData = {
           refreshToken,

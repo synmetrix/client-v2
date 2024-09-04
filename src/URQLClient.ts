@@ -107,7 +107,7 @@ export default () => {
             }
 
             setAuthData({
-              accessToken: result.jwt_token,
+              accessToken: result.access_token,
               refreshToken: result.refresh_token,
             });
           }

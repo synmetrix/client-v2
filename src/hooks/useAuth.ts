@@ -1,25 +1,30 @@
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import type { SignInFormType } from "@/components/SignInForm";
-import type { SignUpFormType } from "@/components/SignUpForm";
 
-const VITE_GRAPHQL_PLUS_SERVER_URL =
-  window.GRAPHQL_PLUS_SERVER_URL !== undefined
-    ? window.GRAPHQL_PLUS_SERVER_URL
-    : import.meta.env.VITE_GRAPHQL_PLUS_SERVER_URL;
+// vite uses dev-proxy to make requests with changed origin
+const KEYCLOAK_URL = import.meta.env.DEV
+  ? `${window.location.origin}/keycloak`
+  : import.meta.env.VITE_KEYCLOAK_URL;
+const KEYCLOAK_REALM_URL = `${KEYCLOAK_URL}/realms/${
+  import.meta.env.VITE_KEYCLOAK_REALM
+}`;
 
 type Response = {
-  statusCode?: number;
   error?: string;
-  message?: string;
+  error_description?: string;
 };
 
 type AuthResponse = {
-  jwt_token: string;
+  access_token: string;
   refresh_token: string;
-  statusCode?: number;
+  expires_in: number;
+  refresh_expires_in: number;
+  token_type: string;
+  "not-before-policy": number;
+  session_state: string;
+  scope: string;
   error?: string;
-  message?: string;
-  magicLink?: boolean;
+  error_description?: string;
 };
 
 export const validateResponse = async (response: any) => {
@@ -43,12 +48,17 @@ export const validateResponse = async (response: any) => {
 
 export const fetchRefreshToken = async (refreshToken: string) => {
   const response = await fetch(
-    `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/token/refresh?refresh_token=${refreshToken}`,
+    `${KEYCLOAK_REALM_URL}/protocol/openid-connect/token`,
     {
-      method: "GET",
+      method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
+      body: new URLSearchParams({
+        refresh_token: refreshToken,
+        grant_type: "password",
+        client_id: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
+      }),
     }
   );
 
@@ -56,82 +66,56 @@ export const fetchRefreshToken = async (refreshToken: string) => {
 };
 
 export default () => {
-  const { refreshToken, accessToken, setAuthData } = AuthTokensStore();
+  const { refreshToken, setAuthData } = AuthTokensStore();
 
   const login = async (values: SignInFormType) => {
-    const response = await fetch(`${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...values,
-        cookie: false,
-      }),
-    });
+    const response = await fetch(
+      `${KEYCLOAK_REALM_URL}/protocol/openid-connect/token`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          ...values,
+          grant_type: "password",
+          client_id: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
+        }),
+      }
+    );
 
     const res = <AuthResponse>await validateResponse(response);
 
     if (res.error) {
       return {
         error: res.error,
-        message: res.message,
+        message: res.error_description,
       };
     }
 
-    if (res?.jwt_token && res?.refresh_token) {
+    if (res?.access_token && res?.refresh_token) {
       setAuthData({
-        accessToken: res.jwt_token,
+        accessToken: res.access_token,
         refreshToken: res.refresh_token,
       });
     }
 
     return {
-      magicLink: res?.magicLink,
+      accessToken: res.access_token,
     };
-  };
-
-  const register = async (values: SignUpFormType) => {
-    const response = await fetch(
-      `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...values,
-          cookie: false,
-        }),
-      }
-    );
-
-    const res = <AuthResponse>await validateResponse(response);
-
-    if (res.error) {
-      return {
-        error: res.error,
-        message: res.message,
-      };
-    }
-
-    setAuthData({
-      accessToken: res.jwt_token,
-      refreshToken: res.refresh_token,
-    });
   };
 
   const logout = async () => {
     const response = await fetch(
-      `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/logout?refresh_token=${refreshToken}`,
+      `${KEYCLOAK_REALM_URL}/protocol/openid-connect/logout?redirect_uri=${window.location.origin}`,
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify({
-          all: true,
+        body: new URLSearchParams({
+          client_id: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
+          refresh_token: refreshToken || "",
         }),
       }
     );
@@ -141,73 +125,15 @@ export default () => {
     if (res.error) {
       return {
         error: res.error,
-        message: res.message,
+        message: res.error_description,
       };
     }
-
-    return res;
-  };
-
-  const changePass = async (values: any) => {
-    const response = await fetch(
-      `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/change-password`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(values),
-      }
-    );
-
-    const res = <Response>await validateResponse(response);
-
-    if (res.error) {
-      return {
-        error: res.error,
-        message: res.message,
-      };
-    }
-
-    return res;
-  };
-
-  const sendMagicLink = async ({ email }: SignUpFormType) => {
-    const response = await fetch(
-      `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/register`,
-      {
-        method: "POST",
-        body: JSON.stringify({ email, cookie: false }),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const res = <AuthResponse>await validateResponse(response);
-
-    if (res.error) {
-      return {
-        error: res.error,
-        message: res.message,
-      };
-    }
-
-    setAuthData({
-      accessToken: res.jwt_token,
-      refreshToken: res.refresh_token,
-    });
 
     return res;
   };
 
   return {
     login,
-    register,
     logout,
-    changePass,
-    sendMagicLink,
   };
 };

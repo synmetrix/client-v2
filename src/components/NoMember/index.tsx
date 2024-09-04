@@ -2,7 +2,6 @@ import { Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import NoMemberImg from "@/assets/no-member.png";
-import Button from "@/components/Button";
 
 import styles from "./index.module.less";
 
@@ -21,9 +20,6 @@ const NoMember: FC<NoMemberProps> = ({ onInvite = () => {} }) => {
       <img className={styles.img} src={NoMemberImg} alt="" />
       <Title level={4}>{t("members.not_found.title")}</Title>
       <Text className={styles.text}>{t("members.not_found.text")}</Text>
-      <Button size="large" type="primary" onClick={onInvite}>
-        {t("members.not_found.invite_btn")}
-      </Button>
     </div>
   );
 };

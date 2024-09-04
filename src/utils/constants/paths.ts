@@ -1,7 +1,6 @@
 export const HOME = "/";
 
 export const AUTH = "/userauth";
-export const SIGNUP = `${AUTH}/signup`;
 export const SIGNIN = `${AUTH}/signin`;
 export const LOGOUT = `${AUTH}/logout`;
 

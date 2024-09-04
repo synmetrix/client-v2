@@ -93,7 +93,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (p) => p.replace("/ws", "/graphql"),
       },
-      "/auth": "http://localhost:8081",
+      "/keycloak": {
+        target: "http://localhost:8090",
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/keycloak/, ""),
+      },
       "/api/v1": "http://localhost:4000",
     },
   },

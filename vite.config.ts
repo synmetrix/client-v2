@@ -13,6 +13,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import svgx from "@svgx/vite-plugin-react";
 import monacoEditorPlugin from "vite-plugin-monaco-editor";
 import pluginRewriteAll from "vite-plugin-rewrite-all";
+import copy from "rollup-plugin-copy";
 
 import routes from "./config/routes";
 
@@ -38,6 +39,15 @@ export function reactVirtualized() {
 export default defineConfig({
   base: "/",
   plugins: [
+    copy({
+      hook: "buildStart",
+      targets: [
+        {
+          src: "node_modules/monaco-editor/min/vs",
+          dest: "public/monaco-editor/min",
+        },
+      ],
+    }),
     react({
       babel: {
         parserOpts: {

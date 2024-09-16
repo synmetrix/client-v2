@@ -22,3 +22,4 @@ stats.html
 package-lock.json
 /dist.zip
 /dist.tar.gz
+public/monaco-editor

@@ -153,7 +153,8 @@
       "json": "JSON",
       "body": "Body",
       "request_output": "Request Output",
-      "headers": "Headers"
+      "headers": "Headers",
+      "use_ldap": "Use LDAP"
     },
     "placeholders": {
       "name": "Name",
@@ -162,6 +163,7 @@
       "schema": "schema",
       "password": "Password",
       "email": "E-mail",
+      "email_username": "E-mail/Username",
       "search": "Search"
     },
     "errors": {

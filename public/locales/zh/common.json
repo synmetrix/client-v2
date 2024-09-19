@@ -153,7 +153,8 @@
       "json": "JSON",
       "body": "正文",
       "request_output": "请求输出",
-      "headers": "标头"
+      "headers": "标头",
+      "use_ldap": "使用 LDAP"
     },
     "placeholders": {
       "name": "名称",
@@ -162,6 +163,7 @@
       "schema": "模式",
       "password": "密码",
       "email": "电子邮件",
+      "email_username": "电子邮件/名称",
       "search": "搜索"
     },
     "errors": {

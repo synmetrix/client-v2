@@ -110,6 +110,12 @@ export type InviteTeamMemberOutput = {
   message?: Maybe<Scalars["String"]["output"]>;
 };
 
+export type LdapLoginOutput = {
+  __typename?: "LDAPLoginOutput";
+  data: Scalars["json"]["output"];
+  errorMessage?: Maybe<Scalars["json"]["output"]>;
+};
+
 export type PreAggregationPreviewOutput = {
   __typename?: "PreAggregationPreviewOutput";
   data: Scalars["json"]["output"];
@@ -5546,6 +5552,7 @@ export type Mutation_Root = {
   /** insert a single row into the table: "versions" */
   insert_versions_one?: Maybe<Versions>;
   invite_team_member?: Maybe<InviteTeamMemberOutput>;
+  ldap_login?: Maybe<LdapLoginOutput>;
   run_query?: Maybe<RunSourceQueryOutput>;
   send_test_alert?: Maybe<SendTestAlertOutput>;
   /** update data of the table: "access_lists" */
@@ -6373,6 +6380,12 @@ export type Mutation_RootInvite_Team_MemberArgs = {
   email: Scalars["String"]["input"];
   role?: InputMaybe<Scalars["String"]["input"]>;
   teamId?: InputMaybe<Scalars["uuid"]["input"]>;
+};
+
+/** mutation root */
+export type Mutation_RootLdap_LoginArgs = {
+  password: Scalars["String"]["input"];
+  username: Scalars["String"]["input"];
 };
 
 /** mutation root */
@@ -11784,6 +11797,20 @@ export type Versions_Updates = {
   where: Versions_Bool_Exp;
 };
 
+export type LdapLoginMutationVariables = Exact<{
+  username: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
+}>;
+
+export type LdapLoginMutation = {
+  __typename?: "mutation_root";
+  ldap_login?: {
+    __typename?: "LDAPLoginOutput";
+    data: any;
+    errorMessage?: any | null;
+  } | null;
+};
+
 export type AllAccessListsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars["Int"]["input"]>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
@@ -13122,6 +13149,20 @@ export const DefaultFieldsFragmentDoc = gql`
     datasource_id
   }
 `;
+export const LdapLoginDocument = gql`
+  mutation LDAPLogin($username: String!, $password: String!) {
+    ldap_login(username: $username, password: $password) {
+      data
+      errorMessage
+    }
+  }
+`;
+
+export function useLdapLoginMutation() {
+  return Urql.useMutation<LdapLoginMutation, LdapLoginMutationVariables>(
+    LdapLoginDocument
+  );
+}
 export const AllAccessListsDocument = gql`
   query AllAccessLists(
     $offset: Int
@@ -14649,6 +14690,7 @@ export const namedOperations = {
     CurrentVersion: "CurrentVersion",
   },
   Mutation: {
+    LDAPLogin: "LDAPLogin",
     UpdateAccessList: "UpdateAccessList",
     DeleteAccessList: "DeleteAccessList",
     CreateAccessList: "CreateAccessList",

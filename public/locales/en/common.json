@@ -110,7 +110,8 @@
     "find": "Find",
     "edit_teams": "Edit teams",
     "roles_and_access": "Roles and access",
-    "sql_api": "SQL API"
+    "sql_api": "SQL API",
+    "credentials": "Credentials"
   },
   "form": {
     "labels": {
@@ -157,6 +158,7 @@
     },
     "placeholders": {
       "name": "Name",
+      "login": "Login",
       "use_ssl": "I want use SSL",
       "attach_file_credentials": "Attach the file credentials, please",
       "schema": "schema",

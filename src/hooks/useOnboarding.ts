@@ -208,6 +208,16 @@ export default ({ editId }: Props) => {
               },
             ],
           },
+          credentials: {
+            data: [
+              {
+                user_id: currentUser.id,
+                datasource_id: dataSourceId,
+                username: apiConfig.db_username,
+                password: apiConfig.password,
+              },
+            ],
+          },
           sql_credentials: {
             data: [credentialParams],
           },

@@ -12267,23 +12267,11 @@
       },
       {
         "kind": "OBJECT",
-        "name": "auth_migrations",
-        "description": "columns and relationships of \"auth.migrations\"",
+        "name": "auth_options",
+        "description": "columns and relationships of \"auth_options\"",
         "fields": [
           {
-            "name": "executed_at",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "hash",
+            "name": "auth",
             "description": null,
             "args": [],
             "type": {
@@ -12299,31 +12287,173 @@
             "deprecationReason": null
           },
           {
-            "name": "id",
-            "description": null,
-            "args": [],
+            "name": "datasources",
+            "description": "An array relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "datasources_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "datasources_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "datasources_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "datasources",
+                    "ofType": null
+                  }
+                }
               }
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "name",
-            "description": null,
-            "args": [],
+            "name": "datasources_aggregate",
+            "description": "An aggregate relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "datasources_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "datasources_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "datasources_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "OBJECT",
+                "name": "datasources_aggregate",
                 "ofType": null
               }
             },
@@ -12338,8 +12468,8 @@
       },
       {
         "kind": "OBJECT",
-        "name": "auth_migrations_aggregate",
-        "description": "aggregated selection of \"auth.migrations\"",
+        "name": "auth_options_aggregate",
+        "description": "aggregated selection of \"auth_options\"",
         "fields": [
           {
             "name": "aggregate",
@@ -12347,7 +12477,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations_aggregate_fields",
+              "name": "auth_options_aggregate_fields",
               "ofType": null
             },
             "isDeprecated": false,
@@ -12368,7 +12498,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "auth_migrations",
+                    "name": "auth_options",
                     "ofType": null
                   }
                 }
@@ -12385,21 +12515,9 @@
       },
       {
         "kind": "OBJECT",
-        "name": "auth_migrations_aggregate_fields",
-        "description": "aggregate fields of \"auth.migrations\"",
+        "name": "auth_options_aggregate_fields",
+        "description": "aggregate fields of \"auth_options\"",
         "fields": [
-          {
-            "name": "avg",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "auth_migrations_avg_fields",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "count",
             "description": null,
@@ -12415,7 +12533,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "auth_migrations_select_column",
+                      "name": "auth_options_select_column",
                       "ofType": null
                     }
                   }
@@ -12451,7 +12569,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations_max_fields",
+              "name": "auth_options_max_fields",
               "ofType": null
             },
             "isDeprecated": false,
@@ -12463,114 +12581,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations_min_fields",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "stddev",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "auth_migrations_stddev_fields",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "stddev_pop",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "auth_migrations_stddev_pop_fields",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "stddev_samp",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "auth_migrations_stddev_samp_fields",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "sum",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "auth_migrations_sum_fields",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "var_pop",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "auth_migrations_var_pop_fields",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "var_samp",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "auth_migrations_var_samp_fields",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "variance",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "auth_migrations_variance_fields",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "auth_migrations_avg_fields",
-        "description": "aggregate avg on columns",
-        "fields": [
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
+              "name": "auth_options_min_fields",
               "ofType": null
             },
             "isDeprecated": false,
@@ -12584,8 +12595,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_bool_exp",
-        "description": "Boolean expression to filter rows from the table \"auth.migrations\". All fields are combined with a logical 'AND'.",
+        "name": "auth_options_bool_exp",
+        "description": "Boolean expression to filter rows from the table \"auth_options\". All fields are combined with a logical 'AND'.",
         "fields": null,
         "inputFields": [
           {
@@ -12599,7 +12610,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_bool_exp",
+                  "name": "auth_options_bool_exp",
                   "ofType": null
                 }
               }
@@ -12611,7 +12622,7 @@
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "auth_migrations_bool_exp",
+              "name": "auth_options_bool_exp",
               "ofType": null
             },
             "defaultValue": null
@@ -12627,7 +12638,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_bool_exp",
+                  "name": "auth_options_bool_exp",
                   "ofType": null
                 }
               }
@@ -12635,17 +12646,7 @@
             "defaultValue": null
           },
           {
-            "name": "executed_at",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "timestamp_comparison_exp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "hash",
+            "name": "auth",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -12655,21 +12656,21 @@
             "defaultValue": null
           },
           {
-            "name": "id",
+            "name": "datasources",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "Int_comparison_exp",
+              "name": "datasources_bool_exp",
               "ofType": null
             },
             "defaultValue": null
           },
           {
-            "name": "name",
+            "name": "datasources_aggregate",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "String_comparison_exp",
+              "name": "datasources_aggregate_bool_exp",
               "ofType": null
             },
             "defaultValue": null
@@ -12681,21 +12682,38 @@
       },
       {
         "kind": "ENUM",
-        "name": "auth_migrations_constraint",
-        "description": "unique or primary key constraints on table \"auth.migrations\"",
+        "name": "auth_options_constraint",
+        "description": "unique or primary key constraints on table \"auth_options\"",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
         "enumValues": [
           {
-            "name": "migrations_name_key",
-            "description": "unique or primary key constraint on columns \"name\"",
+            "name": "auth_options_pkey",
+            "description": "unique or primary key constraint on columns \"auth\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "auth_options_enum",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "private",
+            "description": null,
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "migrations_pkey",
-            "description": "unique or primary key constraint on columns \"id\"",
+            "name": "shared",
+            "description": null,
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -12704,17 +12722,73 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_inc_input",
-        "description": "input type for incrementing numeric columns in table \"auth.migrations\"",
+        "name": "auth_options_enum_comparison_exp",
+        "description": "Boolean expression to compare columns of type \"auth_options_enum\". All fields are combined with logical 'AND'.",
         "fields": null,
         "inputFields": [
           {
-            "name": "id",
+            "name": "_eq",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "auth_options_enum",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "_in",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "auth_options_enum",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "_is_null",
             "description": null,
             "type": {
               "kind": "SCALAR",
-              "name": "Int",
+              "name": "Boolean",
               "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "_neq",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "auth_options_enum",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "_nin",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "auth_options_enum",
+                  "ofType": null
+                }
+              }
             },
             "defaultValue": null
           }
@@ -12725,22 +12799,12 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_insert_input",
-        "description": "input type for inserting data into table \"auth.migrations\"",
+        "name": "auth_options_insert_input",
+        "description": "input type for inserting data into table \"auth_options\"",
         "fields": null,
         "inputFields": [
           {
-            "name": "executed_at",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "hash",
+            "name": "auth",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -12750,21 +12814,11 @@
             "defaultValue": null
           },
           {
-            "name": "id",
+            "name": "datasources",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "name",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
+              "kind": "INPUT_OBJECT",
+              "name": "datasources_arr_rel_insert_input",
               "ofType": null
             },
             "defaultValue": null
@@ -12776,47 +12830,11 @@
       },
       {
         "kind": "OBJECT",
-        "name": "auth_migrations_max_fields",
+        "name": "auth_options_max_fields",
         "description": "aggregate max on columns",
         "fields": [
           {
-            "name": "executed_at",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "hash",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
+            "name": "auth",
             "description": null,
             "args": [],
             "type": {
@@ -12835,47 +12853,11 @@
       },
       {
         "kind": "OBJECT",
-        "name": "auth_migrations_min_fields",
+        "name": "auth_options_min_fields",
         "description": "aggregate min on columns",
         "fields": [
           {
-            "name": "executed_at",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "hash",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
+            "name": "auth",
             "description": null,
             "args": [],
             "type": {
@@ -12894,8 +12876,8 @@
       },
       {
         "kind": "OBJECT",
-        "name": "auth_migrations_mutation_response",
-        "description": "response of any mutation on the table \"auth.migrations\"",
+        "name": "auth_options_mutation_response",
+        "description": "response of any mutation on the table \"auth_options\"",
         "fields": [
           {
             "name": "affected_rows",
@@ -12928,7 +12910,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "auth_migrations",
+                    "name": "auth_options",
                     "ofType": null
                   }
                 }
@@ -12945,8 +12927,43 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_on_conflict",
-        "description": "on_conflict condition type for table \"auth.migrations\"",
+        "name": "auth_options_obj_rel_insert_input",
+        "description": "input type for inserting object relation for remote table \"auth_options\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "data",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "auth_options_insert_input",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "on_conflict",
+            "description": "upsert condition",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "auth_options_on_conflict",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "auth_options_on_conflict",
+        "description": "on_conflict condition type for table \"auth_options\"",
         "fields": null,
         "inputFields": [
           {
@@ -12957,7 +12974,7 @@
               "name": null,
               "ofType": {
                 "kind": "ENUM",
-                "name": "auth_migrations_constraint",
+                "name": "auth_options_constraint",
                 "ofType": null
               }
             },
@@ -12977,7 +12994,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "ENUM",
-                    "name": "auth_migrations_update_column",
+                    "name": "auth_options_update_column",
                     "ofType": null
                   }
                 }
@@ -12990,7 +13007,7 @@
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "auth_migrations_bool_exp",
+              "name": "auth_options_bool_exp",
               "ofType": null
             },
             "defaultValue": null
@@ -13002,12 +13019,12 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_order_by",
-        "description": "Ordering options when selecting data from \"auth.migrations\".",
+        "name": "auth_options_order_by",
+        "description": "Ordering options when selecting data from \"auth_options\".",
         "fields": null,
         "inputFields": [
           {
-            "name": "executed_at",
+            "name": "auth",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -13017,31 +13034,11 @@
             "defaultValue": null
           },
           {
-            "name": "hash",
+            "name": "datasources_aggregate",
             "description": null,
             "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "id",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "name",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
+              "kind": "INPUT_OBJECT",
+              "name": "datasources_aggregate_order_by",
               "ofType": null
             },
             "defaultValue": null
@@ -13053,19 +13050,19 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_pk_columns_input",
-        "description": "primary key columns input for table: auth.migrations",
+        "name": "auth_options_pk_columns_input",
+        "description": "primary key columns input for table: auth_options",
         "fields": null,
         "inputFields": [
           {
-            "name": "id",
+            "name": "auth",
             "description": null,
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -13078,32 +13075,14 @@
       },
       {
         "kind": "ENUM",
-        "name": "auth_migrations_select_column",
-        "description": "select columns of table \"auth.migrations\"",
+        "name": "auth_options_select_column",
+        "description": "select columns of table \"auth_options\"",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
         "enumValues": [
           {
-            "name": "executed_at",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "hash",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
+            "name": "auth",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -13113,42 +13092,12 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_set_input",
-        "description": "input type for updating data in table \"auth.migrations\"",
+        "name": "auth_options_set_input",
+        "description": "input type for updating data in table \"auth_options\"",
         "fields": null,
         "inputFields": [
           {
-            "name": "executed_at",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "hash",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "id",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "name",
+            "name": "auth",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -13163,78 +13112,9 @@
         "possibleTypes": null
       },
       {
-        "kind": "OBJECT",
-        "name": "auth_migrations_stddev_fields",
-        "description": "aggregate stddev on columns",
-        "fields": [
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "auth_migrations_stddev_pop_fields",
-        "description": "aggregate stddev_pop on columns",
-        "fields": [
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "auth_migrations_stddev_samp_fields",
-        "description": "aggregate stddev_samp on columns",
-        "fields": [
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_stream_cursor_input",
-        "description": "Streaming cursor of the table \"auth_migrations\"",
+        "name": "auth_options_stream_cursor_input",
+        "description": "Streaming cursor of the table \"auth_options\"",
         "fields": null,
         "inputFields": [
           {
@@ -13245,7 +13125,7 @@
               "name": null,
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "auth_migrations_stream_cursor_value_input",
+                "name": "auth_options_stream_cursor_value_input",
                 "ofType": null
               }
             },
@@ -13268,42 +13148,12 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_stream_cursor_value_input",
+        "name": "auth_options_stream_cursor_value_input",
         "description": "Initial value of the column from where the streaming should start",
         "fields": null,
         "inputFields": [
           {
-            "name": "executed_at",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "hash",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "id",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "name",
+            "name": "auth",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -13314,60 +13164,19 @@
           }
         ],
         "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "auth_migrations_sum_fields",
-        "description": "aggregate sum on columns",
-        "fields": [
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
       {
         "kind": "ENUM",
-        "name": "auth_migrations_update_column",
-        "description": "update columns of table \"auth.migrations\"",
+        "name": "auth_options_update_column",
+        "description": "update columns of table \"auth_options\"",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
         "enumValues": [
           {
-            "name": "executed_at",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "hash",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
+            "name": "auth",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -13377,26 +13186,16 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "auth_migrations_updates",
+        "name": "auth_options_updates",
         "description": null,
         "fields": null,
         "inputFields": [
-          {
-            "name": "_inc",
-            "description": "increments the numeric columns with given value of the filtered values",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "auth_migrations_inc_input",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
           {
             "name": "_set",
             "description": "sets the columns of the filtered rows to the given values",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "auth_migrations_set_input",
+              "name": "auth_options_set_input",
               "ofType": null
             },
             "defaultValue": null
@@ -13409,7 +13208,7 @@
               "name": null,
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "auth_migrations_bool_exp",
+                "name": "auth_options_bool_exp",
                 "ofType": null
               }
             },
@@ -13417,75 +13216,6 @@
           }
         ],
         "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "auth_migrations_var_pop_fields",
-        "description": "aggregate var_pop on columns",
-        "fields": [
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "auth_migrations_var_samp_fields",
-        "description": "aggregate var_samp on columns",
-        "fields": [
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "auth_migrations_variance_fields",
-        "description": "aggregate variance on columns",
-        "fields": [
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
         "enumValues": null,
         "possibleTypes": null
       },
@@ -16644,6 +16374,180 @@
         "description": "columns and relationships of \"branch_statuses\"",
         "fields": [
           {
+            "name": "branches",
+            "description": "An array relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "branches_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "branches_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "branches_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "branches",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "branches_aggregate",
+            "description": "An aggregate relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "branches_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "branches_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "branches_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "branches_aggregate",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "status",
             "description": null,
             "args": [],
@@ -16845,6 +16749,26 @@
             "defaultValue": null
           },
           {
+            "name": "branches",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "branches_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "branches_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "branches_aggregate_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "status",
             "description": null,
             "type": {
@@ -16988,6 +16912,16 @@
         "description": "input type for inserting data into table \"branch_statuses\"",
         "fields": null,
         "inputFields": [
+          {
+            "name": "branches",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "branches_arr_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
           {
             "name": "status",
             "description": null,
@@ -17198,6 +17132,16 @@
         "description": "Ordering options when selecting data from \"branch_statuses\".",
         "fields": null,
         "inputFields": [
+          {
+            "name": "branches_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "branches_aggregate_order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
           {
             "name": "status",
             "description": null,
@@ -19789,6 +19733,1647 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "credentials",
+        "description": "columns and relationships of \"credentials\"",
+        "fields": [
+          {
+            "name": "created_at",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "timestamptz",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "datasource",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "datasources",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "uuid",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "uuid",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "timestamptz",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "user",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "users",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "uuid",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "credentials_aggregate",
+        "description": "aggregated selection of \"credentials\"",
+        "fields": [
+          {
+            "name": "aggregate",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials_aggregate_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "nodes",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "credentials",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_aggregate_bool_exp",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "count",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_aggregate_bool_exp_count",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_aggregate_bool_exp_count",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "arguments",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "credentials_select_column",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "distinct",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "filter",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "predicate",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "Int_comparison_exp",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "credentials_aggregate_fields",
+        "description": "aggregate fields of \"credentials\"",
+        "fields": [
+          {
+            "name": "count",
+            "description": null,
+            "args": [
+              {
+                "name": "columns",
+                "description": null,
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "credentials_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "distinct",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "max",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials_max_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "min",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials_min_fields",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_aggregate_order_by",
+        "description": "order by aggregate values of table \"credentials\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "count",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "max",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_max_order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "min",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_min_order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_arr_rel_insert_input",
+        "description": "input type for inserting array relation for remote table \"credentials\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "data",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "credentials_insert_input",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "on_conflict",
+            "description": "upsert condition",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_on_conflict",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_bool_exp",
+        "description": "Boolean expression to filter rows from the table \"credentials\". All fields are combined with a logical 'AND'.",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "_and",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "_not",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "_or",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "created_at",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "timestamptz_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "datasources_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "uuid_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "uuid_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "String_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "timestamptz_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "users_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "uuid_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "String_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "credentials_constraint",
+        "description": "unique or primary key constraints on table \"credentials\"",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "credentials_datasource_id_user_id_key",
+            "description": "unique or primary key constraint on columns \"user_id\", \"datasource_id\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials_pkey",
+            "description": "unique or primary key constraint on columns \"id\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_insert_input",
+        "description": "input type for inserting data into table \"credentials\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "created_at",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "datasources_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "users_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "credentials_max_fields",
+        "description": "aggregate max on columns",
+        "fields": [
+          {
+            "name": "created_at",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_max_order_by",
+        "description": "order by max() on columns of table \"credentials\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "created_at",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "credentials_min_fields",
+        "description": "aggregate min on columns",
+        "fields": [
+          {
+            "name": "created_at",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_min_order_by",
+        "description": "order by min() on columns of table \"credentials\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "created_at",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "credentials_mutation_response",
+        "description": "response of any mutation on the table \"credentials\"",
+        "fields": [
+          {
+            "name": "affected_rows",
+            "description": "number of rows affected by the mutation",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "returning",
+            "description": "data from the rows affected by the mutation",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "credentials",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_on_conflict",
+        "description": "on_conflict condition type for table \"credentials\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "constraint",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "credentials_constraint",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "update_columns",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "credentials_update_column",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "defaultValue": "[]"
+          },
+          {
+            "name": "where",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_order_by",
+        "description": "Ordering options when selecting data from \"credentials\".",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "created_at",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "datasources_order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "users_order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_pk_columns_input",
+        "description": "primary key columns input for table: credentials",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "id",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "uuid",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "credentials_select_column",
+        "description": "select columns of table \"credentials\"",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "created_at",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "datasource_id",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "password",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "updated_at",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "user_id",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "username",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_set_input",
+        "description": "input type for updating data in table \"credentials\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "created_at",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_stream_cursor_input",
+        "description": "Streaming cursor of the table \"credentials\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "initial_value",
+            "description": "Stream column input with initial value",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "credentials_stream_cursor_value_input",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "ordering",
+            "description": "cursor ordering",
+            "type": {
+              "kind": "ENUM",
+              "name": "cursor_ordering",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_stream_cursor_value_input",
+        "description": "Initial value of the column from where the streaming should start",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "created_at",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "datasource_id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "password",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "updated_at",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "user_id",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "username",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "credentials_update_column",
+        "description": "update columns of table \"credentials\"",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "created_at",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "datasource_id",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "password",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "updated_at",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "user_id",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "username",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "credentials_updates",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "_set",
+            "description": "sets the columns of the filtered rows to the given values",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_set_input",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "where",
+            "description": "filter the rows which have to be updated",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "credentials_bool_exp",
+                "ofType": null
+              }
+            },
+            "defaultValue": null
+          }
+        ],
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -23698,6 +25283,38 @@
         "description": "columns and relationships of \"datasources\"",
         "fields": [
           {
+            "name": "auth",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "auth_options_enum",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "auth_option",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "auth_options",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "branches",
             "description": "An array relationship",
             "args": [
@@ -23881,6 +25498,180 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "timestamptz",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials",
+            "description": "An array relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "credentials_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "credentials_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "credentials",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials_aggregate",
+            "description": "An aggregate relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "credentials_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "credentials_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "credentials_aggregate",
                 "ofType": null
               }
             },
@@ -24084,29 +25875,6 @@
                 "name": "jsonb",
                 "ofType": null
               }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "db_params_computed",
-            "description": "A computed field, executes function \"hide_password\"",
-            "args": [
-              {
-                "name": "path",
-                "description": "JSON select path",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null
-              }
-            ],
-            "type": {
-              "kind": "SCALAR",
-              "name": "jsonb",
-              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -25128,6 +26896,26 @@
             "defaultValue": null
           },
           {
+            "name": "auth",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "auth_options_enum_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "auth_option",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "auth_options_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "branches",
             "description": null,
             "type": {
@@ -25158,6 +26946,26 @@
             "defaultValue": null
           },
           {
+            "name": "credentials",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "credentials_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_aggregate_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "dataschemas",
             "description": null,
             "type": {
@@ -25179,16 +26987,6 @@
           },
           {
             "name": "db_params",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "jsonb_comparison_exp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "db_params_computed",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -25437,6 +27235,26 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "auth",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "auth_options_enum",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "auth_option",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "auth_options_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "branches",
             "description": null,
             "type": {
@@ -25452,6 +27270,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "credentials",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_arr_rel_insert_input",
               "ofType": null
             },
             "defaultValue": null
@@ -26093,6 +27921,26 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "auth",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "auth_option",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "auth_options_order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "branches_aggregate",
             "description": null,
             "type": {
@@ -26113,6 +27961,16 @@
             "defaultValue": null
           },
           {
+            "name": "credentials_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_aggregate_order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "dataschemas_aggregate",
             "description": null,
             "type": {
@@ -26124,16 +27982,6 @@
           },
           {
             "name": "db_params",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "db_params_computed",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -26312,6 +28160,12 @@
         "interfaces": null,
         "enumValues": [
           {
+            "name": "auth",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "created_at",
             "description": "column name",
             "isDeprecated": false,
@@ -26368,6 +28222,16 @@
         "description": "input type for updating data in table \"datasources\"",
         "fields": null,
         "inputFields": [
+          {
+            "name": "auth",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "auth_options_enum",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
           {
             "name": "created_at",
             "description": null,
@@ -26495,6 +28359,16 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "auth",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "auth_options_enum",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "created_at",
             "description": null,
             "type": {
@@ -26587,6 +28461,12 @@
         "inputFields": null,
         "interfaces": null,
         "enumValues": [
+          {
+            "name": "auth",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "created_at",
             "description": "column name",
@@ -34781,8 +36661,8 @@
             "deprecationReason": null
           },
           {
-            "name": "delete_auth_migrations",
-            "description": "delete data from the table: \"auth.migrations\"",
+            "name": "delete_auth_options",
+            "description": "delete data from the table: \"auth_options\"",
             "args": [
               {
                 "name": "where",
@@ -34792,7 +36672,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "auth_migrations_bool_exp",
+                    "name": "auth_options_bool_exp",
                     "ofType": null
                   }
                 },
@@ -34801,25 +36681,25 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations_mutation_response",
+              "name": "auth_options_mutation_response",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "delete_auth_migrations_by_pk",
-            "description": "delete single row from the table: \"auth.migrations\"",
+            "name": "delete_auth_options_by_pk",
+            "description": "delete single row from the table: \"auth_options\"",
             "args": [
               {
-                "name": "id",
+                "name": "auth",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
+                    "name": "String",
                     "ofType": null
                   }
                 },
@@ -34828,7 +36708,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations",
+              "name": "auth_options",
               "ofType": null
             },
             "isDeprecated": false,
@@ -35099,6 +36979,60 @@
             "type": {
               "kind": "OBJECT",
               "name": "branches",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "delete_credentials",
+            "description": "delete data from the table: \"credentials\"",
+            "args": [
+              {
+                "name": "where",
+                "description": "filter the rows which have to be deleted",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "credentials_bool_exp",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials_mutation_response",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "delete_credentials_by_pk",
+            "description": "delete single row from the table: \"credentials\"",
+            "args": [
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "uuid",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials",
               "ofType": null
             },
             "isDeprecated": false,
@@ -36512,8 +38446,8 @@
             "deprecationReason": null
           },
           {
-            "name": "insert_auth_migrations",
-            "description": "insert data into the table: \"auth.migrations\"",
+            "name": "insert_auth_options",
+            "description": "insert data into the table: \"auth_options\"",
             "args": [
               {
                 "name": "objects",
@@ -36529,7 +38463,7 @@
                       "name": null,
                       "ofType": {
                         "kind": "INPUT_OBJECT",
-                        "name": "auth_migrations_insert_input",
+                        "name": "auth_options_insert_input",
                         "ofType": null
                       }
                     }
@@ -36542,7 +38476,7 @@
                 "description": "upsert condition",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_on_conflict",
+                  "name": "auth_options_on_conflict",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -36550,15 +38484,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations_mutation_response",
+              "name": "auth_options_mutation_response",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "insert_auth_migrations_one",
-            "description": "insert a single row into the table: \"auth.migrations\"",
+            "name": "insert_auth_options_one",
+            "description": "insert a single row into the table: \"auth_options\"",
             "args": [
               {
                 "name": "object",
@@ -36568,7 +38502,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "auth_migrations_insert_input",
+                    "name": "auth_options_insert_input",
                     "ofType": null
                   }
                 },
@@ -36579,7 +38513,7 @@
                 "description": "upsert condition",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_on_conflict",
+                  "name": "auth_options_on_conflict",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -36587,7 +38521,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations",
+              "name": "auth_options",
               "ofType": null
             },
             "isDeprecated": false,
@@ -36998,6 +38932,88 @@
             "type": {
               "kind": "OBJECT",
               "name": "branches",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "insert_credentials",
+            "description": "insert data into the table: \"credentials\"",
+            "args": [
+              {
+                "name": "objects",
+                "description": "the rows to be inserted",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "INPUT_OBJECT",
+                        "name": "credentials_insert_input",
+                        "ofType": null
+                      }
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "on_conflict",
+                "description": "upsert condition",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_on_conflict",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials_mutation_response",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "insert_credentials_one",
+            "description": "insert a single row into the table: \"credentials\"",
+            "args": [
+              {
+                "name": "object",
+                "description": "the row to be inserted",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "credentials_insert_input",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "on_conflict",
+                "description": "upsert condition",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_on_conflict",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials",
               "ofType": null
             },
             "isDeprecated": false,
@@ -39354,25 +41370,15 @@
             "deprecationReason": null
           },
           {
-            "name": "update_auth_migrations",
-            "description": "update data of the table: \"auth.migrations\"",
+            "name": "update_auth_options",
+            "description": "update data of the table: \"auth_options\"",
             "args": [
-              {
-                "name": "_inc",
-                "description": "increments the numeric columns with given value of the filtered values",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_inc_input",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
               {
                 "name": "_set",
                 "description": "sets the columns of the filtered rows to the given values",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_set_input",
+                  "name": "auth_options_set_input",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -39385,7 +41391,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "auth_migrations_bool_exp",
+                    "name": "auth_options_bool_exp",
                     "ofType": null
                   }
                 },
@@ -39394,32 +41400,22 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations_mutation_response",
+              "name": "auth_options_mutation_response",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "update_auth_migrations_by_pk",
-            "description": "update single row of the table: \"auth.migrations\"",
+            "name": "update_auth_options_by_pk",
+            "description": "update single row of the table: \"auth_options\"",
             "args": [
-              {
-                "name": "_inc",
-                "description": "increments the numeric columns with given value of the filtered values",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_inc_input",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
               {
                 "name": "_set",
                 "description": "sets the columns of the filtered rows to the given values",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_set_input",
+                  "name": "auth_options_set_input",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -39432,7 +41428,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "auth_migrations_pk_columns_input",
+                    "name": "auth_options_pk_columns_input",
                     "ofType": null
                   }
                 },
@@ -39441,15 +41437,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations",
+              "name": "auth_options",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "update_auth_migrations_many",
-            "description": "update multiples rows of table: \"auth.migrations\"",
+            "name": "update_auth_options_many",
+            "description": "update multiples rows of table: \"auth_options\"",
             "args": [
               {
                 "name": "updates",
@@ -39465,7 +41461,7 @@
                       "name": null,
                       "ofType": {
                         "kind": "INPUT_OBJECT",
-                        "name": "auth_migrations_updates",
+                        "name": "auth_options_updates",
                         "ofType": null
                       }
                     }
@@ -39479,7 +41475,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "auth_migrations_mutation_response",
+                "name": "auth_options_mutation_response",
                 "ofType": null
               }
             },
@@ -40045,6 +42041,119 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "branches_mutation_response",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "update_credentials",
+            "description": "update data of the table: \"credentials\"",
+            "args": [
+              {
+                "name": "_set",
+                "description": "sets the columns of the filtered rows to the given values",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_set_input",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows which have to be updated",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "credentials_bool_exp",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials_mutation_response",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "update_credentials_by_pk",
+            "description": "update single row of the table: \"credentials\"",
+            "args": [
+              {
+                "name": "_set",
+                "description": "sets the columns of the filtered rows to the given values",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_set_input",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "pk_columns",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "credentials_pk_columns_input",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "update_credentials_many",
+            "description": "update multiples rows of table: \"credentials\"",
+            "args": [
+              {
+                "name": "updates",
+                "description": "updates to execute, in order",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "INPUT_OBJECT",
+                        "name": "credentials_updates",
+                        "ofType": null
+                      }
+                    }
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "credentials_mutation_response",
                 "ofType": null
               }
             },
@@ -45808,8 +47917,8 @@
             "deprecationReason": null
           },
           {
-            "name": "auth_migrations",
-            "description": "fetch data from the table: \"auth.migrations\"",
+            "name": "auth_options",
+            "description": "fetch data from the table: \"auth_options\"",
             "args": [
               {
                 "name": "distinct_on",
@@ -45822,7 +47931,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "auth_migrations_select_column",
+                      "name": "auth_options_select_column",
                       "ofType": null
                     }
                   }
@@ -45860,7 +47969,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "auth_migrations_order_by",
+                      "name": "auth_options_order_by",
                       "ofType": null
                     }
                   }
@@ -45872,7 +47981,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_bool_exp",
+                  "name": "auth_options_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -45889,7 +47998,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "auth_migrations",
+                    "name": "auth_options",
                     "ofType": null
                   }
                 }
@@ -45899,8 +48008,8 @@
             "deprecationReason": null
           },
           {
-            "name": "auth_migrations_aggregate",
-            "description": "fetch aggregated fields from the table: \"auth.migrations\"",
+            "name": "auth_options_aggregate",
+            "description": "fetch aggregated fields from the table: \"auth_options\"",
             "args": [
               {
                 "name": "distinct_on",
@@ -45913,7 +48022,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "auth_migrations_select_column",
+                      "name": "auth_options_select_column",
                       "ofType": null
                     }
                   }
@@ -45951,7 +48060,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "auth_migrations_order_by",
+                      "name": "auth_options_order_by",
                       "ofType": null
                     }
                   }
@@ -45963,7 +48072,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_bool_exp",
+                  "name": "auth_options_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -45974,7 +48083,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "auth_migrations_aggregate",
+                "name": "auth_options_aggregate",
                 "ofType": null
               }
             },
@@ -45982,18 +48091,18 @@
             "deprecationReason": null
           },
           {
-            "name": "auth_migrations_by_pk",
-            "description": "fetch data from the table: \"auth.migrations\" using primary key columns",
+            "name": "auth_options_by_pk",
+            "description": "fetch data from the table: \"auth_options\" using primary key columns",
             "args": [
               {
-                "name": "id",
+                "name": "auth",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
+                    "name": "String",
                     "ofType": null
                   }
                 },
@@ -46002,7 +48111,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations",
+              "name": "auth_options",
               "ofType": null
             },
             "isDeprecated": false,
@@ -47035,6 +49144,207 @@
             "type": {
               "kind": "OBJECT",
               "name": "create_events",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials",
+            "description": "An array relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "credentials_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "credentials_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "credentials",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials_aggregate",
+            "description": "An aggregate relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "credentials_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "credentials_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "credentials_aggregate",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials_by_pk",
+            "description": "fetch data from the table: \"credentials\" using primary key columns",
+            "args": [
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "uuid",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials",
               "ofType": null
             },
             "isDeprecated": false,
@@ -61520,8 +63830,8 @@
             "deprecationReason": null
           },
           {
-            "name": "auth_migrations",
-            "description": "fetch data from the table: \"auth.migrations\"",
+            "name": "auth_options",
+            "description": "fetch data from the table: \"auth_options\"",
             "args": [
               {
                 "name": "distinct_on",
@@ -61534,7 +63844,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "auth_migrations_select_column",
+                      "name": "auth_options_select_column",
                       "ofType": null
                     }
                   }
@@ -61572,7 +63882,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "auth_migrations_order_by",
+                      "name": "auth_options_order_by",
                       "ofType": null
                     }
                   }
@@ -61584,7 +63894,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_bool_exp",
+                  "name": "auth_options_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -61601,7 +63911,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "auth_migrations",
+                    "name": "auth_options",
                     "ofType": null
                   }
                 }
@@ -61611,8 +63921,8 @@
             "deprecationReason": null
           },
           {
-            "name": "auth_migrations_aggregate",
-            "description": "fetch aggregated fields from the table: \"auth.migrations\"",
+            "name": "auth_options_aggregate",
+            "description": "fetch aggregated fields from the table: \"auth_options\"",
             "args": [
               {
                 "name": "distinct_on",
@@ -61625,7 +63935,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "auth_migrations_select_column",
+                      "name": "auth_options_select_column",
                       "ofType": null
                     }
                   }
@@ -61663,7 +63973,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "auth_migrations_order_by",
+                      "name": "auth_options_order_by",
                       "ofType": null
                     }
                   }
@@ -61675,7 +63985,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_bool_exp",
+                  "name": "auth_options_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -61686,7 +63996,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "auth_migrations_aggregate",
+                "name": "auth_options_aggregate",
                 "ofType": null
               }
             },
@@ -61694,18 +64004,18 @@
             "deprecationReason": null
           },
           {
-            "name": "auth_migrations_by_pk",
-            "description": "fetch data from the table: \"auth.migrations\" using primary key columns",
+            "name": "auth_options_by_pk",
+            "description": "fetch data from the table: \"auth_options\" using primary key columns",
             "args": [
               {
-                "name": "id",
+                "name": "auth",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
+                    "name": "String",
                     "ofType": null
                   }
                 },
@@ -61714,15 +64024,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "auth_migrations",
+              "name": "auth_options",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "auth_migrations_stream",
-            "description": "fetch data from the table in a streaming manner: \"auth.migrations\"",
+            "name": "auth_options_stream",
+            "description": "fetch data from the table in a streaming manner: \"auth_options\"",
             "args": [
               {
                 "name": "batch_size",
@@ -61749,7 +64059,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "auth_migrations_stream_cursor_input",
+                      "name": "auth_options_stream_cursor_input",
                       "ofType": null
                     }
                   }
@@ -61761,7 +64071,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "auth_migrations_bool_exp",
+                  "name": "auth_options_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null
@@ -61778,7 +64088,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "auth_migrations",
+                    "name": "auth_options",
                     "ofType": null
                   }
                 }
@@ -63150,6 +65460,274 @@
               "kind": "OBJECT",
               "name": "create_events",
               "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials",
+            "description": "An array relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "credentials_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "credentials_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "credentials",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials_aggregate",
+            "description": "An aggregate relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "credentials_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "credentials_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "credentials_aggregate",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials_by_pk",
+            "description": "fetch data from the table: \"credentials\" using primary key columns",
+            "args": [
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "uuid",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "credentials",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials_stream",
+            "description": "fetch data from the table in a streaming manner: \"credentials\"",
+            "args": [
+              {
+                "name": "batch_size",
+                "description": "maximum number of rows returned in a single batch",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "cursor",
+                "description": "cursor to stream the results returned by the query",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "credentials_stream_cursor_input",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "credentials",
+                    "ofType": null
+                  }
+                }
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -71084,133 +73662,6 @@
       },
       {
         "kind": "SCALAR",
-        "name": "timestamp",
-        "description": null,
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "timestamp_comparison_exp",
-        "description": "Boolean expression to compare columns of type \"timestamp\". All fields are combined with logical 'AND'.",
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "_eq",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_gt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_gte",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_in",
-            "description": null,
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "timestamp",
-                  "ofType": null
-                }
-              }
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_is_null",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_lt",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_lte",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_neq",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "timestamp",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
-            "name": "_nin",
-            "description": null,
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "timestamp",
-                  "ofType": null
-                }
-              }
-            },
-            "defaultValue": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
         "name": "timestamptz",
         "description": null,
         "fields": null,
@@ -71723,6 +74174,180 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "timestamptz",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials",
+            "description": "An array relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "credentials_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "credentials_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "credentials",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "credentials_aggregate",
+            "description": "An aggregate relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "credentials_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "credentials_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "credentials_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "credentials_aggregate",
                 "ofType": null
               }
             },
@@ -73421,6 +76046,26 @@
             "defaultValue": null
           },
           {
+            "name": "credentials",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "credentials_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_aggregate_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "dataschemas",
             "description": null,
             "type": {
@@ -73684,6 +76329,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "credentials",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_arr_rel_insert_input",
               "ofType": null
             },
             "defaultValue": null
@@ -74140,6 +76795,16 @@
             "type": {
               "kind": "ENUM",
               "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "credentials_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "credentials_aggregate_order_by",
               "ofType": null
             },
             "defaultValue": null

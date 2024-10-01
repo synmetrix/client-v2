@@ -103,7 +103,6 @@ const ApiSetup: FC<ApiSetupProps> = ({
       connection = CONNECTION_DEFAULT,
       host = connectionUrls[CONNECTION_DEFAULT],
       user = initialValue?.db_username,
-      password = initialValue?.password,
       database = initialValue?.db,
     }) => {
       const [hostname, port] = host.split(":");
@@ -117,7 +116,7 @@ const ApiSetup: FC<ApiSetupProps> = ({
 
       return `psql --host=${hostname} ${psqlPortOption} --username=${user} --dbname=${database}`;
     },
-    [initialValue?.password, initialValue?.db_username, initialValue?.db]
+    [initialValue?.db_username, initialValue?.db]
   );
 
   const onDownload = () => {

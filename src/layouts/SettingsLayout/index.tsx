@@ -9,6 +9,7 @@ import { Roles } from "@/types/team";
 
 import AlertsIcon from "@/assets/alert-logs.svg";
 import DataSourceIcon from "@/assets/data-source.svg";
+import CredentialsIcon from "@/assets/credentials.svg";
 import MembersIcon from "@/assets/members.svg";
 import PersonalInfoIcon from "@/assets/personal-info.svg";
 import ReportsIcon from "@/assets/report-logs.svg";
@@ -43,6 +44,12 @@ const SettingsLayout: React.FC<SidebarLayoutProps> = ({
       label: t("common:words.data_sources"),
       href: "/settings/sources",
       icon: <DataSourceIcon />,
+    },
+    {
+      key: "credentials",
+      label: t("common:words.credentials"),
+      href: "/settings/credentials",
+      icon: <CredentialsIcon />,
     },
     {
       key: "sql-api",

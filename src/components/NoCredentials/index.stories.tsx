@@ -5,7 +5,7 @@ import NoCredentials from ".";
 import type { StoryFn, Meta } from "@storybook/react";
 
 export default {
-  title: "Components/Settings/SQLApi/NoCredentials",
+  title: "Components/Settings/Credentials/NoCredentials",
   component: NoCredentials,
 } as Meta<typeof NoCredentials>;
 

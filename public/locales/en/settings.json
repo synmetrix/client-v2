@@ -60,6 +60,18 @@
       "attach_btn": "Attach SQL API"
     }
   },
+  "credentials": {
+    "title": "Manage Credentials",
+    "action": "Create now",
+    "created": "Credential created",
+    "updated": "Credential updated",
+    "deleted": "Credential deleted",
+    "not_found": {
+      "title": "You have no Credentials",
+      "text": "Click \"Create Credential\" to add one",
+      "create_btn": "Create Credential"
+    }
+  },
   "roles_and_access": {
     "manage_roles": "Manage roles",
     "create_now": "Create now",

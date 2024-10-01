@@ -60,7 +60,7 @@ export const prepareDataSourceData = (data: Datasources[] | undefined) => {
       ({
         id: d?.id,
         name: d.name,
-        dbParams: d.db_params_computed,
+        dbParams: d.db_params,
         createdAt: d.created_at,
         updatedAt: d.updated_at,
         type: dbTiles.find((tile) => tile.value === d.db_type.toLowerCase()),

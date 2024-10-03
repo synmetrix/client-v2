@@ -111,10 +111,14 @@
     "edit_teams": "Edit teams",
     "roles_and_access": "Roles and access",
     "sql_api": "SQL API",
-    "credentials": "Credentials"
+    "credentials": "Credentials",
+    "shared": "Shared",
+    "private": "Private",
+    "specific_users": "Specific users"
   },
   "form": {
     "labels": {
+      "access_type": "Access type",
       "data_source": "Data source",
       "name": "Name",
       "db_name": "Database Name",
@@ -150,6 +154,7 @@
       "new_password": "New Password",
       "old_password": "Old Password",
       "team_member": "Team member",
+      "team_members": "Team members",
       "auth_token": "Auth Token",
       "json": "JSON",
       "body": "Body",
@@ -158,6 +163,9 @@
     },
     "placeholders": {
       "name": "Name",
+      "choose_access_type": "Choose access type",
+      "choose_data_source": "Choose data source",
+      "choose_team_members": "Choose team members",
       "login": "Login",
       "use_ssl": "I want use SSL",
       "attach_file_credentials": "Attach the file credentials, please",

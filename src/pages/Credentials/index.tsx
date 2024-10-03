@@ -13,12 +13,15 @@ import {
   useCredentialsQuery,
   useInsertCredentialMutation,
   useUpdateCredentialMutation,
+  useDeleteMemberCredentialsMutation,
+  useInsertMembersCredentialsMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import PageHeader from "@/components/PageHeader";
 import Modal from "@/components/Modal";
 import type { Credentials, CredentialsFormType } from "@/types/credential";
 import type { DataSourceInfo } from "@/types/dataSource";
+import type { Member } from "@/types/team";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 import NoCredentials from "@/components/NoCredentials";
 
@@ -27,6 +30,7 @@ import styles from "./index.module.less";
 const { Title } = Typography;
 
 interface CredentialsProps {
+  members?: Member[];
   initialValue?: CredentialsFormType;
   credentials: Credentials[];
   dataSources?: DataSourceInfo[];
@@ -42,6 +46,7 @@ interface CredentialsProps {
 
 const CredentialsPage: React.FC<CredentialsProps> = ({
   initialValue,
+  members,
   dataSources,
   isOpen,
   credentials,
@@ -92,6 +97,7 @@ const CredentialsPage: React.FC<CredentialsProps> = ({
         </div>
         <CredentialsForm
           initialValue={initialValue}
+          members={members}
           dataSources={dataSources}
           onSubmit={onSubmit}
         />
@@ -107,12 +113,14 @@ const prepareCredentialData = (
 
   return (credentialResult.credentials || []).map((c) => ({
     id: c.id,
+    accessType: c.access_type,
     username: c.username,
     createdAt: c.created_at,
     updatedAt: c.updated_at,
     user: c.user,
+    members: c.members_credentials.map((m) => m.member_id),
     dataSource: c.datasource,
-  })) as Credentials[];
+  })) as unknown as Credentials[];
 };
 
 const CredentialsPageWrapper = () => {
@@ -126,21 +134,10 @@ const CredentialsPageWrapper = () => {
   const [deleteMutation, execDeleteMutation] = useDeleteCredentialMutation();
   const [createMutation, execCreateMutation] = useInsertCredentialMutation();
   const [updateMutation, execUpdateMutation] = useUpdateCredentialMutation();
-
-  useCheckResponse(createMutation, () => {
-    execCredentialsQuery();
-    message.success(t("settings:credentials.created"));
-  });
-
-  useCheckResponse(updateMutation, () => {
-    execCredentialsQuery();
-    message.success(t("settings:credentials.updated"));
-  });
-
-  useCheckResponse(deleteMutation, () => {
-    execCredentialsQuery();
-    message.success(t("settings:credentials.deleted"));
-  });
+  const [deleteMemberCredentials, execDeleteMemberCredentials] =
+    useDeleteMemberCredentialsMutation();
+  const [insertMembersCredentials, execInsertMembersCredentials] =
+    useInsertMembersCredentialsMutation();
 
   const onDelete = useCallback(
     (id: string) => {
@@ -162,31 +159,64 @@ const CredentialsPageWrapper = () => {
 
   const onClose = useCallback(() => {
     setLocation(CREDENTIALS);
-  }, [setLocation]);
+    execCredentialsQuery();
+  }, [setLocation, execCredentialsQuery]);
 
-  const onSubmit = useCallback(
-    (data: CredentialsFormType) => {
-      if (isNew) {
-        execCreateMutation({
-          object: {
-            user_id: currentUser?.id,
-            datasource_id: data.dataSourceId,
-            username: data.username,
-            password: data.password,
+  useCheckResponse(createMutation, () => onClose(), {
+    successMessage: t("settings:credentials.created"),
+  });
+
+  useCheckResponse(updateMutation, () => onClose(), {
+    successMessage: t("settings:credentials.updated"),
+  });
+
+  useCheckResponse(deleteMutation, () => onClose(), {
+    successMessage: t("settings:credentials.deleted"),
+  });
+
+  useCheckResponse(deleteMemberCredentials, () => {}, {
+    showMessage: false,
+  });
+
+  useCheckResponse(insertMembersCredentials, () => {}, {
+    showMessage: false,
+  });
+
+  const onSubmit = async (data: CredentialsFormType) => {
+    const payload = {
+      access_type: data.accessType,
+      username: data.username,
+      password: data.password,
+    };
+
+    if (isNew) {
+      await execCreateMutation({
+        object: {
+          ...payload,
+          user_id: currentUser?.id,
+          datasource_id: data.dataSourceId,
+          members_credentials: {
+            data: (data.members || []).map((m) => ({
+              member_id: m,
+            })),
           },
-        });
-      } else {
-        execUpdateMutation({
-          pk_columns: { id: editId },
-          _set: {
-            username: data.username,
-            password: data.password,
-          },
-        });
-      }
-    },
-    [execCreateMutation, execUpdateMutation, isNew, editId, currentUser]
-  );
+        },
+      });
+    } else {
+      await execDeleteMemberCredentials({ id: editId });
+      await execInsertMembersCredentials({
+        objects: (data.members || []).map((m) => ({
+          member_id: m,
+          credential_id: editId,
+        })),
+      });
+
+      await execUpdateMutation({
+        pk_columns: { id: editId },
+        _set: payload,
+      });
+    }
+  };
 
   const credentials = useMemo(
     () =>
@@ -203,9 +233,12 @@ const CredentialsPageWrapper = () => {
       if (curCredential) {
         return {
           id: curCredential.id,
+          accessType: curCredential.accessType,
+          name: curCredential.user.display_name,
           username: curCredential.username,
-          password: curCredential.password,
           dataSourceId: curCredential.dataSource.id,
+          members: curCredential.members,
+          password: "",
         };
       }
 
@@ -215,6 +248,7 @@ const CredentialsPageWrapper = () => {
 
   return (
     <CredentialsPage
+      members={teamData?.members}
       dataSources={teamData?.dataSources}
       credentials={credentials}
       initialValue={initialValue}

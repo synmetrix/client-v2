@@ -1,0 +1,6 @@
+mutation LDAPLogin($username: String!, $password: String!) {
+  ldap_login(username: $username, password: $password) {
+    data
+    errorMessage
+  }
+}

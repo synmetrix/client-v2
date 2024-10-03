@@ -1,6 +1,8 @@
 import AuthTokensStore from "@/stores/AuthTokensStore";
 import type { SignInFormType } from "@/components/SignInForm";
 import type { SignUpFormType } from "@/components/SignUpForm";
+import type { LdapLoginOutput } from "@/graphql/generated";
+import { useLdapLoginMutation } from "@/graphql/generated";
 
 const VITE_GRAPHQL_PLUS_SERVER_URL =
   window.GRAPHQL_PLUS_SERVER_URL !== undefined
@@ -57,20 +59,47 @@ export const fetchRefreshToken = async (refreshToken: string) => {
 
 export default () => {
   const { refreshToken, accessToken, setAuthData } = AuthTokensStore();
+  const [, execLDAPLoginMutation] = useLdapLoginMutation();
 
   const login = async (values: SignInFormType) => {
-    const response = await fetch(`${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...values,
-        cookie: false,
-      }),
-    });
+    const credentials = { email: values.email, password: values.password };
+    let res;
 
-    const res = <AuthResponse>await validateResponse(response);
+    if (values.useLDAP) {
+      const result = await execLDAPLoginMutation({
+        username: credentials.email,
+        password: credentials.password || "",
+      });
+
+      const LDAPResponse: LdapLoginOutput | null =
+        result?.data?.ldap_login || null;
+
+      if (LDAPResponse?.errorMessage) {
+        return {
+          message: LDAPResponse?.errorMessage,
+        };
+      }
+
+      res = {
+        jwt_token: LDAPResponse?.data?.accessToken,
+        refresh_token: LDAPResponse?.data?.refreshToken,
+      };
+    } else {
+      const response = await fetch(
+        `${VITE_GRAPHQL_PLUS_SERVER_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...credentials,
+            cookie: false,
+          }),
+        }
+      );
+      res = <AuthResponse>await validateResponse(response);
+    }
 
     if (res.error) {
       return {

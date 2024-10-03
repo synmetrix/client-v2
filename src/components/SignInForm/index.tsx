@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import useLocation from "@/hooks/useLocation";
-import validate from "@/utils/helpers/validations";
 import { SIGNIN, SIGNUP } from "@/utils/constants/paths";
 
 import styles from "./index.module.less";
@@ -15,9 +14,12 @@ import type { FC } from "react";
 
 const { Title, Text } = Typography;
 
+const VITE_ENABLE_LDAP_LOGIN = import.meta.env.VITE_ENABLE_LDAP_LOGIN;
+
 export interface SignInFormType {
   email: string;
   password?: string;
+  useLDAP?: string;
 }
 
 interface SignInFormProps {
@@ -78,12 +80,10 @@ const SignInForm: FC<SignInFormProps> = ({
             [styles.error]: errors?.email,
           })}
           variant="borderless"
-          placeholder={t("common:form.placeholders.email")}
+          placeholder={t("common:form.placeholders.email_username")}
           control={control}
           rules={{
             required: true,
-            validate: (v: string) =>
-              validate.email(v) || t("common:form.errors.email"),
           }}
           name="email"
         />
@@ -101,6 +101,11 @@ const SignInForm: FC<SignInFormProps> = ({
             name="password"
             fieldType="password"
           />
+        )}
+        {VITE_ENABLE_LDAP_LOGIN && (
+          <Input control={control} name="useLDAP" fieldType="checkbox">
+            <span>{t("common:form.labels.use_ldap")}</span>
+          </Input>
         )}
         <Button
           className={styles.submit}

@@ -36,7 +36,7 @@ const SignIn: React.FC = () => {
       return;
     }
 
-    if (!res.magicLink) {
+    if (!res?.magicLink) {
       setLocation(SOURCES);
     }
   };

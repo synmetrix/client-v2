@@ -153,7 +153,8 @@
       "json": "JSON",
       "body": "Тело",
       "request_output": "Выход запроса",
-      "headers": "Заголовки"
+      "headers": "Заголовки",
+      "use_ldap": "Использовать LDAP"
     },
     "placeholders": {
       "name": "Имя",
@@ -162,6 +163,7 @@
       "schema": "схема",
       "password": "Пароль",
       "email": "Электронная почта",
+      "email_username": "Электронная почта/Имя пользователя",
       "search": "Поиск"
     },
     "errors": {

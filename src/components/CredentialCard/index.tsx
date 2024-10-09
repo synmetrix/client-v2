@@ -7,7 +7,8 @@ import cx from "classnames";
 import Button from "@/components/Button";
 import ConfirmModal from "@/components/ConfirmModal";
 import formatTime from "@/utils/helpers/formatTime";
-import type { Credentials } from "@/types/credential";
+import type { CredentialsInfo } from "@/types/credential";
+import DataSourceTag from "@/components/DataSourceTag";
 
 import styles from "./index.module.less";
 
@@ -16,7 +17,7 @@ import type { FC } from "react";
 const { Paragraph } = Typography;
 
 interface CredentialCardProps {
-  credential: Credentials;
+  credential: CredentialsInfo;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
@@ -27,7 +28,7 @@ const CredentialCard: FC<CredentialCardProps> = ({
   onDelete = () => {},
 }) => {
   const { t } = useTranslation(["common"]);
-  const { id, username, dataSource, updatedAt, createdAt, user } = credential;
+  const { id, username, updatedAt, createdAt, user, dataSource } = credential;
   return (
     <div>
       <Card
@@ -44,11 +45,11 @@ const CredentialCard: FC<CredentialCardProps> = ({
           >
             <Paragraph
               ellipsis
-              title={user?.display_name}
+              title={user?.displayName}
               style={{ display: "inline-block", width: "95%" }}
               className={cx(styles.paragraph, styles.btn)}
             >
-              {user?.display_name}
+              {user?.displayName}
             </Paragraph>
           </Button>
         }
@@ -84,6 +85,11 @@ const CredentialCard: FC<CredentialCardProps> = ({
         }
       >
         <ul className={styles.list}>
+          <li className={styles.listItem}>
+            <span className={styles.label}>{t("common:words.type")}</span>
+            <DataSourceTag dataSource={dataSource.type} />
+          </li>
+
           {dataSource?.name && (
             <li className={styles.listItem}>
               <span className={styles.label}>

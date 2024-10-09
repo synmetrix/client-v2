@@ -1,20 +1,18 @@
 import type { Access_Types_Enum } from "@/graphql/generated";
 
-export interface Credentials {
+import type { DataSourceInfo } from "./dataSource";
+export interface CredentialsInfo {
   id: string;
   accessType: Access_Types_Enum;
   username: string;
   updatedAt: string;
   createdAt: string;
   members: string[];
-  dataSource: {
-    id: string;
-    name: string;
-  };
   user: {
     id: string;
-    display_name: string;
+    displayName: string;
   };
+  dataSource: DataSourceInfo;
 }
 
 export interface CredentialsFormType {

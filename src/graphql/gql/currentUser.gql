@@ -145,6 +145,18 @@ query TeamData($team_id: uuid!) {
           display_name
         }
       }
+      credentials(order_by: { updated_at: desc }) {
+        id
+        user_id
+        username
+        access_type
+        created_at
+        updated_at
+        user {
+          id
+          display_name
+        }
+      }
     }
 
     alerts(order_by: { created_at: desc }) {
@@ -214,6 +226,18 @@ subscription SubTeamData($team_id: uuid!) {
       sql_credentials {
         id
         username
+        created_at
+        updated_at
+        user {
+          id
+          display_name
+        }
+      }
+      credentials(order_by: { updated_at: desc }) {
+        id
+        user_id
+        username
+        access_type
         created_at
         updated_at
         user {

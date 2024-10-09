@@ -544,7 +544,6 @@ export enum Access_Types_Constraint {
 }
 
 export enum Access_Types_Enum {
-  Private = "private",
   Shared = "shared",
   SpecificUsers = "specific_users",
 }
@@ -13405,21 +13404,6 @@ export type DeleteCredentialMutation = {
   delete_credentials_by_pk?: { __typename?: "credentials"; id: any } | null;
 };
 
-export type CredentialQueryVariables = Exact<{
-  id: Scalars["uuid"]["input"];
-}>;
-
-export type CredentialQuery = {
-  __typename?: "query_root";
-  credentials_by_pk?: {
-    __typename?: "credentials";
-    id: any;
-    user_id: any;
-    datasource_id: any;
-    username: string;
-  } | null;
-};
-
 export type UpdateCredentialsMutationVariables = Exact<{
   id: Scalars["uuid"]["input"];
   username: Scalars["String"]["input"];
@@ -13432,38 +13416,6 @@ export type UpdateCredentialsMutation = {
     __typename?: "sql_credentials";
     id: any;
   } | null;
-};
-
-export type CredentialsQueryVariables = Exact<{
-  offset?: InputMaybe<Scalars["Int"]["input"]>;
-  limit?: InputMaybe<Scalars["Int"]["input"]>;
-}>;
-
-export type CredentialsQuery = {
-  __typename?: "query_root";
-  credentials: Array<{
-    __typename?: "credentials";
-    id: any;
-    user_id: any;
-    username: string;
-    access_type: Access_Types_Enum;
-    created_at: any;
-    updated_at: any;
-    datasource: { __typename?: "datasources"; id: any; name: string };
-    user: { __typename?: "users"; id: any; display_name?: string | null };
-    members_credentials: Array<{
-      __typename?: "members_credentials";
-      member_id: any;
-      credential_id: any;
-    }>;
-  }>;
-  credentials_aggregate: {
-    __typename?: "credentials_aggregate";
-    aggregate?: {
-      __typename?: "credentials_aggregate_fields";
-      count: number;
-    } | null;
-  };
 };
 
 export type DeleteMemberCredentialsMutationVariables = Exact<{
@@ -13703,6 +13655,16 @@ export type TeamDataQuery = {
         updated_at: any;
         user: { __typename?: "users"; id: any; display_name?: string | null };
       }>;
+      credentials: Array<{
+        __typename?: "credentials";
+        id: any;
+        user_id: any;
+        username: string;
+        access_type: Access_Types_Enum;
+        created_at: any;
+        updated_at: any;
+        user: { __typename?: "users"; id: any; display_name?: string | null };
+      }>;
     }>;
     alerts: Array<{
       __typename?: "alerts";
@@ -13803,6 +13765,16 @@ export type SubTeamDataSubscription = {
         __typename?: "sql_credentials";
         id: any;
         username: string;
+        created_at: any;
+        updated_at: any;
+        user: { __typename?: "users"; id: any; display_name?: string | null };
+      }>;
+      credentials: Array<{
+        __typename?: "credentials";
+        id: any;
+        user_id: any;
+        username: string;
+        access_type: Access_Types_Enum;
         created_at: any;
         updated_at: any;
         user: { __typename?: "users"; id: any; display_name?: string | null };
@@ -14959,25 +14931,6 @@ export function useDeleteCredentialMutation() {
     DeleteCredentialMutationVariables
   >(DeleteCredentialDocument);
 }
-export const CredentialDocument = gql`
-  query Credential($id: uuid!) {
-    credentials_by_pk(id: $id) {
-      id
-      user_id
-      datasource_id
-      username
-    }
-  }
-`;
-
-export function useCredentialQuery(
-  options: Omit<Urql.UseQueryArgs<CredentialQueryVariables>, "query">
-) {
-  return Urql.useQuery<CredentialQuery, CredentialQueryVariables>({
-    query: CredentialDocument,
-    ...options,
-  });
-}
 export const UpdateCredentialsDocument = gql`
   mutation UpdateCredentials(
     $id: uuid!
@@ -14998,48 +14951,6 @@ export function useUpdateCredentialsMutation() {
     UpdateCredentialsMutation,
     UpdateCredentialsMutationVariables
   >(UpdateCredentialsDocument);
-}
-export const CredentialsDocument = gql`
-  query Credentials($offset: Int, $limit: Int) {
-    credentials(
-      offset: $offset
-      limit: $limit
-      order_by: { created_at: desc }
-    ) {
-      id
-      user_id
-      username
-      access_type
-      created_at
-      updated_at
-      datasource {
-        id
-        name
-      }
-      user {
-        id
-        display_name
-      }
-      members_credentials {
-        member_id
-        credential_id
-      }
-    }
-    credentials_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
-export function useCredentialsQuery(
-  options?: Omit<Urql.UseQueryArgs<CredentialsQueryVariables>, "query">
-) {
-  return Urql.useQuery<CredentialsQuery, CredentialsQueryVariables>({
-    query: CredentialsDocument,
-    ...options,
-  });
 }
 export const DeleteMemberCredentialsDocument = gql`
   mutation DeleteMemberCredentials($id: uuid!) {
@@ -15191,6 +15102,18 @@ export const TeamDataDocument = gql`
             display_name
           }
         }
+        credentials(order_by: { updated_at: desc }) {
+          id
+          user_id
+          username
+          access_type
+          created_at
+          updated_at
+          user {
+            id
+            display_name
+          }
+        }
       }
       alerts(order_by: { created_at: desc }) {
         id
@@ -15269,6 +15192,18 @@ export const SubTeamDataDocument = gql`
         sql_credentials {
           id
           username
+          created_at
+          updated_at
+          user {
+            id
+            display_name
+          }
+        }
+        credentials(order_by: { updated_at: desc }) {
+          id
+          user_id
+          username
+          access_type
           created_at
           updated_at
           user {
@@ -16332,8 +16267,6 @@ export const namedOperations = {
   Query: {
     AllAccessLists: "AllAccessLists",
     AccessList: "AccessList",
-    Credential: "Credential",
-    Credentials: "Credentials",
     CurrentUser: "CurrentUser",
     TeamData: "TeamData",
     Datasources: "Datasources",

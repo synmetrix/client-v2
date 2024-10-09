@@ -6,31 +6,42 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 import type { CredentialsFormType } from "@/types/credential";
 import type { DataSourceInfo } from "@/types/dataSource";
-import type { Member } from "@/types/team";
+import { Roles, type Member } from "@/types/team";
 import { Access_Types_Enum } from "@/graphql/generated";
 import CurrentUserStore from "@/stores/CurrentUserStore";
 
 interface CredentialsFormProps {
   initialValue?: CredentialsFormType;
-  members?: Member[];
+  allMembers?: Member[];
   dataSources?: DataSourceInfo[];
   onSubmit?: (data: CredentialsFormType) => void;
 }
 
 const CredentialsForm: React.FC<CredentialsFormProps> = ({
   initialValue,
-  members,
+  allMembers,
   dataSources,
   onSubmit = () => {},
 }) => {
-  const { currentUser } = CurrentUserStore();
+  const { currentUser, currentTeam } = CurrentUserStore();
   const { t } = useTranslation(["common", "credentialsForm"]);
   const { control, handleSubmit, watch } = useForm<CredentialsFormType>({
     values: initialValue,
   });
 
-  const accessType = watch("accessType");
+  const accessType = watch("accessType") || Access_Types_Enum.SpecificUsers;
   const isSpecificUsers = accessType === Access_Types_Enum.SpecificUsers;
+
+  const accessTypeMessage = {
+    [Access_Types_Enum.Shared]: t(
+      "credentialsForm:shared_access_type_description"
+    ),
+    [Access_Types_Enum.SpecificUsers]: t(
+      "credentialsForm:specific_users_access_type_description"
+    ),
+  };
+
+  const isMember = currentTeam?.role === Roles.member;
 
   return (
     <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
@@ -43,9 +54,9 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
             name="dataSourceId"
             fieldType="select"
             placeholder={t("common:form.placeholders.choose_data_source")}
-            options={(dataSources || []).map((ds) => ({
+            options={dataSources?.map((ds) => ({
               label: ds.name,
-              value: ds.id as string,
+              value: ds.id || "",
             }))}
             defaultValue={initialValue?.dataSourceId}
             disabled={!!initialValue?.id}
@@ -90,23 +101,25 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
           />
         </Col>
 
-        <Col span={24} md={12}>
-          <Input
-            rules={{ required: true }}
-            label={t("common:form.labels.access_type")}
-            control={control}
-            name="accessType"
-            fieldType="select"
-            placeholder={t("common:form.placeholders.choose_access_type")}
-            options={Object.values(Access_Types_Enum).map((type) => ({
-              label: t(`common:words.${type}`),
-              value: type,
-            }))}
-            defaultValue={Access_Types_Enum.Private}
-          />
-        </Col>
+        {!isMember && (
+          <Col span={24} md={12}>
+            <Input
+              rules={{ required: true }}
+              label={t("common:form.labels.access_type")}
+              control={control}
+              name="accessType"
+              fieldType="select"
+              placeholder={t("common:form.placeholders.choose_access_type")}
+              options={Object.values(Access_Types_Enum).map((type) => ({
+                label: t(`common:words.${type}`),
+                value: type,
+              }))}
+              defaultValue={Access_Types_Enum.SpecificUsers}
+            />
+          </Col>
+        )}
 
-        {isSpecificUsers && (
+        {!isMember && isSpecificUsers && (
           <Col span={24} md={12}>
             <Input
               rules={{ required: true }}
@@ -116,7 +129,7 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
               mode="multiple"
               fieldType="select"
               placeholder={t("common:form.placeholders.choose_team_members")}
-              options={members?.map((member) => ({
+              options={allMembers?.map((member) => ({
                 label: member.displayName,
                 value: member.id,
               }))}
@@ -129,13 +142,7 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
       <Alert
         style={{ marginBottom: 16 }}
         message={
-          Access_Types_Enum.Shared === accessType
-            ? t("credentialsForm:shared_access_type_description")
-            : Access_Types_Enum.SpecificUsers === accessType
-            ? t("credentialsForm:specific_users_access_type_description")
-            : Access_Types_Enum.Private === accessType
-            ? t("credentialsForm:private_access_type_description")
-            : ""
+          accessTypeMessage[accessType as keyof typeof accessTypeMessage]
         }
         type="info"
       />

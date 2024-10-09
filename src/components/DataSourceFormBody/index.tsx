@@ -81,16 +81,23 @@ const DataSourceFormBody: FC<DataSourceFormBodyProps> = ({
     case 1:
       if (curDataSource) {
         const initialValue = formState?.step1 || formData?.step1;
+        let fields =
+          dataSourceForms[
+            Object.keys(dataSourceForms).find(
+              (f) => f === curDataSource?.value
+            ) ?? "default"
+          ];
+
+        if (!isOnboarding) {
+          fields = fields.filter(
+            (f) => f.label !== "password" && f.label !== "user"
+          );
+        }
+
         return (
           <DataSourceSetup
             dataSource={curDataSource}
-            fields={
-              dataSourceForms[
-                Object.keys(dataSourceForms).find(
-                  (f) => f === curDataSource?.value
-                ) ?? "default"
-              ]
-            }
+            fields={fields}
             loading={loading}
             isOnboarding={isOnboarding}
             initialValue={initialValue}

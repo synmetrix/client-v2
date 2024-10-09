@@ -3947,12 +3947,6 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "private",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "shared",
             "description": null,
             "isDeprecated": false,

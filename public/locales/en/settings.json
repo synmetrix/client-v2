@@ -63,13 +63,13 @@
   "credentials": {
     "title": "Manage Credentials",
     "action": "Create now",
-    "created": "Credential created",
-    "updated": "Credential updated",
-    "deleted": "Credential deleted",
+    "created": "Credentials created",
+    "updated": "Credentials updated",
+    "deleted": "Credentials deleted",
     "not_found": {
       "title": "You have no Credentials",
-      "text": "Click \"Create Credential\" to add one",
-      "create_btn": "Create Credential"
+      "text": "Click \"Create Credentials\" to add one",
+      "create_btn": "Create Credentials"
     }
   },
   "roles_and_access": {

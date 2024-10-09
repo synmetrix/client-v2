@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { message, Spin, Space, Row, Col, Typography } from "antd";
+import { Spin, Space, Row, Col, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { useParams } from "@vitjs/runtime";
 
@@ -7,10 +7,8 @@ import useLocation from "@/hooks/useLocation";
 import CredentialsForm from "@/components/CredentialsForm";
 import CredentialCard from "@/components/CredentialCard";
 import { CREDENTIALS } from "@/utils/constants/paths";
-import type { CredentialsQuery } from "@/graphql/generated";
 import {
   useDeleteCredentialMutation,
-  useCredentialsQuery,
   useInsertCredentialMutation,
   useUpdateCredentialMutation,
   useDeleteMemberCredentialsMutation,
@@ -19,7 +17,7 @@ import {
 import useCheckResponse from "@/hooks/useCheckResponse";
 import PageHeader from "@/components/PageHeader";
 import Modal from "@/components/Modal";
-import type { Credentials, CredentialsFormType } from "@/types/credential";
+import type { CredentialsFormType, CredentialsInfo } from "@/types/credential";
 import type { DataSourceInfo } from "@/types/dataSource";
 import type { Member } from "@/types/team";
 import CurrentUserStore from "@/stores/CurrentUserStore";
@@ -30,10 +28,10 @@ import styles from "./index.module.less";
 const { Title } = Typography;
 
 interface CredentialsProps {
-  members?: Member[];
+  allMembers?: Member[];
   initialValue?: CredentialsFormType;
-  credentials: Credentials[];
   dataSources?: DataSourceInfo[];
+  credentials?: CredentialsInfo[];
   loading?: boolean;
   isOpen?: boolean;
   onDelete?: (id: string) => void;
@@ -44,12 +42,12 @@ interface CredentialsProps {
   onSubmit?: (data: CredentialsFormType) => void;
 }
 
-const CredentialsPage: React.FC<CredentialsProps> = ({
+export const CredentialsPage: React.FC<CredentialsProps> = ({
   initialValue,
-  members,
+  allMembers,
   dataSources,
-  isOpen,
   credentials,
+  isOpen,
   loading,
   onDelete = () => {},
   onEdit = () => {},
@@ -62,9 +60,9 @@ const CredentialsPage: React.FC<CredentialsProps> = ({
   return (
     <>
       <Spin spinning={loading}>
-        {credentials.length === 0 && <NoCredentials onCreate={onCreate} />}
+        {!credentials?.length && <NoCredentials onCreate={onCreate} />}
 
-        {credentials.length > 0 && (
+        {!!credentials?.length && (
           <Space className={styles.wrapper} direction="vertical" size={13}>
             <PageHeader
               title={t("settings:credentials.title")}
@@ -73,7 +71,7 @@ const CredentialsPage: React.FC<CredentialsProps> = ({
             />
             <div className={styles.body}>
               <Row justify={"start"} gutter={[32, 32]}>
-                {credentials.map((c) => (
+                {credentials?.map((c) => (
                   <Col xs={24} sm={12} xl={8} key={c.id}>
                     <CredentialCard
                       key={c.id}
@@ -97,7 +95,7 @@ const CredentialsPage: React.FC<CredentialsProps> = ({
         </div>
         <CredentialsForm
           initialValue={initialValue}
-          members={members}
+          allMembers={allMembers}
           dataSources={dataSources}
           onSubmit={onSubmit}
         />
@@ -106,31 +104,13 @@ const CredentialsPage: React.FC<CredentialsProps> = ({
   );
 };
 
-const prepareCredentialData = (
-  credentialResult: CredentialsQuery
-): Credentials[] => {
-  if (!credentialResult?.credentials?.length) return [];
-
-  return (credentialResult.credentials || []).map((c) => ({
-    id: c.id,
-    accessType: c.access_type,
-    username: c.username,
-    createdAt: c.created_at,
-    updatedAt: c.updated_at,
-    user: c.user,
-    members: c.members_credentials.map((m) => m.member_id),
-    dataSource: c.datasource,
-  })) as unknown as Credentials[];
-};
-
 const CredentialsPageWrapper = () => {
   const { t } = useTranslation(["settings", "common"]);
   const [, setLocation] = useLocation();
-  const { currentUser, teamData } = CurrentUserStore();
+  const { currentUser, teamData, currentTeam } = CurrentUserStore();
   const { editId } = useParams();
   const isNew = editId === "new";
 
-  const [credentialsQuery, execCredentialsQuery] = useCredentialsQuery();
   const [deleteMutation, execDeleteMutation] = useDeleteCredentialMutation();
   const [createMutation, execCreateMutation] = useInsertCredentialMutation();
   const [updateMutation, execUpdateMutation] = useUpdateCredentialMutation();
@@ -159,8 +139,7 @@ const CredentialsPageWrapper = () => {
 
   const onClose = useCallback(() => {
     setLocation(CREDENTIALS);
-    execCredentialsQuery();
-  }, [setLocation, execCredentialsQuery]);
+  }, [setLocation]);
 
   useCheckResponse(createMutation, () => onClose(), {
     successMessage: t("settings:credentials.created"),
@@ -189,6 +168,21 @@ const CredentialsPageWrapper = () => {
       password: data.password,
     };
 
+    let member_credentials = [];
+    if (currentTeam?.role === "admin") {
+      member_credentials = (data.members || []).map((m) => ({
+        member_id: m,
+        credential_id: data.id,
+      }));
+    } else {
+      member_credentials = [
+        {
+          member_id: currentUser?.id,
+          credential_id: data.id,
+        },
+      ];
+    }
+
     if (isNew) {
       await execCreateMutation({
         object: {
@@ -196,61 +190,49 @@ const CredentialsPageWrapper = () => {
           user_id: currentUser?.id,
           datasource_id: data.dataSourceId,
           members_credentials: {
-            data: (data.members || []).map((m) => ({
-              member_id: m,
-            })),
+            data: member_credentials,
           },
         },
       });
     } else {
       await execDeleteMemberCredentials({ id: editId });
-      await execInsertMembersCredentials({
+
+      const membersCredentials = await execInsertMembersCredentials({
         objects: (data.members || []).map((m) => ({
           member_id: m,
           credential_id: editId,
         })),
       });
 
-      await execUpdateMutation({
-        pk_columns: { id: editId },
-        _set: payload,
-      });
+      if (membersCredentials.data?.insert_members_credentials?.affected_rows) {
+        await execUpdateMutation({
+          pk_columns: { id: editId },
+          _set: payload,
+        });
+      }
     }
   };
 
-  const credentials = useMemo(
-    () =>
-      prepareCredentialData(
-        credentialsQuery?.data as unknown as CredentialsQuery
-      ),
-    [credentialsQuery]
-  );
-
   const initialValue = useMemo(() => {
-    if (!isNew && editId && credentials.length) {
-      const curCredential = credentials.find((c) => c.id === editId);
+    if (!isNew && editId && teamData?.credentials?.length) {
+      const curCredential = teamData.credentials.find((c) => c.id === editId);
 
       if (curCredential) {
         return {
-          id: curCredential.id,
-          accessType: curCredential.accessType,
-          name: curCredential.user.display_name,
-          username: curCredential.username,
+          ...curCredential,
           dataSourceId: curCredential.dataSource.id,
-          members: curCredential.members,
-          password: "",
-        };
+        } as unknown as CredentialsFormType;
       }
 
       onClose();
     }
-  }, [credentials, isNew, editId, onClose]);
+  }, [teamData?.credentials, isNew, editId, onClose]);
 
   return (
     <CredentialsPage
-      members={teamData?.members}
+      allMembers={teamData?.members}
       dataSources={teamData?.dataSources}
-      credentials={credentials}
+      credentials={teamData?.credentials}
       initialValue={initialValue}
       loading={false}
       isOpen={isNew || !!editId}

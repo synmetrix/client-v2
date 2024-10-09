@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import type { DataSourceCredentials } from "@/components/CredentialsTable";
 import type {
+  Credentials,
   CurrentUserQuery,
   Datasources,
   Members as MembersType,
@@ -28,6 +29,7 @@ import { Roles } from "@/types/team";
 import type { TeamData, User } from "@/types/user";
 import { SIGNIN } from "@/utils/constants/paths";
 import formatTime from "@/utils/helpers/formatTime";
+import type { CredentialsInfo } from "@/types/credential";
 
 const DEFAULT_TEAM_NAME = "Default team";
 
@@ -52,6 +54,33 @@ const prepareMembersData = (rawMembers: MembersType[]) => {
   return members;
 };
 
+export const prepareCredentialsData = (
+  dataSources: DataSourceInfo[]
+): CredentialsInfo[] => {
+  if (!dataSources?.length) return [];
+
+  const credentials: CredentialsInfo[] = [];
+  (dataSources || []).forEach((ds) => {
+    credentials.push(
+      ...(ds.credentials || []).map((c) => ({
+        id: c.id,
+        accessType: c.access_type,
+        username: c.username,
+        createdAt: c.created_at,
+        updatedAt: c.updated_at,
+        user: {
+          id: c.user.id,
+          displayName: c.user.display_name || "",
+        },
+        members: (c.members_credentials || []).map((m) => m.member_id),
+        dataSource: ds,
+      }))
+    );
+  });
+
+  return credentials;
+};
+
 export const prepareDataSourceData = (data: Datasources[] | undefined) => {
   if (!data?.length) return [];
 
@@ -65,6 +94,7 @@ export const prepareDataSourceData = (data: Datasources[] | undefined) => {
         updatedAt: d.updated_at,
         type: dbTiles.find((tile) => tile.value === d.db_type.toLowerCase()),
         branches: d.branches,
+        credentials: d.credentials,
       } as unknown as DataSourceInfo)
   );
 };
@@ -155,7 +185,7 @@ const prepareUserData = (
   };
 };
 
-const prepareCredentialsData = (
+const prepareSqlCredentialsData = (
   data: Datasources[]
 ): DataSourceCredentials[] => {
   if (!data?.length) return [];
@@ -189,9 +219,10 @@ const prepareTeamData = (
   const alerts = prepareAlertData(rawTeamData?.alerts as RawAlert[]);
   const reports = prepareReportData(rawTeamData?.reports as RawReport[]);
   const members = prepareMembersData(rawTeamData?.members as MembersType[]);
-  const sqlCredentials = prepareCredentialsData(
+  const sqlCredentials = prepareSqlCredentialsData(
     rawTeamData?.datasources as Datasources[]
   );
+  const credentials = prepareCredentialsData(dataSources);
 
   return {
     dataSources: (dataSources || []).sort(
@@ -205,6 +236,7 @@ const prepareTeamData = (
     sqlCredentials: (sqlCredentials || []).sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     ),
+    credentials,
   };
 };
 

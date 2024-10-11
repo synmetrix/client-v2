@@ -187,9 +187,25 @@ const CredentialsPageWrapper = () => {
     }
   );
 
-  useCheckResponse(deleteMutation, () => onClose(), {
-    successMessage: t("settings:credentials.deleted"),
-  });
+  useCheckResponse(
+    deleteMutation,
+    (data, error) => {
+      if (error) {
+        message.error(error.message);
+        return;
+      }
+
+      if (!data?.delete_credentials_by_pk) {
+        message.error(t("settings:credentials.no_rights"));
+        return;
+      }
+
+      message.success(t("settings:credentials.deleted"));
+    },
+    {
+      showMessage: false,
+    }
+  );
 
   const onSubmit = async (data: CredentialsFormType) => {
     const payload = {
@@ -208,7 +224,6 @@ const CredentialsPageWrapper = () => {
           datasource_id: data.dataSourceId,
         }));
       } else {
-        payload.access_type = Access_Types_Enum.SpecificUsers;
         member_credentials = (data.members || []).map((m) => ({
           member_id: m,
           credential_id: data.id,
@@ -216,6 +231,7 @@ const CredentialsPageWrapper = () => {
         }));
       }
     } else {
+      payload.access_type = Access_Types_Enum.SpecificUsers;
       member_credentials = [
         {
           member_id: currentTeam?.memberId,

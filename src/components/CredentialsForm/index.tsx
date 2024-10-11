@@ -107,7 +107,7 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
           />
         </Col>
 
-        {isOwner && !isMember && (
+        {!isMember && (
           <Col span={24} md={12}>
             <Input
               rules={{ required: true }}

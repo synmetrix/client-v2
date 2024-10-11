@@ -9,9 +9,12 @@ import ConfirmModal from "@/components/ConfirmModal";
 import formatTime from "@/utils/helpers/formatTime";
 import type { CredentialsInfo } from "@/types/credential";
 import DataSourceTag from "@/components/DataSourceTag";
+import CurrentUserStore from "@/stores/CurrentUserStore";
+import { Roles } from "@/types/team";
 
 import styles from "./index.module.less";
 
+import type { ItemType } from "antd/lib/menu/hooks/useItems";
 import type { FC } from "react";
 
 const { Paragraph } = Typography;
@@ -28,7 +31,13 @@ const CredentialCard: FC<CredentialCardProps> = ({
   onDelete = () => {},
 }) => {
   const { t } = useTranslation(["common"]);
+  const { currentUser, currentTeam } = CurrentUserStore();
   const { id, username, updatedAt, createdAt, user, dataSource } = credential;
+
+  const isMember = currentTeam?.role === Roles.member;
+  const isOwner = currentUser?.id === credential.user.id;
+  const canDelete = !isMember || (isMember && isOwner);
+
   return (
     <div>
       <Card
@@ -54,34 +63,36 @@ const CredentialCard: FC<CredentialCardProps> = ({
           </Button>
         }
         extra={
-          <Dropdown
-            className={styles.btn}
-            trigger={["click"]}
-            menu={{
-              items: [
-                {
-                  key: "edit",
-                  label: t("common:words.edit"),
-                  onClick: () => id && onEdit(id),
-                },
-                {
-                  key: "delete",
-                  className: styles.deleteItem,
-                  label: (
-                    <ConfirmModal
-                      title={t("common:words.delete_datasource")}
-                      className={styles.deleteText}
-                      onConfirm={() => id && onDelete(id)}
-                    >
-                      {t("common:words.delete")}
-                    </ConfirmModal>
-                  ),
-                },
-              ],
-            }}
-          >
-            <SettingOutlined key="setting" />
-          </Dropdown>
+          canDelete && (
+            <Dropdown
+              className={styles.btn}
+              trigger={["click"]}
+              menu={{
+                items: [
+                  {
+                    key: "edit",
+                    label: t("common:words.edit"),
+                    onClick: () => id && onEdit(id),
+                  },
+                  {
+                    key: "delete",
+                    className: styles.deleteItem,
+                    label: (
+                      <ConfirmModal
+                        title={t("common:words.delete_datasource")}
+                        className={styles.deleteText}
+                        onConfirm={() => id && onDelete(id)}
+                      >
+                        {t("common:words.delete")}
+                      </ConfirmModal>
+                    ),
+                  },
+                ],
+              }}
+            >
+              <SettingOutlined key="setting" />
+            </Dropdown>
+          )
         }
       >
         <ul className={styles.list}>

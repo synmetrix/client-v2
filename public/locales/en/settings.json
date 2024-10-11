@@ -70,7 +70,11 @@
       "title": "You have no Credentials",
       "text": "Click \"Create Credentials\" to add one",
       "create_btn": "Create Credentials"
-    }
+    },
+    "shared_access_type_description": "This credential will be available to all team members.",
+    "specific_users_access_type_description": "This credential will be available to the selected team members.",
+    "member_already_used": "One or more members already have access to this datasource. Please remove them from other credentials of this datasource.",
+    "member_has_access": "You already have access to this datasource. Please remove other credentials of this datasource or contact your administrator."
   },
   "roles_and_access": {
     "manage_roles": "Manage roles",

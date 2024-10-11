@@ -18,6 +18,7 @@ export interface CredentialsInfo {
 export interface CredentialsFormType {
   id?: string;
   name: string;
+  userId: string;
   accessType: Access_Types_Enum;
   members: string[];
   username: string;

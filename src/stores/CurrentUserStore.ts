@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { create } from "zustand";
 
 import type { User, TeamData } from "@/types/user";
@@ -53,6 +54,16 @@ const CurrentUserStore = create<CurrentUser>((set, get) => ({
       localStorage.setItem(LAST_TEAM_ID_KEY, id);
     }
 
+    const currentMember = team?.members?.find(
+      (m) => m.user_id === state?.currentUser?.id
+    );
+
+    if (!currentMember) {
+      message.error("Something went wrong. Member not found.");
+      return;
+    }
+
+    team.memberId = currentMember.id;
     set({ currentTeam: team });
   },
 }));

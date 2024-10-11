@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Spin, Space, Row, Col, Typography } from "antd";
+import { Spin, Space, Row, Col, Typography, message } from "antd";
 import { useTranslation } from "react-i18next";
 import { useParams } from "@vitjs/runtime";
 
@@ -8,11 +8,10 @@ import CredentialsForm from "@/components/CredentialsForm";
 import CredentialCard from "@/components/CredentialCard";
 import { CREDENTIALS } from "@/utils/constants/paths";
 import {
+  Access_Types_Enum,
   useDeleteCredentialMutation,
   useInsertCredentialMutation,
-  useUpdateCredentialMutation,
-  useDeleteMemberCredentialsMutation,
-  useInsertMembersCredentialsMutation,
+  useUpdateCredentialsMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import PageHeader from "@/components/PageHeader";
@@ -110,14 +109,11 @@ const CredentialsPageWrapper = () => {
   const { currentUser, teamData, currentTeam } = CurrentUserStore();
   const { editId } = useParams();
   const isNew = editId === "new";
+  const isMember = currentTeam?.role === "member";
 
   const [deleteMutation, execDeleteMutation] = useDeleteCredentialMutation();
   const [createMutation, execCreateMutation] = useInsertCredentialMutation();
-  const [updateMutation, execUpdateMutation] = useUpdateCredentialMutation();
-  const [deleteMemberCredentials, execDeleteMemberCredentials] =
-    useDeleteMemberCredentialsMutation();
-  const [insertMembersCredentials, execInsertMembersCredentials] =
-    useInsertMembersCredentialsMutation();
+  const [updateMutation, execUpdateMutation] = useUpdateCredentialsMutation();
 
   const onDelete = useCallback(
     (id: string) => {
@@ -141,24 +137,58 @@ const CredentialsPageWrapper = () => {
     setLocation(CREDENTIALS);
   }, [setLocation]);
 
-  useCheckResponse(createMutation, () => onClose(), {
-    successMessage: t("settings:credentials.created"),
-  });
+  useCheckResponse(
+    createMutation,
+    (_, error) => {
+      if (error) {
+        if (
+          error.message.includes(
+            "member_credentials_datasource_id_member_id_key"
+          )
+        ) {
+          if (isMember) {
+            message.error(t("settings:credentials.member_has_access"));
+          } else {
+            message.error(t("settings:credentials.member_already_used"));
+          }
+        } else {
+          message.error(error.message);
+        }
+      } else {
+        message.success(t("settings:credentials.created"));
+        onClose();
+      }
+    },
+    {
+      showMessage: false,
+    }
+  );
 
-  useCheckResponse(updateMutation, () => onClose(), {
-    successMessage: t("settings:credentials.updated"),
-  });
+  useCheckResponse(
+    updateMutation,
+    (_, error) => {
+      if (error) {
+        if (
+          error.message.includes(
+            "member_credentials_datasource_id_member_id_key"
+          )
+        ) {
+          message.error(t("settings:credentials.member_already_used"));
+        } else {
+          message.error(error.message);
+        }
+      } else {
+        message.success(t("settings:credentials.updated"));
+        onClose();
+      }
+    },
+    {
+      showMessage: false,
+    }
+  );
 
   useCheckResponse(deleteMutation, () => onClose(), {
     successMessage: t("settings:credentials.deleted"),
-  });
-
-  useCheckResponse(deleteMemberCredentials, () => {}, {
-    showMessage: false,
-  });
-
-  useCheckResponse(insertMembersCredentials, () => {}, {
-    showMessage: false,
   });
 
   const onSubmit = async (data: CredentialsFormType) => {
@@ -166,19 +196,31 @@ const CredentialsPageWrapper = () => {
       access_type: data.accessType,
       username: data.username,
       password: data.password,
+      datasource_id: data.dataSourceId,
     };
 
     let member_credentials = [];
-    if (currentTeam?.role === "admin") {
-      member_credentials = (data.members || []).map((m) => ({
-        member_id: m,
-        credential_id: data.id,
-      }));
+    if (!isMember) {
+      if (data.accessType === Access_Types_Enum.Shared) {
+        member_credentials = (teamData?.members || []).map((m) => ({
+          member_id: m.id,
+          credential_id: data.id,
+          datasource_id: data.dataSourceId,
+        }));
+      } else {
+        payload.access_type = Access_Types_Enum.SpecificUsers;
+        member_credentials = (data.members || []).map((m) => ({
+          member_id: m,
+          credential_id: data.id,
+          datasource_id: data.dataSourceId,
+        }));
+      }
     } else {
       member_credentials = [
         {
-          member_id: currentUser?.id,
+          member_id: currentTeam?.memberId,
           credential_id: data.id,
+          datasource_id: data.dataSourceId,
         },
       ];
     }
@@ -188,28 +230,19 @@ const CredentialsPageWrapper = () => {
         object: {
           ...payload,
           user_id: currentUser?.id,
-          datasource_id: data.dataSourceId,
-          members_credentials: {
+          member_credentials: {
             data: member_credentials,
           },
         },
       });
     } else {
-      await execDeleteMemberCredentials({ id: editId });
-
-      const membersCredentials = await execInsertMembersCredentials({
-        objects: (data.members || []).map((m) => ({
-          member_id: m,
-          credential_id: editId,
-        })),
+      await execUpdateMutation({
+        id: editId,
+        object: {
+          ...payload,
+        },
+        members: member_credentials,
       });
-
-      if (membersCredentials.data?.insert_members_credentials?.affected_rows) {
-        await execUpdateMutation({
-          pk_columns: { id: editId },
-          _set: payload,
-        });
-      }
     }
   };
 
@@ -220,6 +253,7 @@ const CredentialsPageWrapper = () => {
       if (curCredential) {
         return {
           ...curCredential,
+          userId: curCredential.user.id,
           dataSourceId: curCredential.dataSource.id,
         } as unknown as CredentialsFormType;
       }

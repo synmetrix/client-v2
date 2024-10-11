@@ -72,7 +72,7 @@ export const prepareCredentialsData = (
           id: c.user.id,
           displayName: c.user.display_name || "",
         },
-        members: (c.members_credentials || []).map((m) => m.member_id),
+        members: (c.member_credentials || []).map((m) => m.member_id),
         dataSource: ds,
       }))
     );

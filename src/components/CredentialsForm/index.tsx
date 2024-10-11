@@ -24,7 +24,7 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
   onSubmit = () => {},
 }) => {
   const { currentUser, currentTeam } = CurrentUserStore();
-  const { t } = useTranslation(["common", "credentialsForm"]);
+  const { t } = useTranslation(["common", "settings"]);
   const { control, handleSubmit, watch } = useForm<CredentialsFormType>({
     values: initialValue,
   });
@@ -34,14 +34,16 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
 
   const accessTypeMessage = {
     [Access_Types_Enum.Shared]: t(
-      "credentialsForm:shared_access_type_description"
+      "settings:credentials.shared_access_type_description"
     ),
     [Access_Types_Enum.SpecificUsers]: t(
-      "credentialsForm:specific_users_access_type_description"
+      "settings:credentials.specific_users_access_type_description"
     ),
   };
 
   const isMember = currentTeam?.role === Roles.member;
+  const isOwner = currentUser?.id === initialValue?.userId;
+  const canEdit = !initialValue || (isMember && isOwner) || !isMember;
 
   return (
     <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
@@ -58,7 +60,9 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
               label: ds.name,
               value: ds.id || "",
             }))}
-            defaultValue={initialValue?.dataSourceId}
+            defaultValue={
+              initialValue?.dataSourceId || dataSources?.[0]?.id || undefined
+            }
             disabled={!!initialValue?.id}
           />
         </Col>
@@ -86,6 +90,7 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
             name="username"
             placeholder={t("common:form.placeholders.login")}
             defaultValue={initialValue?.username}
+            disabled={!canEdit}
           />
         </Col>
 
@@ -98,10 +103,11 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
             fieldType="password"
             placeholder={t("common:form.placeholders.password")}
             defaultValue={initialValue?.password}
+            disabled={!canEdit}
           />
         </Col>
 
-        {!isMember && (
+        {isOwner && !isMember && (
           <Col span={24} md={12}>
             <Input
               rules={{ required: true }}
@@ -139,15 +145,17 @@ const CredentialsForm: React.FC<CredentialsFormProps> = ({
         )}
       </Row>
 
-      <Alert
-        style={{ marginBottom: 16 }}
-        message={
-          accessTypeMessage[accessType as keyof typeof accessTypeMessage]
-        }
-        type="info"
-      />
+      {!isMember && (
+        <Alert
+          style={{ marginBottom: 16 }}
+          message={
+            accessTypeMessage[accessType as keyof typeof accessTypeMessage]
+          }
+          type="info"
+        />
+      )}
 
-      <Button type="primary" htmlType="submit">
+      <Button type="primary" htmlType="submit" disabled={!canEdit}>
         {initialValue?.id ? t("common:words.apply") : t("common:words.create")}
       </Button>
     </Form>

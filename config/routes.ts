@@ -95,6 +95,10 @@ export default [
                 path: paths.INFO,
                 component: "./pages/PersonalInfo",
               },
+              {
+                path: `${paths.CREDENTIALS}/:editId?`,
+                component: "./pages/Credentials",
+              },
             ],
           },
           {

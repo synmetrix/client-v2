@@ -16,6 +16,7 @@ export const MEMBERS = `${SETTINGS}/members`;
 export const SQL_API = `${SETTINGS}/sql-api`;
 export const ROLES = `${SETTINGS}/roles`;
 export const INFO = `${SETTINGS}/info`;
+export const CREDENTIALS = `${SETTINGS}/credentials`;
 
 export const DOCS = "/docs";
 export const MODELS = "/models";

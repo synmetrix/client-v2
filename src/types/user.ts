@@ -4,6 +4,7 @@ import type { DataSourceInfo } from "./dataSource";
 import type { Team, Member } from "./team";
 import type { Alert } from "./alert";
 import type { Report } from "./report";
+import type { CredentialsInfo } from "./credential";
 
 export interface User {
   id: string;
@@ -29,4 +30,5 @@ export interface TeamData {
   reports: Report[];
   members: Member[];
   sqlCredentials: DataSourceCredentials[];
+  credentials: CredentialsInfo[];
 }

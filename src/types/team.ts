@@ -39,6 +39,7 @@ export interface Team {
   id: string;
   name: string;
   role: Roles;
+  memberId: string;
   creatorEmail: string;
   members: Member[];
   createdAt: string;

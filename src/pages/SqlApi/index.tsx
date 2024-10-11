@@ -11,10 +11,10 @@ import ApiSetup, {
 } from "@/components/ApiSetup";
 import type { DataSourceCredentials } from "@/components/CredentialsTable";
 import Modal from "@/components/Modal";
-import NoCredentials from "@/components/NoCredentials";
+import NoCredentials from "@/components/NoSqlCredentials";
 import PageHeader from "@/components/PageHeader";
 import {
-  useDeleteCredentialsMutation,
+  useDeleteSqlCredentialsMutation,
   useInsertSqlCredentialsMutation,
 } from "@/graphql/generated";
 import useCheckResponse from "@/hooks/useCheckResponse";
@@ -222,7 +222,8 @@ const SqlApiWrapper = () => {
 
   const [createMutation, execCreateMutation] =
     useInsertSqlCredentialsMutation();
-  const [deleteMutation, execDeleteMutation] = useDeleteCredentialsMutation();
+  const [deleteMutation, execDeleteMutation] =
+    useDeleteSqlCredentialsMutation();
 
   const onClose = () => {
     setLocation(basePath);

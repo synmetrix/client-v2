@@ -1,4 +1,4 @@
-import type { Branch_Statuses_Enum } from "@/graphql/generated";
+import type { Branch_Statuses_Enum, Credentials } from "@/graphql/generated";
 
 import type { ReactNode } from "react";
 
@@ -72,6 +72,7 @@ export interface DataSourceInfo {
   updatedAt: string;
   createdAt: string;
   branches: Branch[];
+  credentials: Credentials[];
 }
 
 export interface CubeOption {

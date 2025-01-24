@@ -27,6 +27,7 @@ import type {
 } from "@/types/dataSource";
 import useCheckResponse from "@/hooks/useCheckResponse";
 import { getSourceAndBranch } from "@/pages/Explore";
+import flattenTables from "@/utils/helpers/flattenTables";
 
 interface Props {
   editId?: string;
@@ -100,13 +101,7 @@ export default ({ editId }: Props) => {
   const onDataModelGenerationSubmit = async (data: DynamicForm) => {
     let tables = { ...data } as any;
     delete tables.type;
-    tables = Object.values(tables).reduce(
-      (acc: any, value: any) => [
-        ...acc,
-        ...Object.keys(value).map((v) => ({ name: v })),
-      ],
-      []
-    );
+    tables = flattenTables(tables);
 
     if (dataSourceSetup && !branchId) {
       message.error(`${t("no_branch")} ${dataSourceSetup.name}`);

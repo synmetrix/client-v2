@@ -6,7 +6,8 @@ export default function getTables(obj: object, prefix: string = "") {
 
       if (value === true) {
         const lastDotIndex = newPath.lastIndexOf(".");
-        const schema = newPath.slice(0, lastDotIndex) || "";
+        const schema =
+          lastDotIndex !== -1 ? newPath.slice(0, lastDotIndex) : "";
         const name = newPath.slice(lastDotIndex + 1);
         result.push({ schema, name });
       }

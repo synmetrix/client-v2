@@ -43,6 +43,8 @@ const options = [
   { label: "JS", value: "js", disabled: false },
 ];
 
+const TMP_SCHEMA_NAME = "tmp_schema_name_1234"; // any random string
+
 const DataModelGeneration: FC<DataModelGenerationProps> = ({
   dataSource,
   schema,
@@ -75,6 +77,11 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   };
 
   const onFormSubmit = (data: DynamicForm, type: string) => {
+    if (data[TMP_SCHEMA_NAME]) {
+      data[""] = data[TMP_SCHEMA_NAME];
+      delete data[TMP_SCHEMA_NAME];
+    }
+
     onSubmit(data, type);
     if (resetOnSubmit) reset();
   };
@@ -120,34 +127,51 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
         <Spin spinning={loading}>
           <Form id="data-model-generation">
             {filteredSchema ? (
-              <Collapse
-                className={styles.collapse}
-                expandIcon={() => <TableIcon />}
-              >
+              <>
                 {Object.keys(filteredSchema).map((s) => {
-                  const count = getCount(watch(), s);
-
-                  return (
-                    <Panel
-                      className={styles.collapse}
-                      header={
-                        <span className={styles.collapseHeader}>
-                          {s} {count > 0 && <span>({count})</span>}
-                        </span>
-                      }
-                      key={s}
-                    >
+                  if (s === "") {
+                    const tmpSchema = { [TMP_SCHEMA_NAME]: filteredSchema[s] };
+                    return Object.keys(filteredSchema[s]).map((tb) => (
                       <TableSelection
+                        key={tb}
                         control={control}
                         type={watch("type")}
-                        schema={filteredSchema}
-                        path={s}
+                        schema={tmpSchema}
+                        path={TMP_SCHEMA_NAME}
                         initialValue={initialValue}
                       />
-                    </Panel>
-                  );
+                    ));
+                  } else {
+                    const count = getCount(watch(), s);
+
+                    return (
+                      <Collapse
+                        className={styles.collapse}
+                        expandIcon={() => <TableIcon />}
+                        key={s}
+                      >
+                        <Panel
+                          className={styles.collapse}
+                          header={
+                            <span className={styles.collapseHeader}>
+                              {s} {count > 0 && <span>({count})</span>}
+                            </span>
+                          }
+                          key={s}
+                        >
+                          <TableSelection
+                            control={control}
+                            type={watch("type")}
+                            schema={filteredSchema}
+                            path={s}
+                            initialValue={initialValue}
+                          />
+                        </Panel>
+                      </Collapse>
+                    );
+                  }
                 })}
-              </Collapse>
+              </>
             ) : (
               <Empty />
             )}

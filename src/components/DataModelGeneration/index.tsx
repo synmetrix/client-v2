@@ -131,16 +131,16 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                 {Object.keys(filteredSchema).map((s) => {
                   if (s === "") {
                     const tmpSchema = { [TMP_SCHEMA_NAME]: filteredSchema[s] };
-                    return Object.keys(filteredSchema[s]).map((tb) => (
+                    return (
                       <TableSelection
-                        key={tb}
+                        key={TMP_SCHEMA_NAME}
                         control={control}
                         type={watch("type")}
                         schema={tmpSchema}
                         path={TMP_SCHEMA_NAME}
                         initialValue={initialValue}
                       />
-                    ));
+                    );
                   } else {
                     const count = getCount(watch(), s);
 

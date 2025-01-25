@@ -68,12 +68,18 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   const [searchValue, setSearchValue] = useState<string>("");
 
   const getCount = (val: DynamicForm, key: string) => {
-    if (val[key]) {
-      return Object.keys(val[key]).filter((k) => val?.[key]?.[k] === true)
-        .length;
-    } else {
-      return 0;
+    const keys = key.split(".");
+    let current = val;
+
+    for (const k of keys) {
+      if (current[k]) {
+        current = current[k];
+      } else {
+        return 0;
+      }
     }
+
+    return Object.keys(current).filter((k) => current[k] === true).length;
   };
 
   const onFormSubmit = (data: DynamicForm, type: string) => {
@@ -127,51 +133,39 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
         <Spin spinning={loading}>
           <Form id="data-model-generation">
             {filteredSchema ? (
-              <>
+              <Collapse
+                className={styles.collapse}
+                expandIcon={() => <TableIcon />}
+              >
                 {Object.keys(filteredSchema).map((s) => {
-                  if (s === "") {
-                    const tmpSchema = { [TMP_SCHEMA_NAME]: filteredSchema[s] };
-                    return (
+                  const count = getCount(watch(), s || TMP_SCHEMA_NAME);
+
+                  return (
+                    <Panel
+                      className={styles.collapse}
+                      header={
+                        <span className={styles.collapseHeader}>
+                          {s || t("common:words.default")}{" "}
+                          {count > 0 && <span>({count})</span>}
+                        </span>
+                      }
+                      key={s}
+                    >
                       <TableSelection
-                        key={TMP_SCHEMA_NAME}
                         control={control}
                         type={watch("type")}
-                        schema={tmpSchema}
-                        path={TMP_SCHEMA_NAME}
+                        schema={
+                          s
+                            ? filteredSchema
+                            : { [TMP_SCHEMA_NAME]: filteredSchema[s] }
+                        }
+                        path={s || TMP_SCHEMA_NAME}
                         initialValue={initialValue}
                       />
-                    );
-                  } else {
-                    const count = getCount(watch(), s);
-
-                    return (
-                      <Collapse
-                        className={styles.collapse}
-                        expandIcon={() => <TableIcon />}
-                        key={s}
-                      >
-                        <Panel
-                          className={styles.collapse}
-                          header={
-                            <span className={styles.collapseHeader}>
-                              {s} {count > 0 && <span>({count})</span>}
-                            </span>
-                          }
-                          key={s}
-                        >
-                          <TableSelection
-                            control={control}
-                            type={watch("type")}
-                            schema={filteredSchema}
-                            path={s}
-                            initialValue={initialValue}
-                          />
-                        </Panel>
-                      </Collapse>
-                    );
-                  }
+                    </Panel>
+                  );
                 })}
-              </>
+              </Collapse>
             ) : (
               <Empty />
             )}

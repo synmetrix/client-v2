@@ -66,12 +66,18 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   const [searchValue, setSearchValue] = useState<string>("");
 
   const getCount = (val: DynamicForm, key: string) => {
-    if (val[key]) {
-      return Object.keys(val[key]).filter((k) => val?.[key]?.[k] === true)
-        .length;
-    } else {
-      return 0;
+    const keys = key.split(".");
+    let current = val;
+
+    for (const k of keys) {
+      if (current[k]) {
+        current = current[k];
+      } else {
+        return 0;
+      }
     }
+
+    return Object.keys(current).filter((k) => current[k] === true).length;
   };
 
   const onFormSubmit = (data: DynamicForm, type: string) => {
@@ -132,7 +138,8 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                       className={styles.collapse}
                       header={
                         <span className={styles.collapseHeader}>
-                          {s} {count > 0 && <span>({count})</span>}
+                          {s === "no_schema" ? t("common:words.no_schema") : s}
+                          {count > 0 && <span>({count})</span>}
                         </span>
                       }
                       key={s}

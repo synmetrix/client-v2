@@ -1,22 +1,24 @@
 export default function getTables(obj: object, prefix: string = "") {
-  return Object.entries(obj).reduce((acc: { name: string }[], [key, value]) => {
-    let result = acc;
-    const newPath = prefix ? `${prefix}.${key}` : key;
+  return Object.entries(obj).reduce(
+    (acc: { schema: string; name: string }[], [key, value]) => {
+      let result = acc;
+      const newPath = prefix ? `${prefix}.${key}` : key;
 
-    if (value === true) {
-      const lastSlashIndex = newPath.lastIndexOf(".");
-      const formattedPath = `${newPath.slice(
-        0,
-        lastSlashIndex
-      )}.${newPath.slice(lastSlashIndex + 1)}`;
-      result.push({ name: formattedPath });
-    }
+      if (value === true) {
+        const lastDotIndex = newPath.lastIndexOf(".");
+        const schema =
+          lastDotIndex !== -1 ? newPath.slice(0, lastDotIndex) : "";
+        const name = newPath.slice(lastDotIndex + 1);
+        result.push({ schema, name });
+      }
 
-    if (typeof value === "object") {
-      const childResults = getTables(value, newPath);
-      result = acc.concat(childResults);
-    }
+      if (typeof value === "object" && value !== null) {
+        const childResults = getTables(value, newPath);
+        result = acc.concat(childResults);
+      }
 
-    return result;
-  }, []);
+      return result;
+    },
+    []
+  );
 }

@@ -79,7 +79,7 @@ const BranchSelection: React.FC<BranchSelectionProps> = ({
           label: b.name,
           title:
             b.status === Branch_Statuses_Enum.Active
-              ? `${b.name}-${t("common:words.default")}`
+              ? `${b.name}-${t("common:words.default").toLowerCase()}`
               : b.name,
           status: b.status,
         }))}

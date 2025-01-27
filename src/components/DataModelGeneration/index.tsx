@@ -43,8 +43,6 @@ const options = [
   { label: "JS", value: "js", disabled: false },
 ];
 
-const TMP_SCHEMA_NAME = "tmp_schema_name_1234"; // any random string
-
 const DataModelGeneration: FC<DataModelGenerationProps> = ({
   dataSource,
   schema,
@@ -83,11 +81,6 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
   };
 
   const onFormSubmit = (data: DynamicForm, type: string) => {
-    if (data[TMP_SCHEMA_NAME]) {
-      data[""] = data[TMP_SCHEMA_NAME];
-      delete data[TMP_SCHEMA_NAME];
-    }
-
     onSubmit(data, type);
     if (resetOnSubmit) reset();
   };
@@ -138,14 +131,14 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                 expandIcon={() => <TableIcon />}
               >
                 {Object.keys(filteredSchema).map((s) => {
-                  const count = getCount(watch(), s || TMP_SCHEMA_NAME);
+                  const count = getCount(watch(), s);
 
                   return (
                     <Panel
                       className={styles.collapse}
                       header={
                         <span className={styles.collapseHeader}>
-                          {s || t("common:words.default")}{" "}
+                          {s === "no_schema" ? t("common:words.no_schema") : s}
                           {count > 0 && <span>({count})</span>}
                         </span>
                       }
@@ -154,12 +147,8 @@ const DataModelGeneration: FC<DataModelGenerationProps> = ({
                       <TableSelection
                         control={control}
                         type={watch("type")}
-                        schema={
-                          s
-                            ? filteredSchema
-                            : { [TMP_SCHEMA_NAME]: filteredSchema[s] }
-                        }
-                        path={s || TMP_SCHEMA_NAME}
+                        schema={filteredSchema}
+                        path={s}
                         initialValue={initialValue}
                       />
                     </Panel>

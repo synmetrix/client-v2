@@ -107,6 +107,7 @@
     "versions": "Версии",
     "version": "Версия",
     "default": "По умолчанию",
+    "no_schema": "Без схемы",
     "find": "Найти",
     "edit_teams": "Редактировать команды",
     "roles_and_access": "Роли и доступ",

@@ -107,6 +107,7 @@
     "versions": "版本",
     "version": "版本",
     "default": "默认",
+    "no_schema": "无模式",
     "find": "查找",
     "edit_teams": "编辑命令",
     "roles_and_access": "角色与访问",

@@ -107,6 +107,7 @@
     "versions": "Versions",
     "version": "Version",
     "default": "Default",
+    "no_schema": "No schema",
     "find": "Find",
     "edit_teams": "Edit teams",
     "roles_and_access": "Roles and access",

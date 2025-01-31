@@ -72,12 +72,8 @@ const MembersForm: FC<MembersFormProps> = ({
             label={t("members.members.send_magic_link")}
             name="magicLink"
             control={control}
-            fieldType="select"
-            defaultValue={"false"}
-            options={[
-              { label: "Yes", value: "true" },
-              { label: "No", value: "false" },
-            ]}
+            fieldType="checkbox"
+            defaultValue={false}
           />
         </Col>
       </Row>

@@ -353,7 +353,6 @@ const MembersWrapper = () => {
       ...data,
       role: data.role.toLowerCase(),
       teamId: currentTeam?.id,
-      // magicLink: false,
     });
   };
 

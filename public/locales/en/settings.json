@@ -43,7 +43,8 @@
       "invite_team_member": "Invite Team Member",
       "select_role": "Select Role",
       "invite": "Invite",
-      "send_magic_link": "Send Magic Link"
+      "magic_link_checkbox": "Magic Link",
+      "magicLink": "I want to send a magic link to the member"
     },
     "not_found": {
       "title": "You have no members yet",

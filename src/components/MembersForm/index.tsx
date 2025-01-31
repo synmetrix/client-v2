@@ -69,7 +69,8 @@ const MembersForm: FC<MembersFormProps> = ({
 
         <Col span={24} md={12}>
           <Input
-            label={t("members.members.send_magic_link")}
+            label={t("members.members.magic_link_checkbox")}
+            placeholder={t("members.members.magicLink")}
             name="magicLink"
             control={control}
             fieldType="checkbox"

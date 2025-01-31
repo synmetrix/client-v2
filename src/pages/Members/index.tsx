@@ -33,7 +33,6 @@ import { createRoleOptions } from "@/utils/helpers/createRoleOptions";
 import formatTime from "@/utils/helpers/formatTime";
 
 import TrashColoredIcon from "@/assets/trash-colored.svg";
-import TrashIcon from "@/assets/trash.svg";
 
 import styles from "./index.module.less";
 

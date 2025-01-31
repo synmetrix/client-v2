@@ -42,7 +42,9 @@
       "title": "成员",
       "invite_team_member": "邀请团队成员",
       "select_role": "选择角色",
-      "invite": "邀请"
+      "invite": "邀请",
+      "magic_link_checkbox": "魔法链接",
+      "magicLink": "我想向成员发送一个魔法链接"
     },
     "not_found": {
       "title": "您还没有成员",

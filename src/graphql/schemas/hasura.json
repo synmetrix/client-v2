@@ -38348,6 +38348,16 @@
                 "defaultValue": null
               },
               {
+                "name": "magicLink",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "role",
                 "description": null,
                 "type": {

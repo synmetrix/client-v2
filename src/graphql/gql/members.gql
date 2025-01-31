@@ -54,8 +54,8 @@ mutation DeleteMember($id: uuid!) {
   }
 }
 
-mutation InviteMember($email: String!, $teamId: uuid!, $role: String) {
-  invite_team_member(email: $email, teamId: $teamId, role: $role) {
+mutation InviteMember($email: String!, $teamId: uuid!, $role: String, $magicLink: Boolean) {
+  invite_team_member(email: $email, teamId: $teamId, role: $role, magicLink: $magicLink) {
     memberId
   }
 }

@@ -42,7 +42,8 @@
       "title": "Members",
       "invite_team_member": "Invite Team Member",
       "select_role": "Select Role",
-      "invite": "Invite"
+      "invite": "Invite",
+      "send_magic_link": "Send Magic Link"
     },
     "not_found": {
       "title": "You have no members yet",

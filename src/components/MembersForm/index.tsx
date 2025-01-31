@@ -16,6 +16,7 @@ import type { FC } from "react";
 export interface Invite {
   email: string;
   role: Team_Roles_Enum;
+  magicLink: boolean;
 }
 
 interface MembersFormProps {
@@ -63,6 +64,20 @@ const MembersForm: FC<MembersFormProps> = ({
             fieldType="select"
             defaultValue={ChangeableRoles.member}
             options={inviteRoles}
+          />
+        </Col>
+
+        <Col span={24} md={12}>
+          <Input
+            label={t("members.members.send_magic_link")}
+            name="magicLink"
+            control={control}
+            fieldType="select"
+            defaultValue={"false"}
+            options={[
+              { label: "Yes", value: "true" },
+              { label: "No", value: "false" },
+            ]}
           />
         </Col>
       </Row>

@@ -1,4 +1,4 @@
-import { Select, Input, DatePicker } from "antd";
+import { Select, Input, DatePicker, Button } from "antd";
 import dayjs, { extend } from "dayjs";
 import { useDebounceFn } from "ahooks";
 import ru from "antd/es/date-picker/locale/ru_RU";
@@ -33,9 +33,28 @@ const inputlessOperators = ["set", "notSet"];
 const { RangePicker } = DatePicker;
 
 interface PlaygroundFilterInputProps {
-  values: string[];
-  onChange: (newValues: string[]) => void;
+  values: string | string[];
+  onChange: (newValues: string | string[]) => void;
 }
+
+const presetValues = [
+  "this second",
+  "last second",
+  "this minute",
+  "last minute",
+  "this hour",
+  "last hour",
+  "this day",
+  "last day",
+  "this week",
+  "last week",
+  "this month",
+  "last month",
+  "this year",
+  "last year",
+  "this quarter",
+  "last quarter",
+];
 
 const filterInputs = {
   string: ({ values, onChange }: PlaygroundFilterInputProps) => (
@@ -61,8 +80,45 @@ const filterInputs = {
   time: ({ values, onChange }: PlaygroundFilterInputProps) => (
     <DatePicker
       size="large"
-      value={Date.parse(values[0]) ? dayjs(values[0]) : undefined}
+      showToday={false}
       onChange={(_, dateString) => onChange([dateString])}
+      value={Date.parse(values[0]) ? dayjs(values[0]) : undefined}
+      inputRender={(inputProps) => {
+        const updatedProps = { ...inputProps };
+
+        if (typeof values === "string" && presetValues.includes(values)) {
+          updatedProps.value = values;
+          updatedProps.title = values;
+        }
+        return <input {...updatedProps} />;
+      }}
+      panelRender={(panel) => {
+        return (
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                height: 310,
+                overflowY: "auto",
+              }}
+            >
+              {presetValues.map((value) => (
+                <Button
+                  key={value}
+                  type="text"
+                  style={{ padding: "0 15px", height: 24 }}
+                  onClick={() => onChange(value)}
+                >
+                  {value}
+                </Button>
+              ))}
+            </div>
+            {panel}
+          </div>
+        );
+      }}
     />
   ),
   timeRange: ({ values, onChange }: PlaygroundFilterInputProps) => {
